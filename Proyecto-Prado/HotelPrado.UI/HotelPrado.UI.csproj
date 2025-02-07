@@ -1,0 +1,662 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7E4E1EB1-111E-4E98-9634-5293595E23E9}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HotelPrado.UI</RootNamespace>
+    <AssemblyName>HotelPrado.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44380</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.4\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.4\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.4\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.2.2\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.2.2\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.2.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.2.2\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.2.2\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.9\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.9\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BitacoraController.cs" />
+    <Compile Include="Controllers\CitasController.cs" />
+    <Compile Include="Controllers\ColaboradorController.cs" />
+    <Compile Include="Controllers\DepartamentoController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="obj\Debug\.NETFramework,Version=v4.8.1.AssemblyAttributes.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Antlr3.Runtime.dll" />
+    <Content Include="bin\EntityFramework.dll" />
+    <Content Include="bin\EntityFramework.SqlServer.dll" />
+    <Content Include="bin\es\Microsoft.AspNet.Identity.Core.resources.dll" />
+    <Content Include="bin\es\Microsoft.AspNet.Identity.EntityFramework.resources.dll" />
+    <Content Include="bin\es\Microsoft.AspNet.Identity.Owin.resources.dll" />
+    <Content Include="bin\es\System.Web.Helpers.resources.dll" />
+    <Content Include="bin\es\System.Web.Mvc.resources.dll" />
+    <Content Include="bin\es\System.Web.Optimization.resources.dll" />
+    <Content Include="bin\es\System.Web.Razor.resources.dll" />
+    <Content Include="bin\es\System.Web.WebPages.Deployment.resources.dll" />
+    <Content Include="bin\es\System.Web.WebPages.Razor.resources.dll" />
+    <Content Include="bin\es\System.Web.WebPages.resources.dll" />
+    <Content Include="bin\HotelPrado.Abstracciones.dll" />
+    <Content Include="bin\HotelPrado.Abstracciones.pdb" />
+    <Content Include="bin\HotelPrado.AccesoADatos.dll" />
+    <Content Include="bin\HotelPrado.AccesoADatos.pdb" />
+    <Content Include="bin\HotelPrado.LN.dll" />
+    <Content Include="bin\HotelPrado.LN.pdb" />
+    <Content Include="bin\HotelPrado.UI.dll" />
+    <Content Include="bin\HotelPrado.UI.pdb" />
+    <Content Include="bin\Microsoft.AspNet.Identity.Core.dll" />
+    <Content Include="bin\Microsoft.AspNet.Identity.Core.xml" />
+    <Content Include="bin\Microsoft.AspNet.Identity.EntityFramework.dll" />
+    <Content Include="bin\Microsoft.AspNet.Identity.EntityFramework.xml" />
+    <Content Include="bin\Microsoft.AspNet.Identity.Owin.dll" />
+    <Content Include="bin\Microsoft.AspNet.Identity.Owin.xml" />
+    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll" />
+    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml" />
+    <Content Include="bin\Microsoft.Owin.dll" />
+    <Content Include="bin\Microsoft.Owin.Host.SystemWeb.dll" />
+    <Content Include="bin\Microsoft.Owin.Host.SystemWeb.xml" />
+    <Content Include="bin\Microsoft.Owin.Security.Cookies.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.Cookies.xml" />
+    <Content Include="bin\Microsoft.Owin.Security.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.OAuth.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.OAuth.xml" />
+    <Content Include="bin\Microsoft.Owin.Security.xml" />
+    <Content Include="bin\Microsoft.Owin.xml" />
+    <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
+    <Content Include="bin\Newtonsoft.Json.dll" />
+    <Content Include="bin\Newtonsoft.Json.xml" />
+    <Content Include="bin\Owin.dll" />
+    <Content Include="bin\roslyn\csc.exe" />
+    <Content Include="bin\roslyn\csi.exe" />
+    <Content Include="bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll" />
+    <Content Include="bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll" />
+    <Content Include="bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll" />
+    <Content Include="bin\roslyn\Microsoft.Win32.Primitives.dll" />
+    <Content Include="bin\roslyn\System.AppContext.dll" />
+    <Content Include="bin\roslyn\System.Collections.Immutable.dll" />
+    <Content Include="bin\roslyn\System.Console.dll" />
+    <Content Include="bin\roslyn\System.Diagnostics.DiagnosticSource.dll" />
+    <Content Include="bin\roslyn\System.Diagnostics.FileVersionInfo.dll" />
+    <Content Include="bin\roslyn\System.Diagnostics.StackTrace.dll" />
+    <Content Include="bin\roslyn\System.Globalization.Calendars.dll" />
+    <Content Include="bin\roslyn\System.IO.Compression.dll" />
+    <Content Include="bin\roslyn\System.IO.Compression.ZipFile.dll" />
+    <Content Include="bin\roslyn\System.IO.FileSystem.dll" />
+    <Content Include="bin\roslyn\System.IO.FileSystem.Primitives.dll" />
+    <Content Include="bin\roslyn\System.Net.Http.dll" />
+    <Content Include="bin\roslyn\System.Net.Sockets.dll" />
+    <Content Include="bin\roslyn\System.Reflection.Metadata.dll" />
+    <Content Include="bin\roslyn\System.Runtime.InteropServices.RuntimeInformation.dll" />
+    <Content Include="bin\roslyn\System.Security.Cryptography.Algorithms.dll" />
+    <Content Include="bin\roslyn\System.Security.Cryptography.Encoding.dll" />
+    <Content Include="bin\roslyn\System.Security.Cryptography.Primitives.dll" />
+    <Content Include="bin\roslyn\System.Security.Cryptography.X509Certificates.dll" />
+    <Content Include="bin\roslyn\System.Text.Encoding.CodePages.dll" />
+    <Content Include="bin\roslyn\System.Threading.Tasks.Extensions.dll" />
+    <Content Include="bin\roslyn\System.ValueTuple.dll" />
+    <Content Include="bin\roslyn\System.Xml.ReaderWriter.dll" />
+    <Content Include="bin\roslyn\System.Xml.XmlDocument.dll" />
+    <Content Include="bin\roslyn\System.Xml.XPath.dll" />
+    <Content Include="bin\roslyn\System.Xml.XPath.XDocument.dll" />
+    <Content Include="bin\roslyn\vbc.exe" />
+    <Content Include="bin\roslyn\VBCSCompiler.exe" />
+    <Content Include="bin\System.Web.Helpers.dll" />
+    <Content Include="bin\System.Web.Helpers.xml" />
+    <Content Include="bin\System.Web.Mvc.dll" />
+    <Content Include="bin\System.Web.Mvc.xml" />
+    <Content Include="bin\System.Web.Optimization.dll" />
+    <Content Include="bin\System.Web.Optimization.xml" />
+    <Content Include="bin\System.Web.Razor.dll" />
+    <Content Include="bin\System.Web.Razor.xml" />
+    <Content Include="bin\System.Web.WebPages.Deployment.dll" />
+    <Content Include="bin\System.Web.WebPages.Deployment.xml" />
+    <Content Include="bin\System.Web.WebPages.dll" />
+    <Content Include="bin\System.Web.WebPages.Razor.dll" />
+    <Content Include="bin\System.Web.WebPages.Razor.xml" />
+    <Content Include="bin\System.Web.WebPages.xml" />
+    <Content Include="bin\WebGrease.dll" />
+    <Content Include="Content\aos.css" />
+    <Content Include="Content\bootstrap-grid.css" />
+    <Content Include="Content\bootstrap-grid.min.css" />
+    <Content Include="Content\bootstrap-grid.rtl.css" />
+    <Content Include="Content\bootstrap-grid.rtl.min.css" />
+    <Content Include="Content\bootstrap-reboot.css" />
+    <Content Include="Content\bootstrap-reboot.min.css" />
+    <Content Include="Content\bootstrap-reboot.rtl.css" />
+    <Content Include="Content\bootstrap-reboot.rtl.min.css" />
+    <Content Include="Content\bootstrap-utilities.css" />
+    <Content Include="Content\bootstrap-utilities.min.css" />
+    <Content Include="Content\bootstrap-utilities.rtl.css" />
+    <Content Include="Content\bootstrap-utilities.rtl.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrap.rtl.css" />
+    <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\DepartamentoClientes\site.css" />
+    <Content Include="Content\flatpickr.min.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Img\images\chocolat\close.png" />
+    <Content Include="Img\images\chocolat\fullscreen-black.png" />
+    <Content Include="Img\images\chocolat\fullscreen.png" />
+    <Content Include="Img\images\chocolat\left.png" />
+    <Content Include="Img\images\chocolat\loader.gif" />
+    <Content Include="Img\images\chocolat\right.png" />
+    <Content Include="Img\images\FOTOS\IMG_7398.CR2" />
+    <Content Include="Img\images\FOTOS\IMG_7435.CR2" />
+    <Content Include="Img\images\FOTOS\IMG_7447.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7454.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7469.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7470.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7472.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7479.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7483.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7488.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7490.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7495.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7521.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7522.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7523.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7526.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7527.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7530.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7543.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7545.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7547.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7575.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7582.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7589.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7592.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7595.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7598.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7599.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7600.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7602.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7606.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7608.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7611.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7612.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7613.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7614.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7617.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7619.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7620.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7629.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7632.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7641.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7652.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7657.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7672.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7684.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7741.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7748.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7753.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7759.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7779.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7788.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7792.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7800.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7801.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7811.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7816.JPG" />
+    <Content Include="Img\images\FOTOS\IMG_7818.JPG" />
+    <Content Include="Img\images\img_1.JPG" />
+    <Content Include="Img\images\IMG_2.JPG" />
+    <Content Include="Img\images\IMG_3.JPG" />
+    <Content Include="Img\images\IMG_4.JPG" />
+    <Content Include="Img\images\IMG_5.JPG" />
+    <Content Include="Img\images\IMG_6.JPG" />
+    <Content Include="Img\images\initial_img.jpg" />
+    <Content Include="Img\images\Initial_img_2.jpg" />
+    <Content Include="Img\images\main-Prado-removebg-preview.png" />
+    <Content Include="Img\images\pattern2.png" />
+    <Content Include="Img\images\Room_1.JPG" />
+    <Content Include="Img\images\Room_2.JPG" />
+    <Content Include="Img\images\Room_3.JPG" />
+    <Content Include="obj\Debug\HotelPrado.UI.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\HotelPrado.UI.dll" />
+    <Content Include="obj\Debug\HotelPrado.UI.pdb" />
+    <Content Include="Properties\serviceDependencies.local.json.user" />
+    <Content Include="Scripts\bootstrap-datepicker.min.css" />
+    <Content Include="Scripts\bootstrap-datepicker.min.js" />
+    <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.esm.js" />
+    <Content Include="Scripts\bootstrap.esm.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.css" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Properties\serviceDependencies.json" />
+    <Content Include="Properties\serviceDependencies.local.json" />
+    <Content Include="bin\HotelPrado.AccesoADatos.dll.config" />
+    <Content Include="bin\HotelPrado.UI.dll.config" />
+    <Content Include="bin\roslyn\csc.exe.config" />
+    <Content Include="bin\roslyn\csc.rsp" />
+    <Content Include="bin\roslyn\csi.exe.config" />
+    <Content Include="bin\roslyn\csi.rsp" />
+    <Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
+    <Content Include="bin\roslyn\Microsoft.Managed.Core.targets" />
+    <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
+    <Content Include="bin\roslyn\vbc.exe.config" />
+    <Content Include="bin\roslyn\vbc.rsp" />
+    <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
+    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferences.cache" />
+    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <Content Include="obj\Debug\HotelPra.1692FE95.Up2Date" />
+    <Content Include="obj\Debug\HotelPrado.UI.csproj.AssemblyReference.cache" />
+    <Content Include="obj\Debug\HotelPrado.UI.csproj.CoreCompileInputs.cache" />
+    <None Include="Scripts\jquery-3.7.0.intellisense.js" />
+    <Content Include="Scripts\flatpickr.js" />
+    <Content Include="Scripts\jquery-3.6.0.min.js" />
+    <Content Include="Scripts\jquery-3.7.0.js" />
+    <Content Include="Scripts\jquery-3.7.0.min.js" />
+    <Content Include="Scripts\jquery-3.7.0.slim.js" />
+    <Content Include="Scripts\jquery-3.7.0.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\ScriptsFront\Departamento\Lista\ListaDepartamentos.js" />
+    <Content Include="Views\Departamento\Create.cshtml" />
+    <Content Include="Views\Departamento\IndexDepartamentos.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\about.html" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\Avaible_Rooms.html" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\Blog.html" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\Contact.html" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\css\ajax-loader.gif" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\css\bootstrap.min.css" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\css\vendor.css" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\chocolat\close.png" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\chocolat\fullscreen-black.png" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\chocolat\fullscreen.png" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\chocolat\left.png" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\chocolat\loader.gif" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\chocolat\right.png" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7398.CR2" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7435.CR2" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7447.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7454.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7469.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7470.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7472.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7479.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7483.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7488.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7490.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7495.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7521.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7522.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7523.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7526.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7527.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7530.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7543.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7545.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7547.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7575.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7582.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7589.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7592.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7595.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7598.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7599.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7600.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7602.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7606.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7608.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7611.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7612.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7613.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7614.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7617.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7619.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7620.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7629.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7632.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7641.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7652.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7657.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7672.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7684.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7741.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7748.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7753.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7759.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7779.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7788.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7792.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7800.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7801.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7811.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7816.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\FOTOS\IMG_7818.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\img_1.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\IMG_2.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\IMG_3.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\IMG_4.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\IMG_5.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\IMG_6.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\initial_img.jpg" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\Initial_img_2.jpg" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\main-Prado-removebg-preview.png" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\pattern2.png" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\Room_1.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\Room_2.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\images\Room_3.JPG" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\index.html" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\index_Usuario.html" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\js\ajax-loader.gif" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\js\bootstrap.bundle.min.js" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\js\jquery-1.11.0.min.js" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\js\plugins.js" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\js\script.js" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\login.html" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\readme.txt" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\Registro.html" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\Rooms.html" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\Services.html" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\style.css" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\Lockout.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\SendCode.cshtml" />
+    <Content Include="Views\Account\VerifyCode.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
+    <Content Include="Views\Manage\ChangePassword.cshtml" />
+    <Content Include="Views\Manage\Index.cshtml" />
+    <Content Include="Views\Manage\ManageLogins.cshtml" />
+    <Content Include="Views\Manage\SetPassword.cshtml" />
+    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Bitacora\IndexBitacoraEventos.cshtml" />
+    <Content Include="Views\Colaborador\IndexColaborador.cshtml" />
+    <Content Include="Views\Colaborador\Create.cshtml" />
+    <Content Include="Views\Colaborador\Edit.cshtml" />
+    <Content Include="Views\Citas\IndexCitas.cshtml" />
+    <Content Include="Views\Citas\Create.cshtml" />
+    <Content Include="Views\Citas\Edit.cshtml" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\.vs\mellow-1.0.0\config\applicationhost.config" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\.vs\mellow-1.0.0\FileContentIndex\d0d16e8f-281b-4604-bfdb-a61ffa1fb9ac.vsidx" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\.vs\mellow-1.0.0\v17\.wsuo" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\.vs\mellow-1.0.0\v17\DocumentLayout.json" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\.vs\slnx.sqlite" />
+    <Content Include="Views\mellow-1.0.0\mellow-1.0.0\.vs\VSWorkspaceState.json" />
+    <Content Include="Views\Departamento\Edit.cshtml" />
+    <Content Include="Views\Departamento\HomeDepartamentos.cshtml" />
+    <Content Include="Views\Departamento\IndexDepartamentosClientes.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="obj\Debug\TempPE\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap.rtl.min.css.map" />
+    <Content Include="Content\bootstrap.rtl.css.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-utilities.rtl.min.css.map" />
+    <Content Include="Content\bootstrap-utilities.rtl.css.map" />
+    <Content Include="Content\bootstrap-utilities.min.css.map" />
+    <Content Include="Content\bootstrap-utilities.css.map" />
+    <Content Include="Content\bootstrap-reboot.rtl.min.css.map" />
+    <Content Include="Content\bootstrap-reboot.rtl.css.map" />
+    <Content Include="Content\bootstrap-reboot.min.css.map" />
+    <Content Include="Content\bootstrap-reboot.css.map" />
+    <Content Include="Content\bootstrap-grid.rtl.min.css.map" />
+    <Content Include="Content\bootstrap-grid.rtl.css.map" />
+    <Content Include="Content\bootstrap-grid.min.css.map" />
+    <Content Include="Content\bootstrap-grid.css.map" />
+    <None Include="packages.config" />
+    <Content Include="Scripts\bootstrap.min.js.map" />
+    <Content Include="Scripts\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap.esm.min.js.map" />
+    <Content Include="Scripts\bootstrap.esm.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <Content Include="Scripts\jquery-3.7.0.slim.min.map" />
+    <Content Include="Scripts\jquery-3.7.0.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HotelPrado.Abstracciones\HotelPrado.Abstracciones.csproj">
+      <Project>{ce4d4db9-71f9-456f-bdec-66e8ed6a5a5e}</Project>
+      <Name>HotelPrado.Abstracciones</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HotelPrado.AccesoADatos\HotelPrado.AccesoADatos.csproj">
+      <Project>{076943FF-11B8-40DE-9F98-07BDFDFAD06F}</Project>
+      <Name>HotelPrado.AccesoADatos</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HotelPrado.LN\HotelPrado.LN.csproj">
+      <Project>{A7E9D229-BFEC-4103-9224-B0AC36926736}</Project>
+      <Name>HotelPrado.LN</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>56582</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44380/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

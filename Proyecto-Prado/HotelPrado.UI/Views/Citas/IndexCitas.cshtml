@@ -1,0 +1,133 @@
+﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Citas.CitasDTO>
+
+@{
+    ViewBag.Title = "IndexCitas";
+}
+
+<h2>IndexCitas</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrimerApellido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SegundoApellido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefono)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Correo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MedioContacto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroHabitacion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreColaborador)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrimerApellidoColaborador)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaHoraInicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaHoraFin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Observaciones)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaCreacion)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrimerApellido)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SegundoApellido)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Telefono)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Correo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MedioContacto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumeroHabitacion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NombreColaborador)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrimerApellidoColaborador)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaHoraInicio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaHoraFin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Observaciones)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaCreacion)
+                </td>
+
+                <td>
+                    <!-- Agregar los enlaces de WhatsApp y correo electrónico -->
+
+
+                    <a href="@item.EnlaceWhatsApp" class="btn btn-sm btn-success" target="_blank">WhatsApp</a>
+                    <a href="@item.EnlaceCorreo" class="btn btn-sm btn-primary" target="_blank">Correo</a>
+
+                    @Html.ActionLink("Edit", "Edit", new { IdCita = item.IdCita }) |
+                    @using (Html.BeginForm("ToggleEstado", "Citas", FormMethod.Post, new { id = "form-estado-" + item.IdCita }))
+                    {
+                        @Html.Hidden("IdCita", item.IdCita)
+
+                        <select name="Estado" id="Estado" class="form-select form-select-sm me-2" onchange="this.form.submit();">
+                            <option value="RespuestaPendiente" @(item.Estado == "RespuestaPendiente" ? "selected" : "")>Respuesta Pendiente</option>
+                            <option value="VisitaPendiente" @(item.Estado == "VisitaPendiente" ? "selected" : "")>Visita Pendiente</option>
+                            <option value="EnCurso" @(item.Estado == "EnCurso" ? "selected" : "")>En Curso</option>
+                            <option value="Finalizado" @(item.Estado == "Finalizado" ? "selected" : "")>Finalizado</option>
+                        </select>
+                    }
+
+
+
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

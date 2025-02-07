@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CE4D4DB9-71F9-456F-BDEC-66E8ED6A5A5E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HotelPrado.Abstracciones</RootNamespace>
+    <AssemblyName>HotelPrado.Abstracciones</AssemblyName>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Http.Features, Version=5.0.17.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.Http.Features.5.0.17\lib\net461\Microsoft.AspNetCore.Http.Features.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=5.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Primitives.5.0.1\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Pipelines, Version=5.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Pipelines.5.0.2\lib\net461\System.IO.Pipelines.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Interfaces\AccesoADatos\Bitacora\Listar\IListarBitacoraEventosAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Bitacora\Registrar\IRegistrarBitacoraEventosAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Citas\Editar\IEditarCitasAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Citas\Listar\IListarCitasAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Citas\ObtenerEnlaces\IObtenerEnlacesAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Citas\ObtenerPorId\IObtenerCitasPorIdAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Citas\Registrar\IRegistrarCitasAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Colaborador\Editar\IEditarColaboradorAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Colaborador\Listar\IListarColaboradorAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Colaborador\ObtenerPorId\IObtenerColaboradorPorIdAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Colaborador\Registrar\IRegistrarColaboradorAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Departamentos\Editar\IEditarDepartamentoAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Departamentos\Listar\IListarDepartamentosAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Departamentos\ObtenerEnlaces\IObtenerEnlacesAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Departamentos\ObtenerPorId\IObtenerDepartamentoPorIdAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Departamentos\Registrar\IRegistrarDepartamentoAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\TipoDeDepartamento\Listar\IListarTipoDeDepartamentosAD.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Bitacora\Listar\IListarBitacoraEventosLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Bitacora\Registrar\IRegistrarBitacoraEventosLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Citas\Convertir\IConvertirCitasDTOACitasTabla.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Citas\Editar\IEditarCitasLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Citas\Listar\IListarCitasLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Citas\ObtenerEnlaces\IObtenerEnlacesLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Citas\ObtenerPorId\IObtenerCitaPorIdLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Citas\Registrar\IRegistrarCitasLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Colaborador\Conversion\IConvertirColaboradorDTOAColaboradorTabla.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Colaborador\Editar\IEditarColaboradorLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Colaborador\Listar\IListarColaboradorLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Colaborador\ObtenerPorId\IObtenerColaboradorPorIdLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Colaborador\Registrar\IRegistrarColaboradorLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Departamentos\Conversion\IConvertirDepartamentoDTOADepartamentoTabla.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Departamentos\Editar\IEditarDepartamentosLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Departamentos\Enlaces\IObtenerEnlacesLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Departamentos\Listar\IListarDepartamentosLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Departamentos\ObtenerPorId\IObtenerDepartamentoPorIdLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Departamentos\Registrar\IRegistrarDepartamentoLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\General\Fecha\IFechaActual.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\TipoDeDepartamentos\IListarTipoDeDepartamenoLN.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\Bitacora\BitacoraTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\Citas\CitasTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\ClientesContactos\ClientesContactosTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\Cliente\ClienteTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\Colaborador\ColaboradorTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\Departamento\DepartamentoTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\ImagenesDepartamento\ImagenesDepartamentoTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\TipoDepartamento\TipoDepartamentoTabla.cs" />
+    <Compile Include="Modelos\Bitacora\BitacoraEventosDTO.cs" />
+    <Compile Include="Modelos\Citas\CitasDTO.cs" />
+    <Compile Include="Modelos\ClientesContactos\ClientesContactosDTO.cs" />
+    <Compile Include="Modelos\Cliente\ClienteDTO.cs" />
+    <Compile Include="Modelos\Colaborador\ColaboradorDTO.cs" />
+    <Compile Include="Modelos\Departamento\DepartamentoDTO.cs" />
+    <Compile Include="Modelos\ImagenesDepartamento\ImagenesDepartamentoDTO.cs" />
+    <Compile Include="Modelos\TipoDeDepartamento\TipoDepartamentoDTO.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props'))" />
+  </Target>
+</Project>

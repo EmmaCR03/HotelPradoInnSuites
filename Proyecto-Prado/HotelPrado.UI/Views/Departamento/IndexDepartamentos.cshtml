@@ -1,0 +1,76 @@
+﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO>
+
+<h2>IndexDepartamentos</h2>
+<p>
+    @Html.ActionLink("Create New", "Create", new { id = ViewBag.IdTipoDeDepartamento }, null)
+</p>
+<div class="table-responsive">
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.NombreCliente)</th>
+        <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+        <th>@Html.DisplayNameFor(model => model.NumeroDepartamento)</th>
+        <th>@Html.DisplayNameFor(model => model.Descripcion)</th>
+        <th>@Html.DisplayNameFor(model => model.NumeroHabitaciones)</th>
+        <th>@Html.DisplayNameFor(model => model.Amueblado)</th>
+        <th>@Html.DisplayNameFor(model => model.Precio)</th>
+        <th>@Html.DisplayNameFor(model => model.Estado)</th>
+        <th>Imagen</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.NombreCliente)</td>
+            <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+            <td>@Html.DisplayFor(modelItem => item.NumeroDepartamento)</td>
+            <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
+            <td>@Html.DisplayFor(modelItem => item.NumeroHabitaciones)</td>
+            <td>@Html.DisplayFor(modelItem => item.Amueblado)</td>
+            <td>@Html.DisplayFor(modelItem => item.Precio)</td>
+            <td>@Html.DisplayFor(modelItem => item.Estado)</td>
+            <td>
+                @if (!string.IsNullOrEmpty(item.UrlImagenes))
+                {
+                    var imagenUrl = item.UrlImagenes.Split(',').First();  // Obtener la primera URL
+                    <img src="@Url.Content(imagenUrl)" alt="Imagen Departamento" style="width: 100px; height: 100px;" />
+                }
+                else
+                {
+                    <img src="@Url.Content("/imagenes/default.jpg")" alt="Imagen por defecto" style="width: 100px; height: 100px;" />
+                }
+            </td>
+            <td>
+                <!-- Primer par de botones -->
+                <div class="d-flex mb-2">
+                    @Html.ActionLink("Ver Citas Disponibles", "IndexCitas", "Citas", new { id = item.IdDepartamento }, new { @class = "btn btn-primary btn-sm me-2" })
+                    @Html.ActionLink("Editar", "Edit", new { IdDepartamento = item.IdDepartamento }, new { @class = "btn btn-warning btn-sm" })
+                </div>
+
+                <!-- Segundo par de botones -->
+                <div class="d-flex mb-2">
+                    @Html.ActionLink("Detalles", "Details", new { id = item.IdDepartamento }, new { @class = "btn btn-info btn-sm me-2" })
+
+                    <!-- Formulario para Toggle Estado -->
+                    @using (Html.BeginForm("ToggleEstado", "Departamento", FormMethod.Post, new { id = "form-estado-" + item.IdDepartamento, @class = "d-inline" }))
+                    {
+                        @Html.Hidden("IdDepartamento", item.IdDepartamento)
+                        <!-- Select con Estado -->
+                        <div class="form-group d-inline">
+                            <label for="Estado" class="sr-only">Estado</label>
+                            <select name="Estado" id="Estado" class="form-select form-select-sm" onchange="this.form.submit();">
+                                <option value="Disponible" @(item.Estado == "Disponible" ? "selected" : "")>Disponible</option>
+                                <option value="Mantenimiento" @(item.Estado == "Mantenimiento" ? "selected" : "")>Mantenimiento</option>
+                                <option value="Ocupado" @(item.Estado == "Ocupado" ? "selected" : "")>Ocupado</option>
+                            </select>
+                        </div>
+                    }
+                </div>
+            </td>
+
+
+        </tr>
+    }
+</table>
+    </div>

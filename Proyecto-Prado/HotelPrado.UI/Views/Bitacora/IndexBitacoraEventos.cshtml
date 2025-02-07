@@ -1,0 +1,63 @@
+﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Bitacora.BitacoraEventosDTO>
+
+@{
+    ViewBag.Title = "IndexBitacoraEventos";
+}
+
+<h2>IndexBitacoraEventos</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.TablaDeEvento)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TipoDeEvento)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaDeEvento)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DescripcionDeEvento)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StackTrace)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DatosAnteriores)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DatosPosteriores)
+        </th>
+        
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.TablaDeEvento)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TipoDeEvento)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaDeEvento)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DescripcionDeEvento)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StackTrace)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DatosAnteriores)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DatosPosteriores)
+        </td>
+       
+    </tr>
+}
+
+</table>

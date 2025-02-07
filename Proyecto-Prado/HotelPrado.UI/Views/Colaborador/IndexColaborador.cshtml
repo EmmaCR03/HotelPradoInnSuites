@@ -1,0 +1,71 @@
+﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Colaborador.ColaboradorDTO>
+
+@{
+    ViewBag.Title = "IndexColaborador";
+}
+
+<h2>IndexColaborador</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div class="table-responsive">
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.NombreColaborador)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PrimerApellidoColaborador)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SegundoApellidoColaborador)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CedulaColaborador)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IngresoColaborador)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PuestoColaborador)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EstadoLaboral)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.NombreColaborador)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PrimerApellidoColaborador)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SegundoApellidoColaborador)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CedulaColaborador)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IngresoColaborador)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PuestoColaborador)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EstadoLaboral)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { IdColaborador = item.IdColaborador }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IdColaborador }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IdColaborador })
+        </td>
+    </tr>
+}
+
+</table>
+    </div>

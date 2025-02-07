@@ -1,0 +1,61 @@
+﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO>
+
+@{
+    ViewBag.Title = "IndexDepartamentosClientes";
+}
+
+<section id="room">
+    <div class="room-container">
+        <div class="text-center mb-4">
+            <h3 class="display-5 fw-bold">Explora Nuestras Habitaciones</h3>
+        </div>
+        <div class="d-flex flex-wrap justify-content-center">
+            @foreach (var depto in Model)
+            {
+                <div class="room-item">
+                    <img src="@(!string.IsNullOrEmpty(depto.UrlImagenes) ? Url.Content(depto.UrlImagenes.Split(',').First()) : Url.Content("/imagenes/default.jpg"))"
+                         alt="Imagen de @depto.Nombre" class="img-fluid" />
+
+                    <div class="product-description">
+                        <h4>@depto.Nombre</h4>
+                        <p>@depto.Descripcion</p>
+                        <table class="table table-borderless text-center">
+                            <tbody>
+                                <tr>
+                                    <td>Habitaciones:</td>
+                                    <td>@depto.NumeroHabitaciones</td>
+                                </tr>
+                                <tr>
+                                    <td>Amueblado:</td>
+                                    <td>@(depto.Amueblado ? "Sí" : "No")</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <a href="@Url.Action("Create", "Citas", new { id = depto.IdDepartamento })" class="btn btn-primary">
+                            Solicitar una Cita
+                        </a>
+
+                        <a href="@($"https://wa.me/{depto.NumeroEmpresa}?text=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
+                           class="btn btn-sm btn-success" target="_blank">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </a>
+
+
+                        @if (!string.IsNullOrEmpty(depto.CorreoEmpresa))
+                        {
+                            <a href="mailto:@depto.CorreoEmpresa?subject=Solicitud%20de%20cotización&body=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20@depto.Nombre."
+                               class="btn btn-sm btn-primary">
+                                <i class="fas fa-envelope"></i> Correo
+                            </a>
+                        }
+
+                        <a href="@Url.Action("Detalle", "Departamento", new { id = depto.IdDepartamento })" class="d-block mt-2 text-primary text-decoration-underline">
+                            Detalles
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
+    @Styles.Render("~/Content/css")
+    <link href="~/Scripts/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <link href="~/Scripts/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/flatpickr.min.css" rel="stylesheet" />
+    <link href="~/Views/mellow-1.0.0/mellow-1.0.0/style.css" rel="stylesheet" />
+    <link href="~/Views/mellow-1.0.0/mellow-1.0.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Views/mellow-1.0.0/mellow-1.0.0/css/vendor.css" rel="stylesheet" />
+    <link href="~/Content/DepartamentoClientes/site.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <header id="header">
+        <nav class="header-top bg-secondary py-1">
+            <div class="container-fluid padding-side">
+                <div class="d-flex flex-wrap justify-content-between align-items-center">
+                    <ul class="info d-flex flex-wrap list-unstyled m-0">
+                        <li class="location text-capitalize d-flex align-items-center me-4" style="font-size: 14px;">
+                            <svg class="color me-1" width="15" height="15">
+                                <use xlink:href="#location"></use>
+                            </svg>Torre Mercedes, 300m North, 100m West, 100m North of, San José, 10102
+                        </li>
+                        <li class="phone d-flex align-items-center me-4" style="font-size: 14px;">
+                            <svg class="color me-1" width="15" height="15">
+                                <use xlink:href="#phone"></use>
+                            </svg>2256-0106
+                        </li>
+                        <li class="time d-flex align-items-center me-4" style="font-size: 14px;">
+                            <svg class="color me-1" width="15" height="15">
+                                <use xlink:href="#email"></use>
+                            </svg>info@pradoinn.com
+                        </li>
+                    </ul>
+                    <ul class="social-links d-flex flex-wrap list-unstyled m-0 ">
+                        <li class="social">
+                            <a href="https://www.facebook.com/share/19uV5QTfRa/?mibextid=LQQJ4d">
+                                <svg class="social" width="16" height="16">
+                                    <use xlink:href="#facebook"></use>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="social ms-4">
+                            <a href="#">
+                                <svg class="social" width="16" height="16">
+                                    <use xlink:href="#instagram"></use>
+                                </svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <nav id="primary-header" class="navbar navbar-expand-lg py-4 navbar-dark bg-dark">
+            <div class="container-fluid padding-side">
+                <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+
+                    <img src="~/Img/images/main-Prado-removebg-preview.png"
+                         class="img-fluid logo"
+                         alt="Logo"
+                         style="max-width: 100px; height: auto; display: block;">
+                </a>
+                <button class="navbar-toggler border-0 d-flex d-lg-none order-3 p-2 shadow-none" type="button"
+                        data-bs-toggle="offcanvas" data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false">
+                    <svg class="navbar-icon" width="60" height="60">
+                        <use xlink:href="#navbar-icon"></use>
+                    </svg>
+                </button>
+                <div class="header-bottom offcanvas offcanvas-end" id="bdNavbar" aria-labelledby="bdNavbarOffcanvasLabel">
+                    <div class="offcanvas-header px-4 pb-0">
+                        <button type="button" class="btn-close btn-close-black mt-2" data-bs-dismiss="offcanvas"
+                                aria-label="Close" data-bs-target="#bdNavbar"></button>
+                    </div>
+                    <div class="offcanvas-body align-items-center justify-content-center">
+                        <ul class="navbar-nav align-items-center mb-2 mb-lg-0">
+                            <li class="nav-item px-3">
+                                @Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
+                            </li>
+                            <li class="nav-item px-3">
+                                @Html.ActionLink("Habitaciones", "Rooms", "Home", new { area = "" }, new { @class = "nav-link" })
+                            </li>
+                            <li class="nav-item px-3">
+                                @Html.ActionLink("Departamentos", "IndexDepartamentosClientes", "Departamento", new { area = "" }, new { @class = "nav-link" })
+                            </li>
+                            <li class="nav-item px-3">
+                                @Html.ActionLink("Acerca de", "About", "Home", new { area = "" }, new { @class = "nav-link" })
+                            </li>
+                            <li class="nav-item px-3">
+                                @Html.ActionLink("Servicios", "Services", "Home", new { area = "" }, new { @class = "nav-link" })
+                            </li>
+                            <li class="nav-item px-3">
+                                @Html.ActionLink("Blog", "Blog", "Home", new { area = "" }, new { @class = "nav-link" })
+                            </li>
+                            <li class="nav-item px-3">
+                                @Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })
+                            </li>
+
+                            <!-- Opciones del administrador -->
+                            <li class="nav-item dropdown px-3">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Administrador
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <li>@Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                    <li>@Html.ActionLink("Departamentos", "IndexDepartamentos", "Departamento", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                    <li>@Html.ActionLink("Colaboradores", "IndexColaborador", "Colaborador", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                    <li>@Html.ActionLink("Bitácora de Eventos", "IndexBitacoraEventos", "Bitacora", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Formulario de búsqueda -->
+                <div class="search d-lg-block d-none">
+                    <form class="position-relative">
+                        <input type="text" class="form-control bg-secondary border-0 rounded-5 px-4 py-2" placeholder="Search...">
+                        <a href="#" class="position-absolute top-50 end-0 translate-middle-y p-1 me-3">
+                            <svg width="20" height="20">
+                                <use xlink:href="#search"></use>
+                            </svg>
+                        </a>
+                    </form>
+                </div>
+
+                <!-- Login -->
+                @Html.Partial("_LoginPartial")
+            </div>
+        </nav>
+    </header>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+
+        <section id="footer" class="bg-light text-dark mt-5 w-100">
+            <div class="padding-side padding-small pt-4 px-3" data-aos="fade-up">
+                <footer class="row justify-content-center">
+                    <!-- Columna 1: Logo y redes sociales -->
+                    <div class="col-md-4 col-lg-3 mb-3 text-center text-md-start">
+                        <img src="~/Img/images/main-Prado-removebg-preview.png" style="max-width: 80px; height: auto;" alt="logo-footer" class="img-fluid">
+                        <p class="mt-2">
+                            ¡Bienvenido al Hotel Prado Inn Suites! Un lugar donde la comodidad y la tranquilidad van de la mano.
+                        </p>
+                        <ul class="social-links d-flex list-unstyled mt-3 justify-content-center justify-content-md-start">
+                            <li><a href="#"><svg class="social me-3" width="18" height="18"><use xlink:href="#facebook"></use></svg></a></li>
+                            <li><a href="#"><svg class="social me-3" width="18" height="18"><use xlink:href="#twitter"></use></svg></a></li>
+                            <li><a href="#"><svg class="social me-3" width="18" height="18"><use xlink:href="#linkedin"></use></svg></a></li>
+                            <li><a href="#"><svg class="social me-3" width="18" height="18"><use xlink:href="#instagram"></use></svg></a></li>
+                            <li><a href="#"><svg class="social me-3" width="18" height="18"><use xlink:href="#youtube"></use></svg></a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Columna 2: Información de contacto -->
+                    <div class="col-md-4 col-lg-3 mb-3">
+                        <h5 class="fw-bold">Nuestra info</h5>
+                        <ul class="nav flex-column">
+                            <li class="d-flex align-items-center"><svg class="color me-1" width="18" height="18"><use xlink:href="#location"></use></svg> Prado Inn Suites</li>
+                            <li class="ms-3">Torre Mercedes</li>
+                            <li class="ms-3">Tranquilidad garantizada</li>
+                            <li class="ms-3">Relaxingland</li>
+                            <li class="d-flex align-items-center mt-2"><svg class="color me-1" width="18" height="18"><use xlink:href="#phone"></use></svg> +506 2256-0106</li>
+                            <li class="d-flex align-items-center mt-2"><svg class="color me-1" width="18" height="18"><use xlink:href="#email"></use></svg> info@pradoinn.com</li>
+                        </ul>
+                    </div>
+
+                    <!-- Columna 3: Servicios -->
+                    <div class="col-md-4 col-lg-3 mb-3">
+                        <h5 class="fw-bold">Servicios</h5>
+                        <ul class="nav flex-column">
+                            <li class="nav-item"><a href="#" class="p-0 text-decoration-none text-dark">Lavandería</a></li>
+                            <li class="nav-item"><a href="#" class="p-0 text-decoration-none text-dark">Gimnasio</a></li>
+                            <li class="nav-item"><a href="#" class="p-0 text-decoration-none text-dark">Transporte</a></li>
+                            <li class="nav-item"><a href="#" class="p-0 text-decoration-none text-dark">Wi-Fi</a></li>
+                        </ul>
+                    </div>
+                </footer>
+            </div>
+
+            <hr class="text-black">
+
+            <!-- Pie de página con copyright -->
+            <div class="text-center py-2">
+                <p class="m-0">© 2024 Hotel Prado Inn Suites.</p>
+            </div>
+        </section>
+    </div>
+
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    <script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+    <script src="~/Scripts/flatpickr.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.js"></script>
+    <a href="~/Scripts/bootstrap.bundle.js.map">~/Scripts/bootstrap.bundle.js.map</a>
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="js/plugins.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
