@@ -19,12 +19,15 @@ namespace HotelPrado.LN.Colaborador.ObtenerPorId
         {
             _obtenerporId = new ObtenerColaboradorPorIdAD();
         }
-        public ColaboradorDTO Obtener(int IdColaborador)
+
+        public async Task<ColaboradorDTO> Obtener(int IdColaborador)
         {
-            ColaboradorTabla colaboradorEnBaseDeDatos = _obtenerporId.Obtener(IdColaborador);
+            // Llamada asíncrona para obtener el colaborador
+            ColaboradorTabla colaboradorEnBaseDeDatos = await _obtenerporId.Obtener(IdColaborador);
             ColaboradorDTO elColaboradorAMostrar = ConvertirAColaboradorAMostrar(colaboradorEnBaseDeDatos);
             return elColaboradorAMostrar;
         }
+
         private ColaboradorDTO ConvertirAColaboradorAMostrar(ColaboradorTabla colaboradorEnBaseDeDatos)
         {
             return new ColaboradorDTO
@@ -36,9 +39,8 @@ namespace HotelPrado.LN.Colaborador.ObtenerPorId
                 CedulaColaborador = (int)colaboradorEnBaseDeDatos.CedulaColaborador,
                 PuestoColaborador = colaboradorEnBaseDeDatos.PuestoColaborador,
                 EstadoLaboral = colaboradorEnBaseDeDatos.EstadoLaboral,
-                IngresoColaborador = colaboradorEnBaseDeDatos.IngresoColaborador,
+                IngresoColaborador = colaboradorEnBaseDeDatos.IngresoColaborador
             };
         }
-
     }
 }

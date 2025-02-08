@@ -11,7 +11,7 @@ namespace HotelPrado.LN.Departamentos.Conversion
 {
     public class ConvertirDepartamentoDTOADepartamentoTabla : IConvertirDepartamentoDTOADepartamentoTabla
     {
-        public DepartamentoTabla Convertir(DepartamentoDTO elDepartamento) 
+        public DepartamentoTabla Convertir(DepartamentoDTO elDepartamento)
         {
             return new DepartamentoTabla
             {

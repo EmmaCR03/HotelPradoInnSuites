@@ -72,11 +72,7 @@ namespace HotelPrado.UI.Controllers
         }
 
 
-        // GET: Citas/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+
 
         // GET: Citas/Create
         public ActionResult Create(int id)
@@ -85,23 +81,43 @@ namespace HotelPrado.UI.Controllers
             return View(modelo);
         }
 
+
         // POST: Citas/Create
         [HttpPost]
         public async Task<ActionResult> Create(CitasDTO citas)
         {
             try
             {
-                // TODO: Add insert logic here
                 citas.Estado = "Respuesta Pendiente";
                 int cantidadDeDatosGuardados = await _registrarCitas.Guardar(citas);
 
-                return RedirectToAction("IndexCitas", new { id = citas.IdDepartamento });
+                // Redirigir a la vista de detalles, no a IndexCitas
+                return RedirectToAction("IndexDepartamentosClientes", "Departamento");
             }
             catch
             {
                 return View();
             }
         }
+
+
+        // GET: Citas/Details/5
+        public ActionResult Details(int id)
+        {
+            var cita = _obtenerCitaPorId.Obtener(id); // Método que obtiene la cita por su ID
+
+            if (cita == null)
+            {
+                // Si la cita no existe, devuelve un error 404
+                return HttpNotFound();
+            }
+
+            // Si la cita existe, pasa el modelo a la vista
+            return View(cita);
+        }
+
+
+
 
         // GET: Citas/Edit/5
         public ActionResult Edit(int IdCita)

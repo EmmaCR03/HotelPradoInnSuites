@@ -17,7 +17,7 @@ namespace HotelPrado.Servicio.Controllers
     {
         IListarDepartamentosLN _listarDepartamenosLN;
 
-        public DepartamentoController() 
+        public DepartamentoController()
         {
             _listarDepartamenosLN = new ListarDepartamentoLN();
         }

@@ -4,73 +4,148 @@
 <p>
     @Html.ActionLink("Create New", "Create", new { id = ViewBag.IdTipoDeDepartamento }, null)
 </p>
-<div class="table-responsive">
-<table class="table">
-    <tr>
-        <th>@Html.DisplayNameFor(model => model.NombreCliente)</th>
-        <th>@Html.DisplayNameFor(model => model.Nombre)</th>
-        <th>@Html.DisplayNameFor(model => model.NumeroDepartamento)</th>
-        <th>@Html.DisplayNameFor(model => model.Descripcion)</th>
-        <th>@Html.DisplayNameFor(model => model.NumeroHabitaciones)</th>
-        <th>@Html.DisplayNameFor(model => model.Amueblado)</th>
-        <th>@Html.DisplayNameFor(model => model.Precio)</th>
-        <th>@Html.DisplayNameFor(model => model.Estado)</th>
-        <th>Imagen</th>
-        <th></th>
-    </tr>
 
+<!-- Barra de Búsqueda -->
+<input type="text" id="search" class="form-control mb-3" placeholder="Buscar por nombre de departamento...">
+
+<div class="row">
     @foreach (var item in Model)
     {
-        <tr>
-            <td>@Html.DisplayFor(modelItem => item.NombreCliente)</td>
-            <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
-            <td>@Html.DisplayFor(modelItem => item.NumeroDepartamento)</td>
-            <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
-            <td>@Html.DisplayFor(modelItem => item.NumeroHabitaciones)</td>
-            <td>@Html.DisplayFor(modelItem => item.Amueblado)</td>
-            <td>@Html.DisplayFor(modelItem => item.Precio)</td>
-            <td>@Html.DisplayFor(modelItem => item.Estado)</td>
-            <td>
-                @if (!string.IsNullOrEmpty(item.UrlImagenes))
-                {
-                    var imagenUrl = item.UrlImagenes.Split(',').First();  // Obtener la primera URL
-                    <img src="@Url.Content(imagenUrl)" alt="Imagen Departamento" style="width: 100px; height: 100px;" />
-                }
-                else
-                {
-                    <img src="@Url.Content("/imagenes/default.jpg")" alt="Imagen por defecto" style="width: 100px; height: 100px;" />
-                }
-            </td>
-            <td>
-                <!-- Primer par de botones -->
-                <div class="d-flex mb-2">
-                    @Html.ActionLink("Ver Citas Disponibles", "IndexCitas", "Citas", new { id = item.IdDepartamento }, new { @class = "btn btn-primary btn-sm me-2" })
-                    @Html.ActionLink("Editar", "Edit", new { IdDepartamento = item.IdDepartamento }, new { @class = "btn btn-warning btn-sm" })
+        <div class="col-md-4 mb-4 departamento-item">
+            <div class="border p-3 rounded shadow-sm hover-effect" data-bs-toggle="collapse" data-bs-target="#departamento-@item.IdDepartamento" aria-expanded="false" aria-controls="departamento-@item.IdDepartamento">
+                <h5>@item.Nombre</h5>
+                <p><strong>Cliente:</strong> @item.NombreCliente</p>
+                <p><strong>Precio:</strong> @item.Precio</p>
+            </div>
+
+            <div id="departamento-@item.IdDepartamento" class="collapse">
+                <div class="border p-3 mt-2 rounded shadow-sm">
+                    <p><strong>Descripción:</strong> @item.Descripcion</p>
+                    <p><strong>Habitaciones:</strong> @item.NumeroHabitaciones</p>
+                    <p><strong>Estado:</strong> @item.Estado</p>
+                    <p><strong>Amueblado:</strong> @item.Amueblado</p>
+
+                    <div class="mb-3">
+                        @if (item.ListaImagenes.Any())
+                        {
+                            foreach (var imagenUrl in item.ListaImagenes)
+                            {
+                                <img src="@Url.Content(imagenUrl)" alt="Imagen Departamento" class="lazy" data-src="@Url.Content(imagenUrl)" style="width: 100px; height: 100px; margin-right: 5px;" />
+                            }
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("/imagenes/default.jpg")" alt="Imagen por defecto" class="lazy" data-src="@Url.Content("/imagenes/default.jpg")" style="width: 100px; height: 100px;" />
+                        }
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        @Html.ActionLink("Ver Citas Disponibles", "IndexCitas", "Citas", new { id = item.IdDepartamento }, new { @class = "btn btn-outline-primary btn-sm" })
+                        @Html.ActionLink("Detalles", "Details", new { id = item.IdDepartamento }, new { @class = "btn btn-outline-info btn-sm" })
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-2">
+                        @Html.ActionLink("Editar", "Edit", new { IdDepartamento = item.IdDepartamento }, new { @class = "btn btn-outline-warning btn-sm" })
+                        @Html.ActionLink("Editar Imágenes", "EditarImagenes", "Departamento", new { id = item.IdDepartamento }, new { @class = "btn btn-outline-info btn-sm" })
+                    </div>
+
+                    <div class="d-flex justify-content-end mt-3">
+                        @using (Html.BeginForm("ToggleEstado", "Departamento", FormMethod.Post, new { id = "form-estado-" + item.IdDepartamento, @class = "d-inline" }))
+                        {
+                            @Html.Hidden("IdDepartamento", item.IdDepartamento)
+                            <div class="form-group d-inline">
+                                <label for="Estado" class="sr-only">Estado</label>
+                                <select name="Estado" id="Estado" class="form-select form-select-sm" onchange="this.form.submit();">
+                                    <option value="Disponible" @(item.Estado == "Disponible" ? "selected" : "")>Disponible</option>
+                                    <option value="Mantenimiento" @(item.Estado == "Mantenimiento" ? "selected" : "")>Mantenimiento</option>
+                                    <option value="Ocupado" @(item.Estado == "Ocupado" ? "selected" : "")>Ocupado</option>
+                                </select>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Botón de Cerrar Información -->
+                    <button type="button" class="btn btn-outline-danger btn-sm mt-2" data-bs-toggle="collapse" data-bs-target="#departamento-@item.IdDepartamento" aria-expanded="false" aria-controls="departamento-@item.IdDepartamento">
+                        Cerrar
+                    </button>
                 </div>
-
-                <!-- Segundo par de botones -->
-                <div class="d-flex mb-2">
-                    @Html.ActionLink("Detalles", "Details", new { id = item.IdDepartamento }, new { @class = "btn btn-info btn-sm me-2" })
-
-                    <!-- Formulario para Toggle Estado -->
-                    @using (Html.BeginForm("ToggleEstado", "Departamento", FormMethod.Post, new { id = "form-estado-" + item.IdDepartamento, @class = "d-inline" }))
-                    {
-                        @Html.Hidden("IdDepartamento", item.IdDepartamento)
-                        <!-- Select con Estado -->
-                        <div class="form-group d-inline">
-                            <label for="Estado" class="sr-only">Estado</label>
-                            <select name="Estado" id="Estado" class="form-select form-select-sm" onchange="this.form.submit();">
-                                <option value="Disponible" @(item.Estado == "Disponible" ? "selected" : "")>Disponible</option>
-                                <option value="Mantenimiento" @(item.Estado == "Mantenimiento" ? "selected" : "")>Mantenimiento</option>
-                                <option value="Ocupado" @(item.Estado == "Ocupado" ? "selected" : "")>Ocupado</option>
-                            </select>
-                        </div>
-                    }
-                </div>
-            </td>
-
-
-        </tr>
+            </div>
+        </div>
     }
-</table>
-    </div>
+</div>
+
+<!-- Scripts para interactividad -->
+<script>
+    // Filtro de búsqueda
+    document.getElementById("search").addEventListener("input", function () {
+        let filter = this.value.toLowerCase();
+        let items = document.querySelectorAll(".departamento-item");
+
+        items.forEach(function (item) {
+            let nombre = item.querySelector("h5").innerText.toLowerCase();
+            if (nombre.includes(filter)) {
+                item.style.display = "block";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    });
+
+    // Lazy Loading de Imágenes
+    document.addEventListener("DOMContentLoaded", function () {
+        let lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
+
+        if ("IntersectionObserver" in window) {
+            let lazyImageObserver = new IntersectionObserver(function (entries, observer) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        let lazyImage = entry.target;
+                        lazyImage.src = lazyImage.dataset.src;
+                        lazyImage.classList.remove("lazy");
+                        lazyImageObserver.unobserve(lazyImage);
+                    }
+                });
+            });
+
+            lazyImages.forEach(function (lazyImage) {
+                lazyImageObserver.observe(lazyImage);
+            });
+        }
+    });
+
+    // Efecto Hover
+    document.querySelectorAll('.hover-effect').forEach(function (element) {
+        element.addEventListener('mouseover', function () {
+            element.style.transform = 'scale(1.05)';
+            element.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+        });
+        element.addEventListener('mouseout', function () {
+            element.style.transform = 'scale(1)';
+            element.style.boxShadow = 'none';
+        });
+    });
+</script>
+
+<!-- Estilos para hover y botones -->
+<style>
+    .hover-effect {
+        transition: all 0.3s ease;
+    }
+
+        .hover-effect:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+    /* Estilo para el filtro de búsqueda */
+    #search {
+        max-width: 300px;
+        margin-bottom: 20px;
+    }
+
+    /* Estilo de los botones */
+    .btn-outline-primary, .btn-outline-info, .btn-outline-warning, .btn-outline-danger {
+        width: 100%;
+        text-align: center;
+    }
+</style>

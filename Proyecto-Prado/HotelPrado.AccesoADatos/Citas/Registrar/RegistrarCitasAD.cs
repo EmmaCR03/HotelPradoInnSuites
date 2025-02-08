@@ -15,7 +15,7 @@ namespace HotelPrado.AccesoADatos.Citas.Registrar
     {
         Contexto _contexto;
 
-        public RegistrarCitasAD() 
+        public RegistrarCitasAD()
         {
             _contexto = new Contexto();
         }

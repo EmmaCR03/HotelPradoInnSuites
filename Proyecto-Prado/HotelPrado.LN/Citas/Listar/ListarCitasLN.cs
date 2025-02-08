@@ -14,7 +14,7 @@ namespace HotelPrado.LN.Citas.Listar
     {
         IListarCitasAD _listarCitasAD;
 
-        public ListarCitasLN() 
+        public ListarCitasLN()
         {
             _listarCitasAD = new ListarCitasAD();
         }

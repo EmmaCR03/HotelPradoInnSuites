@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Departamentos.ObtenerPorId
 {
-    public interface IObtenerCitasPorIdLN
+    public interface IObtenerDepartamentoPorIdLN
     {
         DepartamentoDTO Obtener(int IdDepartamento);
     }

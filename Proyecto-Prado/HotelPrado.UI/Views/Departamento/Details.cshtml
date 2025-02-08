@@ -1,0 +1,107 @@
+﻿@model HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO
+
+@{
+    ViewBag.Title = "Detalles del Departamento";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Carrusel de imágenes -->
+        <div class="col-md-6 d-flex align-items-center">
+            @{
+                var images = !string.IsNullOrEmpty(Model.UrlImagenes)
+                    ? Model.UrlImagenes.Split(',').Select(img => img.Trim()).Where(img => !string.IsNullOrEmpty(img)).ToList()
+                    : new List<string>(); // Si no hay imágenes, creamos una lista vacía
+            }
+
+            <div id="carousel-@Model.IdDepartamento" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @if (images.Any())
+                    {
+                        for (int i = 0; i < images.Count; i++)
+                        {
+                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                <img src="@Url.Content(images[i])" class="d-block w-100" alt="Imagen de @Model.Nombre">
+
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="carousel-item active">
+                            <img src="@Url.Content("~/imagenes/default.jpg")" class="d-block w-100 rounded" alt="Imagen por defecto">
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@Model.IdDepartamento" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carousel-@Model.IdDepartamento" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+        </div>
+
+        <!-- Información del Departamento -->
+        <div class="col-md-6">
+            <h2 class="fw-bold">@Model.Nombre</h2>
+            <p class="text-muted">@Model.Descripcion</p>
+
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <td><strong>Habitaciones:</strong></td>
+                        <td>@Model.NumeroHabitaciones</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Amueblado:</strong></td>
+                        <td>@(Model.Amueblado ? "Sí" : "No")</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Botones -->
+            <div class="row g-2 mt-4">
+                <div class="col-md-4">
+                    <a href="@($"https://wa.me/{Model.NumeroEmpresa}?text=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
+                       class="btn btn-success w-100" target="_blank">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="@($"mailto:{Model.CorreoEmpresa}?subject=Solicitud%20de%20cotización&body=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
+                       class="btn btn-primary w-100" target="_blank">
+                        <i class="fas fa-envelope"></i> Correo
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    @Html.ActionLink("Solicitar Visita", "Create", "Citas", new { id = Model.IdDepartamento }, new { @class = "btn btn-outline-secondary w-100" })
+                </div>
+                <div class="col-md-12">
+                    <a href="@Url.Action("IndexDepartamentosClientes", "Departamento")" class="btn btn-dark w-100 mt-2">
+                        <i class="fas fa-home"></i> Volver al Inicio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .carousel-inner img {
+        max-height: 300px; /* Ajusta la altura máxima */
+        width: auto; /* Permite que el ancho sea automático */
+        transition: transform 0.5s ease-in-out; /* Transición suave */
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        background-color: black;
+    }
+
+
+    .carousel-item-next, .carousel-item-prev, .carousel-item.active {
+        transition: transform 0.5s ease-in-out; /* Suaviza el cambio entre las imágenes */
+    }
+</style>

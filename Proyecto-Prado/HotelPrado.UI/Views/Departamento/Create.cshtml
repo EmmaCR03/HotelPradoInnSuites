@@ -11,75 +11,75 @@
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <h4>DepartamentoDTO</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+    <div class="form-horizontal">
+        <h4>DepartamentoDTO</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(model => model.NumeroDepartamento, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.NumeroDepartamento, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.NumeroDepartamento, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.NumeroDepartamento, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NumeroDepartamento, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NumeroDepartamento, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.IdTipoDepartamento, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(
-                model => model.IdTipoDepartamento,
-                (SelectList)ViewBag.TipoDepartamento,
-                "Seleccione un tipo de Habitación ",
-                new { @class = "form-control" }
-            )
-            @Html.ValidationMessageFor(model => model.IdTipoDepartamento, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.IdTipoDepartamento, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(
+                    model => model.IdTipoDepartamento,
+                    (SelectList)ViewBag.TipoDepartamento,
+                    "Seleccione un tipo de Habitación ",
+                    new { @class = "form-control" }
+                )
+                @Html.ValidationMessageFor(model => model.IdTipoDepartamento, "", new { @class = "text-danger" })
 
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Estado, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(
+    model => model.Estado,
+    new SelectList(new List<SelectListItem>
+    {
+    new SelectListItem { Value = "Disponible", Text = "Disponible" },
+    new SelectListItem { Value = "Ocupado", Text = "Ocupado" },
+    new SelectListItem { Value = "Mantenimiento", Text = "Mantenimiento" }
+
+    }, "Value", "Text"),
+    "Seleccione un tipo", // Texto predeterminado
+    new { @class = "form-control" }
+    )
+                @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
+            </div>
         </div>
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Estado, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(
-model => model.Estado,
-new SelectList(new List<SelectListItem>
-{
-new SelectListItem { Value = "Disponible", Text = "Disponible" },
-new SelectListItem { Value = "Ocupado", Text = "Ocupado" },
-new SelectListItem { Value = "Mantenimiento", Text = "Mantenimiento" }
-
-}, "Value", "Text"),
-"Seleccione un tipo", // Texto predeterminado
-new { @class = "form-control" }
-)
-            @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
-        </div>
-    </div>
-</div>
     <div class="form-group">
         @Html.Label("Imágenes", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
@@ -104,31 +104,31 @@ new { @class = "form-control" }
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-<script>
-    document.getElementById('imagenInput').addEventListener('change', function (event) {
-        let preview = document.getElementById('preview');
-        let fileCount = document.getElementById('fileCount');
-        preview.innerHTML = ''; // Limpiar el preview anterior
+    <script>
+        document.getElementById('imagenInput').addEventListener('change', function (event) {
+            let preview = document.getElementById('preview');
+            let fileCount = document.getElementById('fileCount');
+            preview.innerHTML = ''; // Limpiar el preview anterior
 
-        if (event.target.files.length > 0) {
-            fileCount.textContent = event.target.files.length + " archivos seleccionados";
-        } else {
-            fileCount.textContent = "No se han seleccionado archivos";
-        }
+            if (event.target.files.length > 0) {
+                fileCount.textContent = event.target.files.length + " archivos seleccionados";
+            } else {
+                fileCount.textContent = "No se han seleccionado archivos";
+            }
 
-        for (let file of event.target.files) {
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                let img = document.createElement('img');
-                img.src = e.target.result;
-                img.style.width = '100px';
-                img.style.marginRight = '10px';
-                img.style.borderRadius = '8px';
-                img.style.boxShadow = '0px 2px 5px rgba(0,0,0,0.2)';
-                preview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-</script>
+            for (let file of event.target.files) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.width = '100px';
+                    img.style.marginRight = '10px';
+                    img.style.borderRadius = '8px';
+                    img.style.boxShadow = '0px 2px 5px rgba(0,0,0,0.2)';
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 }

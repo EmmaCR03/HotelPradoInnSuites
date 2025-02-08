@@ -11,7 +11,7 @@ namespace HotelPrado.AccesoADatos.Colaborador.Editar
 {
     public class EditarColaboradorAD : IEditarColaboradorAD
     {
-        Contexto _contexto;
+        private readonly Contexto _contexto;
 
         public EditarColaboradorAD()
         {
@@ -22,33 +22,33 @@ namespace HotelPrado.AccesoADatos.Colaborador.Editar
         {
             try
             {
-                ColaboradorTabla elcolaboradorEnBaseDeDatos = _contexto.ColaboradorTabla
-                    .Where(elColaborador => elColaborador.IdColaborador == elColaboradorActualizar.IdColaborador)
-                    .FirstOrDefault();
+                // Buscar el colaborador en la base de datos
+                var elcolaboradorEnBaseDeDatos = await _contexto.ColaboradorTabla
+                    .Where(c => c.IdColaborador == elColaboradorActualizar.IdColaborador)
+                    .FirstOrDefaultAsync();
 
-                if (elcolaboradorEnBaseDeDatos == null)
-                {
-                    throw new Exception("El colaborador no fue encontrado.");
-                }
 
-                // Actualización de los campos
+                // Actualizar los campos con los nuevos valores
                 elcolaboradorEnBaseDeDatos.NombreColaborador = elColaboradorActualizar.NombreColaborador;
                 elcolaboradorEnBaseDeDatos.PrimerApellidoColaborador = elColaboradorActualizar.PrimerApellidoColaborador;
                 elcolaboradorEnBaseDeDatos.SegundoApellidoColaborador = elColaboradorActualizar.SegundoApellidoColaborador;
-                elcolaboradorEnBaseDeDatos.CedulaColaborador = (int)elColaboradorActualizar.CedulaColaborador;
+                elcolaboradorEnBaseDeDatos.CedulaColaborador = elColaboradorActualizar.CedulaColaborador;
                 elcolaboradorEnBaseDeDatos.PuestoColaborador = elColaboradorActualizar.PuestoColaborador;
                 elcolaboradorEnBaseDeDatos.IngresoColaborador = elColaboradorActualizar.IngresoColaborador;
+                elcolaboradorEnBaseDeDatos.EstadoLaboral = elColaboradorActualizar.EstadoLaboral;
 
-                // Estado de la entidad
-                EntityState estado = _contexto.Entry(elColaboradorActualizar).State = System.Data.Entity.EntityState.Modified;
+                // Cambiar el estado de la entidad a "Modified" para que Entity Framework realice el seguimiento del cambio
+                _contexto.Entry(elcolaboradorEnBaseDeDatos).State = EntityState.Modified;
 
+                // Guardar los cambios en la base de datos
                 int cantidadDeDatosAlmacenados = await _contexto.SaveChangesAsync();
+
+                // Devolver la cantidad de registros actualizados
                 return cantidadDeDatosAlmacenados;
             }
             catch (Exception ex)
             {
-                // Log de error
-                // Puedes agregar un log para registrar el error
+                // Registrar el error
                 throw new Exception("Error al editar el colaborador.", ex);
             }
         }

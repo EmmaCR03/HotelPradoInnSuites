@@ -1,5 +1,4 @@
-﻿
-using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Departamentos.ObtenerEnlaces;
+﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Departamentos.ObtenerEnlaces;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Departamentos.Enlaces;
 using HotelPrado.Abstracciones.Modelos.Departamento;
 using HotelPrado.AccesoADatos.Departamentos.ObtenerEnlaces;

@@ -13,14 +13,14 @@ namespace HotelPrado.LN.TipoDeDepartamento.Listar
     public class ListarTipoDeDepartamenoLN : IListarTipoDeDepartamenoLN
     {
         IListarTipoDeDepartamentosAD _listarTipoDeDepartamentoLN;
-        public ListarTipoDeDepartamenoLN() 
+        public ListarTipoDeDepartamenoLN()
         {
             _listarTipoDeDepartamentoLN = new ListarTipoDeDepartamentosAD();
         }
 
-        public List<TipoDepartamentoDTO> Listar() 
-        { 
-        List<TipoDepartamentoDTO> ListaTipoDepartamento = _listarTipoDeDepartamentoLN.Listar();
+        public List<TipoDepartamentoDTO> Listar()
+        {
+            List<TipoDepartamentoDTO> ListaTipoDepartamento = _listarTipoDeDepartamentoLN.Listar();
             return ListaTipoDepartamento;
         }
     }

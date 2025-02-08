@@ -7,94 +7,120 @@
 <h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
-    <h4>CitasDTO</h4>
-    <hr />
-    @Html.HiddenFor(model => model.IdDepartamento)
 
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
-        </div>
-    </div>
+    <div class="form-horizontal">
+        <h4>CitasDTO</h4>
+        <hr />
+        @Html.HiddenFor(model => model.IdDepartamento)
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.PrimerApellido, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.PrimerApellido, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.PrimerApellido, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.SegundoApellido, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.SegundoApellido, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.SegundoApellido, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.PrimerApellido, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PrimerApellido, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PrimerApellido, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.SegundoApellido, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SegundoApellido, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SegundoApellido, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Correo, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Correo, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.MedioContacto, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(
-model => model.MedioContacto,
-new SelectList(new List<SelectListItem>
-{
-new SelectListItem { Value = "Llamada", Text = "Llamada" },
-new SelectListItem { Value = "WhatsApp", Text = "WhatsApp" },
-new SelectListItem { Value = "Correo", Text = "Correo" },
-new SelectListItem { Value = "MensajeDeTexto", Text = "Mensaje de Texto" }
+        <div class="form-group">
+            @Html.LabelFor(model => model.Correo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Correo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-}, "Value", "Text"),
-"Seleccione un tipo", // Texto predeterminado
-new { @class = "form-control" }
-)
-            @Html.ValidationMessageFor(model => model.MedioContacto, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.MedioContacto, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(
+    model => model.MedioContacto,
+    new SelectList(new List<SelectListItem>
+    {
+    new SelectListItem { Value = "Llamada", Text = "Llamada" },
+    new SelectListItem { Value = "WhatsApp", Text = "WhatsApp" },
+    new SelectListItem { Value = "Correo", Text = "Correo" },
+    new SelectListItem { Value = "MensajeDeTexto", Text = "Mensaje de Texto" }
+
+    }, "Value", "Text"),
+    "Seleccione un tipo", // Texto predeterminado
+    new { @class = "form-control" }
+    )
+                @Html.ValidationMessageFor(model => model.MedioContacto, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="Create" class="btn btn-primary" id="submitButton" onclick="showConfirmation()" />
+            </div>
         </div>
     </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.Observaciones, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Observaciones, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Observaciones, "", new { @class = "text-danger" })
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-default" />
-        </div>
-    </div>
-</div>
 }
 
+<!-- Confirmación -->
+<div id="confirmationButtons" style="display:none; text-align:center;">
+    <h3>¿Estás seguro de que deseas crear esta cita?</h3>
+    <button type="button" class="btn btn-success" onclick="acceptAction()">Aceptar</button>
+    <button type="button" class="btn btn-danger" onclick="cancelAction()">Cancelar</button>
+</div>
+
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", new { @style = "display:none;", @id = "backToList" })
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+<script>
+    // Mostrar el mensaje de confirmación
+    function showConfirmation() {
+        // Ocultar el botón de submit
+        document.getElementById('submitButton').style.display = 'none';
+
+        // Mostrar los botones de confirmación
+        document.getElementById('confirmationButtons').style.display = 'block';
+    }
+
+    // Aceptar y enviar el formulario
+    function acceptAction() {
+        $("form").submit(); // Enviar el formulario
+    }
+
+    // Cancelar y mostrar el enlace para volver
+    function cancelAction() {
+        // Volver a mostrar el botón de submit
+        document.getElementById('submitButton').style.display = 'inline-block';
+
+        // Ocultar los botones de confirmación
+        document.getElementById('confirmationButtons').style.display = 'none';
+    }
+</script>

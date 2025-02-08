@@ -25,7 +25,7 @@ namespace HotelPrado.LN.Citas.Registrar
         IRegistrarBitacoraEventosLN _registrarBitacoraEventosLN;
         IFechaActual _fecha;
 
-        public RegistrarCitasLN() 
+        public RegistrarCitasLN()
         {
             _registrarCitasAD = new RegistrarCitasAD();
             _registrarBitacoraEventosLN = new RegistrarBitacoraEventosLN();

@@ -13,12 +13,12 @@ namespace HotelPrado.AccesoADatos.Citas.ObtenerPorId
     {
         Contexto _contexto;
 
-        public ObtenerCitasPorIdAD() 
+        public ObtenerCitasPorIdAD()
         {
             _contexto = new Contexto();
         }
 
-        public CitasTabla Obtener(int IdCita) 
+        public CitasTabla Obtener(int IdCita)
         {
             return _contexto.CitasTabla.FirstOrDefault(d => d.IdCita == IdCita);
         }

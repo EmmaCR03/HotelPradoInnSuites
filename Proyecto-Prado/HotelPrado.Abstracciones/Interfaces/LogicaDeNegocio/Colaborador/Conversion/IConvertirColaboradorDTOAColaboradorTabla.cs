@@ -11,5 +11,6 @@ namespace HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Colaborador.Conver
     public interface IConvertirColaboradorDTOAColaboradorTabla
     {
         ColaboradorTabla Convertir(ColaboradorDTO elColaborador);
+
     }
 }

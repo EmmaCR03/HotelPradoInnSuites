@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.TipoDepartamento;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -24,6 +25,9 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Departamento
         public string Estado { get; set; }
         public string NumeroEmpresa { get; set; }  // Antes era int, ahora es string
         public string CorreoEmpresa { get; set; }
+
+        [ForeignKey("IdTipoDepartamento")]
+        public virtual TipoDepartamentoTabla TipoDepartamento { get; set; }
 
     }
 }

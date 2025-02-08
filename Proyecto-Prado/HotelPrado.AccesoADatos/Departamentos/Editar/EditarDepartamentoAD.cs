@@ -13,12 +13,12 @@ namespace HotelPrado.AccesoADatos.Departamentos.Editar
     {
         Contexto _contexto;
 
-        public EditarDepartamentoAD() 
+        public EditarDepartamentoAD()
         {
             _contexto = new Contexto();
         }
 
-        public async Task<int> Editar(DepartamentoTabla elDepartamentoActualizar) 
+        public async Task<int> Editar(DepartamentoTabla elDepartamentoActualizar)
         {
             DepartamentoTabla eldepartamentoEnBaseDeDatos = _contexto.DepartamentoTabla
                 .Where(elDepartamento => elDepartamento.IdDepartamento == elDepartamentoActualizar.IdDepartamento)

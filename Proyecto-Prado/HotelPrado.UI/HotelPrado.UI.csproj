@@ -569,6 +569,9 @@
     <Content Include="Views\Departamento\Edit.cshtml" />
     <Content Include="Views\Departamento\HomeDepartamentos.cshtml" />
     <Content Include="Views\Departamento\IndexDepartamentosClientes.cshtml" />
+    <Content Include="Views\Citas\Details.cshtml" />
+    <Content Include="Views\Departamento\Details.cshtml" />
+    <Content Include="Views\Departamento\EditarImagenes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

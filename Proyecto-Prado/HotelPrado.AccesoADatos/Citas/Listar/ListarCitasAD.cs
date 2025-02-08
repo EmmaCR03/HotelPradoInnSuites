@@ -12,9 +12,9 @@ namespace HotelPrado.AccesoADatos.Citas.Listar
     {
         Contexto _contexto;
 
-        public ListarCitasAD() 
-        { 
-        _contexto = new Contexto();
+        public ListarCitasAD()
+        {
+            _contexto = new Contexto();
         }
 
         public List<CitasDTO> Listar(int IdDepartamento)

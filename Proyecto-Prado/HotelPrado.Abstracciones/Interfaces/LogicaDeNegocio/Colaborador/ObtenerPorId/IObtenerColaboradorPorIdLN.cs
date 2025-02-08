@@ -9,6 +9,6 @@ namespace HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Colaborador.Obtene
 {
     public interface IObtenerColaboradorPorIdLN
     {
-        ColaboradorDTO Obtener(int IdColaborador);
+        Task<ColaboradorDTO> Obtener(int IdColaborador);
     }
 }

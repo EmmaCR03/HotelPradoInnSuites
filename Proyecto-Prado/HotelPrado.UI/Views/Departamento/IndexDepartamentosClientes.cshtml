@@ -4,58 +4,141 @@
     ViewBag.Title = "IndexDepartamentosClientes";
 }
 
-<section id="room">
-    <div class="room-container">
+<!-- Link a Bootstrap y AOS (Animaciones) -->
+<link href="~/Content/aos.css" rel="stylesheet" />
+<link href="~/Content/DepartamentoClientes/departamentosgeneral.css" rel="stylesheet" />
+
+<section id="room" class="py-4">
+    <div class="container">
         <div class="text-center mb-4">
-            <h3 class="display-5 fw-bold">Explora Nuestras Habitaciones</h3>
+            <h3 class="display-4 fw-bold">Explora Nuestros Departamentos</h3>
         </div>
-        <div class="d-flex flex-wrap justify-content-center">
+        <div class="row">
             @foreach (var depto in Model)
             {
-                <div class="room-item">
-                    <img src="@(!string.IsNullOrEmpty(depto.UrlImagenes) ? Url.Content(depto.UrlImagenes.Split(',').First()) : Url.Content("/imagenes/default.jpg"))"
-                         alt="Imagen de @depto.Nombre" class="img-fluid" />
-
-                    <div class="product-description">
-                        <h4>@depto.Nombre</h4>
-                        <p>@depto.Descripcion</p>
-                        <table class="table table-borderless text-center">
-                            <tbody>
-                                <tr>
-                                    <td>Habitaciones:</td>
-                                    <td>@depto.NumeroHabitaciones</td>
-                                </tr>
-                                <tr>
-                                    <td>Amueblado:</td>
-                                    <td>@(depto.Amueblado ? "Sí" : "No")</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <a href="@Url.Action("Create", "Citas", new { id = depto.IdDepartamento })" class="btn btn-primary">
-                            Solicitar una Cita
-                        </a>
-
-                        <a href="@($"https://wa.me/{depto.NumeroEmpresa}?text=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
-                           class="btn btn-sm btn-success" target="_blank">
-                            <i class="fab fa-whatsapp"></i> WhatsApp
-                        </a>
-
-
-                        @if (!string.IsNullOrEmpty(depto.CorreoEmpresa))
-                        {
-                            <a href="mailto:@depto.CorreoEmpresa?subject=Solicitud%20de%20cotización&body=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20@depto.Nombre."
-                               class="btn btn-sm btn-primary">
-                                <i class="fas fa-envelope"></i> Correo
+                <div class="col-md-5 mb-5">
+                    <div class="room-item" data-aos="fade-up">
+                        <!-- Slider (Carrusel) -->
+                        <div id="carousel-@depto.IdDepartamento" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @if (!string.IsNullOrEmpty(depto.UrlImagenes))
+                                {
+                                    var images = depto.UrlImagenes.Split(',').ToList();
+                                    for (int i = 0; i < images.Count; i++)
+                                    {
+                                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                                            <img src="@Url.Content(images[i])" class="d-block w-100" alt="Imagen de @depto.Nombre">
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="carousel-item active">
+                                        <img src="@Url.Content("/imagenes/default.jpg")" class="d-block w-100" alt="Imagen de @depto.Nombre">
+                                    </div>
+                                }
+                            </div>
+                            <a class="carousel-control-prev" href="#carousel-@depto.IdDepartamento" role="button" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             </a>
-                        }
+                            <a class="carousel-control-next" href="#carousel-@depto.IdDepartamento" role="button" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            </a>
+                        </div>
 
-                        <a href="@Url.Action("Detalle", "Departamento", new { id = depto.IdDepartamento })" class="d-block mt-2 text-primary text-decoration-underline">
-                            Detalles
-                        </a>
+                        <!-- Overlay con información -->
+                        <div class="overlay-info">
+                            <div class="product-description text-center">
+                                <h4>@depto.Nombre</h4>
+                                <p>@depto.Descripcion</p>
+                                <table class="table table-borderless text-center">
+                                    <tbody>
+                                        <tr>
+                                            <td>Habitaciones:</td>
+                                            <td>@depto.NumeroHabitaciones</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Amueblado:</td>
+                                            <td>@(depto.Amueblado ? "Sí" : "No")</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Botón Ver Detalles -->
+                            <a href="@Url.Action("Details", "Departamento", new { id = depto.IdDepartamento })" class="btn btn-dark btn-sm w-100">
+                                Ver Detalles
+                            </a>
+                        </div>
                     </div>
                 </div>
             }
         </div>
     </div>
 </section>
+
+<!-- Scripts de AOS y Bootstrap -->
+<script src="~/Scripts/aos.js"></script>
+<script>
+    AOS.init();
+</script>
+<script src="~/Scripts/bootstrap.bundle.min.js"></script>
+
+<style>
+    /* Ajustes del Carrusel */
+    .carousel-control-prev, .carousel-control-next {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    /* Ajuste general de las tarjetas */
+    .room-item {
+        position: relative;
+        width: 100%;
+        height: auto;
+        transition: transform 0.3s ease-in-out;
+        overflow: hidden;
+        border-radius: 15px;
+    }
+
+        .room-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+    /* Overlay */
+    .overlay-info {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(128, 128, 128, 0.6); /* Gris semi-transparente */
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 15px;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .room-item:hover .overlay-info {
+        opacity: 1;
+    }
+
+    /* Botón mejorado */
+    .btn-dark {
+        background-color: #333;
+        border-color: #222;
+    }
+
+        .btn-dark:hover {
+            background-color: #222;
+            border-color: #111;
+        }
+</style>

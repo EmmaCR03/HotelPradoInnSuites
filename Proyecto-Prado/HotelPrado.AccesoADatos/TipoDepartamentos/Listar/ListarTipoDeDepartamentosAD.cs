@@ -12,16 +12,16 @@ namespace HotelPrado.AccesoADatos.TipoDepartamentos.Listar
     {
         Contexto _contexto;
 
-        public ListarTipoDeDepartamentosAD() 
+        public ListarTipoDeDepartamentosAD()
         {
             _contexto = new Contexto();
         }
 
-        public List<TipoDepartamentoDTO> Listar() 
+        public List<TipoDepartamentoDTO> Listar()
         {
             List<TipoDepartamentoDTO> laListaDeTipoDeDepartamento = (from TipoDeDepartamento in _contexto.TipoDepartamentoTabla
-                                                                     select new TipoDepartamentoDTO 
-                                                                     { 
+                                                                     select new TipoDepartamentoDTO
+                                                                     {
                                                                          IdTipoDepartamento = TipoDeDepartamento.IdTipoDepartamento,
                                                                          NumeroHabitaciones = TipoDeDepartamento.NumeroHabitaciones,
                                                                          Amueblado = TipoDeDepartamento.Amueblado

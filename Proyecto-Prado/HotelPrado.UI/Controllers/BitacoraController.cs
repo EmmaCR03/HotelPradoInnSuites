@@ -14,7 +14,7 @@ namespace HotelPrado.UI.Controllers
     {
         IListarBitacoraEventosLN _ListarBitacoraLN;
 
-        public BitacoraController() 
+        public BitacoraController()
         {
             _ListarBitacoraLN = new ListarBitacoraEventosLN();
         }

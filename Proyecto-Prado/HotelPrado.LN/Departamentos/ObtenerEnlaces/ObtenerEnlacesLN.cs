@@ -8,4 +8,4 @@ using System.Threading.Tasks;
 
 namespace HotelPrado.LN.Departamentos.ObtenerEnlaces
 {
-}                         
+}

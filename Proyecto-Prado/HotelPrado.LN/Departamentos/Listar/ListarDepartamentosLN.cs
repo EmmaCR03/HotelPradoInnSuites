@@ -14,12 +14,12 @@ namespace HotelPrado.LN.Departamentos.Listar
     {
         IListarDepartamentosAD _listarDepartamentosAD;
 
-        public ListarDepartamentoLN() 
+        public ListarDepartamentoLN()
         {
             _listarDepartamentosAD = new ListarDepartamentosAD();
         }
 
-        public List<DepartamentoDTO> Listar() 
+        public List<DepartamentoDTO> Listar()
         {
             List<DepartamentoDTO> laListaDeDepartamento = _listarDepartamentosAD.Listar();
 

@@ -9,6 +9,6 @@ namespace HotelPrado.Abstracciones.Interfaces.AccesoADatos.Colaborador.ObtenerPo
 {
     public interface IObtenerColaboradorPorIdAD
     {
-        ColaboradorTabla Obtener(int IdColaborador);
+        Task<ColaboradorTabla> Obtener(int IdColaborador);
     }
 }

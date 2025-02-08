@@ -1,0 +1,25 @@
+﻿@model HotelPrado.Abstracciones.Modelos.Citas.CitasDTO
+
+@if (Model != null)
+{
+    <h2>Detalles de la Cita</h2>
+
+    <div>
+        <p><strong>Nombre:</strong> @Model.Nombre</p>
+        <p><strong>Fecha y Hora de Inicio:</strong> @Model.FechaHoraInicio</p>
+        <p><strong>Fecha y Hora de Fin:</strong> @Model.FechaHoraFin</p>
+        <p><strong>Estado:</strong> @Model.Estado</p>
+        <p><strong>Observaciones:</strong> @Model.Observaciones</p>
+        <p><strong>Teléfono:</strong> @Model.Telefono</p>
+        <p><strong>Correo:</strong> @Model.Correo</p>
+    </div>
+
+    <div>
+        <button type="button" class="btn btn-success" id="confirmarBtn">Confirmar</button>
+        <button type="button" class="btn btn-danger" id="cancelarBtn">Cancelar</button>
+    </div>
+}
+else
+{
+    <h3>La cita no fue encontrada.</h3>
+}

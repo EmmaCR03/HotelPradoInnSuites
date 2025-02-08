@@ -1,7 +1,4 @@
-﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Departamentos.ObtenerPorId;
-using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Departamentos.Registrar;
-using HotelPrado.Abstracciones.Interfaces.AccesoADatos.TipoDeDepartamento.Listar;
-using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Bitacora.Registrar;
+﻿using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Bitacora.Registrar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Departamentos.Editar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Departamentos.Listar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Departamentos.ObtenerPorId;
@@ -9,7 +6,6 @@ using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Departamentos.Registra
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.TipoDeDepartamentos;
 using HotelPrado.Abstracciones.Modelos.Bitacora;
 using HotelPrado.Abstracciones.Modelos.Departamento;
-using HotelPrado.Abstracciones.Modelos.ImagenesDepartamento;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.ImagenesDepartamento;
 using HotelPrado.AccesoADatos;
 using HotelPrado.LN.Bitacora.Registrar;
@@ -35,21 +31,22 @@ namespace HotelPrado.UI.Controllers
         IListarTipoDeDepartamenoLN _listarTipoDeDepartamentosLN;
         IRegistrarDepartamentoLN _registrarDepartamentosLN;
         Contexto _contexto;
-        IObtenerCitasPorIdLN _obtenerDepartamentoPorId;
         IEditarDepartamentosLN _editarDepartamentoLN;
         IRegistrarBitacoraEventosLN _registrarBitacoraEventosLN;
+        IObtenerDepartamentoPorIdLN _obtenerDepartamentoPorId;
+
         public DepartamentoController()
         {
             _listarDepartamentosLN = new ListarDepartamentoLN();
             _listarTipoDeDepartamentosLN = new ListarTipoDeDepartamenoLN();
             _registrarDepartamentosLN = new RegistrarDepartamentoLN();
             _contexto = new Contexto();
-            _obtenerDepartamentoPorId = new ObtenerCitasPorIdLN();
+            _obtenerDepartamentoPorId = new ObtenerDepartamentoPorIdLN();
             _editarDepartamentoLN = new EditarDepartamentosLN();
             _registrarBitacoraEventosLN = new RegistrarBitacoraEventosLN();
         }
 
-        // GET: Depa
+        // GET: Departamento
         public ActionResult IndexDepartamentos()
         {
             ViewBag.Title = "El Departamento";
@@ -90,8 +87,31 @@ namespace HotelPrado.UI.Controllers
         // GET: Departamento/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            DepartamentoDTO depto = _obtenerDepartamentoPorId.Obtener(id);
+            if (depto == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Asegurar que UrlImagenes no sea null ni vacío
+            if (string.IsNullOrWhiteSpace(depto.UrlImagenes))
+            {
+                depto.UrlImagenes = ""; // Evita errores en la vista
+            }
+
+            return View(depto);
         }
+
+        public string GetUrlImagenesById(int id)
+        {
+            var urlImagenes = _contexto.DepartamentoTabla
+                .Where(d => d.IdDepartamento == id)
+                .Select(d => d.UrlImagenes)
+                .FirstOrDefault();
+
+            return urlImagenes; // Devuelve solo el campo UrlImagenes
+        }
+
 
         // GET: Departamento/Create
 
@@ -136,7 +156,7 @@ namespace HotelPrado.UI.Controllers
                     ModelState.AddModelError("IdTipoDepartamento", "Debe seleccionar un tipo de habitación.");
                     return View(modeloDeDepartamento);
                 }
-              
+
 
 
                 // Lista de archivos a almacenar
@@ -229,18 +249,55 @@ namespace HotelPrado.UI.Controllers
 
         // POST: Persona/Edit/5
         [HttpPost]
-        public async Task<ActionResult> Edit(DepartamentoDTO eldepartamento)
+        public async Task<ActionResult> Edit(DepartamentoDTO eldepartamento, List<string> eliminarImagenes)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Obtén el departamento desde la base de datos usando su ID
+                    var departamento = _obtenerDepartamentoPorId.Obtener(eldepartamento.IdDepartamento);
+
+                    // Eliminar imágenes seleccionadas
+                    if (eliminarImagenes != null && eliminarImagenes.Count > 0)
+                    {
+                        // Eliminar las imágenes de la lista del departamento
+                        departamento.ListaImagenes = departamento.ListaImagenes.Except(eliminarImagenes).ToList();
+                    }
+
+                    // Guardar nuevas imágenes
+                    if (Request.Files.Count > 0)
+                    {
+                        foreach (string file in Request.Files)
+                        {
+                            var imagen = Request.Files[file];
+                            if (imagen.ContentLength > 0)
+                            {
+                                // Asigna una ruta para almacenar la imagen
+                                var ruta = $"/imagenes/{imagen.FileName}";
+
+                                // Guarda la imagen en el servidor (en la carpeta wwwroot)
+                                var filePath = Path.Combine(Server.MapPath("~"), "wwwroot", "imagenes", imagen.FileName);
+                                imagen.SaveAs(filePath);
+
+                                // Añadir la URL de la imagen a la lista de imágenes
+                                departamento.ListaImagenes.Add(ruta);
+                            }
+                        }
+                    }
+
+                    // Guardar cambios en la base de datos (las URLs de las imágenes)
+                    departamento.UrlImagenes = string.Join(",", departamento.ListaImagenes);
+
+                    // Actualizar el departamento en la base de datos
                     int cantidadDeDatosActualizados = await _editarDepartamentoLN.Actualizar(eldepartamento);
+
                     if (cantidadDeDatosActualizados == 0)
                     {
                         ViewBag.mensaje = "Ocurrió un error inesperado, favor intente nuevamente.";
                         return View(eldepartamento);
                     }
+
                     return RedirectToAction("IndexDepartamentos");
                 }
                 catch (Exception ex)
@@ -249,8 +306,11 @@ namespace HotelPrado.UI.Controllers
                     return View(eldepartamento);
                 }
             }
+
             return View(eldepartamento);
         }
+
+
 
         // GET: Departamento/Delete/5
         public ActionResult Delete(int id)
@@ -273,6 +333,164 @@ namespace HotelPrado.UI.Controllers
                 return View();
             }
         }
+        public ActionResult EditarImagenes(int id)
+        {
+            var departamento = _listarDepartamentosLN.Listar().FirstOrDefault(d => d.IdDepartamento == id);
+
+            if (departamento == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(departamento);
+        }
+
+
+        [HttpPost]
+        public ActionResult ActualizarImagenes(int id, IEnumerable<HttpPostedFileBase> imagenes)
+        {
+            var departamento = _contexto.DepartamentoTabla.Find(id);
+
+            if (departamento == null)
+            {
+                return HttpNotFound();
+            }
+
+            var imagenUrls = new List<string>();
+
+            // Mantener las imágenes existentes en el departamento
+            if (!string.IsNullOrEmpty(departamento.UrlImagenes))
+            {
+                imagenUrls.AddRange(departamento.UrlImagenes.Split(','));
+            }
+
+            var datosAnteriores = string.Join(",", imagenUrls); // Guardamos las URLs antes de la actualización
+
+            if (imagenes != null)
+            {
+                foreach (var imagen in imagenes)
+                {
+                    if (imagen != null && imagen.ContentLength > 0)
+                    {
+                        var rutaCarpeta = Server.MapPath("~/Content/Imagenes");
+                        if (!Directory.Exists(rutaCarpeta))
+                        {
+                            Directory.CreateDirectory(rutaCarpeta);
+                        }
+
+                        var filePath = Path.Combine(rutaCarpeta, Path.GetFileName(imagen.FileName));
+
+                        // Guardar archivo
+                        imagen.SaveAs(filePath);
+
+                        // Guardar la URL relativa
+                        imagenUrls.Add("/Content/Imagenes/" + Path.GetFileName(imagen.FileName));
+                    }
+                }
+
+                // Actualiza el campo de UrlImagenes en el departamento
+                departamento.UrlImagenes = string.Join(",", imagenUrls);
+                _contexto.SaveChanges();
+            }
+
+            var datosPosteriores = string.Join(",", imagenUrls); // Guardamos las URLs después de la actualización
+
+            // Registrar en la bitácora
+            string datosJsonAnteriores = $@"
+    {{
+        ""IdDepartamento"": {departamento.IdDepartamento},
+        ""Nombre"": ""{departamento.Nombre}"",
+        ""UrlImagenes"": ""{datosAnteriores}""
+    }}";
+
+            string datosJsonPosteriores = $@"
+    {{
+        ""IdDepartamento"": {departamento.IdDepartamento},
+        ""Nombre"": ""{departamento.Nombre}"",
+        ""UrlImagenes"": ""{datosPosteriores}""
+    }}";
+
+            var bitacora = new BitacoraEventosDTO
+            {
+                IdEvento = 0,
+                TablaDeEvento = "ModuloDepartamento",
+                TipoDeEvento = "Actualizar imágenes",
+                FechaDeEvento = DateTime.Now.ToString("dd-MM-yyyy"),
+                DescripcionDeEvento = "Se actualizaron las imágenes de un departamento.",
+                StackTrace = "no hubo error",
+                DatosAnteriores = datosJsonAnteriores,
+                DatosPosteriores = datosJsonPosteriores
+            };
+
+            _registrarBitacoraEventosLN.RegistrarBitacora(bitacora);
+
+            return RedirectToAction("IndexDepartamentos");
+        }
+
+
+        [HttpPost]
+        public ActionResult EliminarImagen(int id, string imagenUrl)
+        {
+            var departamento = _contexto.DepartamentoTabla.Find(id);
+
+            if (departamento == null || string.IsNullOrEmpty(imagenUrl))
+            {
+                return HttpNotFound();
+            }
+
+            // Convertir la lista de imágenes en un List<string>
+            var imagenesList = departamento.UrlImagenes.Split(',').ToList();
+
+            var datosAnteriores = string.Join(",", imagenesList); // Guardamos las URLs antes de la eliminación
+
+            // Eliminar la imagen seleccionada
+            imagenesList.Remove(imagenUrl);
+
+            // Actualizar la cadena de imágenes en la base de datos
+            departamento.UrlImagenes = string.Join(",", imagenesList);
+            _contexto.SaveChanges();
+
+            // Eliminar físicamente la imagen del servidor
+            var rutaImagen = Server.MapPath(imagenUrl);
+            if (System.IO.File.Exists(rutaImagen))
+            {
+                System.IO.File.Delete(rutaImagen);
+            }
+
+            var datosPosteriores = string.Join(",", imagenesList); // Guardamos las URLs después de la eliminación
+
+            // Registrar en la bitácora
+            string datosJsonAnteriores = $@"
+    {{
+        ""IdDepartamento"": {departamento.IdDepartamento},
+        ""Nombre"": ""{departamento.Nombre}"",
+        ""UrlImagenes"": ""{datosAnteriores}""
+    }}";
+
+            string datosJsonPosteriores = $@"
+    {{
+        ""IdDepartamento"": {departamento.IdDepartamento},
+        ""Nombre"": ""{departamento.Nombre}"",
+        ""UrlImagenes"": ""{datosPosteriores}""
+    }}";
+
+            var bitacora = new BitacoraEventosDTO
+            {
+                IdEvento = 0,
+                TablaDeEvento = "ModuloDepartamento",
+                TipoDeEvento = "Eliminar imagen",
+                FechaDeEvento = DateTime.Now.ToString("dd-MM-yyyy"),
+                DescripcionDeEvento = "Se eliminó una imagen de un departamento.",
+                StackTrace = "no hubo error",
+                DatosAnteriores = datosJsonAnteriores,
+                DatosPosteriores = datosJsonPosteriores
+            };
+
+            _registrarBitacoraEventosLN.RegistrarBitacora(bitacora);
+
+            return RedirectToAction("EditarImagenes", new { id = id });
+        }
+
 
         [HttpPost]
         public ActionResult ToggleEstado(int IdDepartamento, string Estado)

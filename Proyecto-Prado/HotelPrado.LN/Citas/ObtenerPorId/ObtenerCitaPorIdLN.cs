@@ -17,7 +17,7 @@ namespace HotelPrado.LN.Citas.ObtenerPorId
     {
         IObtenerCitasPorIdAD _obtenerId;
 
-        public ObtenerCitaPorIdLN() 
+        public ObtenerCitaPorIdLN()
         {
             _obtenerId = new ObtenerCitasPorIdAD();
         }

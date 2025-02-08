@@ -19,14 +19,14 @@ namespace HotelPrado.LN.Departamentos.Editar
         private readonly IConvertirDepartamentoDTOADepartamentoTabla _convertir;
         private readonly IEditarDepartamentoAD _editarDepartamento;
         private readonly IRegistrarBitacoraEventosLN _registrarBitacoraEventosLN;
-        private readonly IObtenerCitasPorIdLN _obtenerDepartamentoPorIdLN;
+        private readonly IObtenerDepartamentoPorIdLN _obtenerDepartamentoPorIdLN;
 
         public EditarDepartamentosLN()
         {
             _convertir = new ConvertirDepartamentoDTOADepartamentoTabla();
             _editarDepartamento = new EditarDepartamentoAD();
             _registrarBitacoraEventosLN = new RegistrarBitacoraEventosLN();
-            _obtenerDepartamentoPorIdLN = new ObtenerCitasPorIdLN();
+            _obtenerDepartamentoPorIdLN = new ObtenerDepartamentoPorIdLN();
         }
 
         public async Task<int> Actualizar(DepartamentoDTO elDepartamentoEnVista)

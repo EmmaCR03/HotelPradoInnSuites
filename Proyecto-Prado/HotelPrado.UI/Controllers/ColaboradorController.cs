@@ -5,7 +5,6 @@ using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Colaborador.ObtenerPor
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Colaborador.Registrar;
 using HotelPrado.Abstracciones.Modelos.Bitacora;
 using HotelPrado.Abstracciones.Modelos.Colaborador;
-using HotelPrado.Abstracciones.Modelos.Departamento;
 using HotelPrado.AccesoADatos;
 using HotelPrado.LN.Bitacora.Registrar;
 using HotelPrado.LN.Colaborador.Editar;
@@ -75,38 +74,75 @@ namespace HotelPrado.UI.Controllers
         }
 
         // GET: Colaborador/Edit/5
-        public ActionResult Edit(int IdColaborador)
+        public async Task<ActionResult> Edit(int IdColaborador)
         {
+            // Obtener el colaborador desde la base de datos
+            var colaborador = await _obtenerColaboradorPorId.Obtener(IdColaborador);
 
+            if (colaborador == null)
+            {
+                return HttpNotFound();
+            }
 
-            var elcolaborador = _obtenerColaboradorPorId.Obtener(IdColaborador);
-            return View(elcolaborador);
+            // Lista de estados laborales predefinidos
+            var estadosLaboralesDb = new List<dynamic>
+    {
+        new { Id = "Activo", Descripcion = "Activo" },
+        new { Id = "De Vacaciones", Descripcion = "De Vacaciones" },
+        new { Id = "Incapacitado", Descripcion = "Incapacitado" },
+        new { Id = "Licencia con goce de salario", Descripcion = "Licencia con goce de salario" },
+        new { Id = "Licencia sin goce de salario", Descripcion = "Licencia sin goce de salario" },
+        new { Id = "Permiso Especial", Descripcion = "Permiso Especial" }
+    };
+
+            // Formatear la lista de estados laborales
+            var estadosLaborales = estadosLaboralesDb
+                .Select(e => new
+                {
+                    Id = e.Id,
+                    Detalle = e.Descripcion
+                })
+                .ToList();
+
+            // Asignar la lista a ViewBag
+            ViewBag.EstadoLaboral = new SelectList(estadosLaborales, "Id", "Detalle", colaborador.EstadoLaboral);
+
+            // Retornar la vista con el colaborador obtenido
+            return View(colaborador);
         }
+
+
+
+
 
         // POST: Colaborador/Edit/5
         [HttpPost]
         public async Task<ActionResult> Edit(ColaboradorDTO elcolaborador)
         {
+            Console.WriteLine($"EstadoLaboral recibido: {elcolaborador.EstadoLaboral}");
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    int cantidadDeDatosActualizados = await _editarColaboradorLN.Actualizar(elcolaborador);
+                    var cantidadDeDatosActualizados = await _editarColaboradorLN.Actualizar(elcolaborador);
                     if (cantidadDeDatosActualizados == 0)
                     {
                         ViewBag.mensaje = "Ocurrió un error inesperado, favor intente nuevamente.";
                         return View(elcolaborador);
                     }
-                    return RedirectToAction("IndexDepartamentos");
+                    return RedirectToAction("IndexColaborador");
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine($"Error al actualizar: {ex.Message}");
                     ViewBag.mensaje = "Ocurrió un error inesperado, favor intente nuevamente.";
                     return View(elcolaborador);
                 }
             }
             return View(elcolaborador);
         }
+
 
         // GET: Colaborador/Delete/5
         public ActionResult Delete(int id)

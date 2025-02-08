@@ -11,33 +11,37 @@ using System.Threading.Tasks;
 
 namespace HotelPrado.LN.Departamentos.ObtenerPorId
 {
-    public class ObtenerCitasPorIdLN : IObtenerCitasPorIdLN
+    public class ObtenerDepartamentoPorIdLN : IObtenerDepartamentoPorIdLN
     {
         IObtenerDepartamentoPorIdAD _obtenerporId;
 
-        public ObtenerCitasPorIdLN()
+        public ObtenerDepartamentoPorIdLN()
         {
             _obtenerporId = new ObtenerDepartamentoPorIdAD();
         }
         public DepartamentoDTO Obtener(int IdDepartamento)
         {
             DepartamentoTabla departamentoEnBaseDeDatos = _obtenerporId.Obtener(IdDepartamento);
-            DepartamentoDTO elDepartamentoAMostrar = ConvertirAPersonaAMostrar(departamentoEnBaseDeDatos);
+            DepartamentoDTO elDepartamentoAMostrar = ConvertirADepartamentoAMostrar(departamentoEnBaseDeDatos);
             return elDepartamentoAMostrar;
         }
-        private DepartamentoDTO ConvertirAPersonaAMostrar(DepartamentoTabla departamentoEnBaseDeDatos)
+        private DepartamentoDTO ConvertirADepartamentoAMostrar(DepartamentoTabla departamentoEnBaseDeDatos)
         {
             return new DepartamentoDTO
             {
                 IdDepartamento = departamentoEnBaseDeDatos.IdDepartamento,
-                IdCliente = departamentoEnBaseDeDatos.IdCliente ?? 0            ,
+                IdCliente = departamentoEnBaseDeDatos.IdCliente ?? 0,
                 Nombre = departamentoEnBaseDeDatos.Nombre,
                 Descripcion = departamentoEnBaseDeDatos.Descripcion,
                 IdTipoDepartamento = departamentoEnBaseDeDatos.IdTipoDepartamento,
                 Precio = departamentoEnBaseDeDatos.Precio,
-                Estado = departamentoEnBaseDeDatos.Estado
+                Estado = departamentoEnBaseDeDatos.Estado,
+                UrlImagenes = departamentoEnBaseDeDatos.UrlImagenes ?? "", // 🔹 Evitar que sea null
+                NumeroHabitaciones = departamentoEnBaseDeDatos.TipoDepartamento != null ? departamentoEnBaseDeDatos.TipoDepartamento.NumeroHabitaciones : 0,
+                Amueblado = departamentoEnBaseDeDatos.TipoDepartamento != null && departamentoEnBaseDeDatos.TipoDepartamento.Amueblado
             };
         }
+
 
     }
 }

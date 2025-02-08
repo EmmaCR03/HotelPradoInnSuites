@@ -9,21 +9,21 @@ using System.Threading.Tasks;
 
 namespace HotelPrado.AccesoADatos.Departamentos.ObtenerEnlaces
 {
-        public class ObtenerEnlacesAD : IObtenerEnlacesAD
+    public class ObtenerEnlacesAD : IObtenerEnlacesAD
+    {
+        private readonly Contexto _contexto;
+
+        public ObtenerEnlacesAD()
         {
-            private readonly Contexto _contexto;
+            _contexto = new Contexto();
+        }
 
-            public ObtenerEnlacesAD()
-            {
-                _contexto = new Contexto();
-            }
-
-            public List<DepartamentoTabla> ObtenerDepartamentos()
-            {
-                return _contexto.DepartamentoTabla.ToList();
-            }
+        public List<DepartamentoTabla> ObtenerDepartamentos()
+        {
+            return _contexto.DepartamentoTabla.ToList();
         }
     }
+}
 
 
 

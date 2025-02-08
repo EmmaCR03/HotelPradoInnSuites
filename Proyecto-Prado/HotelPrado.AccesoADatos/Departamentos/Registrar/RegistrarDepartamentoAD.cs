@@ -13,9 +13,9 @@ namespace HotelPrado.AccesoADatos.Departamentos.Registrar
     {
         Contexto _contexto;
 
-        public RegistrarDepartamentoAD() 
-        { 
-        _contexto = new Contexto();
+        public RegistrarDepartamentoAD()
+        {
+            _contexto = new Contexto();
         }
 
         public async Task<int> Guardar(DepartamentoTabla elDepartamentoAGuardar)
@@ -28,7 +28,7 @@ namespace HotelPrado.AccesoADatos.Departamentos.Registrar
                 int cantidadDeDatosAlmacenados = await _contexto.SaveChangesAsync();
                 return cantidadDeDatosAlmacenados;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Console.WriteLine("Error al guardar el departamento:  " + ex.Message);
                 return 0;

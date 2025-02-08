@@ -1,0 +1,46 @@
+﻿@model HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO
+
+@{
+    ViewBag.Title = "EditarImagenes";
+}
+
+<h2>Editar Imágenes del Departamento</h2>
+
+<div class="card p-3">
+    <h4>Departamento: @Model.Nombre</h4>
+
+    @if (!string.IsNullOrEmpty(Model.UrlImagenes))
+    {
+        <h5>Imágenes Actuales:</h5>
+        <div class="d-flex flex-wrap">
+            @foreach (var imagenUrl in Model.UrlImagenes.Split(','))
+            {
+                <div class="m-2 text-center">
+                    <img src="@imagenUrl" alt="Imagen Departamento" class="img-thumbnail" style="width: 100px; height: 100px;">
+
+                    <!-- Botón para eliminar imagen -->
+                    @using (Html.BeginForm("EliminarImagen", "Departamento", FormMethod.Post))
+                    {
+                        <input type="hidden" name="id" value="@Model.IdDepartamento" />
+                        <input type="hidden" name="imagenUrl" value="@imagenUrl" />
+                        <button type="submit" class="btn btn-danger btn-sm mt-1">Eliminar</button>
+                    }
+                </div>
+            }
+        </div>
+    }
+
+    <h5 class="mt-4">Agregar nuevas imágenes:</h5>
+
+    @using (Html.BeginForm("ActualizarImagenes", "Departamento", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="id" value="@Model.IdDepartamento" />
+
+        <div class="form-group mt-3">
+            <input type="file" name="imagenes" multiple class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success mt-3">Agregar Imágenes</button>
+        @Html.ActionLink("Cancelar", "IndexDepartamentos", null, new { @class = "btn btn-secondary mt-3" })
+    }
+</div>
