@@ -49,7 +49,7 @@ namespace HotelPrado.UI.Controllers
             _registrarBitacoraEventosLN = new RegistrarBitacoraEventosLN();
         }
 
-        // GET: Departamento
+        // GET: Depa
         public ActionResult IndexDepartamentos()
         {
             ViewBag.Title = "El Departamento";
