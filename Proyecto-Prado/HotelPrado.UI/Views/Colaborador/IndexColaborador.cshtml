@@ -7,65 +7,81 @@
 <h2>IndexColaborador</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary mb-3" })
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.NombreColaborador)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PrimerApellidoColaborador)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SegundoApellidoColaborador)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CedulaColaborador)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IngresoColaborador)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PuestoColaborador)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EstadoLaboral)
-        </th>
-        <th></th>
-    </tr>
 
+<!-- Barra de Búsqueda -->
+<input type="text" id="search" class="form-control mb-3" placeholder="Buscar por nombre de colaborador...">
+
+<div class="row">
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.NombreColaborador)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PrimerApellidoColaborador)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SegundoApellidoColaborador)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CedulaColaborador)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IngresoColaborador)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PuestoColaborador)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EstadoLaboral)
-            </td>
-            <td>
-                @Html.ActionLink("Editar", "Edit", "Colaborador", new { IdColaborador = item.IdColaborador }, null)
-                |
-                @Html.ActionLink("Details", "Details", new { id = item.IdColaborador }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.IdColaborador })
-            </td>
-        </tr>
+        <div class="col-md-4 mb-4 colaborador-item">
+            <div class="border p-3 rounded shadow-sm hover-effect" data-bs-toggle="collapse" data-bs-target="#colaborador-@item.IdColaborador" aria-expanded="false" aria-controls="colaborador-@item.IdColaborador">
+                <h5>@item.NombreColaborador @item.PrimerApellidoColaborador</h5>
+                <p><strong>Puesto:</strong> @item.PuestoColaborador</p>
+                <p><strong>Estado:</strong> @item.EstadoLaboral</p>
+            </div>
+
+            <div id="colaborador-@item.IdColaborador" class="collapse">
+                <div class="border p-3 mt-2 rounded shadow-sm">
+                    <div class="d-flex justify-content-center">
+                        @Html.ActionLink("Editar", "Edit", "Colaborador", new { IdColaborador = item.IdColaborador }, new { @class = "btn btn-outline-warning btn-sm" })
+                    </div>
+
+                    <!-- Botón de Cerrar Información -->
+                    <button type="button" class="btn btn-outline-secondary btn-sm mt-2" data-bs-toggle="collapse" data-bs-target="#colaborador-@item.IdColaborador" aria-expanded="false" aria-controls="colaborador-@item.IdColaborador">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Scripts para interactividad -->
+<script>// Filtro de búsqueda
+    document.getElementById("search").addEventListener("input", function () {
+        let filter = this.value.toLowerCase();
+        let items = document.querySelectorAll(".colaborador-item");
+
+        items.forEach(function (item) {
+            let nombre = item.querySelector("h5").innerText.toLowerCase();
+            if (nombre.includes(filter)) {
+                item.style.display = "block";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    });
+
+    // Efecto Hover
+    document.querySelectorAll('.hover-effect').forEach(function (element) {
+        element.addEventListener('mouseover', function () {
+            element.style.transform = 'scale(1.05)';
+            element.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+        });
+        element.addEventListener('mouseout', function () {
+            element.style.transform = 'scale(1)';
+            element.style.boxShadow = 'none';
+        });
+    });</script>
+
+<!-- Estilos para hover y botones -->
+<style>
+    .hover-effect {
+        transition: all 0.3s ease;
     }
 
-</table>
+        .hover-effect:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+    /* Estilo para el filtro de búsqueda */
+    #search {
+        max-width: 300px;
+        margin-bottom: 20px;
+    }
+</style>
+
