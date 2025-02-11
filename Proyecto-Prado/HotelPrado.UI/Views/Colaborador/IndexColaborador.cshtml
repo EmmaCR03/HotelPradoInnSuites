@@ -4,43 +4,43 @@
     ViewBag.Title = "IndexColaborador";
 }
 
-<h2>IndexColaborador</h2>
+<div class="container mt-4">
+    <h2 class="text-center text-primary fw-bold mb-4">Lista de Colaboradores</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary mb-3" })
-</p>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <input type="text" id="search" class="form-control w-50 shadow-sm" placeholder="Buscar colaborador...">
+        @Html.ActionLink("Nuevo Colaborador", "Create", null, new { @class = "btn btn-success shadow-sm" })
+    </div>
 
-<!-- Barra de Búsqueda -->
-<input type="text" id="search" class="form-control mb-3" placeholder="Buscar por nombre de colaborador...">
-
-<div class="row">
-    @foreach (var item in Model)
-    {
-        <div class="col-md-4 mb-4 colaborador-item">
-            <div class="border p-3 rounded shadow-sm hover-effect" data-bs-toggle="collapse" data-bs-target="#colaborador-@item.IdColaborador" aria-expanded="false" aria-controls="colaborador-@item.IdColaborador">
-                <h5>@item.NombreColaborador @item.PrimerApellidoColaborador</h5>
-                <p><strong>Puesto:</strong> @item.PuestoColaborador</p>
-                <p><strong>Estado:</strong> @item.EstadoLaboral</p>
-            </div>
-
-            <div id="colaborador-@item.IdColaborador" class="collapse">
-                <div class="border p-3 mt-2 rounded shadow-sm">
-                    <div class="d-flex justify-content-center">
-                        @Html.ActionLink("Editar", "Edit", "Colaborador", new { IdColaborador = item.IdColaborador }, new { @class = "btn btn-outline-warning btn-sm" })
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4 colaborador-item">
+                <div class="card border-0 shadow-sm hover-effect">
+                    <div class="card-body text-center" data-bs-toggle="collapse" data-bs-target="#colaborador-@item.IdColaborador">
+                        <h5 class="fw-bold text-dark">@item.NombreColaborador @item.PrimerApellidoColaborador</h5>
+                        <p class="text-muted"><strong>Puesto:</strong> @item.PuestoColaborador</p>
+                        <p class="text-muted"><strong>Estado:</strong> @item.EstadoLaboral</p>
                     </div>
 
-                    <!-- Botón de Cerrar Información -->
-                    <button type="button" class="btn btn-outline-secondary btn-sm mt-2" data-bs-toggle="collapse" data-bs-target="#colaborador-@item.IdColaborador" aria-expanded="false" aria-controls="colaborador-@item.IdColaborador">
-                        Cerrar
-                    </button>
+                    <div id="colaborador-@item.IdColaborador" class="collapse">
+                        <div class="card-footer bg-light p-3 d-flex justify-content-between">
+                            <a href="@Url.Action("Edit", "Colaborador", new { IdColaborador = item.IdColaborador })" class="btn btn-warning btn-sm shadow-sm flex-fill mx-1">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <button class="btn btn-secondary btn-sm shadow-sm flex-fill mx-1" data-bs-toggle="collapse" data-bs-target="#colaborador-@item.IdColaborador">
+                                Cerrar
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
 
-<!-- Scripts para interactividad -->
-<script>// Filtro de búsqueda
+<!-- Scripts -->
+<script>
     document.getElementById("search").addEventListener("input", function () {
         let filter = this.value.toLowerCase();
         let items = document.querySelectorAll(".colaborador-item");
@@ -49,6 +49,7 @@
             let nombre = item.querySelector("h5").innerText.toLowerCase();
             if (nombre.includes(filter)) {
                 item.style.display = "block";
+                item.classList.add("fade-in");
             } else {
                 item.style.display = "none";
             }
@@ -58,30 +59,36 @@
     // Efecto Hover
     document.querySelectorAll('.hover-effect').forEach(function (element) {
         element.addEventListener('mouseover', function () {
-            element.style.transform = 'scale(1.05)';
-            element.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+            element.style.transform = 'translateY(-5px)';
+            element.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.2)';
         });
         element.addEventListener('mouseout', function () {
-            element.style.transform = 'scale(1)';
-            element.style.boxShadow = 'none';
+            element.style.transform = 'translateY(0)';
+            element.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
         });
-    });</script>
+    });
+</script>
 
-<!-- Estilos para hover y botones -->
+<!-- Estilos -->
 <style>
     .hover-effect {
         transition: all 0.3s ease;
+        cursor: pointer;
     }
 
-        .hover-effect:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
 
-    /* Estilo para el filtro de búsqueda */
     #search {
-        max-width: 300px;
-        margin-bottom: 20px;
+        max-width: 350px;
+    }
+
+    .card-footer .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+   
     }
 </style>
-

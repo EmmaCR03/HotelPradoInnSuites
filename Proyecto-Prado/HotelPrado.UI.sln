@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelPrado.Abstracciones", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelPrado.AccesoADatos", "HotelPrado.AccesoADatos\HotelPrado.AccesoADatos.csproj", "{076943FF-11B8-40DE-9F98-07BDFDFAD06F}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DB", "DB\DB.sqlproj", "{D2B07D9C-00B3-4687-919F-641DF29238DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,12 @@ Global
 		{076943FF-11B8-40DE-9F98-07BDFDFAD06F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{076943FF-11B8-40DE-9F98-07BDFDFAD06F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{076943FF-11B8-40DE-9F98-07BDFDFAD06F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2B07D9C-00B3-4687-919F-641DF29238DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2B07D9C-00B3-4687-919F-641DF29238DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2B07D9C-00B3-4687-919F-641DF29238DC}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{D2B07D9C-00B3-4687-919F-641DF29238DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2B07D9C-00B3-4687-919F-641DF29238DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2B07D9C-00B3-4687-919F-641DF29238DC}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
