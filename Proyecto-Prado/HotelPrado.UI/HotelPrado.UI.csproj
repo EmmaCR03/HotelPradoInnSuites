@@ -165,6 +165,7 @@
     <Compile Include="Controllers\CitasController.cs" />
     <Compile Include="Controllers\ColaboradorController.cs" />
     <Compile Include="Controllers\DepartamentoController.cs" />
+    <Compile Include="Controllers\HabitacionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
@@ -292,6 +293,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\DepartamentoClientes\departamentosgeneral.css" />
     <Content Include="Content\DepartamentoClientes\site.css" />
     <Content Include="Content\flatpickr.min.css" />
     <Content Include="favicon.ico" />
@@ -568,10 +570,13 @@
     <Content Include="Views\mellow-1.0.0\mellow-1.0.0\.vs\VSWorkspaceState.json" />
     <Content Include="Views\Departamento\Edit.cshtml" />
     <Content Include="Views\Departamento\HomeDepartamentos.cshtml" />
-    <Content Include="Views\Departamento\IndexDepartamentosClientes.cshtml" />
     <Content Include="Views\Citas\Details.cshtml" />
     <Content Include="Views\Departamento\Details.cshtml" />
     <Content Include="Views\Departamento\EditarImagenes.cshtml" />
+    <Content Include="Views\Departamento\IndexDepartamentosClientes.cshtml" />
+    <Content Include="Views\Habitacion\IndexHabitaciones.cshtml" />
+    <Content Include="Views\Habitacion\Create.cshtml" />
+    <Content Include="Views\Habitacion\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

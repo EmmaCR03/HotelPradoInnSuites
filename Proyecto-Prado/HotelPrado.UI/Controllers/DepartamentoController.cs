@@ -49,16 +49,17 @@ namespace HotelPrado.UI.Controllers
         // GET: Departamento
         public ActionResult IndexDepartamentos()
         {
-            ViewBag.Title = "El Departamento";
             var laListaDeDepartamentos = _listarDepartamentosLN.Listar();
+            ViewBag.Title = "El Departamento";
             return View(laListaDeDepartamentos);
         }
 
+
         public ActionResult IndexDepartamentosClientes()
         {
-            ViewBag.Title = "El Departamento";
+            ViewBag.Title = "Explora Nuestros Departamentos";
 
-            // Obtener departamentos
+            // Obtener todos los departamentos
             var laListaDeDepartamentos = _listarDepartamentosLN.Listar();
 
             // Verificar si hay datos en la lista
@@ -67,20 +68,48 @@ namespace HotelPrado.UI.Controllers
                 return View(new List<DepartamentoDTO>()); // Si no hay departamentos, retorna una lista vacía
             }
 
-            // Asegurar que todos los departamentos tengan valores
             foreach (var depto in laListaDeDepartamentos)
             {
-                depto.NumeroEmpresa = depto.NumeroEmpresa ?? "+50685406105"; // Si es null, asigna un valor
-                depto.CorreoEmpresa = depto.CorreoEmpresa ?? "info@pradoinn.com";
+                depto.NumeroEmpresa = !string.IsNullOrEmpty(depto.NumeroEmpresa) ? depto.NumeroEmpresa : "+50685406105";
+                depto.CorreoEmpresa = !string.IsNullOrEmpty(depto.CorreoEmpresa) ? depto.CorreoEmpresa : "info@pradoinn.com";
             }
 
-            // Filtrar los departamentos disponibles
-            var departamentosDisponibles = laListaDeDepartamentos
-                .Where(d => d.Estado == "Disponible" || d.Estado == "Activo")
+            // Filtrar departamentos por tipo
+            var departamentosPequeñosDisponibles = laListaDeDepartamentos
+                .Where(d => d.Nombre == "Departamento Pequeño" && d.Estado == "Disponible")
                 .ToList();
 
-            return View(departamentosDisponibles);
+            var departamentosGrandesDisponibles = laListaDeDepartamentos
+                .Where(d => d.Nombre == "Departamento Grande" && d.Estado == "Disponible")
+                .ToList();
+
+            // Preparar la lista para mostrar en el índice
+            var departamentosAMostrar = new List<DepartamentoDTO>();
+
+            // Solo agregar el Departamento Grande si hay al menos uno disponible
+            if (departamentosGrandesDisponibles.Any())
+            {
+                departamentosAMostrar.Add(departamentosGrandesDisponibles.First()); // Agregar el primer disponible
+            }
+
+            // Solo agregar el Departamento Pequeño si hay al menos uno disponible
+            if (departamentosPequeñosDisponibles.Any())
+            {
+                departamentosAMostrar.Add(departamentosPequeñosDisponibles.First()); // Agregar el primer disponible
+            }
+
+            // Limitar a dos departamentos (si hay más de dos, tomamos solo los primeros dos)
+            departamentosAMostrar = departamentosAMostrar.Take(2).ToList();
+
+            // Retorna los departamentos filtrados
+            return View(departamentosAMostrar);
         }
+
+        // Asegurarse de que todos los departamentos tengan valores
+
+
+
+
 
 
 
@@ -92,6 +121,9 @@ namespace HotelPrado.UI.Controllers
             {
                 return HttpNotFound();
             }
+
+            depto.NumeroEmpresa = !string.IsNullOrEmpty(depto.NumeroEmpresa) ? depto.NumeroEmpresa : "+50685406105";
+            depto.CorreoEmpresa = !string.IsNullOrEmpty(depto.CorreoEmpresa) ? depto.CorreoEmpresa : "info@pradoinn.com";
 
             // Asegurar que UrlImagenes no sea null ni vacío
             if (string.IsNullOrWhiteSpace(depto.UrlImagenes))

@@ -11,11 +11,17 @@ namespace HotelPrado.Abstracciones.Modelos.Citas
     {
         [Key]
         public int IdCita { get; set; }
+        [Required]
         public string Nombre { get; set; }
+        [Required]
         public string PrimerApellido { get; set; }
+        [Required]
         public string SegundoApellido { get; set; }
+        [Required]
         public int Telefono { get; set; }
+        [Required]
         public string Correo { get; set; }
+        [Required]
         public string MedioContacto { get; set; }
         public int IdDepartamento { get; set; }
         public int? IdColaborador { get; set; }

@@ -90,7 +90,12 @@
     <Compile Include="Interfaces\AccesoADatos\Departamentos\ObtenerEnlaces\IObtenerEnlacesAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Departamentos\ObtenerPorId\IObtenerDepartamentoPorIdAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Departamentos\Registrar\IRegistrarDepartamentoAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Habitaciones\Editar\IEditarHabitacionesAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Habitaciones\Listar\IListarHabitacionesAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Habitaciones\ObtenerPorId\IObtenerHabitacionesPorIdAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Habitaciones\Registrar\IRegistrarHabitacionesAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\TipoDeDepartamento\Listar\IListarTipoDeDepartamentosAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\TipoDeHabitacion\Listar\IListarTipoDeHabitacionAD.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Bitacora\Listar\IListarBitacoraEventosLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Bitacora\Registrar\IRegistrarBitacoraEventosLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Citas\Convertir\IConvertirCitasDTOACitasTabla.cs" />
@@ -111,29 +116,41 @@
     <Compile Include="Interfaces\LogicaDeNegocio\Departamentos\ObtenerPorId\IObtenerDepartamentoPorIdLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Departamentos\Registrar\IRegistrarDepartamentoLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\General\Fecha\IFechaActual.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Habitaciones\Conversion\IConvertirHabitacionesDTOAHabitacionesTabla.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Habitaciones\Editar\IEditarHabitacionesLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Habitaciones\Listar\IListarHabitacionesLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Habitaciones\ObtenerPorId\IObtenerHabitacionesPorIdLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Habitaciones\Registrar\IRegistrarHabitacionesLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\TipoDeDepartamentos\IListarTipoDeDepartamenoLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\TipoHabitacion\Listar\IListarTipoHabitacionLN.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Bitacora\BitacoraTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Citas\CitasTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\ClientesContactos\ClientesContactosTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Cliente\ClienteTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Colaborador\ColaboradorTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Departamento\DepartamentoTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\Habitaciones\HabitacionesTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\ImagenesDepartamento\ImagenesDepartamentoTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\TipoDepartamento\TipoDepartamentoTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\TipoHabitacion\TipoHabitacionTabla.cs" />
     <Compile Include="Modelos\Bitacora\BitacoraEventosDTO.cs" />
     <Compile Include="Modelos\Citas\CitasDTO.cs" />
     <Compile Include="Modelos\ClientesContactos\ClientesContactosDTO.cs" />
     <Compile Include="Modelos\Cliente\ClienteDTO.cs" />
     <Compile Include="Modelos\Colaborador\ColaboradorDTO.cs" />
     <Compile Include="Modelos\Departamento\DepartamentoDTO.cs" />
+    <Compile Include="Modelos\Habitaciones\HabitacionesDTO.cs" />
     <Compile Include="Modelos\ImagenesDepartamento\ImagenesDepartamentoDTO.cs" />
     <Compile Include="Modelos\TipoDeDepartamento\TipoDepartamentoDTO.cs" />
+    <Compile Include="Modelos\TipoDeHabitacion\TipoHabitacionDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Interfaces\LogicaDeNegocio\Habitaciones\Enlaces\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

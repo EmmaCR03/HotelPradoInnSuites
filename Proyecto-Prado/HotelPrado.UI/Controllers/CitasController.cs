@@ -132,13 +132,16 @@ namespace HotelPrado.UI.Controllers
             // Obtener la lista de colaboradores
             // Obtener los colaboradores de la base de datos
             var colaboradoresDb = _contexto.ColaboradorTabla
-                .Select(c => new
-                {
-                    Id = c.IdColaborador,
-                    Nombre = c.NombreColaborador,
-                    Apellido = c.PrimerApellidoColaborador
-                })
-                .ToList(); // Trae los datos a memoria
+            .Select(c => new
+            {
+                Id = c.IdColaborador,
+                Nombre = c.NombreColaborador,
+                Apellido = c.PrimerApellidoColaborador
+            })
+            .ToList();
+
+            Console.WriteLine($"Número de colaboradores encontrados: {colaboradoresDb.Count}");
+
 
             // Concatenar los nombres en memoria
             var colaboradores = colaboradoresDb
@@ -238,10 +241,10 @@ namespace HotelPrado.UI.Controllers
                     var bitacora = new BitacoraEventosDTO
                     {
                         IdEvento = 0,
-                        TablaDeEvento = "ModuloDepartamento",
+                        TablaDeEvento = "ModuloCitas",
                         TipoDeEvento = "Cambiar Estado",
                         FechaDeEvento = DateTime.Now.ToString("dd-MM-yyyy"),
-                        DescripcionDeEvento = "Se actualizó el estado de un departamento.",
+                        DescripcionDeEvento = "Se actualizó el estado de un citas.",
                         StackTrace = "no hubo error",
                         DatosAnteriores = datosJson,
                         DatosPosteriores = datosJson
@@ -260,10 +263,10 @@ namespace HotelPrado.UI.Controllers
                 var bitacora = new BitacoraEventosDTO
                 {
                     IdEvento = 0,
-                    TablaDeEvento = "ModuloDepartamento",
+                    TablaDeEvento = "ModuloCitas",
                     TipoDeEvento = "Error",
                     FechaDeEvento = DateTime.Now.ToString("dd-MM-yyyy"),
-                    DescripcionDeEvento = "Error al actualizar el estado del departamento.",
+                    DescripcionDeEvento = "Error al actualizar el estado del citas.",
                     StackTrace = ex.StackTrace,
                     DatosAnteriores = "NA",
                     DatosPosteriores = "NA"

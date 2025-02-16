@@ -73,7 +73,12 @@
     <Compile Include="Departamentos\ObtenerEnlaces\ObtenerEnlacesAD.cs" />
     <Compile Include="Departamentos\ObtenerPorId\ObtenerDepartamentoPorIdAD.cs" />
     <Compile Include="Departamentos\Registrar\RegistrarDepartamentoAD.cs" />
+    <Compile Include="Habitacion\Editar\EditarHabitacionesAD.cs" />
+    <Compile Include="Habitacion\Listar\ListarHabitacionesAD.cs" />
+    <Compile Include="Habitacion\ObtenerPorId\ObtenerHabitacionesPorIdAD.cs" />
+    <Compile Include="Habitacion\Registrar\RegistrarHabitacionesAD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TipoDeHabitacion\Listar\ListarTipoDeHabitacionAD.cs" />
     <Compile Include="TipoDepartamentos\Listar\ListarTipoDeDepartamentosAD.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -86,7 +91,9 @@
       <Name>HotelPrado.Abstracciones</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Habitacion\ObtenerEnlaces\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

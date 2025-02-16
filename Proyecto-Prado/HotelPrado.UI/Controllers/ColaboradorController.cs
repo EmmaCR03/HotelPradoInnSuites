@@ -168,6 +168,7 @@ namespace HotelPrado.UI.Controllers
 
         [HttpPost]
         public ActionResult ToggleEstado(int IdColaborador, string Estado)
+
         {
             try
             {

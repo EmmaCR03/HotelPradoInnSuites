@@ -77,8 +77,14 @@
     <Compile Include="Departamentos\ObtenerPorId\ObtenerDepartamentoPorIdLN.cs" />
     <Compile Include="Departamentos\Registrar\RegistrarDepartamentoLN.cs" />
     <Compile Include="General\Fecha\FechaActual.cs" />
+    <Compile Include="Habitaciones\Conversion\ConvertirHabitacionesDTOAHabitacionesTabla.cs" />
+    <Compile Include="Habitaciones\Editar\EditarHabitacionesLN.cs" />
+    <Compile Include="Habitaciones\Listar\ListarHabitacionesLN.cs" />
+    <Compile Include="Habitaciones\ObtenerPorId\ObtenerHabitacionesPorIdLN.cs" />
+    <Compile Include="Habitaciones\Registrar\RegistrarHabitacionesLN.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TipoDeDepartamento\Listar\ListarTipoDeDepartamenoLN.cs" />
+    <Compile Include="TipoHabitacion\Listar\ListarTipoHabitacionLN.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HotelPrado.Abstracciones\HotelPrado.Abstracciones.csproj">
@@ -94,7 +100,10 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Habitaciones\Enlaces\" />
+    <Folder Include="Habitaciones\ObtenerEnlaces\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

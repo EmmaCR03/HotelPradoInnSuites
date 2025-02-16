@@ -1,0 +1,81 @@
+﻿.room-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+
+    .room-item:hover .overlay-info {
+        opacity: 1;
+    }
+
+.buttons a {
+    margin-right: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+    .buttons a:hover {
+        opacity: 0.8;
+    }
+
+.room-item {
+    position: relative;
+}
+
+.overlay-info {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semi-transparente */
+    color: #fff;
+    opacity: 0;
+    z-index: 1; /* Hace que el overlay esté encima de la imagen */
+    transition: opacity 0.3s ease-in-out;
+}
+
+.room-item:hover .overlay-info {
+    opacity: 1; /* Solo aparece al pasar el mouse */
+}
+
+.buttons {
+    position: relative;
+    z-index: 2; /* Asegura que los botones estén por encima del overlay */
+}
+
+.carousel-inner img {
+    width: 100%;
+    height: auto;
+}
+
+/* Estilo para los botones */
+.btn {
+    margin: 5px;
+}
+
+/* Ajuste del tamaño para dispositivos grandes */
+.carousel-inner {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.product-description h4 {
+    text-align: center; /* Centra el nombre */
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.product-description p {
+    text-align: center; /* Centra la descripción */
+    font-size: 1rem;
+}
+
+.table td {
+    color: #fff; /* Color blanco para las celdas de la tabla */
+    font-size: 1rem;
+    text-align:  center;
+}

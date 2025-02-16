@@ -22,11 +22,13 @@
             @Html.LabelFor(model => model.IdColaborador, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownListFor(
-     model => model.IdColaborador,
-     (SelectList)ViewBag.Colaborador,
-     "Seleccione el colaborador que atenderá la cita ",
-     new { @class = "form-control" }
-    )
+            model => model.IdColaborador,
+            (IEnumerable<SelectListItem>)ViewBag.Colaborador,
+            "Seleccione un colaborador",
+            new { @class = "form-control" }
+        
+
+                )
                 @Html.ValidationMessageFor(model => model.IdColaborador, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -60,7 +62,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "IndexCitas")
 </div>
 
 @section Scripts {

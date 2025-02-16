@@ -1,0 +1,51 @@
+﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Habitaciones.HabitacionesDTO>
+
+@{
+    ViewBag.Title = "IndexHabitaciones";
+}
+
+<h2>IndexHabitaciones</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.NumeroHabitacion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PrecioPorNoche)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdTipoHabitacion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Estado)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumeroHabitacion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PrecioPorNoche)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IdTipoHabitacion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Estado)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IdHabitacion }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IdHabitacion }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IdHabitacion })
+        </td>
+    </tr>
+}
+
+</table>
