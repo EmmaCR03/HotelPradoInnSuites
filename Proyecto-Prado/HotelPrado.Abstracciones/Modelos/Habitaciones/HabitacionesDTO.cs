@@ -18,6 +18,8 @@ namespace HotelPrado.Abstracciones.Modelos.Habitaciones
         public decimal PrecioPorNoche4P { get; set; }
 
         public decimal PrecioFinal { get; set; }
+        public decimal TotalPrecio { get; set; }
+
         public int IdTipoHabitacion { get; set; }
         public string Estado { get; set; }
 

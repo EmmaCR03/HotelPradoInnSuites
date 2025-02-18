@@ -20,19 +20,22 @@ namespace HotelPrado.AccesoADatos.Habitacion.HabDisponibles
 
         public List<HabitacionesDTO> ListarDisponibles(DateTime check_in, DateTime check_out, int capacidad)
         {
+            int totalNoches = (int)(check_out - check_in).TotalDays; // Calcula el total de noches
+
             var habitacionesDisponibles = (from laHabitacion in _contexto.HabitacionesTabla
                                            join tipoHab in _contexto.TipoHabitacionTabla
                                            on laHabitacion.IdTipoHabitacion equals tipoHab.IdTipoHabitacion into tipoHabJoin
                                            from tipo in tipoHabJoin.DefaultIfEmpty()  // LEFT JOIN
-                                           where  laHabitacion.Capacidad >= capacidad    // Capacidad suficiente
-                                           && !_contexto.ReservasTabla.Any(reserva =>
-                                                  reserva.IdHabitacion == laHabitacion.IdHabitacion &&
-                                                  (
-                                                      (check_in >= reserva.FechaInicio && check_in < reserva.FechaFinal) ||  
-                                                      (check_out > reserva.FechaInicio && check_out <= reserva.FechaFinal) ||
-                                                      (check_in <= reserva.FechaInicio && check_out >= reserva.FechaFinal) 
+                                           where laHabitacion.CapacidadMin <= capacidad
+                                                 && laHabitacion.CapacidadMax >= capacidad // Capacidad suficiente
+                                                 && !_contexto.ReservasTabla.Any(reserva =>
+                                                      reserva.IdHabitacion == laHabitacion.IdHabitacion &&
+                                                      (
+                                                          (check_in >= reserva.FechaInicio && check_in < reserva.FechaFinal) ||
+                                                          (check_out > reserva.FechaInicio && check_out <= reserva.FechaFinal) ||
+                                                          (check_in <= reserva.FechaInicio && check_out >= reserva.FechaFinal)
+                                                      )
                                                   )
-                                              )
                                            select new HabitacionesDTO
                                            {
                                                IdHabitacion = laHabitacion.IdHabitacion,
