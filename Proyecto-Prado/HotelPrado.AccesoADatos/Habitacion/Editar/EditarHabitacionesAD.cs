@@ -32,6 +32,9 @@ namespace HotelPrado.AccesoADatos.Habitacion.Editar
             laHabitacionEnBaseDeDatos.CapacidadMax = laHabitacionActualizar.CapacidadMax;
             laHabitacionEnBaseDeDatos.CapacidadMin = laHabitacionActualizar.CapacidadMin;
             laHabitacionEnBaseDeDatos.Estado = laHabitacionActualizar.Estado;
+            laHabitacionEnBaseDeDatos.CapacidadMax = laHabitacionActualizar.CapacidadMax;
+            laHabitacionEnBaseDeDatos.CapacidadMin = laHabitacionActualizar.CapacidadMin;
+            EntityState estado = _contexto.Entry(laHabitacionEnBaseDeDatos).State = System.Data.Entity.EntityState.Modified;
             int cantidadDeDatosAlmacenados = await _contexto.SaveChangesAsync();
             return cantidadDeDatosAlmacenados;
         }

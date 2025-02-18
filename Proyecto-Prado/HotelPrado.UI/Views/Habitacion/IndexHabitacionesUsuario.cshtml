@@ -6,20 +6,19 @@
 
 <h2>IndexHabitacionesUsuario</h2>
 
-
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
 <table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.NumeroHabitacion)
         </th>
-
         <th>
-            @Html.DisplayNameFor(model => model.PrecioFinal)
+            @Html.DisplayNameFor(model => model.PrecioPorNoche1P)
         </th>
-
         <th>
-            @Html.DisplayNameFor(model => model.TotalPrecio)
-
+            @Html.DisplayNameFor(model => model.PrecioPorNoche2P)
         </th>
 
         <th>
@@ -28,7 +27,9 @@
         <th>
             @Html.DisplayNameFor(model => model.IdTipoHabitacion)
         </th>
-
+        <th>
+            @Html.DisplayNameFor(model => model.Estado)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.Capacidad)
         </th>
