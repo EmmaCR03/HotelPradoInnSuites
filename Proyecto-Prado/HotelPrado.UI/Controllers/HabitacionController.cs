@@ -119,7 +119,7 @@ namespace HotelPrado.UI.Controllers
                         ViewBag.mensaje = "Ocurrió un error inesperado, favor intente nuevamente.";
                         return View(laHabitacion);
                     }
-                    return RedirectToAction("IndexColaborador");
+                    return RedirectToAction("IndexHabitaciones");
                 }
                 catch (Exception ex)
                 {
@@ -173,7 +173,8 @@ namespace HotelPrado.UI.Controllers
                     ""PrecioPorNoche3P"": ""{Habitacion.PrecioPorNoche3P}"",
                     ""PrecioPorNoche4P"": ""{Habitacion.PrecioPorNoche4P}"",
                     ""IdTipoHabitacion"": ""{Habitacion.IdTipoHabitacion}"",
-                    ""Capacidad"": ""{Habitacion.Capacidad}"",
+                    ""CapacidadMax"": ""{Habitacion.CapacidadMax}"",
+                    ""CapacidadMin"": ""{Habitacion.CapacidadMin}"",
                     ""Estado"": ""{Habitacion.Estado}""
             }}";
 

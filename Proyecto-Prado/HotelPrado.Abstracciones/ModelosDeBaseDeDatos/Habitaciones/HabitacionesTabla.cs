@@ -29,7 +29,8 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Habitaciones
         [ForeignKey("IdTipoHabitacion")]
         public virtual TipoHabitacionTabla TipoHabitacion { get; set; }
 
-        public int Capacidad { get; set; }
+        public int CapacidadMax { get; set; }
+        public int CapacidadMin { get; set; }
 
     }
 }
