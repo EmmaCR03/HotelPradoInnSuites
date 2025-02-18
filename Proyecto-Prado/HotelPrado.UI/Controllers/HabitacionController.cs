@@ -59,18 +59,10 @@ namespace HotelPrado.UI.Controllers
         }
 
         // GET: Habitacion/IndexHabitacionesUsuario
-        public ActionResult IndexHabitacionesUsuario(DateTime? check_in, DateTime? check_out, int? capacidad)
+        public ActionResult IndexHabitacionesUsuario(DateTime check_in, DateTime check_out, int capacidad)
         {
-            if (!check_in.HasValue || !check_out.HasValue)
-            {
-                check_in = check_in ?? DateTime.Now;
-                check_out = check_out ?? DateTime.Now.AddDays(1);
-            }
-
-            capacidad = capacidad ?? 1;
-
             ViewBag.Title = "La Habitacion";
-            var laListaDeHabitacionesDisponibles = _habDisponibles.ListarDisponibles(check_in.Value, check_out.Value, capacidad.Value);
+            var laListaDeHabitacionesDisponibles = _habDisponibles.ListarDisponibles(check_in, check_out, capacidad);
             return View(laListaDeHabitacionesDisponibles);
         }
 
@@ -222,7 +214,8 @@ namespace HotelPrado.UI.Controllers
                         ""PrecioPorNoche3P"": ""{Habitacion.PrecioPorNoche3P}"",
                         ""PrecioPorNoche4P"": ""{Habitacion.PrecioPorNoche4P}"",
                         ""IdTipoHabitacion"": ""{Habitacion.IdTipoHabitacion}"",
-                        ""Capacidad"": ""{Habitacion.Capacidad}"",
+                        ""CapacidadMin"": ""{Habitacion.CapacidadMin}"",
+                        ""CapacidadMax"": ""{Habitacion.CapacidadMax}"",
                         ""Estado"": ""{Habitacion.Estado}""
                     }}";
 

@@ -18,10 +18,17 @@ namespace HotelPrado.Abstracciones.Modelos.Habitaciones
         public decimal PrecioPorNoche4P { get; set; }
 
         public decimal PrecioFinal { get; set; }
+        public decimal TotalPrecio { get; set; }
         public int IdTipoHabitacion { get; set; }
         public string Estado { get; set; }
 
+        public int CapacidadMin { get; set; }
+        public int CapacidadMax { get; set; }
+
+
         public int Capacidad { get; set; }
+        public int TotalNoches { get; set; }
+
         public string UrlImagenes { get; set; }
         public List<string> ListaImagenes
         {
@@ -36,3 +43,4 @@ namespace HotelPrado.Abstracciones.Modelos.Habitaciones
         }
     }
 }
+

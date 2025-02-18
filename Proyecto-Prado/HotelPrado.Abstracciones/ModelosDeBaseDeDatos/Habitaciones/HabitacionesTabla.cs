@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Habitaciones
 {
+    
     [Table("Habitaciones")]
     public class HabitacionesTabla
     {
@@ -20,6 +21,7 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Habitaciones
         public decimal PrecioPorNoche2P { get; set; }
         public decimal PrecioPorNoche3P { get; set; }
         public decimal PrecioPorNoche4P { get; set; }
+
         public string UrlImagenes { get; set; }
         public string Estado { get; set; }
 
@@ -28,7 +30,8 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Habitaciones
         [ForeignKey("IdTipoHabitacion")]
         public virtual TipoHabitacionTabla TipoHabitacion { get; set; }
 
-        public int Capacidad { get; set; }
+        public int CapacidadMax { get; set; }
+        public int CapacidadMin { get; set; }
 
     }
 }

@@ -29,10 +29,12 @@ namespace HotelPrado.AccesoADatos.Habitacion.Editar
             laHabitacionEnBaseDeDatos.PrecioPorNoche3P = laHabitacionActualizar.PrecioPorNoche3P;
             laHabitacionEnBaseDeDatos.PrecioPorNoche4P = laHabitacionActualizar.PrecioPorNoche4P;
             laHabitacionEnBaseDeDatos.IdTipoHabitacion = laHabitacionActualizar.IdTipoHabitacion;
-            laHabitacionEnBaseDeDatos.Capacidad = laHabitacionActualizar.Capacidad;
+            laHabitacionEnBaseDeDatos.CapacidadMax = laHabitacionActualizar.CapacidadMax;
+            laHabitacionEnBaseDeDatos.CapacidadMin = laHabitacionActualizar.CapacidadMin;
             laHabitacionEnBaseDeDatos.Estado = laHabitacionActualizar.Estado;
             int cantidadDeDatosAlmacenados = await _contexto.SaveChangesAsync();
             return cantidadDeDatosAlmacenados;
         }
     }
 }
+

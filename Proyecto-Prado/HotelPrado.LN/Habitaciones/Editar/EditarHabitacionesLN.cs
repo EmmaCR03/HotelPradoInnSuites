@@ -48,7 +48,8 @@ namespace HotelPrado.LN.Habitaciones.Editar
                     ""PrecioPorNoche3P"": ""{datosAnteriores.PrecioPorNoche3P}"",
                     ""PrecioPorNoche4P"": ""{datosAnteriores.PrecioPorNoche4P}"",
                     ""IdTipoHabitacion"": ""{datosAnteriores.IdTipoHabitacion}"",
-                    ""Capacidad"": ""{datosAnteriores.Capacidad}"",
+                    ""CapacidadMax"": ""{datosAnteriores.CapacidadMax}"",
+                    ""CapacidadMin"": ""{datosAnteriores.CapacidadMin}"",
                     ""Estado"": ""{datosAnteriores.Estado}""
                 }}";
 
@@ -65,7 +66,8 @@ namespace HotelPrado.LN.Habitaciones.Editar
                     ""PrecioPorNoche3P"": ""{laHabitacionEnVista.PrecioPorNoche3P}"",
                     ""PrecioPorNoche4P"": ""{laHabitacionEnVista.PrecioPorNoche4P}"",
                     ""IdTipoHabitacion"": {laHabitacionEnVista.IdTipoHabitacion},
-                    ""Capacidad"": {laHabitacionEnVista.Capacidad},
+                    ""CapacidadMax"": ""{laHabitacionEnVista.CapacidadMax}"",
+                    ""CapacidadMin"": ""{laHabitacionEnVista.CapacidadMin}"",
                     ""Estado"": ""{laHabitacionEnVista.Estado}""
                 }}";
 

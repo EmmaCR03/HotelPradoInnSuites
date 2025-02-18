@@ -6,76 +6,58 @@
 
 <h2>IndexHabitacionesUsuario</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+
 <table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.NumeroHabitacion)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PrecioPorNoche1P)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PrecioPorNoche2P)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PrecioPorNoche3P)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PrecioPorNoche4P)
-        </th>
+
         <th>
             @Html.DisplayNameFor(model => model.PrecioFinal)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.TotalPrecio)
+
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.TotalNoches)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.IdTipoHabitacion)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Estado)
-        </th>
+
         <th>
             @Html.DisplayNameFor(model => model.Capacidad)
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.NumeroHabitacion)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PrecioPorNoche1P)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PrecioPorNoche2P)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PrecioPorNoche3P)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PrecioPorNoche4P)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PrecioFinal)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IdTipoHabitacion)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Estado)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Capacidad)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.IdHabitacion }) |
-            @Html.ActionLink("Details", "Details", new { id=item.IdHabitacion }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.IdHabitacion })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumeroHabitacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrecioFinal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalPrecio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalNoches)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdTipoHabitacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Capacidad)
+            </td>
+
+        </tr>
+    }
 
 </table>

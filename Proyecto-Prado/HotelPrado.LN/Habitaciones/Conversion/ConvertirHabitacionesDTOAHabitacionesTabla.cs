@@ -22,7 +22,8 @@ namespace HotelPrado.LN.Habitaciones.Conversion
                 PrecioPorNoche3P = laHabitacion.PrecioPorNoche3P,
                 PrecioPorNoche4P = laHabitacion.PrecioPorNoche4P,
                 IdTipoHabitacion = laHabitacion.IdTipoHabitacion,
-                Capacidad = laHabitacion.Capacidad,
+                CapacidadMax = laHabitacion.CapacidadMax,
+                CapacidadMin = laHabitacion.CapacidadMin,
                 Estado = laHabitacion.Estado
             };
         }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HotelPrado.AccesoADatos.Habitacion.HabDisponibles
 {
-   public class ListarHabitacionesAD : IListarHabitacionesAD
+    public class ListarHabitacionesAD : IListarHabitacionesAD
     {
         Contexto _contexto;
 
@@ -32,14 +32,14 @@ namespace HotelPrado.AccesoADatos.Habitacion.HabDisponibles
                                              PrecioPorNoche3P = laHabitacion.PrecioPorNoche3P,
                                              PrecioPorNoche4P = laHabitacion.PrecioPorNoche4P,
                                              Estado = laHabitacion.Estado,
-                                             Capacidad = laHabitacion.Capacidad,
-                                             UrlImagenes = laHabitacion.UrlImagenes,
-                                             IdTipoHabitacion =laHabitacion.IdTipoHabitacion
+                                             CapacidadMin = laHabitacion.CapacidadMin,
+                                             CapacidadMax = laHabitacion.CapacidadMax,
+                                             IdTipoHabitacion = laHabitacion.IdTipoHabitacion
                                          });
 
             if (capacidad.HasValue)
             {
-                laListaDeHabitaciones = laListaDeHabitaciones.Where(h => h.Capacidad == capacidad.Value);
+                laListaDeHabitaciones = laListaDeHabitaciones.Where(h => h.CapacidadMin <= capacidad.Value && h.CapacidadMax >= capacidad.Value);
             }
 
             if (!string.IsNullOrEmpty(estado))
