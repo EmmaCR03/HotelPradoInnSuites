@@ -13,8 +13,8 @@ namespace HotelPrado.Abstracciones.Modelos.Reservas
         public int IdReserva {  get; set; }
         public int IdCliente { get; set; }
         public int IdHabitacion { get; set; }
-        public DateTime FechaInicio { get; set; }
-        public DateTime FechaFinal { get; set; }
+        public DateTime? FechaInicio { get; set; }
+        public DateTime? FechaFinal { get; set; }
         public string EstadoReserva { get; set; }
         public Decimal MontoTotal { get; set; }
     }

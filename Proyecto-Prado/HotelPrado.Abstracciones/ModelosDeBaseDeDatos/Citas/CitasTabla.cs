@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Colaborador;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -28,5 +29,10 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Citas
         public DateTime FechaCreacion { get; set; }
         public string EnlaceWhatsApp { get; set; }
         public string EnlaceCorreo { get; set; }
+
+        [ForeignKey("IdColaborador")]
+
+        public virtual ColaboradorTabla Colaborador { get; set; }
+
     }
 }

@@ -30,7 +30,7 @@ namespace HotelPrado.AccesoADatos.Habitacion.Editar
             laHabitacionEnBaseDeDatos.PrecioPorNoche4P = laHabitacionActualizar.PrecioPorNoche4P;
             laHabitacionEnBaseDeDatos.IdTipoHabitacion = laHabitacionActualizar.IdTipoHabitacion;
             laHabitacionEnBaseDeDatos.Capacidad = laHabitacionActualizar.Capacidad;
-            EntityState estado = _contexto.Entry(laHabitacionEnBaseDeDatos).State = System.Data.Entity.EntityState.Modified;
+            laHabitacionEnBaseDeDatos.Estado = laHabitacionActualizar.Estado;
             int cantidadDeDatosAlmacenados = await _contexto.SaveChangesAsync();
             return cantidadDeDatosAlmacenados;
         }

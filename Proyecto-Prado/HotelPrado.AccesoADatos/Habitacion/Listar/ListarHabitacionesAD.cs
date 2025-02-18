@@ -33,6 +33,7 @@ namespace HotelPrado.AccesoADatos.Habitacion.HabDisponibles
                                              PrecioPorNoche4P = laHabitacion.PrecioPorNoche4P,
                                              Estado = laHabitacion.Estado,
                                              Capacidad = laHabitacion.Capacidad,
+                                             UrlImagenes = laHabitacion.UrlImagenes,
                                              IdTipoHabitacion =laHabitacion.IdTipoHabitacion
                                          });
 
