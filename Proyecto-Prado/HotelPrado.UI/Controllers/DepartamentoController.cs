@@ -74,43 +74,20 @@ namespace HotelPrado.UI.Controllers
                 depto.CorreoEmpresa = !string.IsNullOrEmpty(depto.CorreoEmpresa) ? depto.CorreoEmpresa : "info@pradoinn.com";
             }
 
-            // Filtrar departamentos por tipo
-            var departamentosPequeñosDisponibles = laListaDeDepartamentos
-                .Where(d => d.Nombre == "Departamento Pequeño" && d.Estado == "Disponible")
+            // Filtrar todos los departamentos que estén disponibles
+            var departamentosDisponibles = laListaDeDepartamentos
+                .Where(d => d.Estado == "Disponible")
                 .ToList();
 
-            var departamentosGrandesDisponibles = laListaDeDepartamentos
-                .Where(d => d.Nombre == "Departamento Grande" && d.Estado == "Disponible")
-                .ToList();
-
-            // Preparar la lista para mostrar en el índice
-            var departamentosAMostrar = new List<DepartamentoDTO>();
-
-            // Solo agregar el Departamento Grande si hay al menos uno disponible
-            if (departamentosGrandesDisponibles.Any())
+            // Si no hay departamentos disponibles, retornar vista con lista vacía
+            if (!departamentosDisponibles.Any())
             {
-                departamentosAMostrar.Add(departamentosGrandesDisponibles.First()); // Agregar el primer disponible
+                return View(new List<DepartamentoDTO>());
             }
 
-            // Solo agregar el Departamento Pequeño si hay al menos uno disponible
-            if (departamentosPequeñosDisponibles.Any())
-            {
-                departamentosAMostrar.Add(departamentosPequeñosDisponibles.First()); // Agregar el primer disponible
-            }
-
-            // Limitar a dos departamentos (si hay más de dos, tomamos solo los primeros dos)
-            departamentosAMostrar = departamentosAMostrar.Take(2).ToList();
-
-            // Retorna los departamentos filtrados
-            return View(departamentosAMostrar);
+            // Retorna todos los departamentos disponibles (sin limitación de cantidad)
+            return View(departamentosDisponibles);
         }
-
-        // Asegurarse de que todos los departamentos tengan valores
-
-
-
-
-
 
 
         // GET: Departamento/Details/5
@@ -133,6 +110,7 @@ namespace HotelPrado.UI.Controllers
 
             return View(depto);
         }
+
 
         public string GetUrlImagenesById(int id)
         {

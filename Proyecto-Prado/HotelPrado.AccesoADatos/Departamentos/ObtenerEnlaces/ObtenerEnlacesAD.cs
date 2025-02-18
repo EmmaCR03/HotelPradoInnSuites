@@ -1,5 +1,4 @@
 ﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Departamentos.ObtenerEnlaces;
-using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Citas;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Departamento;
 using System;
 using System.Collections.Generic;

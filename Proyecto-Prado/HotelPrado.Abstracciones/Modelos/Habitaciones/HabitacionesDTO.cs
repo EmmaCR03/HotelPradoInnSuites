@@ -27,6 +27,18 @@ namespace HotelPrado.Abstracciones.Modelos.Habitaciones
 
         
         public int Capacidad { get; set; }
+        public string UrlImagenes { get; set; }
+        public List<string> ListaImagenes
+        {
+            get
+            {
+                return string.IsNullOrEmpty(UrlImagenes) ? new List<string>() : UrlImagenes.Split(',').ToList();
+            }
+            set
+            {
+                UrlImagenes = string.Join(",", value);
+            }
+        }
         public int TotalNoches { get; set; }
 
     }

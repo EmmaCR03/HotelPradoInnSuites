@@ -34,6 +34,8 @@ namespace HotelPrado.AccesoADatos.Habitacion.HabDisponibles
                                              Estado = laHabitacion.Estado,
                                              CapacidadMin = laHabitacion.CapacidadMin,
                                              CapacidadMax = laHabitacion.CapacidadMax,
+                                             Capacidad = laHabitacion.Capacidad,
+                                             UrlImagenes = laHabitacion.UrlImagenes,
                                              IdTipoHabitacion =laHabitacion.IdTipoHabitacion
                                          });
 

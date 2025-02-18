@@ -92,6 +92,7 @@
     <Compile Include="Interfaces\AccesoADatos\Habitaciones\Editar\IEditarHabitacionesAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Habitaciones\HabDisponibles\IHabDisponiblesAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Habitaciones\Listar\IListarHabitacionesAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Habitaciones\ObtenerEnlaces\IObtenerEnlacesHAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Habitaciones\ObtenerPorId\IObtenerHabitacionesPorIdAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Habitaciones\Registrar\IRegistrarHabitacionesAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\TipoDeDepartamento\Listar\IListarTipoDeDepartamentosAD.cs" />
