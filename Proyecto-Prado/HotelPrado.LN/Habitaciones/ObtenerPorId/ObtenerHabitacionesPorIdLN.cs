@@ -37,6 +37,7 @@ namespace HotelPrado.LN.Habitaciones.ObtenerPorId
                 IdTipoHabitacion = habitacionEnBaseDeDatos.IdTipoHabitacion,
                 Capacidad = habitacionEnBaseDeDatos.Capacidad,
                 Estado = habitacionEnBaseDeDatos.Estado,
+                UrlImagenes = habitacionEnBaseDeDatos.UrlImagenes ?? "",
                 NumeroHabitacion = habitacionEnBaseDeDatos.NumeroHabitacion,
             };
         }

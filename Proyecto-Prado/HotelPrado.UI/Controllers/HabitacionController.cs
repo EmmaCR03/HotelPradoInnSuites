@@ -61,22 +61,18 @@ namespace HotelPrado.UI.Controllers
         // GET: Habitacion/IndexHabitacionesUsuario
         public ActionResult IndexHabitacionesUsuario(DateTime? check_in, DateTime? check_out, int? capacidad)
         {
-            // Verifica si check_in y check_out no tienen valores, si no, asigna valores por defecto
             if (!check_in.HasValue || !check_out.HasValue)
             {
                 check_in = check_in ?? DateTime.Now;
-                check_out = check_out ?? DateTime.Now.AddDays(1); // La fecha de salida será el día siguiente al de entrada
+                check_out = check_out ?? DateTime.Now.AddDays(1);
             }
 
-            // Si capacidad es nula, asigna un valor por defecto (por ejemplo, 1)
             capacidad = capacidad ?? 1;
 
             ViewBag.Title = "La Habitacion";
             var laListaDeHabitacionesDisponibles = _habDisponibles.ListarDisponibles(check_in.Value, check_out.Value, capacidad.Value);
             return View(laListaDeHabitacionesDisponibles);
         }
-
-  
 
         // GET: Habitacion/Details/5
         public ActionResult Details(int id)
@@ -85,18 +81,13 @@ namespace HotelPrado.UI.Controllers
         }
 
         // GET: Habitacion/Create
-
         public ActionResult Create()
         {
-            // Cargar los tipos de habitación desde la lógica de negocio
-            var tipoHabitacion = _listarTipoHabitacionLN.Listar();  
-
+            var tipoHabitacion = _listarTipoHabitacionLN.Listar();
             ViewBag.TipoHabitacion = new SelectList(tipoHabitacion, "IdTipoHabitacion", "Nombre");
 
             return View();
         }
-
-
 
         // POST: Habitacion/Create
         [HttpPost]
@@ -111,7 +102,6 @@ namespace HotelPrado.UI.Controllers
                 {
                     List<string> rutasImagenes = new List<string>();
 
-            
                     if (Request.Files.Count > 0)
                     {
                         foreach (string file in Request.Files)
@@ -120,9 +110,7 @@ namespace HotelPrado.UI.Controllers
                             if (archivo != null && archivo.ContentLength > 0)
                             {
                                 string rutaImagen = Server.MapPath("~/Images/") + Path.GetFileName(archivo.FileName);
-
                                 archivo.SaveAs(rutaImagen);
-
                                 rutasImagenes.Add("/Images/" + Path.GetFileName(archivo.FileName));
                             }
                         }
@@ -160,7 +148,6 @@ namespace HotelPrado.UI.Controllers
         public ActionResult Edit(int id)
         {
             var datosHabitacion = _obtenerHabitacionesPorId.Obtener(id);
-
             ViewBag.Estados = new List<SelectListItem>
             {
                 new SelectListItem { Text = "Disponible", Value = "Disponible" },
@@ -208,8 +195,6 @@ namespace HotelPrado.UI.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
-
                 return RedirectToAction("Index");
             }
             catch
@@ -226,7 +211,6 @@ namespace HotelPrado.UI.Controllers
                 var Habitacion = _contexto.HabitacionesTabla.FirstOrDefault(d => d.IdHabitacion == IdHabitacion);
                 if (Habitacion != null)
                 {
-                    // Actualiza el estado con el valor recibido del formulario
                     Habitacion.Estado = Estado;
                     _contexto.SaveChanges();
                     string datosJson = $@"
@@ -259,7 +243,6 @@ namespace HotelPrado.UI.Controllers
                     return RedirectToAction("IndexHabitaciones");
                 }
 
-                // Si no se encuentra la habitacion, redirigir a IndexHabitaciones
                 return RedirectToAction("IndexHabitaciones");
             }
             catch (Exception ex)
