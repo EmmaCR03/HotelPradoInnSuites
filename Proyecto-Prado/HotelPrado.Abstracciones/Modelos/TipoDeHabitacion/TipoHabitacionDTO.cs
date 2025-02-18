@@ -11,8 +11,7 @@ namespace HotelPrado.Abstracciones.Modelos.TipoDeHabitacion
     {
         [Key]
         public int IdTipoHabitacion { get; set; }
-        public int Descripcion { get; set; }
-        public bool CapacidadDePersonas { get; set; }
-        public int NumeroHabitaciones { get; set; }
+        public string Nombre { get; set; }
+        public string Equipamiento { get; set; }
     }
 }

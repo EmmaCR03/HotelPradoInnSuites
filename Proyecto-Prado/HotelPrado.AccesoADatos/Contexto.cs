@@ -5,6 +5,7 @@ using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Colaborador;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Departamento;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Habitaciones;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.ImagenesDepartamento;
+using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Reservas;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.TipoDepartamento;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.TipoHabitacion;
 using System;
@@ -28,7 +29,10 @@ namespace HotelPrado.AccesoADatos
             modelBuilder.Entity<ColaboradorTabla>().ToTable("Colaborador");
             modelBuilder.Entity<ImagenesDepartamentoTabla>().ToTable("ImagenesDepartamento");
             modelBuilder.Entity<HabitacionesTabla>().ToTable("Habitaciones");
-            modelBuilder.Entity<TipoHabitacionTabla>().ToTable("TipoHabitaciones");
+            modelBuilder.Entity<TipoHabitacionTabla>().ToTable("TipoHabitacion");
+            modelBuilder.Entity<ReservasTabla>().ToTable("Reservas");
+
+
 
 
         }
@@ -41,6 +45,9 @@ namespace HotelPrado.AccesoADatos
         public DbSet<ImagenesDepartamentoTabla> ImagenesDepartamentoTabla { get; set; }
         public DbSet<HabitacionesTabla> HabitacionesTabla { get; set; }
         public DbSet<TipoHabitacionTabla> TipoHabitacionTabla { get; set; }
+        public DbSet<ReservasTabla> ReservasTabla { get; set; }
+
+
 
     }
 }

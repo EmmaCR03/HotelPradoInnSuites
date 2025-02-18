@@ -23,9 +23,9 @@ namespace HotelPrado.AccesoADatos.TipoDeHabitacion.Listar
                                                                  select new TipoHabitacionDTO
                                                                      {
                                                                      IdTipoHabitacion = TipoDeHabitacion.IdTipoHabitacion,
-                                                                     Descripcion = TipoDeHabitacion.Descripcion,
-                                                                     CapacidadDePersonas = TipoDeHabitacion.CapacidadDePersonas,
-                                                                     NumeroHabitaciones = TipoDeHabitacion.NumeroHabitaciones
+                                                                     Nombre = TipoDeHabitacion.Nombre,
+                                                                     Equipamiento = TipoDeHabitacion.Equipamiento
+
                                                                  }).ToList();
             return laListaDeTipoDeHabitacion;
 

@@ -24,8 +24,12 @@ namespace HotelPrado.AccesoADatos.Habitacion.Editar
                 .Where(laHabitacion => laHabitacion.IdHabitacion == laHabitacionActualizar.IdHabitacion)
                 .FirstOrDefault();
             laHabitacionEnBaseDeDatos.NumeroHabitacion = laHabitacionActualizar.NumeroHabitacion;
-            laHabitacionEnBaseDeDatos.PrecioPorNoche = laHabitacionActualizar.PrecioPorNoche;
+            laHabitacionEnBaseDeDatos.PrecioPorNoche1P = laHabitacionActualizar.PrecioPorNoche1P;
+            laHabitacionEnBaseDeDatos.PrecioPorNoche2P = laHabitacionActualizar.PrecioPorNoche2P;
+            laHabitacionEnBaseDeDatos.PrecioPorNoche3P = laHabitacionActualizar.PrecioPorNoche3P;
+            laHabitacionEnBaseDeDatos.PrecioPorNoche4P = laHabitacionActualizar.PrecioPorNoche4P;
             laHabitacionEnBaseDeDatos.IdTipoHabitacion = laHabitacionActualizar.IdTipoHabitacion;
+            laHabitacionEnBaseDeDatos.Capacidad = laHabitacionActualizar.Capacidad;
             EntityState estado = _contexto.Entry(laHabitacionEnBaseDeDatos).State = System.Data.Entity.EntityState.Modified;
             int cantidadDeDatosAlmacenados = await _contexto.SaveChangesAsync();
             return cantidadDeDatosAlmacenados;

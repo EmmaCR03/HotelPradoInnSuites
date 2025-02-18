@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HotelPrado.AccesoADatos.Habitacion.Listar
+namespace HotelPrado.AccesoADatos.Habitacion.HabDisponibles
 {
    public class ListarHabitacionesAD : IListarHabitacionesAD
     {
@@ -17,7 +17,7 @@ namespace HotelPrado.AccesoADatos.Habitacion.Listar
             _contexto = new Contexto();
         }
 
-        public List<HabitacionesDTO> Listar()
+        public List<HabitacionesDTO> Listar(int? capacidad = null, string estado = null)
         {
             var laListaDeHabitaciones = (from laHabitacion in _contexto.HabitacionesTabla
                                          join tipoHab in _contexto.TipoHabitacionTabla
@@ -27,13 +27,27 @@ namespace HotelPrado.AccesoADatos.Habitacion.Listar
                                          {
                                              IdHabitacion = laHabitacion.IdHabitacion,
                                              NumeroHabitacion = laHabitacion.NumeroHabitacion,
-                                             PrecioPorNoche = laHabitacion.PrecioPorNoche,
+                                             PrecioPorNoche1P = laHabitacion.PrecioPorNoche1P,
+                                             PrecioPorNoche2P = laHabitacion.PrecioPorNoche2P,
+                                             PrecioPorNoche3P = laHabitacion.PrecioPorNoche3P,
+                                             PrecioPorNoche4P = laHabitacion.PrecioPorNoche4P,
                                              Estado = laHabitacion.Estado,
-                                             IdTipoHabitacion = laHabitacion.IdTipoHabitacion,
-                                         }).ToList();
+                                             Capacidad = laHabitacion.Capacidad,
+                                             IdTipoHabitacion =laHabitacion.IdTipoHabitacion
+                                         });
+
+            if (capacidad.HasValue)
+            {
+                laListaDeHabitaciones = laListaDeHabitaciones.Where(h => h.Capacidad == capacidad.Value);
+            }
+
+            if (!string.IsNullOrEmpty(estado))
+            {
+                laListaDeHabitaciones = laListaDeHabitaciones.Where(h => h.Estado == estado);
+            }
 
 
-            return laListaDeHabitaciones;
+            return laListaDeHabitaciones.ToList();
         }
 
 

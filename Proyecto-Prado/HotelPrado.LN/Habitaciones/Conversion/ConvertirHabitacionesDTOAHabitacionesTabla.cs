@@ -17,8 +17,12 @@ namespace HotelPrado.LN.Habitaciones.Conversion
             {
                 IdHabitacion = laHabitacion.IdHabitacion,
                 NumeroHabitacion = laHabitacion.NumeroHabitacion,
-                PrecioPorNoche = laHabitacion.PrecioPorNoche,
+                PrecioPorNoche1P = laHabitacion.PrecioPorNoche1P,
+                PrecioPorNoche2P = laHabitacion.PrecioPorNoche2P,
+                PrecioPorNoche3P = laHabitacion.PrecioPorNoche3P,
+                PrecioPorNoche4P = laHabitacion.PrecioPorNoche4P,
                 IdTipoHabitacion = laHabitacion.IdTipoHabitacion,
+                Capacidad = laHabitacion.Capacidad,
                 Estado = laHabitacion.Estado
             };
         }

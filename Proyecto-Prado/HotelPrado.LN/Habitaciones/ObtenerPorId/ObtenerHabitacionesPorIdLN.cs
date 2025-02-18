@@ -30,10 +30,13 @@ namespace HotelPrado.LN.Habitaciones.ObtenerPorId
             return new HabitacionesDTO
             {
                 IdHabitacion = habitacionEnBaseDeDatos.IdHabitacion,
-                PrecioPorNoche = habitacionEnBaseDeDatos.PrecioPorNoche,
+                PrecioPorNoche1P = habitacionEnBaseDeDatos.PrecioPorNoche1P,
+                PrecioPorNoche2P = habitacionEnBaseDeDatos.PrecioPorNoche2P,
+                PrecioPorNoche3P = habitacionEnBaseDeDatos.PrecioPorNoche3P,
+                PrecioPorNoche4P = habitacionEnBaseDeDatos.PrecioPorNoche4P,
                 IdTipoHabitacion = habitacionEnBaseDeDatos.IdTipoHabitacion,
                 Estado = habitacionEnBaseDeDatos.Estado,
-                NumeroHabitacion = habitacionEnBaseDeDatos.TipoHabitacion != null ? habitacionEnBaseDeDatos.TipoHabitacion.NumeroHabitaciones : 0,
+                NumeroHabitacion = habitacionEnBaseDeDatos.NumeroHabitacion,
             };
         }
 

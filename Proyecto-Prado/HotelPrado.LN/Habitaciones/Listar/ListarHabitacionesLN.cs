@@ -1,7 +1,7 @@
 ﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Habitaciones.Listar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.Listar;
 using HotelPrado.Abstracciones.Modelos.Habitaciones;
-using HotelPrado.AccesoADatos.Habitacion.Listar;
+using HotelPrado.AccesoADatos.Habitacion.HabDisponibles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +19,9 @@ namespace HotelPrado.LN.Habitaciones.Listar
             _listarHabitacionesAD = new ListarHabitacionesAD();
         }
 
-        public List<HabitacionesDTO> Listar()
+        public List<HabitacionesDTO> Listar(int? capacidad = null, string estado = null)
         {
-            List<HabitacionesDTO> laListaDeHabitacion = _listarHabitacionesAD.Listar();
+            List<HabitacionesDTO> laListaDeHabitacion = _listarHabitacionesAD.Listar(capacidad, estado);
 
             return laListaDeHabitacion;
 

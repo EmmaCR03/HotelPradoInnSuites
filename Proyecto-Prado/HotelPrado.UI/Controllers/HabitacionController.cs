@@ -1,5 +1,6 @@
 ﻿using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Bitacora.Registrar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.Editar;
+using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.HabDisponibles;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.Listar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.ObtenerPorId;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.Registrar;
@@ -9,6 +10,7 @@ using HotelPrado.Abstracciones.Modelos.Habitaciones;
 using HotelPrado.AccesoADatos;
 using HotelPrado.LN.Bitacora.Registrar;
 using HotelPrado.LN.Habitaciones.Editar;
+using HotelPrado.LN.Habitaciones.HabDisponibles;
 using HotelPrado.LN.Habitaciones.Listar;
 using HotelPrado.LN.Habitaciones.ObtenerPorId;
 using HotelPrado.LN.Habitaciones.Registrar;
@@ -16,6 +18,7 @@ using HotelPrado.LN.TipoHabitacion.Listar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -25,12 +28,14 @@ namespace HotelPrado.UI.Controllers
     public class HabitacionController : Controller
     {
         IListarHabitacionesLN _listarHabitacionesLN;
+        IHabDisponiblesLN _habDisponiblesLN;
         IListarTipoHabitacionLN _listarTipoHabitacionLN;
         IRegistrarHabitacionesLN _registrarHabitacionesLN;
         Contexto _contexto;
         IEditarHabitacionesLN _editarHabitacionesLN;
         IRegistrarBitacoraEventosLN _registrarBitacoraEventosLN;
         IObtenerHabitacionesPorIdLN _obtenerHabitacionesPorId;
+        IHabDisponiblesLN _habDisponibles;
 
         public HabitacionController()
         {
@@ -41,13 +46,21 @@ namespace HotelPrado.UI.Controllers
             _obtenerHabitacionesPorId = new ObtenerHabitacionesPorIdLN();
             _editarHabitacionesLN = new EditarHabitacionesLN();
             _registrarBitacoraEventosLN = new RegistrarBitacoraEventosLN();
+            _habDisponibles=new HabDisponiblesLN();
         }
         // GET: Habitacion
-        public ActionResult IndexHabitaciones()
+        public ActionResult IndexHabitaciones(int? capacidad,string estado)
         {
             ViewBag.Title = "La Habitacion";
-            var laListaDeHabitaciones = _listarHabitacionesLN.Listar();
+            var laListaDeHabitaciones = _listarHabitacionesLN.Listar(capacidad,estado);
             return View(laListaDeHabitaciones);
+        }
+
+        public ActionResult IndexHabitacionesUsuario(DateTime check_in, DateTime check_out, int capacidad)
+        {
+            ViewBag.Title = "La Habitacion";
+            var laListaDeHabitacionesDisponibles = _habDisponibles.ListarDisponibles(check_in, check_out,capacidad);
+            return View(laListaDeHabitacionesDisponibles);
         }
 
         // GET: Habitacion/Details/5
@@ -80,7 +93,15 @@ namespace HotelPrado.UI.Controllers
         // GET: Habitacion/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var datosHabitacion = _obtenerHabitacionesPorId.Obtener(id);
+
+            ViewBag.Estados = new List<SelectListItem>
+    {
+        new SelectListItem { Text = "Disponible", Value = "Disponible" },
+        new SelectListItem { Text = "En Mantenimiento", Value = "En Mantenimiento" },
+        new SelectListItem { Text = "Ocupado", Value = "Ocupado" }
+    };
+            return View(datosHabitacion);
         }
 
         // POST: Habitacion/Edit/5
@@ -147,8 +168,12 @@ namespace HotelPrado.UI.Controllers
             {{
                     ""IdHabitacion"": {Habitacion.IdHabitacion},
                     ""NumeroHabitacion"": {Habitacion.NumeroHabitacion},
-                    ""PrecioPorNoche"": ""{Habitacion.PrecioPorNoche}"",
+                    ""PrecioPorNoche1P"": ""{Habitacion.PrecioPorNoche1P}"",
+                    ""PrecioPorNoche2P"": ""{Habitacion.PrecioPorNoche2P}"",
+                    ""PrecioPorNoche3P"": ""{Habitacion.PrecioPorNoche3P}"",
+                    ""PrecioPorNoche4P"": ""{Habitacion.PrecioPorNoche4P}"",
                     ""IdTipoHabitacion"": ""{Habitacion.IdTipoHabitacion}"",
+                    ""Capacidad"": ""{Habitacion.Capacidad}"",
                     ""Estado"": ""{Habitacion.Estado}""
             }}";
 

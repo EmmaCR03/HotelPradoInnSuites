@@ -1,32 +1,11 @@
 ﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Habitaciones.HabitacionesDTO>
 
 @{
-    ViewBag.Title = "IndexHabitaciones";
+    ViewBag.Title = "IndexHabitacionesUsuario";
 }
 
-<h2>IndexHabitaciones</h2>
+<h2>IndexHabitacionesUsuario</h2>
 
-
-<form method="get" class="form-inline">
-    <label for="capacidad">Filtrar por Capacidad:</label>
-    <select name="capacidad" id="capacidad" class="form-control mr-4">
-        <option value="">Todas</option>
-        <option value="1">1 Persona</option>
-        <option value="2">2 Personas</option>
-        <option value="3">3 Personas</option>
-        <option value="4">4 Personas</option>
-    </select>
-
-    <label for="estado">Filtrar por Estado:</label>
-    <select name="estado" id="estado" class="form-control">
-        <option value="">Todos</option>
-        <option value="Disponible">Disponible</option>
-        <option value="En Mantenimiento">En Mantenimiento</option>
-        <option value="Ocupado">Ocupado</option>
-    </select>
-
-    <button type="submit" class="btn btn-primary ml-4">Filtrar</button>
-</form>
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
@@ -48,13 +27,16 @@
             @Html.DisplayNameFor(model => model.PrecioPorNoche4P)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.PrecioFinal)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.IdTipoHabitacion)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Capacidad)
+            @Html.DisplayNameFor(model => model.Estado)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Estado)
+            @Html.DisplayNameFor(model => model.Capacidad)
         </th>
         <th></th>
     </tr>
@@ -70,29 +52,28 @@
         <td>
             @Html.DisplayFor(modelItem => item.PrecioPorNoche2P)
         </td>
-
         <td>
             @Html.DisplayFor(modelItem => item.PrecioPorNoche3P)
         </td>
-
         <td>
             @Html.DisplayFor(modelItem => item.PrecioPorNoche4P)
         </td>
-
-
         <td>
-            @Html.DisplayFor(modelItem => item.IdTipoHabitacion)
+            @Html.DisplayFor(modelItem => item.PrecioFinal)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Capacidad)
+            @Html.DisplayFor(modelItem => item.IdTipoHabitacion)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Estado)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.IdHabitacion }) |
-            @Html.ActionLink("Details", "Details", new { id = item.IdHabitacion }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.IdHabitacion })
+            @Html.DisplayFor(modelItem => item.Capacidad)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IdHabitacion }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IdHabitacion }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IdHabitacion })
         </td>
     </tr>
 }

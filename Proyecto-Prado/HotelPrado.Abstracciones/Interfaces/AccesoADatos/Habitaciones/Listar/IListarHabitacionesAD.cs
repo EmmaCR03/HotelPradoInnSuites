@@ -9,6 +9,6 @@ namespace HotelPrado.Abstracciones.Interfaces.AccesoADatos.Habitaciones.Listar
 {
     public interface IListarHabitacionesAD
     {
-        List<HabitacionesDTO> Listar();
+        List<HabitacionesDTO> Listar(int? capacidad = null, string estado=null);
     }
 }

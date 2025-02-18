@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props')" />
-  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -38,8 +37,8 @@
     <Reference Include="Microsoft.AspNetCore.Http.Features, Version=5.0.17.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Http.Features.5.0.17\lib\net461\Microsoft.AspNetCore.Http.Features.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\lib\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Primitives, Version=5.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Primitives.5.0.1\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
@@ -91,6 +90,7 @@
     <Compile Include="Interfaces\AccesoADatos\Departamentos\ObtenerPorId\IObtenerDepartamentoPorIdAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Departamentos\Registrar\IRegistrarDepartamentoAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Habitaciones\Editar\IEditarHabitacionesAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Habitaciones\HabDisponibles\IHabDisponiblesAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Habitaciones\Listar\IListarHabitacionesAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Habitaciones\ObtenerPorId\IObtenerHabitacionesPorIdAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Habitaciones\Registrar\IRegistrarHabitacionesAD.cs" />
@@ -118,6 +118,7 @@
     <Compile Include="Interfaces\LogicaDeNegocio\General\Fecha\IFechaActual.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Habitaciones\Conversion\IConvertirHabitacionesDTOAHabitacionesTabla.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Habitaciones\Editar\IEditarHabitacionesLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Habitaciones\HabDisponibles\IHabDisponiblesLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Habitaciones\Listar\IListarHabitacionesLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Habitaciones\ObtenerPorId\IObtenerHabitacionesPorIdLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Habitaciones\Registrar\IRegistrarHabitacionesLN.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="ModelosDeBaseDeDatos\Departamento\DepartamentoTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Habitaciones\HabitacionesTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\ImagenesDepartamento\ImagenesDepartamentoTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\Reservas\ReservasTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\TipoDepartamento\TipoDepartamentoTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\TipoHabitacion\TipoHabitacionTabla.cs" />
     <Compile Include="Modelos\Bitacora\BitacoraEventosDTO.cs" />
@@ -141,11 +143,13 @@
     <Compile Include="Modelos\Departamento\DepartamentoDTO.cs" />
     <Compile Include="Modelos\Habitaciones\HabitacionesDTO.cs" />
     <Compile Include="Modelos\ImagenesDepartamento\ImagenesDepartamentoDTO.cs" />
+    <Compile Include="Modelos\Reservas\ReservasDTO.cs" />
     <Compile Include="Modelos\TipoDeDepartamento\TipoDepartamentoDTO.cs" />
     <Compile Include="Modelos\TipoDeHabitacion\TipoHabitacionDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -156,7 +160,8 @@
     <PropertyGroup>
       <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets'))" />
   </Target>
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />
 </Project>

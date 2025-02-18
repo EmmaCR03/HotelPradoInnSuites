@@ -37,8 +37,12 @@ namespace HotelPrado.LN.Habitaciones.Registrar
                 {{
                     ""IdHabitacion"": {modelo.IdHabitacion},
                     ""NumeroHabitacion"": {modelo.NumeroHabitacion},
-                    ""PrecioPorNoche"": ""{modelo.PrecioPorNoche}"",
+                    ""PrecioPorNoche1P"": ""{modelo.PrecioPorNoche1P}"",
+                    ""PrecioPorNoche2P"": ""{modelo.PrecioPorNoche2P}"",
+                    ""PrecioPorNoche3P"": ""{modelo.PrecioPorNoche3P}"",
+                    ""PrecioPorNoche4P"": ""{modelo.PrecioPorNoche4P}"",
                     ""IdTipoHabitacion"": {modelo.IdTipoHabitacion},
+                    ""Capacidad"": {modelo.Capacidad},
                     ""Estado"": ""{modelo.Estado}"",
                 }}";
 
@@ -87,8 +91,12 @@ namespace HotelPrado.LN.Habitaciones.Registrar
             {
                 IdHabitacion = lahabitacion.IdHabitacion,
                 NumeroHabitacion = lahabitacion.NumeroHabitacion,
-                PrecioPorNoche = lahabitacion.PrecioPorNoche,
-                IdTipoHabitacion = lahabitacion.IdTipoHabitacion,
+                PrecioPorNoche1P = lahabitacion.PrecioPorNoche1P,
+                PrecioPorNoche2P = lahabitacion.PrecioPorNoche2P,
+                PrecioPorNoche3P = lahabitacion.PrecioPorNoche3P,
+                PrecioPorNoche4P = lahabitacion.PrecioPorNoche4P,
+                IdTipoHabitacion = (int)lahabitacion.IdTipoHabitacion,
+                Capacidad = lahabitacion.Capacidad,
                 Estado = lahabitacion.Estado,
             };
         }

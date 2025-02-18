@@ -1,4 +1,5 @@
-﻿using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.TipoHabitacion;
+﻿
+using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.TipoHabitacion;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,13 +15,22 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Habitaciones
     {
         [Key]
         public int IdHabitacion { get; set; }
-        public int NumeroHabitacion { get; set; }
-        public int PrecioPorNoche { get; set; }
-        public int IdTipoHabitacion { get; set; }
+        public string NumeroHabitacion { get; set; }
+        public decimal PrecioPorNoche1P { get; set; }
+        public decimal PrecioPorNoche2P { get; set; }
+        public decimal PrecioPorNoche3P { get; set; }
+        public decimal PrecioPorNoche4P { get; set; }
+
+        
         public string Estado { get; set; }
+
+        public int IdTipoHabitacion { get; set; }
 
         [ForeignKey("IdTipoHabitacion")]
         public virtual TipoHabitacionTabla TipoHabitacion { get; set; }
+
+        public int Capacidad { get; set; }
+
     }
 }
 
