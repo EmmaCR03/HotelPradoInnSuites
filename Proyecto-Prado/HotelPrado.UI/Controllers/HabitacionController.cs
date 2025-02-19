@@ -6,7 +6,10 @@ using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.ObtenerPo
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.Registrar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.TipoHabitacion.Listar;
 using HotelPrado.Abstracciones.Modelos.Bitacora;
+using HotelPrado.Abstracciones.Modelos.Departamento;
 using HotelPrado.Abstracciones.Modelos.Habitaciones;
+using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.ImagenesDepartamento;
+using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.ImagenesHabitacion;
 using HotelPrado.AccesoADatos;
 using HotelPrado.LN.Bitacora.Registrar;
 using HotelPrado.LN.Habitaciones.Editar;
@@ -69,71 +72,112 @@ namespace HotelPrado.UI.Controllers
         // GET: Habitacion/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            HabitacionesDTO hab = _obtenerHabitacionesPorId.Obtener(id);
+            if (hab == null)
+            {
+                return HttpNotFound();
+            }
+            // Asegurar que UrlImagenes no sea null ni vacío
+            if (string.IsNullOrWhiteSpace(hab.UrlImagenes))
+            {
+                hab.UrlImagenes = ""; // Evita errores en la vista
+            }
+
+            return View(hab);
         }
+
+
+        public string GetUrlImagenesById(int id)
+        {
+            var urlImagenes = _contexto.HabitacionesTabla
+                .Where(d => d.IdHabitacion == id)
+                .Select(d => d.UrlImagenes)
+                .FirstOrDefault();
+
+            return urlImagenes; // Devuelve solo el campo UrlImagenes
+        }
+
+
 
         // GET: Habitacion/Create
         public ActionResult Create()
         {
-            var tipoHabitacion = _listarTipoHabitacionLN.Listar();
-            ViewBag.TipoHabitacion = new SelectList(tipoHabitacion, "IdTipoHabitacion", "Nombre");
+            
 
             return View();
         }
 
-        // POST: Habitacion/Create
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(HabitacionesDTO modeloDeHabitaciones)
         {
-            var tipoHabitacion = _listarTipoHabitacionLN.Listar();
-            ViewBag.TipoHabitacion = new SelectList(tipoHabitacion, "IdTipoHabitacion", "Nombre");
-
             if (ModelState.IsValid)
             {
-                try
+                Console.WriteLine("IdTipoHabitacion recibido: " + modeloDeHabitaciones.IdTipoHabitacion);
+
+                // Si el valor es null o 0, el problema está en la vista
+                if (modeloDeHabitaciones.IdTipoHabitacion == null || modeloDeHabitaciones.IdTipoHabitacion == 0)
                 {
-                    List<string> rutasImagenes = new List<string>();
-
-                    if (Request.Files.Count > 0)
-                    {
-                        foreach (string file in Request.Files)
-                        {
-                            var archivo = Request.Files[file];
-                            if (archivo != null && archivo.ContentLength > 0)
-                            {
-                                string rutaImagen = Server.MapPath("~/Images/") + Path.GetFileName(archivo.FileName);
-                                archivo.SaveAs(rutaImagen);
-                                rutasImagenes.Add("/Images/" + Path.GetFileName(archivo.FileName));
-                            }
-                        }
-
-                        modeloDeHabitaciones.ListaImagenes = rutasImagenes;
-                    }
-
-                    int cantidadDeDatosGuardados = await _registrarHabitacionesLN.Guardar(modeloDeHabitaciones);
-
-                    if (cantidadDeDatosGuardados > 0)
-                    {
-                        return RedirectToAction("IndexHabitaciones");
-                    }
-                    else
-                    {
-                        ViewBag.ErrorMessage = "No se pudo registrar la habitación. Intente nuevamente.";
-                        return View(modeloDeHabitaciones);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ViewBag.ErrorMessage = "Hubo un error al registrar la habitación. Intente nuevamente.";
-                    Console.WriteLine($"Error: {ex.Message}");
+                    ModelState.AddModelError("IdTipoHabitacion", "Debe seleccionar un tipo de habitación.");
                     return View(modeloDeHabitaciones);
                 }
+
+
+
+                // Lista de archivos a almacenar
+                var archivos = new List<string>();
+
+                // Verificar si la carpeta "Uploads" existe, si no, crearla
+                string uploadDirectory = Server.MapPath("~/Uploads/");
+                if (!Directory.Exists(uploadDirectory))
+                {
+                    Directory.CreateDirectory(uploadDirectory);
+                }
+
+                // Verificar si hay archivos cargados
+                if (Request.Files.Count > 0)
+                {
+                    foreach (string fileName in Request.Files)
+                    {
+                        var file = Request.Files[fileName];
+                        if (file != null && file.ContentLength > 0)
+                        {
+                            // Guardar el archivo en un directorio específico
+                            string path = Path.Combine(uploadDirectory, Path.GetFileName(file.FileName));
+                            file.SaveAs(path);
+
+                            // Agregar la URL del archivo a la lista
+                            archivos.Add("/Uploads/" + Path.GetFileName(file.FileName));
+                        }
+                    }
+
+                    // Aquí puedes agregar la lista de imágenes a tu modelo
+                    modeloDeHabitaciones.UrlImagenes = string.Join(",", archivos);
+                }
+
+                // Guardar el departamento en la base de datos
+                int cantidadDeDatosGuardados = await _registrarHabitacionesLN.Guardar(modeloDeHabitaciones);
+                await _contexto.SaveChangesAsync();
+
+                // Guardar las imágenes asociadas a esta habitacion
+                foreach (var url in archivos) // Usa "archivos" para recorrer las URLs
+                {
+                    var imagen = new ImagenesHabitacionTabla
+                    {
+                        IdHabitacion = modeloDeHabitaciones.IdHabitacion,
+                        UrlImagen = url
+                    };
+
+                    _contexto.ImagenesHabitacionTabla.Add(imagen);
+                }
+
+                // Guardar cambios en la base de datos
+
+                return RedirectToAction("IndexHabitaciones");
             }
-            else
-            {
-                ViewBag.ErrorMessage = "Por favor, corrija los errores de validación.";
-                return View(modeloDeHabitaciones);
-            }
+
+            // Si no es válido, regresamos el modelo para que se pueda corregir
+            return View(modeloDeHabitaciones);
         }
 
         // GET: Habitacion/Edit/5
@@ -151,42 +195,81 @@ namespace HotelPrado.UI.Controllers
 
         // POST: Habitacion/Edit/5
         [HttpPost]
-        public async Task<ActionResult> Edit(HabitacionesDTO laHabitacion)
+        public async Task<ActionResult> Edit(HabitacionesDTO lahabitacion, List<string> eliminarImagenes)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var cantidadDeDatosActualizados = await _editarHabitacionesLN.Actualizar(laHabitacion);
+                    // Obtén la habitacion desde la base de datos usando su ID
+                    var habitacion = _obtenerHabitacionesPorId.Obtener(lahabitacion.IdHabitacion);
+
+                    // Eliminar imágenes seleccionadas
+                    if (eliminarImagenes != null && eliminarImagenes.Count > 0)
+                    {
+                        // Eliminar las imágenes de la lista de la habitacion
+                        habitacion.ListaImagenes = habitacion.ListaImagenes.Except(eliminarImagenes).ToList();
+                    }
+
+                    // Guardar nuevas imágenes
+                    if (Request.Files.Count > 0)
+                    {
+                        foreach (string file in Request.Files)
+                        {
+                            var imagen = Request.Files[file];
+                            if (imagen.ContentLength > 0)
+                            {
+                                // Asigna una ruta para almacenar la imagen
+                                var ruta = $"/imagenes/{imagen.FileName}";
+
+                                // Guarda la imagen en el servidor (en la carpeta wwwroot)
+                                var filePath = Path.Combine(Server.MapPath("~"), "wwwroot", "imagenes", imagen.FileName);
+                                imagen.SaveAs(filePath);
+
+                                // Añadir la URL de la imagen a la lista de imágenes
+                                habitacion.ListaImagenes.Add(ruta);
+                            }
+                        }
+                    }
+
+                    // Guardar cambios en la base de datos (las URLs de las imágenes)
+                    habitacion.UrlImagenes = string.Join(",", habitacion.ListaImagenes);
+
+                    // Actualizar la habitacion en la base de datos
+                    int cantidadDeDatosActualizados = await _editarHabitacionesLN.Actualizar(lahabitacion);
+
                     if (cantidadDeDatosActualizados == 0)
                     {
                         ViewBag.mensaje = "Ocurrió un error inesperado, favor intente nuevamente.";
-                        return View(laHabitacion);
+                        return View(lahabitacion);
                     }
+
                     return RedirectToAction("IndexHabitaciones");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error al actualizar: {ex.Message}");
                     ViewBag.mensaje = "Ocurrió un error inesperado, favor intente nuevamente.";
-                    return View(laHabitacion);
+                    return View(lahabitacion);
                 }
             }
-            return View(laHabitacion);
+
+            return View(lahabitacion);
         }
 
-        // GET: Habitacion/Delete/5
+        // GET: Departamento/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Habitacion/Delete/5
+        // POST: Departamento/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
             try
             {
+                // TODO: Add delete logic here
+
                 return RedirectToAction("Index");
             }
             catch
@@ -194,36 +277,195 @@ namespace HotelPrado.UI.Controllers
                 return View();
             }
         }
+        public ActionResult EditarImagenes(int id)
+        {
+            var habitaciones = _listarHabitacionesLN.Listar().FirstOrDefault(d => d.IdHabitacion == id);
+
+            if (habitaciones == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(habitaciones);
+        }
+
+
+        [HttpPost]
+        public ActionResult ActualizarImagenes(int id, IEnumerable<HttpPostedFileBase> imagenes)
+        {
+            var habitaciones = _contexto.HabitacionesTabla.Find(id);
+
+            if (habitaciones == null)
+            {
+                return HttpNotFound();
+            }
+
+            var imagenUrls = new List<string>();
+
+            // Mantener las imágenes existentes en la habitacion
+            if (!string.IsNullOrEmpty(habitaciones.UrlImagenes))
+            {
+                imagenUrls.AddRange(habitaciones.UrlImagenes.Split(','));
+            }
+
+            var datosAnteriores = string.Join(",", imagenUrls); // Guardamos las URLs antes de la actualización
+
+            if (imagenes != null)
+            {
+                foreach (var imagen in imagenes)
+                {
+                    if (imagen != null && imagen.ContentLength > 0)
+                    {
+                        var rutaCarpeta = Server.MapPath("~/Content/Imagenes");
+                        if (!Directory.Exists(rutaCarpeta))
+                        {
+                            Directory.CreateDirectory(rutaCarpeta);
+                        }
+
+                        var filePath = Path.Combine(rutaCarpeta, Path.GetFileName(imagen.FileName));
+
+                        // Guardar archivo
+                        imagen.SaveAs(filePath);
+
+                        // Guardar la URL relativa
+                        imagenUrls.Add("/Content/Imagenes/" + Path.GetFileName(imagen.FileName));
+                    }
+                }
+
+                // Actualiza el campo de UrlImagenes en el departamento
+                habitaciones.UrlImagenes = string.Join(",", imagenUrls);
+                _contexto.SaveChanges();
+            }
+            var datosPosteriores = string.Join(",", imagenUrls); // Guardamos las URLs después de la actualización
+
+            // Registrar en la bitácora
+            string datosJsonAnteriores = $@"
+    {{
+        ""IdDepartamento"": {habitaciones.IdHabitacion},
+        ""NumeroHabitacion"": ""{habitaciones.NumeroHabitacion}"",
+        ""UrlImagenes"": ""{datosAnteriores}""
+    }}";
+
+            string datosJsonPosteriores = $@"
+    {{
+        ""IdDepartamento"": {habitaciones.IdHabitacion},
+        ""NumeroHabitacion"": ""{habitaciones.NumeroHabitacion}"",
+        ""UrlImagenes"": ""{datosPosteriores}""
+    }}";
+
+            var bitacora = new BitacoraEventosDTO
+            {
+                IdEvento = 0,
+                TablaDeEvento = "ModuloHabitaciones",
+                TipoDeEvento = "Actualizar imágenes",
+                FechaDeEvento = DateTime.Now.ToString("dd-MM-yyyy"),
+                DescripcionDeEvento = "Se actualizaron las imágenes de una habitacion.",
+                StackTrace = "no hubo error",
+                DatosAnteriores = datosJsonAnteriores,
+                DatosPosteriores = datosJsonPosteriores
+            };
+
+            _registrarBitacoraEventosLN.RegistrarBitacora(bitacora);
+
+            return RedirectToAction("IndexHabitaciones");
+        }
+
+
+        [HttpPost]
+        public ActionResult EliminarImagen(int id, string imagenUrl)
+        {
+            var habitaciones = _contexto.HabitacionesTabla.Find(id);
+
+            if (habitaciones == null || string.IsNullOrEmpty(imagenUrl))        
+            {
+                return HttpNotFound();
+            }
+
+            // Convertir la lista de imágenes en un List<string>
+            var imagenesList = habitaciones.UrlImagenes.Split(',').ToList();
+
+            var datosAnteriores = string.Join(",", imagenesList); // Guardamos las URLs antes de la eliminación
+
+            // Eliminar la imagen seleccionada
+            imagenesList.Remove(imagenUrl);
+
+            // Actualizar la cadena de imágenes en la base de datos
+            habitaciones.UrlImagenes = string.Join(",", imagenesList);
+            _contexto.SaveChanges();
+
+            // Eliminar físicamente la imagen del servidor
+            var rutaImagen = Server.MapPath(imagenUrl);
+            if (System.IO.File.Exists(rutaImagen))
+            {
+                System.IO.File.Delete(rutaImagen);
+            }
+
+            var datosPosteriores = string.Join(",", imagenesList); // Guardamos las URLs después de la eliminación
+
+            // Registrar en la bitácora
+            string datosJsonAnteriores = $@"
+    {{
+        ""IdHabitacion"": {habitaciones.IdHabitacion},
+        ""NumeroHabitacion"": ""{habitaciones.NumeroHabitacion}"",
+        ""UrlImagenes"": ""{datosAnteriores}""
+    }}";
+
+            string datosJsonPosteriores = $@"
+    {{
+        ""IdHabitacion"": {habitaciones.IdHabitacion},
+        ""NumeroHabitacion"": ""{habitaciones.NumeroHabitacion}"",
+        ""UrlImagenes"": ""{datosPosteriores}""
+    }}";
+
+            var bitacora = new BitacoraEventosDTO
+            {
+                IdEvento = 0,
+                TablaDeEvento = "ModuloHabitaciones",
+                TipoDeEvento = "Eliminar imagen",
+                FechaDeEvento = DateTime.Now.ToString("dd-MM-yyyy"),
+                DescripcionDeEvento = "Se eliminó una imagen de una imagen.",
+                StackTrace = "no hubo error",
+                DatosAnteriores = datosJsonAnteriores,
+                DatosPosteriores = datosJsonPosteriores
+            };
+
+            _registrarBitacoraEventosLN.RegistrarBitacora(bitacora);
+
+            return RedirectToAction("EditarImagenes", new { id = id });
+        }
+
 
         [HttpPost]
         public ActionResult ToggleEstado(int IdHabitacion, string Estado)
         {
             try
             {
-                var Habitacion = _contexto.HabitacionesTabla.FirstOrDefault(d => d.IdHabitacion == IdHabitacion);
-                if (Habitacion != null)
+                var habitaciones = _contexto.HabitacionesTabla.FirstOrDefault(d => d.IdHabitacion == IdHabitacion);
+                if (habitaciones != null)
                 {
-                    Habitacion.Estado = Estado;
+                    // Actualiza el estado con el valor recibido del formulario
+                    habitaciones.Estado = Estado;
                     _contexto.SaveChanges();
+
                     string datosJson = $@"
-                    {{
-                        ""IdHabitacion"": {Habitacion.IdHabitacion},
-                        ""NumeroHabitacion"": {Habitacion.NumeroHabitacion},
-                        ""PrecioPorNoche1P"": ""{Habitacion.PrecioPorNoche1P}"",
-                        ""PrecioPorNoche2P"": ""{Habitacion.PrecioPorNoche2P}"",
-                        ""PrecioPorNoche3P"": ""{Habitacion.PrecioPorNoche3P}"",
-                        ""PrecioPorNoche4P"": ""{Habitacion.PrecioPorNoche4P}"",
-                        ""IdTipoHabitacion"": ""{Habitacion.IdTipoHabitacion}"",
-                        ""CapacidadMin"": ""{Habitacion.CapacidadMin}"",
-                        ""CapacidadMax"": ""{Habitacion.CapacidadMax}"",
-                        ""Estado"": ""{Habitacion.Estado}""
-                    }}";
+           {{
+                    ""IdHabitacion"": {habitaciones.IdHabitacion},
+                    ""NumeroHabitacion"": {habitaciones.NumeroHabitacion},
+                    ""PrecioPorNoche1P"": ""{habitaciones.PrecioPorNoche1P}"",
+                    ""PrecioPorNoche2P"": ""{habitaciones.PrecioPorNoche2P}"",
+                    ""PrecioPorNoche3P"": ""{habitaciones.PrecioPorNoche3P}"",
+                    ""PrecioPorNoche4P"": ""{habitaciones.PrecioPorNoche4P}"",
+                    ""IdTipoHabitacion"": ""{habitaciones.IdTipoHabitacion}"",
+                    ""CapacidadMax"": ""{habitaciones.CapacidadMax}"",
+                    ""CapacidadMin"": ""{habitaciones.CapacidadMin}"",
+                    ""Estado"": ""{habitaciones.Estado}""
+                }}";
 
                     var bitacora = new BitacoraEventosDTO
                     {
                         IdEvento = 0,
                         TablaDeEvento = "ModuloHabitaciones",
-                        TipoDeEvento = "Actualizar",
+                        TipoDeEvento = "Cambiar Estado",
                         FechaDeEvento = DateTime.Now.ToString("dd-MM-yyyy"),
                         DescripcionDeEvento = "Se actualizó el estado de la habitacion.",
                         StackTrace = "no hubo error",
@@ -236,6 +478,7 @@ namespace HotelPrado.UI.Controllers
                     return RedirectToAction("IndexHabitaciones");
                 }
 
+                // Si no se encuentra el departamento, redirigir a IndexHabitaciones
                 return RedirectToAction("IndexHabitaciones");
             }
             catch (Exception ex)
@@ -254,8 +497,9 @@ namespace HotelPrado.UI.Controllers
 
                 _registrarBitacoraEventosLN.RegistrarBitacora(bitacora);
 
-                return RedirectToAction("IndexHabitaciones", "Habitacion");
+                return RedirectToAction("Index", "Home");
             }
         }
+
     }
 }

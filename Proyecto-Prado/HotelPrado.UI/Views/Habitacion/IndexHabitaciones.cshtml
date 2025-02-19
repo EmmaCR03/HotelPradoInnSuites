@@ -6,102 +6,138 @@
 
 <h2>IndexHabitaciones</h2>
 
-
-<form method="get" class="form-inline">
-    <label for="capacidad">Filtrar por Capacidad:</label>
-    <select name="capacidad" id="capacidad" class="form-control mr-4">
-        <option value="">Todas</option>
-        <option value="1">1 Persona</option>
-        <option value="2">2 Personas</option>
-        <option value="3">3 Personas</option>
-        <option value="4">4 Personas</option>
-    </select>
-
-    <label for="estado">Filtrar por Estado:</label>
-    <select name="estado" id="estado" class="form-control">
-        <option value="">Todos</option>
-        <option value="Disponible">Disponible</option>
-        <option value="En Mantenimiento">En Mantenimiento</option>
-        <option value="Ocupado">Ocupado</option>
-    </select>
-
-    <button type="submit" class="btn btn-primary ml-4">Filtrar</button>
-</form>
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success" })
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.NumeroHabitacion)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PrecioPorNoche1P)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PrecioPorNoche2P)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PrecioPorNoche3P)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PrecioPorNoche4P)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IdTipoHabitacion)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CapacidadMin)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CapacidadMax)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Estado)
-        </th>
-        <th></th>
-    </tr>
 
+<!-- Barra de Búsqueda -->
+<input type="text" id="search" class="form-control mb-3" placeholder="Buscar por número de habitación...">
+
+<div class="row">
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumeroHabitacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PrecioPorNoche1P)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PrecioPorNoche2P)
-            </td>
+        <div class="col-md-4 mb-4 habitacion-item">
+            <div class="border p-3 rounded shadow-sm hover-effect" data-bs-toggle="collapse" data-bs-target="#habitacion-@item.IdHabitacion" aria-expanded="false" aria-controls="habitacion-@item.IdHabitacion">
+                <h5>Habitación @item.NumeroHabitacion</h5>
+                <p><strong>Capacidad:</strong> @item.CapacidadMax personas</p>
+                <p><strong>Estado:</strong> @item.Estado</p>
+            </div>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.PrecioPorNoche3P)
-            </td>
+            <div id="habitacion-@item.IdHabitacion" class="collapse">
+                <div class="border p-3 mt-2 rounded shadow-sm">
+                    <p><strong>Precio 1P:</strong> @item.PrecioPorNoche1P</p>
+                    <p><strong>Precio 2P:</strong> @item.PrecioPorNoche2P</p>
+                    <p><strong>Precio 3P:</strong> @item.PrecioPorNoche3P</p>
+                    <p><strong>Precio 4P:</strong> @item.PrecioPorNoche4P</p>
+                    <p><strong>Tipo:</strong> @item.IdTipoHabitacion</p>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.PrecioPorNoche4P)
-            </td>
+                    <div class="mb-3">
+                        @if (item.ListaImagenes.Any())
+                        {
+                            foreach (var imagenUrl in item.ListaImagenes)
+                            {
+                                <img src="@Url.Content(imagenUrl)" alt="Imagen Departamento" class="lazy" data-src="@Url.Content(imagenUrl)" style="width: 100px; height: 100px; margin-right: 5px;" />
+                            }
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("/imagenes/default.jpg")" alt="Imagen por defecto" class="lazy" data-src="@Url.Content("/imagenes/default.jpg")" style="width: 100px; height: 100px;" />
+                        }
+                    </div>
 
+                    <div class="d-flex justify-content-between">
+                        @Html.ActionLink("Ver Citas Disponibles", "IndexCitas", "Citas", new { id = item.IdHabitacion }, new { @class = "btn btn-outline-primary btn-sm" })
 
-            <td>
-                @Html.DisplayFor(modelItem => item.IdTipoHabitacion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CapacidadMin)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CapacidadMax)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.IdHabitacion }) |
-                @Html.ActionLink("Details", "Details", new { id = item.IdHabitacion }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.IdHabitacion })
-            </td>
-        </tr>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-2">
+
+                        @Html.ActionLink("Editar Imágenes", "EditarImagenes", "Departamento", new { id = item.IdHabitacion }, new { @class = "btn btn-outline-info btn-sm" })
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        @Html.ActionLink("Detalles", "Details", new { id = item.IdHabitacion }, new { @class = "btn btn-outline-info btn-sm" })
+                        @Html.ActionLink("Editar", "Edit", new { id = item.IdHabitacion }, new { @class = "btn btn-outline-warning btn-sm" })
+                        @Html.ActionLink("Eliminar", "Delete", new { id = item.IdHabitacion }, new { @class = "btn btn-outline-danger btn-sm" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Scripts para interactividad -->
+<script>
+    // Filtro de búsqueda
+    document.getElementById("search").addEventListener("input", function () {
+        let filter = this.value.toLowerCase();
+        let items = document.querySelectorAll(".departamento-item");
+
+        items.forEach(function (item) {
+            let nombre = item.querySelector("h5").innerText.toLowerCase();
+            if (nombre.includes(filter)) {
+                item.style.display = "block";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    });
+
+    // Lazy Loading de Imágenes
+    document.addEventListener("DOMContentLoaded", function () {
+        let lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
+
+        if ("IntersectionObserver" in window) {
+            let lazyImageObserver = new IntersectionObserver(function (entries, observer) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        let lazyImage = entry.target;
+                        lazyImage.src = lazyImage.dataset.src;
+                        lazyImage.classList.remove("lazy");
+                        lazyImageObserver.unobserve(lazyImage);
+                    }
+                });
+            });
+
+            lazyImages.forEach(function (lazyImage) {
+                lazyImageObserver.observe(lazyImage);
+            });
+        }
+    });
+
+    // Efecto Hover
+    document.querySelectorAll('.hover-effect').forEach(function (element) {
+        element.addEventListener('mouseover', function () {
+            element.style.transform = 'scale(1.05)';
+            element.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+        });
+        element.addEventListener('mouseout', function () {
+            element.style.transform = 'scale(1)';
+            element.style.boxShadow = 'none';
+        });
+    });
+</script>
+
+<!-- Estilos para hover y botones -->
+<style>
+    .hover-effect {
+        transition: all 0.3s ease;
     }
 
-</table>
+        .hover-effect:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+    /* Estilo para el filtro de búsqueda */
+    #search {
+        max-width: 300px;
+        margin-bottom: 20px;
+    }
+
+    /* Estilo de los botones */
+    .btn-outline-primary, .btn-outline-info, .btn-outline-warning, .btn-outline-danger {
+        width: 100%;
+        text-align: center;
+    }
+</style>

@@ -133,6 +133,7 @@
     <Compile Include="ModelosDeBaseDeDatos\Departamento\DepartamentoTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Habitaciones\HabitacionesTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\ImagenesDepartamento\ImagenesDepartamentoTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\ImagenesHabitacion\ImagenesHabitacionTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Reservas\ReservasTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\TipoDepartamento\TipoDepartamentoTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\TipoHabitacion\TipoHabitacionTabla.cs" />
@@ -144,6 +145,7 @@
     <Compile Include="Modelos\Departamento\DepartamentoDTO.cs" />
     <Compile Include="Modelos\Habitaciones\HabitacionesDTO.cs" />
     <Compile Include="Modelos\ImagenesDepartamento\ImagenesDepartamentoDTO.cs" />
+    <Compile Include="Modelos\ImagenesHabitacion\ImagenesHabitacionDTO.cs" />
     <Compile Include="Modelos\Reservas\ReservasDTO.cs" />
     <Compile Include="Modelos\TipoDeDepartamento\TipoDepartamentoDTO.cs" />
     <Compile Include="Modelos\TipoDeHabitacion\TipoHabitacionDTO.cs" />
