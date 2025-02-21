@@ -1,0 +1,113 @@
+﻿@model HotelPrado.Abstracciones.Modelos.Habitaciones.HabitacionesDTO
+
+@{
+    ViewBag.Title = "Detalles de la Habitación";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Carrusel de imágenes -->
+        <div class="col-md-6 d-flex align-items-center">
+            @{
+                var images = !string.IsNullOrEmpty(Model.UrlImagenes)
+                    ? Model.UrlImagenes.Split(',').Select(img => img.Trim()).Where(img => !string.IsNullOrEmpty(img)).ToList()
+                    : new List<string>(); // Si no hay imágenes, creamos una lista vacía
+            }
+
+            <div id="carousel-@Model.IdHabitacion" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @if (images.Any())
+                    {
+                        for (int i = 0; i < images.Count; i++)
+                        {
+                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                <img src="@Url.Content(images[i])" class="d-block w-100" alt="Imagen de la habitación @Model.NumeroHabitacion">
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="carousel-item active">
+                            <img src="@Url.Content("~/imagenes/default.jpg")" class="d-block w-100 rounded" alt="Imagen por defecto">
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@Model.IdHabitacion" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carousel-@Model.IdHabitacion" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+        </div>
+
+        <!-- Información de la Habitación -->
+        <div class="col-md-6">
+            <h2 class="fw-bold">Habitación @Model.NumeroHabitacion</h2>
+
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <td><strong>Capacidad Mínima:</strong></td>
+                        <td>@Model.CapacidadMin</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Capacidad Máxima:</strong></td>
+                        <td>@Model.CapacidadMax</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Precio por Noche (1 persona):</strong></td>
+                        <td>@Model.PrecioPorNoche1P</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Precio por Noche (2 personas):</strong></td>
+                        <td>@Model.PrecioPorNoche2P</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Precio por Noche (3 personas):</strong></td>
+                        <td>@Model.PrecioPorNoche3P</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Precio por Noche (4 personas):</strong></td>
+                        <td>@Model.PrecioPorNoche4P</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Precio Final:</strong></td>
+                        <td>@Model.PrecioFinal</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Botones -->
+            <div class="row g-2 mt-4">
+                <div class="col-md-4">
+                    <a href="@Url.Action("Reservar", "Reservas", new { id = Model.IdHabitacion })" class="btn btn-success w-100">
+                        <i class="fas fa-bed"></i> Reservar
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="@Url.Action("IndexHabitacionesUsuario", "Habitacion")" class="btn btn-dark w-100">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .carousel-inner img {
+        max-height: 300px;
+        width: auto;
+        transition: transform 0.5s ease-in-out;
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        background-color: black;
+    }
+
+    .carousel-item-next, .carousel-item-prev, .carousel-item.active {
+        transition: transform 0.5s ease-in-out;
+    }
+</style>

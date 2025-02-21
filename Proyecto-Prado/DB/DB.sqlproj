@@ -77,5 +77,6 @@
     <Build Include="dbo\Tables\AspNetUserLogins.sql" />
     <Build Include="dbo\Tables\AspNetUserClaims.sql" />
     <Build Include="dbo\Tables\AspNetRoles.sql" />
+    <Build Include="dbo\Tables\ImagenesHabitaciones.sql" />
   </ItemGroup>
 </Project>

@@ -575,6 +575,7 @@
     <Content Include="Views\Habitacion\Edit.cshtml" />
     <Content Include="Views\Habitacion\IndexHabitacionesUsuario.cshtml" />
     <Content Include="Views\Habitacion\Create.cshtml" />
+    <Content Include="Views\Habitacion\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

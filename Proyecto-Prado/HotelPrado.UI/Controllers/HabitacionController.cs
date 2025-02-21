@@ -6,9 +6,7 @@ using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.ObtenerPo
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.Registrar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.TipoHabitacion.Listar;
 using HotelPrado.Abstracciones.Modelos.Bitacora;
-using HotelPrado.Abstracciones.Modelos.Departamento;
 using HotelPrado.Abstracciones.Modelos.Habitaciones;
-using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.ImagenesDepartamento;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.ImagenesHabitacion;
 using HotelPrado.AccesoADatos;
 using HotelPrado.LN.Bitacora.Registrar;
@@ -233,7 +231,7 @@ namespace HotelPrado.UI.Controllers
                     }
 
                     // Guardar cambios en la base de datos (las URLs de las imágenes)
-                    habitacion.UrlImagenes = string.Join(",", habitacion.ListaImagenes);
+                    habitacion.UrlImagenes = string.Join(",", habitacion.ListaImagenes) ??"";
 
                     // Actualizar la habitacion en la base de datos
                     int cantidadDeDatosActualizados = await _editarHabitacionesLN.Actualizar(lahabitacion);
