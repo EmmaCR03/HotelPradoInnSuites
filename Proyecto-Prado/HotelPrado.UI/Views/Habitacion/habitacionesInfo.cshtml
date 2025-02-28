@@ -1,0 +1,135 @@
+﻿@{
+    ViewBag.Title = "Habitaciones Info";
+}
+
+<!-- Estilos -->
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/site.css" rel="stylesheet" />
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Información de Habitaciones</h2>
+
+    <!-- Carrusel de imágenes -->
+    <div id="habitacionesCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="~/Img/images/initial_img.jpg" class="d-block w-100" alt="Habitación 1">
+            </div>
+            <div class="carousel-item">
+                <img src="~/Img/images/habitacion2.jpg" class="d-block w-100" alt="Habitación 2">
+            </div>
+            <div class="carousel-item">
+                <img src="~/Img/images/habitacion3.jpg" class="d-block w-100" alt="Habitación 3">
+            </div>
+            <div class="carousel-item">
+                <img src="~/Img/images/habitacion4.jpg" class="d-block w-100" alt="Habitación 4">
+            </div>
+        </div>
+
+        <!-- Controles del carrusel -->
+        <a class="carousel-control-prev" href="#habitacionesCarousel" role="button" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#habitacionesCarousel" role="button" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </a>
+    </div>
+
+    <!-- Información de la Habitación -->
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header text-center">
+                    <h5 class="card-title">Descripción</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p>Todas nuestras habitaciones cuentan con dos camas matrimoniales, un amplio baño, pantalla inteligente, WI-FI y todas las comodidades para nuestros clientes.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header text-center">
+                    <h5 class="card-title">Capacidad</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p>Todas nuestras habitaciones tienen una capacidad de mínimo una persona y máximo 4</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header text-center">
+                    <h5 class="card-title">Precio por Noche</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p>Nuestros precios varían dependiendo de la cantidad de personas que se hospeden en nuestro hotel:</p>
+                    <ul>
+                        <li>1 Persona: ₡35.700</li>
+                        <li>2 Personas: ₡40.000</li>
+                        <li>3 Personas: ₡45.000</li>
+                        <li>4 Personas: ₡50.000</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 d-flex justify-content-center mt-5">
+            <form id="form" class="form-group bg-white p-5 rounded-4 w-50"
+                  method="get"
+                  action="@Url.Action("IndexHabitacionesUsuario", "Habitacion")">
+                <h6 class="display-6 text-center">Comprobar Disponibilidad</h6>
+
+                <div class="col-lg-12 my-4">
+                    <label class="form-label text-uppercase">Check-In</label>
+                    <input type="date" name="check_in" class="form-control text-black-50 ps-3" required>
+                </div>
+
+                <div class="col-lg-12 my-4">
+                    <label class="form-label text-uppercase">Check-Out</label>
+                    <input type="date" name="check_out" class="form-control text-black-50 ps-3" required>
+                </div>
+
+                <div class="col-lg-12 my-4">
+                    <label class="form-label text-uppercase">Personas</label>
+                    <input type="number" name="capacidad" class="form-control text-black-50 ps-3" value="1" min="1" required>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-arrow btn-primary mt-3">
+                        <span>
+                            Comprobar<svg width="18" height="18">
+                                <use xlink:href="#arrow-right"></use>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+
+
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="~/Scripts/bootstrap.bundle.min.js"></script>
+
+<!-- Estilos adicionales -->
+<style>
+    .card {
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+    .carousel-item img {
+        height: 500px;
+        object-fit: cover;
+    }
+</style>

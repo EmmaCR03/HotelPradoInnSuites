@@ -4,14 +4,28 @@
     ViewBag.Title = "IndexHabitaciones";
 }
 
-<h2>IndexHabitaciones</h2>
+<h2>Todas las habitaciones</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success" })
+    @Html.ActionLink("Create New", "Crear", null, new { @class = "btn btn-success" })
 </p>
 
 <!-- Barra de Búsqueda -->
-<input type="text" id="search" class="form-control mb-3" placeholder="Buscar por número de habitación...">
+<form method="get" asp-action="Listar" style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+
+    <div>
+        <label for="estado" style="font-weight: bold;">Estado:</label>
+        <select name="estado" class="input-style">
+            <option value="">Todos</option>
+            <option value="Disponible">Disponible</option>
+            <option value="Ocupado">Ocupado</option>
+            <option value="En Mantenimiento">En Mantenimiento</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn-filtrar">Filtrar</button>
+</form>
+
 
 <div class="row">
     @foreach (var item in Model)
@@ -139,5 +153,27 @@
     .btn-outline-primary, .btn-outline-info, .btn-outline-warning, .btn-outline-danger {
         width: 100%;
         text-align: center;
+
     }
+    .input-style {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .btn-filtrar {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .btn-filtrar:hover {
+            background-color: #0056b3;
+        }
 </style>

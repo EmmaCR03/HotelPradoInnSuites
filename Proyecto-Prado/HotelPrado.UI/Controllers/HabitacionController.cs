@@ -59,12 +59,27 @@ namespace HotelPrado.UI.Controllers
             return View(laListaDeHabitaciones);
         }
 
+        public ActionResult habitacionesInfo()
+        {
+            return View();
+        }
+
+        // GET: Habitacion/IndexHabitacionesUsuario
         // GET: Habitacion/IndexHabitacionesUsuario
         public ActionResult IndexHabitacionesUsuario(DateTime check_in, DateTime check_out, int capacidad)
         {
             ViewBag.Title = "La Habitacion";
             var laListaDeHabitacionesDisponibles = _habDisponibles.ListarDisponibles(check_in, check_out, capacidad);
-            return View(laListaDeHabitacionesDisponibles);
+
+            // Si hay habitaciones disponibles, solo mostrar una
+            if (laListaDeHabitacionesDisponibles.Any())
+            {
+                var habitacionDisponible = laListaDeHabitacionesDisponibles.First();
+                return View(new List<HabitacionesDTO> { habitacionDisponible });
+            }
+
+            // Si no hay habitaciones disponibles, devolver la lista vacía
+            return View(new List<HabitacionesDTO>());
         }
 
         // GET: Habitacion/Details/5
