@@ -100,6 +100,7 @@ namespace HotelPrado.LN.Habitaciones.Registrar
                 CapacidadMin = lahabitacion.CapacidadMin,
                 CapacidadMax = lahabitacion.CapacidadMax,
                 Estado = lahabitacion.Estado,
+                UrlImagenes = lahabitacion.UrlImagenes,
             };
         }
     }

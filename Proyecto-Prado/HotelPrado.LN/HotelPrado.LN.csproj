@@ -79,6 +79,11 @@
     <Compile Include="Habitaciones\Listar\ListarHabitacionesLN.cs" />
     <Compile Include="Habitaciones\ObtenerPorId\ObtenerHabitacionesPorIdLN.cs" />
     <Compile Include="Habitaciones\Registrar\RegistrarHabitacionesLN.cs" />
+    <Compile Include="Mantenimiento\Conversion\ConvertirMantenimientoDTOAMantenimientoTabla.cs" />
+    <Compile Include="Mantenimiento\Editar\EditarMantenimientoLN.cs" />
+    <Compile Include="Mantenimiento\Listar\ListarMantenimientoLN.cs" />
+    <Compile Include="Mantenimiento\ObtenerPorId\ObtenerMantenimientoPorIdLN.cs" />
+    <Compile Include="Mantenimiento\Registrar\RegistrarMantenimientoLN.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TipoDeDepartamento\Listar\ListarTipoDeDepartamenoLN.cs" />
     <Compile Include="TipoHabitacion\Listar\ListarTipoHabitacionLN.cs" />

@@ -1,0 +1,37 @@
+﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Mantenimiento.MantenimientoDTO>
+
+@{
+    ViewBag.Title = "IndexMantenimiento";
+}
+
+<h2>IndexMantenimiento</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Estado)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descripcion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Estado)
+        </td>
+        <td>
+            @Html.ActionLink("Editar", "Edit", new { IdMantenimiento = item.IdMantenimiento }, new { @class = "btn btn-outline-warning btn-sm" }) 
+        </td>
+    </tr>
+}
+
+</table>

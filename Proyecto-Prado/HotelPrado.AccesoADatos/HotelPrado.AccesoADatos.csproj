@@ -75,6 +75,10 @@
     <Compile Include="Habitacion\ObtenerEnlaces\ObtenerEnlacesHAD.cs" />
     <Compile Include="Habitacion\ObtenerPorId\ObtenerHabitacionesPorIdAD.cs" />
     <Compile Include="Habitacion\Registrar\RegistrarHabitacionesAD.cs" />
+    <Compile Include="Mantenimiento\Editar\EditarMantenimientoAD.cs" />
+    <Compile Include="Mantenimiento\Listar\ListarMantenimientoAD.cs" />
+    <Compile Include="Mantenimiento\ObtenerPorId\ObtenerMantenimientoPorIdAD.cs" />
+    <Compile Include="Mantenimiento\Registrar\RegistrarMantenimientoAD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TipoDeHabitacion\Listar\ListarTipoDeHabitacionAD.cs" />
     <Compile Include="TipoDepartamentos\Listar\ListarTipoDeDepartamentosAD.cs" />

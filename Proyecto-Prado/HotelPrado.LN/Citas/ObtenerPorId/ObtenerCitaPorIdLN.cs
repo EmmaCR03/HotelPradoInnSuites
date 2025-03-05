@@ -1,9 +1,7 @@
 ﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Citas.ObtenerPorId;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Citas.ObtenerPorId;
 using HotelPrado.Abstracciones.Modelos.Citas;
-using HotelPrado.Abstracciones.Modelos.Departamento;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Citas;
-using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Departamento;
 using HotelPrado.AccesoADatos.Citas.ObtenerPorId;
 using System;
 using System.Collections.Generic;

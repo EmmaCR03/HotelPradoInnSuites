@@ -122,7 +122,7 @@ namespace HotelPrado.UI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(HabitacionesDTO modeloDeHabitaciones)
+        public async Task<ActionResult> Create(HabitacionesDTO modeloDeHabitaciones, IEnumerable<HttpPostedFileBase> Image)
         {
             if (ModelState.IsValid)
             {
@@ -135,24 +135,21 @@ namespace HotelPrado.UI.Controllers
                     return View(modeloDeHabitaciones);
                 }
 
-
-
                 // Lista de archivos a almacenar
                 var archivos = new List<string>();
 
                 // Verificar si la carpeta "Uploads" existe, si no, crearla
-                string uploadDirectory = Server.MapPath("~/Uploads/");
+                string uploadDirectory = System.Web.Hosting.HostingEnvironment.MapPath("~/Uploads/");
                 if (!Directory.Exists(uploadDirectory))
                 {
                     Directory.CreateDirectory(uploadDirectory);
                 }
 
                 // Verificar si hay archivos cargados
-                if (Request.Files.Count > 0)
+                if (Image != null && Image.Any())
                 {
-                    foreach (string fileName in Request.Files)
+                    foreach (var file in Image)
                     {
-                        var file = Request.Files[fileName];
                         if (file != null && file.ContentLength > 0)
                         {
                             // Guardar el archivo en un directorio específico
@@ -181,10 +178,11 @@ namespace HotelPrado.UI.Controllers
                         UrlImagen = url
                     };
 
-                    _contexto.ImagenesHabitacionTabla.Add(imagen);
+                    _contexto.ImagenesHabitacionesTabla.Add(imagen);
                 }
 
                 // Guardar cambios en la base de datos
+                await _contexto.SaveChangesAsync();
 
                 return RedirectToAction("IndexHabitaciones");
             }

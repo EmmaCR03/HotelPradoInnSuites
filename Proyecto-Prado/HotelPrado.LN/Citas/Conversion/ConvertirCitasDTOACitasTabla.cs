@@ -1,8 +1,6 @@
 ﻿using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Citas.Convertir;
 using HotelPrado.Abstracciones.Modelos.Citas;
-using HotelPrado.Abstracciones.Modelos.Departamento;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Citas;
-using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Departamento;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,4 +33,3 @@ namespace HotelPrado.LN.Citas.Conversion
         }
     }
 }
-

@@ -1,7 +1,5 @@
 ﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Citas.Editar;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Citas;
-using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Colaborador;
-using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Departamento;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;

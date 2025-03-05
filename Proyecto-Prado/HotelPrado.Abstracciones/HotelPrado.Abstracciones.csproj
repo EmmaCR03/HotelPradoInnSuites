@@ -92,6 +92,10 @@
     <Compile Include="Interfaces\AccesoADatos\Habitaciones\ObtenerEnlaces\IObtenerEnlacesHAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Habitaciones\ObtenerPorId\IObtenerHabitacionesPorIdAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Habitaciones\Registrar\IRegistrarHabitacionesAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Mantenimiento\Editar\IEditarMantenimientoAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Mantenimiento\Listar\IListarMantenimientoAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Mantenimiento\ObtenerPorId\IObtenerMantenimientoPorIdAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Mantenimiento\Registrar\IRegistrarMantenimientoAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\TipoDeDepartamento\Listar\IListarTipoDeDepartamentosAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\TipoDeHabitacion\Listar\IListarTipoDeHabitacionAD.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Bitacora\Listar\IListarBitacoraEventosLN.cs" />
@@ -120,6 +124,11 @@
     <Compile Include="Interfaces\LogicaDeNegocio\Habitaciones\Listar\IListarHabitacionesLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Habitaciones\ObtenerPorId\IObtenerHabitacionesPorIdLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Habitaciones\Registrar\IRegistrarHabitacionesLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Mantenimiento\Convertir\IConvertirMantenimientoDTOAMantenimientoTabla.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Mantenimiento\Editar\IEditarMantenimientoLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Mantenimiento\Listar\IListarMantenimientoLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Mantenimiento\ObtenerPorId\IObtenerMantenimientoPorIdLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Mantenimiento\Registrar\IRegistrarMantenimientoLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\TipoDeDepartamentos\IListarTipoDeDepartamenoLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\TipoHabitacion\Listar\IListarTipoHabitacionLN.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Bitacora\BitacoraTabla.cs" />
@@ -131,6 +140,7 @@
     <Compile Include="ModelosDeBaseDeDatos\Habitaciones\HabitacionesTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\ImagenesDepartamento\ImagenesDepartamentoTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\ImagenesHabitacion\ImagenesHabitacionTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\Mantenimiento\MantenimientoTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Reservas\ReservasTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\TipoDepartamento\TipoDepartamentoTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\TipoHabitacion\TipoHabitacionTabla.cs" />
@@ -143,6 +153,7 @@
     <Compile Include="Modelos\Habitaciones\HabitacionesDTO.cs" />
     <Compile Include="Modelos\ImagenesDepartamento\ImagenesDepartamentoDTO.cs" />
     <Compile Include="Modelos\ImagenesHabitacion\ImagenesHabitacionDTO.cs" />
+    <Compile Include="Modelos\Mantenimiento\MantenimientoDTO.cs" />
     <Compile Include="Modelos\Reservas\ReservasDTO.cs" />
     <Compile Include="Modelos\TipoDeDepartamento\TipoDepartamentoDTO.cs" />
     <Compile Include="Modelos\TipoDeHabitacion\TipoHabitacionDTO.cs" />
