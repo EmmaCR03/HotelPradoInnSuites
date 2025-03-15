@@ -1,105 +1,85 @@
 ﻿@model HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO
 
-@{
-    ViewBag.Title = "Create";
-}
+<div class="card mt-5">
+    <div class="card-header">
+        <h2>Crear Departamento</h2>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("Create", "Departamento", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
 
-<h2>Create</h2>
-
-
-@using (Html.BeginForm("Create", "Departamento", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        <h4>DepartamentoDTO</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.Nombre, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control w-100" } })
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.NumeroDepartamento, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.EditorFor(model => model.NumeroDepartamento, new { htmlAttributes = new { @class = "form-control w-100" } })
+                        @Html.ValidationMessageFor(model => model.NumeroDepartamento, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.Descripcion, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control w-100" } })
+                        @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.IdTipoDepartamento, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.DropDownListFor(model => model.IdTipoDepartamento, (SelectList)ViewBag.TipoDepartamento, "Seleccione un tipo de Habitación", new { @class = "form-control w-100" })
+                        @Html.ValidationMessageFor(model => model.IdTipoDepartamento, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.Precio, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control w-100" } })
+                        @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.Estado, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.DropDownListFor(model => model.Estado, new SelectList(new List<SelectListItem>
+                                {
+                            new SelectListItem { Value = "Disponible", Text = "Disponible" },
+                            new SelectListItem { Value = "Ocupado", Text = "Ocupado" },
+                            new SelectListItem { Value = "Mantenimiento", Text = "Mantenimiento" }
+                        }, "Value", "Text"), "Seleccione un tipo", new { @class = "form-control w-100" })
+                        @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.Label("Imágenes", new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        <input type="file" id="imagenInput" name="Imagenes" multiple class="d-none" accept="image/*" />
+                        <button type="button" class="btn btn-primary" onclick="document.getElementById('imagenInput').click();">
+                            Subir Imágenes
+                        </button>
+                        <span id="fileCount" class="text-muted ml-2">No se han seleccionado archivos</span>
+                        <div id="preview" class="mt-2"></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3 w-100">
+                        <input type="submit" value="Crear Departamento" class="btn btn-primary w-100" />
+                    </div>
+                </div>
             </div>
-        </div>
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.NumeroDepartamento, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.NumeroDepartamento, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.NumeroDepartamento, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.IdTipoDepartamento, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(
-                    model => model.IdTipoDepartamento,
-                    (SelectList)ViewBag.TipoDepartamento,
-                    "Seleccione un tipo de Habitación ",
-                    new { @class = "form-control" }
-                )
-                @Html.ValidationMessageFor(model => model.IdTipoDepartamento, "", new { @class = "text-danger" })
-
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Estado, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(
-    model => model.Estado,
-    new SelectList(new List<SelectListItem>
-    {
-    new SelectListItem { Value = "Disponible", Text = "Disponible" },
-    new SelectListItem { Value = "Ocupado", Text = "Ocupado" },
-    new SelectListItem { Value = "Mantenimiento", Text = "Mantenimiento" }
-
-    }, "Value", "Text"),
-    "Seleccione un tipo", // Texto predeterminado
-    new { @class = "form-control" }
-    )
-                @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
-            </div>
+        }
+        <div>
+            @Html.ActionLink("Regresar", "IndexDepartamentos", null, new { @class = "btn btn-secondary w-100" })
         </div>
     </div>
-    <div class="form-group">
-        @Html.Label("Imágenes", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <input type="file" id="imagenInput" name="Imagenes" multiple class="d-none" accept="image/*" />
-            <button type="button" class="btn btn-primary" onclick="document.getElementById('imagenInput').click();">
-                Subir Imágenes
-            </button>
-            <span id="fileCount" class="text-muted ml-2">No se han seleccionado archivos</span>
-            <div id="preview" class="mt-2"></div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-default" />
-        </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {
@@ -108,7 +88,7 @@
         document.getElementById('imagenInput').addEventListener('change', function (event) {
             let preview = document.getElementById('preview');
             let fileCount = document.getElementById('fileCount');
-            preview.innerHTML = ''; // Limpiar el preview anterior
+            preview.innerHTML = '';
 
             if (event.target.files.length > 0) {
                 fileCount.textContent = event.target.files.length + " archivos seleccionados";

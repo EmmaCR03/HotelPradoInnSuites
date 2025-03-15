@@ -1,67 +1,54 @@
 ﻿@model HotelPrado.Abstracciones.Modelos.Citas.CitasDTO
 
-@{
-    ViewBag.Title = "Edit";
-}
+<div class="card mt-5">
+    <div class="card-header">
+        <h2>Editar Cita</h2>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("Edit", "Citas", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
 
-<h2>Edit</h2>
+            <div class="form-horizontal">
+                @Html.HiddenFor(model => model.IdCita)
+                @Html.HiddenFor(model => model.IdDepartamento)
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.IdColaborador, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.DropDownListFor(model => model.IdColaborador, ViewBag.Colaborador as List<SelectListItem> ?? new List<SelectListItem>(), "Seleccione un colaborador", new { @class = "form-control w-100" })
+                        @Html.ValidationMessageFor(model => model.IdColaborador, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.FechaHoraInicio, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.TextBoxFor(model => model.FechaHoraInicio, new { @class = "form-control w-100", id = "fechaInicio" })
+                        @Html.ValidationMessageFor(model => model.FechaHoraInicio, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-    <div class="form-horizontal">
-        <h4>CitasDTO</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.IdCita)
-        @Html.HiddenFor(model => model.IdDepartamento)
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.FechaHoraFin, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.TextBoxFor(model => model.FechaHoraFin, new { @class = "form-control w-100", id = "fechaFin" })
+                        @Html.ValidationMessageFor(model => model.FechaHoraFin, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IdColaborador, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(
-    model => model.IdColaborador,
-    ViewBag.Colaborador as List<SelectListItem> ?? new List<SelectListItem>(), // Evita errores si ViewBag.Colaborador es null
-    "Seleccione un colaborador",
-    new { @class = "form-control" }
-)
-
-                @Html.ValidationMessageFor(model => model.IdColaborador, "", new { @class = "text-danger" })
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3 w-100">
+                        <input type="submit" value="Guardar Cambios" class="btn btn-primary w-100" />
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.FechaHoraInicio, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.FechaHoraInicio, new { @class = "form-control", id = "fechaInicio" })
-                @Html.ValidationMessageFor(model => model.FechaHoraInicio, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.FechaHoraFin, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.FechaHoraFin, new { @class = "form-control", id = "fechaFin" })
-                @Html.ValidationMessageFor(model => model.FechaHoraFin, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-
-
-
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+        }
+        <div>
+            @Html.ActionLink("Volver", "IndexCitas", null, new { @class = "btn btn-secondary w-100" })
         </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "IndexCitas")
 </div>
 
 @section Scripts {
@@ -82,6 +69,5 @@
         defaultDate: "@(Model.FechaHoraFin.HasValue ? Model.FechaHoraFin.Value.ToString("yyyy-MM-dd HH:mm") : "")"
     });
     </script>
-
 }
 

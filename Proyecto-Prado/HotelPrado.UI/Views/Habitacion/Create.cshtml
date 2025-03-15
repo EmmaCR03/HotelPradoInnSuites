@@ -1,118 +1,117 @@
 ﻿@model HotelPrado.Abstracciones.Modelos.Habitaciones.HabitacionesDTO
 
-@{
-    ViewBag.Title = "Create";
-}
+<div class="card mt-5">
+    <div class="card-header">
+        <h2>Crear Habitación</h2>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("Create", "Habitacion", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
 
-<h2>Create</h2>
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-@using (Html.BeginForm("Create", "Habitacion", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.NumeroHabitacion, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.EditorFor(model => model.NumeroHabitacion, new { htmlAttributes = new { @class = "form-control w-100" } })
+                        @Html.ValidationMessageFor(model => model.NumeroHabitacion, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-    <div class="form-horizontal">
-        <h4>HabitacionesDTO</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.NumeroHabitacion, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.NumeroHabitacion, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.NumeroHabitacion, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.PrecioPorNoche1P, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.EditorFor(model => model.PrecioPorNoche1P, new { htmlAttributes = new { @class = "form-control w-100" } })
+                        @Html.ValidationMessageFor(model => model.PrecioPorNoche1P, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.PrecioPorNoche1P, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PrecioPorNoche1P, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PrecioPorNoche1P, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.PrecioPorNoche2P, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PrecioPorNoche2P, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PrecioPorNoche2P, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.PrecioPorNoche3P, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PrecioPorNoche3P, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PrecioPorNoche3P, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.PrecioPorNoche4P, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PrecioPorNoche4P, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PrecioPorNoche4P, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.PrecioPorNoche2P, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.EditorFor(model => model.PrecioPorNoche2P, new { htmlAttributes = new { @class = "form-control w-100" } })
+                        @Html.ValidationMessageFor(model => model.PrecioPorNoche2P, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IdTipoHabitacion, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.IdTipoHabitacion, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.IdTipoHabitacion, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.PrecioPorNoche3P, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.EditorFor(model => model.PrecioPorNoche3P, new { htmlAttributes = new { @class = "form-control w-100" } })
+                        @Html.ValidationMessageFor(model => model.PrecioPorNoche3P, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.CapacidadMin, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CapacidadMin, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CapacidadMin, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.CapacidadMax, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CapacidadMax, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CapacidadMax, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.PrecioPorNoche4P, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.EditorFor(model => model.PrecioPorNoche4P, new { htmlAttributes = new { @class = "form-control w-100" } })
+                        @Html.ValidationMessageFor(model => model.PrecioPorNoche4P, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Estado, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.Estado,
-                                   new List<SelectListItem>
-                                   {
-                    new SelectListItem { Text = "Disponible", Value = "Disponible" },
-                    new SelectListItem { Text = "En Mantenimiento", Value = "En Mantenimiento" },
-                    new SelectListItem { Text = "Ocupado", Value = "Ocupado" }
-                                   },
-                                   "Seleccione un estado",
-                                   new { @class = "form-control" }
-                               )
-                @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <!-- Campo de carga de imágenes -->
-        <div class="form-group">
-            @Html.Label("Imágenes", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input type="file" id="imagenInput" name="Image" multiple class="d-none" accept="image/*" />
-                <button type="button" class="btn btn-primary" onclick="document.getElementById('imagenInput').click();">
-                    Subir Imágenes
-                </button>
-                <span id="fileCount" class="text-muted ml-2">No se han seleccionado archivos</span>
-                <div id="preview" class="mt-2"></div>
-            </div>
-        </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.IdTipoHabitacion, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.EditorFor(model => model.IdTipoHabitacion, new { htmlAttributes = new { @class = "form-control w-100" } })
+                        @Html.ValidationMessageFor(model => model.IdTipoHabitacion, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.CapacidadMin, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.EditorFor(model => model.CapacidadMin, new { htmlAttributes = new { @class = "form-control w-100" } })
+                        @Html.ValidationMessageFor(model => model.CapacidadMin, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.CapacidadMax, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.EditorFor(model => model.CapacidadMax, new { htmlAttributes = new { @class = "form-control w-100" } })
+                        @Html.ValidationMessageFor(model => model.CapacidadMax, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.Estado, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.DropDownListFor(model => model.Estado, new List<SelectListItem>
+                                {
+                            new SelectListItem { Text = "Disponible", Value = "Disponible" },
+                            new SelectListItem { Text = "En Mantenimiento", Value = "En Mantenimiento" },
+                            new SelectListItem { Text = "Ocupado", Value = "Ocupado" }
+                        }, "Seleccione un estado", new { @class = "form-control w-100" })
+                        @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.Label("Imágenes", new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        <input type="file" id="imagenInput" name="Image" multiple class="d-none" accept="image/*" />
+                        <button type="button" class="btn btn-primary" onclick="document.getElementById('imagenInput').click();">
+                            Subir Imágenes
+                        </button>
+                        <span id="fileCount" class="text-muted ml-2">No se han seleccionado archivos</span>
+                        <div id="preview" class="mt-2"></div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-9 offset-md-3 w-100">
+                        <input type="submit" value="Crear Habitación" class="btn btn-primary w-100" />
+                    </div>
+                </div>
             </div>
+        }
+        <div>
+            @Html.ActionLink("Volver", "IndexHabitaciones", null, new { @class = "btn btn-secondary w-100" })
         </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "IndexHabitaciones")
 </div>
 
 @section Scripts {
@@ -145,3 +144,4 @@
         });
     </script>
 }
+
