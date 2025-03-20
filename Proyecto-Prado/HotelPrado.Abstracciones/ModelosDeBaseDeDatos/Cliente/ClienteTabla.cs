@@ -10,7 +10,7 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Cliente
 {
     [Table("Cliente")]
 
-    public class ClienteTabla
+    public class ApplicationUser
     {
         [Key]
         public int IdCliente { get; set; }

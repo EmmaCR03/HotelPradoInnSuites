@@ -24,7 +24,8 @@ namespace HotelPrado.AccesoADatos.Departamentos.Registrar
             {
 
                 _contexto.DepartamentoTabla.Add(elDepartamentoAGuardar);
-                EntityState estado = _contexto.Entry(elDepartamentoAGuardar).State = System.Data.Entity.EntityState.Added;
+                EntityState estado = _contexto.Entry(elDepartamentoAGuardar)
+                    .State = System.Data.Entity.EntityState.Added;
                 int cantidadDeDatosAlmacenados = await _contexto.SaveChangesAsync();
                 return cantidadDeDatosAlmacenados;
             }

@@ -25,7 +25,7 @@ namespace HotelPrado.AccesoADatos
         {
             modelBuilder.Entity<DepartamentoTabla>().ToTable("Departamento");
             modelBuilder.Entity<TipoDepartamentoTabla>().ToTable("TipoDepartamento");
-            modelBuilder.Entity<ClienteTabla>().ToTable("Cliente");
+            modelBuilder.Entity<ApplicationUser>().ToTable("Cliente");
             modelBuilder.Entity<BitacoraTabla>().ToTable("bitacoraEventos");
             modelBuilder.Entity<CitasTabla>().ToTable("Citas");
             modelBuilder.Entity<ColaboradorTabla>().ToTable("Colaborador");
@@ -42,7 +42,7 @@ namespace HotelPrado.AccesoADatos
         }
         public DbSet<DepartamentoTabla> DepartamentoTabla { get; set; }
         public DbSet<TipoDepartamentoTabla> TipoDepartamentoTabla { get; set; }
-        public DbSet<ClienteTabla> ClienteTabla { get; set; }
+        public DbSet<ApplicationUser> ClienteTabla { get; set; }
         public DbSet<BitacoraTabla> BitacoraTabla { get; set; }
         public DbSet<CitasTabla> CitasTabla { get; set; }
         public DbSet<ColaboradorTabla> ColaboradorTabla { get; set; }

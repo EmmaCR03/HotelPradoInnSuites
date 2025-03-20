@@ -11,7 +11,9 @@ namespace HotelPrado.Abstracciones.Modelos.Reservas
     {
         [Key]
         public int IdReserva {  get; set; }
-        public int IdCliente { get; set; }
+        public string IdCliente { get; set; }
+        public int cantidadPersonas { get; set; }
+        public string NombreCliente { get; set; }
         public int IdHabitacion { get; set; }
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFinal { get; set; }

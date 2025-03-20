@@ -15,7 +15,9 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Reservas
     {
         [Key]
         public int IdReserva { get; set; }
-        public int IdCliente { get; set; }
+        public string IdCliente { get; set; }
+        public string NombreCliente { get; set; }
+        public int cantidadPersonas { get; set; }
         public int IdHabitacion { get; set; }
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFinal { get; set; }
@@ -24,7 +26,8 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Reservas
 
         [ForeignKey("IdHabitacion")]
         public virtual HabitacionesTabla Habitacion { get; set; }
+
         [ForeignKey("IdCliente")]
-        public virtual ClienteTabla Cliente { get; set; }
+        public virtual ApplicationUser Cliente { get; set; }
     }
 }

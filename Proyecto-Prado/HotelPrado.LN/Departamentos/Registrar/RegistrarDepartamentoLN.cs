@@ -27,7 +27,8 @@ namespace HotelPrado.LN.Departamentos.Registrar
             try
             {
                 // Guardar el departamento en la base de datos
-                int cantidadDeDatosAlmacenados = await _registrarDepartamentoAD.Guardar(ConvertirObjetoDepartamentoTabla(modelo));
+                int cantidadDeDatosAlmacenados = await _registrarDepartamentoAD.
+                    Guardar(ConvertirObjetoDepartamentoTabla(modelo));
 
                 // Preparar datos para registrar en la bitácora
                 string datos = $@"
