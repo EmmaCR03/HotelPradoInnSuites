@@ -10,9 +10,6 @@ using HotelPrado.LN.Bitacora.Registrar;
 using HotelPrado.LN.Colaborador.Conversion;
 using HotelPrado.LN.Colaborador.ObtenerPorId;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HotelPrado.LN.Colaborador.Editar

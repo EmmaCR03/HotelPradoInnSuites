@@ -1,7 +1,6 @@
 ﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Reservas;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Reservas;
 using HotelPrado.Abstracciones.Modelos.Reservas;
-using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Habitaciones;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Reservas;
 using HotelPrado.AccesoADatos.Reservas;
 using System;

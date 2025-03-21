@@ -3,10 +3,6 @@ using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Colaborador.ObtenerPor
 using HotelPrado.Abstracciones.Modelos.Colaborador;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Colaborador;
 using HotelPrado.AccesoADatos.Colaborador.ObtenerPorId;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HotelPrado.LN.Colaborador.ObtenerPorId

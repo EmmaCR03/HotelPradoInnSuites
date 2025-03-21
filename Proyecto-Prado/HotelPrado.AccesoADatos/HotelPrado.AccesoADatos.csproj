@@ -80,6 +80,10 @@
     <Compile Include="Mantenimiento\ObtenerPorId\ObtenerMantenimientoPorIdAD.cs" />
     <Compile Include="Mantenimiento\Registrar\RegistrarMantenimientoAD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reservas\Editar\EditarReservaAD.cs" />
+    <Compile Include="Reservas\Listar\ListarReservasAD.cs" />
+    <Compile Include="Reservas\ObtenerPorId\ObtenerReservaPorIdAD.cs" />
+    <Compile Include="Reservas\Registrar\RegistrarReservaAD.cs" />
     <Compile Include="Reservas\ReservasAD.cs" />
     <Compile Include="TipoDeHabitacion\Listar\ListarTipoDeHabitacionAD.cs" />
     <Compile Include="TipoDepartamentos\Listar\ListarTipoDeDepartamentosAD.cs" />

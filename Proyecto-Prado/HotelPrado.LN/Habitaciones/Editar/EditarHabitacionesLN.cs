@@ -1,5 +1,6 @@
 ﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Habitaciones.Editar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Bitacora.Registrar;
+using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.Conversion;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.Editar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.ObtenerPorId;
 using HotelPrado.Abstracciones.Modelos.Bitacora;
@@ -18,7 +19,7 @@ namespace HotelPrado.LN.Habitaciones.Editar
 {
     public class EditarHabitacionesLN : IEditarHabitacionesLN
     {
-        private readonly ConvertirHabitacionesDTOAHabitacionesTabla _convertir;
+        private readonly IConvertirHabitacionesDTOAHabitacionesTabla _convertir;
         private readonly IEditarHabitacionesAD _editarHabitaciones;
         private readonly IRegistrarBitacoraEventosLN _registrarBitacoraEventosLN;
         private readonly IObtenerHabitacionesPorIdLN _obtenerHabitacionesPorIdLN;

@@ -3,9 +3,7 @@ using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Reservas;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Core.Objects.DataClasses;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HotelPrado.AccesoADatos.Reservas
@@ -134,12 +132,15 @@ namespace HotelPrado.AccesoADatos.Reservas
 
         public List<ReservasTabla> ObtenerReservasPorUsuario(string IdUsuario)
         {
+            int idCliente = Convert.ToInt32(IdUsuario); 
+
             return _contexto.ReservasTabla
                 .Include(r => r.Habitacion)
                 .Include(r => r.Cliente)
-                .Where(r => r.IdCliente == IdUsuario)
+                .Where(r => r.IdCliente == IdUsuario) 
                 .ToList();
         }
+
     }
 }
 

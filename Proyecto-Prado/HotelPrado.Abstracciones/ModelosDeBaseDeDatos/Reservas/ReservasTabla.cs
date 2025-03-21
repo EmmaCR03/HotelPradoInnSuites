@@ -1,12 +1,8 @@
 ﻿using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Cliente;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Habitaciones;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Reservas
 {
@@ -15,7 +11,9 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Reservas
     {
         [Key]
         public int IdReserva { get; set; }
-        public string IdCliente { get; set; }
+
+        public string  IdCliente { get; set; }  
+
         public string NombreCliente { get; set; }
         public int cantidadPersonas { get; set; }
         public int IdHabitacion { get; set; }
@@ -28,6 +26,6 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Reservas
         public virtual HabitacionesTabla Habitacion { get; set; }
 
         [ForeignKey("IdCliente")]
-        public virtual ApplicationUser Cliente { get; set; }
+        public virtual ApplicationUser Cliente { get; set; }  
     }
 }

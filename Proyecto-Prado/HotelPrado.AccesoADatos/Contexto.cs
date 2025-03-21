@@ -10,12 +10,7 @@ using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Mantenimiento;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Reservas;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.TipoDepartamento;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.TipoHabitacion;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelPrado.AccesoADatos
 {
