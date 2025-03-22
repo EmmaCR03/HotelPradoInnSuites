@@ -1,4 +1,5 @@
-﻿using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Reservas;
+﻿using HotelPrado.Abstracciones.Modelos.Reservas;
+using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Reservas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,12 @@ namespace HotelPrado.Abstracciones.Interfaces.AccesoADatos.Reservas
 {
     public interface IReservasDA
     {
-        Task<int> Crear(ReservasTabla laReservaAGuardar);
+      
         Task<int> CrearReservaUsuario(ReservasTabla laReservaAGuardar,int IdHabitacion);
-        Task<int> Editar(ReservasTabla laReservaActualizar);
-        ReservasTabla Obtener(int IdReserva);
-        List<ReservasTabla> ObtenerReservas();
 
-        List<ReservasTabla> ObtenerReservasPorUsuario(string IdUsuario);
+        List<ReservasDTO> ObtenerReservasPorUsuario(string IdUsuario);
 
-        Task<int> Eliminar(int IdReserva);
+
+
     }
 }

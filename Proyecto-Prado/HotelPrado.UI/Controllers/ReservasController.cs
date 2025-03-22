@@ -1,89 +1,73 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Reservas;
+using HotelPrado.Abstracciones.Modelos.Reservas;
+using HotelPrado.LN.Reservas;
+using Microsoft.AspNet.Identity;
+using System;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace HotelPrado.UI.Controllers
 {
     public class ReservasController : Controller
     {
-        // GET: Reservas
-        public ActionResult Index()
+        private readonly IReservasLN _reservasLN;
+
+        public ReservasController()
         {
-            return View();
+            _reservasLN = new ReservasLN();
         }
 
-        // GET: Reservas/Details/5
-        public ActionResult Details(int id)
+        
+        [HttpGet]
+        public ActionResult ConfirmarReserva(int id, DateTime checkIn, DateTime checkOut, decimal totalPrecio, int cantidadPersonas)
         {
-            return View();
+            var model = new ReservasDTO
+            {
+                IdHabitacion = id,
+                FechaInicio = checkIn,
+                FechaFinal = checkOut,
+                cantidadPersonas = cantidadPersonas,
+                MontoTotal = totalPrecio
+            };
+            return View(model);
         }
 
-        // GET: Reservas/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Reservas/Create
+        
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ConfirmarReserva(ReservasDTO model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add insert logic here
+                model.IdCliente = User.Identity.GetUserId(); 
+                model.EstadoReserva = "Pendiente"; 
+                model.NombreCliente = User.Identity.GetUserName();
 
-                return RedirectToAction("Index");
+                int resultado = await _reservasLN.CrearReservasUsuario(model);
+                if (resultado > 0)
+                {
+                    return RedirectToAction("Confirmacion");
+                }
+                ModelState.AddModelError("", "No se pudo crear la reserva. Inténtelo de nuevo.");
             }
-            catch
-            {
-                return View();
-            }
+            return View(model);
         }
 
-        // GET: Reservas/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Reservas/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Reservas/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Confirmacion()
         {
             return View();
         }
 
-        // POST: Reservas/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+        [HttpGet]
+        public ActionResult ReservasUsuario()
+        {
+            ViewBag.Title = "La Habitacion";
+            string idCliente = User.Identity.GetUserId();
+            var laListaReservasUsuario = _reservasLN.ListarReservasUsuario(idCliente);
+            return View(laListaReservasUsuario);
         }
+
+
     }
 }

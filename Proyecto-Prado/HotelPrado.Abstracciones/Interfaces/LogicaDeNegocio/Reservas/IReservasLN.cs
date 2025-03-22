@@ -12,14 +12,10 @@ namespace HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Reservas
     public interface IReservasLN
     {
         Task<int> CrearReservasUsuario(ReservasDTO reserva);
-        Task<int> CrearReservasAdmin(ReservasDTO reserva);
-        Task<int> ActualizarReservas(ReservasDTO reserva);
-        Task<int> EliminarReservas(int IdReserva);
-
-        List<ReservasDTO> ListarReservas();
-        List<ReservasDTO> ListarReservasUsuario(int IdUsuario);
-        List<ReservasDTO> ListarReservasId(int Id);
+        
+        List<ReservasDTO> ListarReservasUsuario(string IdUsuario);
 
         ReservasTabla Convertir(ReservasDTO laReserva);
+
     }
 }

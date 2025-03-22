@@ -19,20 +19,16 @@ namespace HotelPrado.LN.Reservas
             _reservasDA = new ReservasAD();
         }
 
-        public async Task<int> ActualizarReservas(ReservasDTO reserva)
+        public async Task<int> CrearReservasUsuario(ReservasDTO reserva)
         {
-            try
-            {
-                var datosAnteriores = _reservasDA.Obtener(reserva.IdReserva);
+            var reservaTabla = Convertir(reserva);
+            return await _reservasDA.CrearReservaUsuario(reservaTabla, reserva.IdHabitacion);
+        }
 
-                int cantidadDeDatosActualizados = await _reservasDA.Editar(Convertir(reserva));
-
-                return cantidadDeDatosActualizados;
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException("Error al actualizar la reserva.", ex);
-            }
+        public List<ReservasDTO> ListarReservasUsuario(string IdUsuario)
+        {
+           List<ReservasDTO> reservas = _reservasDA.ObtenerReservasPorUsuario(IdUsuario);
+            return reservas;
         }
 
         public ReservasTabla Convertir(ReservasDTO laReserva)
@@ -50,80 +46,5 @@ namespace HotelPrado.LN.Reservas
                 MontoTotal = laReserva.MontoTotal
             };
         }
-
-        public async Task<int> CrearReservasAdmin(ReservasDTO reserva)
-        {
-            var reservaTabla = Convertir(reserva);
-            return await _reservasDA.Crear(reservaTabla);
-        }
-
-        public async Task<int> CrearReservasUsuario(ReservasDTO reserva)
-        {
-            var reservaTabla = Convertir(reserva);
-            return await _reservasDA.CrearReservaUsuario(reservaTabla, reserva.IdHabitacion);
-        }
-
-        public async Task<int> EliminarReservas(int IdReserva)
-        {
-            return await _reservasDA.Eliminar(IdReserva);
-        }
-
-        public List<ReservasDTO> ListarReservas()
-        {
-            var reservas = _reservasDA.ObtenerReservas();
-            return reservas.Select(r => new ReservasDTO
-            {
-                IdReserva = r.IdReserva,
-                IdCliente = r.IdCliente,
-                NombreCliente = r.NombreCliente,
-                cantidadPersonas = r.cantidadPersonas,
-                IdHabitacion = r.IdHabitacion,
-                FechaInicio = r.FechaInicio,
-                FechaFinal = r.FechaFinal,
-                EstadoReserva = r.EstadoReserva,
-                MontoTotal = r.MontoTotal
-            }).ToList();
-        }
-
-        public List<ReservasDTO> ListarReservasId(int Id)
-        {
-            var reserva = _reservasDA.Obtener(Id);
-            if (reserva == null) return null;
-
-            return new List<ReservasDTO>
-            {
-                new ReservasDTO
-                {
-                    IdReserva = reserva.IdReserva,
-                    IdCliente = reserva.IdCliente,
-                    NombreCliente = reserva.NombreCliente,
-                    cantidadPersonas = reserva.cantidadPersonas,
-                    IdHabitacion = reserva.IdHabitacion,
-                    FechaInicio = reserva.FechaInicio,
-                    FechaFinal = reserva.FechaFinal,
-                    EstadoReserva = reserva.EstadoReserva,
-                    MontoTotal = reserva.MontoTotal
-                }
-            };
-        }
-
-        public List<ReservasDTO> ListarReservasUsuario(int IdUsuario)
-        {
-            var reservas = _reservasDA.ObtenerReservasPorUsuario(IdUsuario.ToString());
-            return reservas.Select(r => new ReservasDTO
-            {
-                IdReserva = r.IdReserva,
-                IdCliente = r.IdCliente,
-                NombreCliente = r.NombreCliente,
-                cantidadPersonas = r.cantidadPersonas,
-                IdHabitacion = r.IdHabitacion,
-                FechaInicio = r.FechaInicio,
-                FechaFinal = r.FechaFinal,
-                EstadoReserva = r.EstadoReserva,
-                MontoTotal = r.MontoTotal
-            }).ToList();
-        }
-
-
     }
 }

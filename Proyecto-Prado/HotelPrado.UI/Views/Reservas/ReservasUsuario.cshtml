@@ -1,0 +1,101 @@
+﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Reservas.ReservasDTO>
+
+@{
+    ViewBag.Title = "Mis Reservas";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Mis Reservas</h2>
+
+    <table class="table table-bordered table-striped table-hover shadow-lg">
+        <thead class="thead-dark">
+            <tr>
+                <th>#</th>
+                <th>Id Reserva</th>
+                <th>Nombre Cliente</th>
+                <th>Habitación</th>
+                <th>Cantidad Personas</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Final</th>
+                <th>Estado</th>
+                <th>Monto Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                int count = 1;
+                foreach (var reserva in Model)
+                {
+                    <tr>
+                        <td>@count</td>
+                        <td>@reserva.IdReserva</td>
+                        <td>@reserva.NombreCliente</td>
+                        <td>@reserva.IdHabitacion</td>
+                        <td>@reserva.cantidadPersonas</td>
+                        <td>@(reserva.FechaInicio.HasValue ? reserva.FechaInicio.Value.ToString("dd/MM/yyyy") : "No definida")</td>
+                        <td>@(reserva.FechaFinal.HasValue ? reserva.FechaFinal.Value.ToString("dd/MM/yyyy") : "No definida")</td>
+                        <td>@reserva.EstadoReserva</td>
+                        <td>$@reserva.MontoTotal.ToString("0.00")</td>
+                        <td>
+                            <!-- Botón de acción para ver más detalles -->
+                            <a href="@Url.Action("DetalleReserva", "Reservas", new { id = reserva.IdReserva })" class="btn btn-info btn-sm" title="Ver Detalles">
+                                <i class="fas fa-info-circle"></i> Detalles
+                            </a>
+                        </td>
+                    </tr>
+                    count++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="9" class="text-center text-danger">No tienes reservas.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Scripts para iconos de Font Awesome -->
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<!-- Estilos personalizados -->
+<style>
+    .table th, .table td {
+        text-align: center;
+    }
+
+    .table th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .table td {
+        background-color: #f9f9f9;
+    }
+
+    .table-striped tbody tr:nth-child(odd) {
+        background-color: #f2f2f2;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+
+        .btn-info:hover {
+            background-color: #138496;
+            border-color: #117a8b;
+        }
+
+    .shadow-lg {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>

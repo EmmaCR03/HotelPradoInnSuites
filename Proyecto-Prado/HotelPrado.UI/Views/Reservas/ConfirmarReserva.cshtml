@@ -1,0 +1,55 @@
+﻿@model HotelPrado.Abstracciones.Modelos.Reservas.ReservasDTO
+
+@{
+    ViewBag.Title = "Confirmar Reserva";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded">
+        <div class="card-header bg-primary text-white text-center">
+            <h2 class="mb-0">Confirmar Reserva</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <div class="card p-3 border-0 shadow-sm">
+                        <h4 class="text-center text-secondary mb-3">Detalles de la Reserva</h4>
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>Habitación:</strong> @Model.IdHabitacion</li>
+                            <li class="list-group-item">
+                                <strong>Fecha de Inicio:</strong> @(Model.FechaInicio.HasValue ? Model.FechaInicio.Value.ToString("dd/MM/yyyy") : "No definida")
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Fecha de Finalización:</strong> @(Model.FechaFinal.HasValue ? Model.FechaFinal.Value.ToString("dd/MM/yyyy") : "No definida")
+                            </li>
+                            <li class="list-group-item"><strong>Cantidad de Personas:</strong> @Model.cantidadPersonas</li>
+                            <li class="list-group-item">
+                                <strong>Monto Total:</strong>
+                                <span class="text-success fw-bold">$@Model.MontoTotal.ToString("0.00")</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    @using (Html.BeginForm("ConfirmarReserva", "Reservas", FormMethod.Post, new { @class = "mt-4" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.IdHabitacion)
+                        @Html.HiddenFor(model => model.FechaInicio)
+                        @Html.HiddenFor(model => model.FechaFinal)
+                        @Html.HiddenFor(model => model.cantidadPersonas)
+                        @Html.HiddenFor(model => model.MontoTotal)
+
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-lg btn-success shadow">
+                                <i class="fas fa-check-circle"></i> Confirmar Reserva
+                            </button>
+                            @Html.ActionLink("Cancelar", "Index", "Home", null, new { @class = "btn btn-lg btn-danger shadow" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Asegúrate de que en tu Layout tienes cargado Bootstrap y FontAwesome -->

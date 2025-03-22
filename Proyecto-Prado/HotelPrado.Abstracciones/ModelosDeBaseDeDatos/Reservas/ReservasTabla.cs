@@ -26,6 +26,6 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Reservas
         public virtual HabitacionesTabla Habitacion { get; set; }
 
         [ForeignKey("IdCliente")]
-        public virtual ApplicationUser Cliente { get; set; }  
+        public virtual ApplicationUser Usuario { get; set; }  
     }
 }
