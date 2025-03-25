@@ -17,13 +17,6 @@
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.IdReserva)
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.IdCliente, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.IdCliente, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.IdCliente, "", new { @class = "text-danger" })
-        </div>
-    </div>
 
     <div class="form-group">
         @Html.LabelFor(model => model.cantidadPersonas, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -66,9 +59,16 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.EstadoReserva, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.EstadoReserva, new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.EstadoReserva, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.DropDownListFor(model => model.EstadoReserva,
+                new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "Seleccione un estado", Value = "", Selected = true, Disabled = true },
+                    new SelectListItem { Text = "Pendiente", Value = "Pendiente" },
+                    new SelectListItem { Text = "Realizado", Value = "Realizado" }
+                },
+                new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.EstadoReserva, "", new { @class = "text-danger" })
         </div>
     </div>

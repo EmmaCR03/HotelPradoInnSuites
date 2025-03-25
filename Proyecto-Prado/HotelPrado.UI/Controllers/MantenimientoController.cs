@@ -53,7 +53,12 @@ namespace HotelPrado.UI.Controllers
         {
             return View();
         }
-
+        // GET: Mantenimiento/Create
+        public ActionResult Create()
+        {
+            ViewBag.Titulo = "Nuevo Mantenimiento";
+            return View();
+        }
 
 
         // GET: Mantenimiento/CreateHabitacion/5
@@ -78,7 +83,7 @@ namespace HotelPrado.UI.Controllers
                 await _registrarMantenimientoLN.Guardar(modelo);
                 TempData["SuccessMessage"] = "Mantenimiento creado!";
 
-                return RedirectToAction("Index", "Habitacion");
+                return RedirectToAction("IndexMantenimiento");
             }
             catch
             {

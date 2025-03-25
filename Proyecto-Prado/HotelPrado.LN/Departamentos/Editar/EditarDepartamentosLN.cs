@@ -42,7 +42,7 @@ namespace HotelPrado.LN.Departamentos.Editar
                     ""IdDepartamento"": {datosAnteriores.IdDepartamento},
                     ""IdCliente"": {datosAnteriores.IdCliente},
                     ""Nombre"": ""{datosAnteriores.Nombre}"",
-""Descripcion"": ""{datosAnteriores.Descripcion}"",
+                    ""Descripcion"": ""{datosAnteriores.Descripcion}"",
                     ""IdTipoDepartamento"": {datosAnteriores.IdTipoDepartamento},
                     ""Precio"": {datosAnteriores.Precio},
                     ""Estado"": ""{datosAnteriores.Estado}""
@@ -57,8 +57,7 @@ namespace HotelPrado.LN.Departamentos.Editar
                     ""IdDepartamento"": {elDepartamentoEnVista.IdDepartamento},
                     ""IdCliente"": {elDepartamentoEnVista.IdCliente},
                     ""Nombre"": ""{elDepartamentoEnVista.Nombre}"",
-""Descripcion"": ""{datosAnteriores.Descripcion}"",
-
+                    ""Descripcion"": ""{datosAnteriores.Descripcion}"",
                     ""IdTipoDepartamento"": {elDepartamentoEnVista.IdTipoDepartamento},
                     ""Precio"": {elDepartamentoEnVista.Precio},
                     ""Estado"": ""{elDepartamentoEnVista.Estado}""

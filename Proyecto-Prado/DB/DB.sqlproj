@@ -60,7 +60,6 @@
     <Folder Include="dbo\Tables\" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\TipoHabitacion.sql" />
     <Build Include="dbo\Tables\TipoDepartamento.sql" />
     <Build Include="dbo\Tables\Reservas.sql" />
     <Build Include="dbo\Tables\Puesto.sql" />
@@ -77,7 +76,7 @@
     <Build Include="dbo\Tables\AspNetUserLogins.sql" />
     <Build Include="dbo\Tables\AspNetUserClaims.sql" />
     <Build Include="dbo\Tables\AspNetRoles.sql" />
-    <Build Include="dbo\Tables\ImagenesHabitaciones.sql" />
     <Build Include="dbo\Tables\Mantenimiento.sql" />
+    <Build Include="dbo\Tables\ImagenesHabitacion.sql" />
   </ItemGroup>
 </Project>

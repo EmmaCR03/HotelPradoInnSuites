@@ -43,7 +43,6 @@ namespace HotelPrado.LN.Habitaciones.Editar
                 string datosAnterioresJson = $@"
                 {{
                     ""IdHabitacion"": {datosAnteriores.IdHabitacion},
-                    ""NumeroHabitacion"": {datosAnteriores.NumeroHabitacion},
                     ""PrecioPorNoche1P"": ""{datosAnteriores.PrecioPorNoche1P}"",
                     ""PrecioPorNoche2P"": ""{datosAnteriores.PrecioPorNoche2P}"",
                     ""PrecioPorNoche3P"": ""{datosAnteriores.PrecioPorNoche3P}"",
@@ -60,7 +59,6 @@ namespace HotelPrado.LN.Habitaciones.Editar
                 string datosPosterioresJson = $@"
                 {{
                     ""IdHabitacion"": {laHabitacionEnVista.IdHabitacion},
-                    ""NumeroHabitacion"": {laHabitacionEnVista.NumeroHabitacion},
                     ""PrecioPorNoche1P"": ""{laHabitacionEnVista.PrecioPorNoche1P}"",
                     ""PrecioPorNoche2P"": ""{laHabitacionEnVista.PrecioPorNoche2P}"",
                     ""PrecioPorNoche3P"": ""{laHabitacionEnVista.PrecioPorNoche3P}"",

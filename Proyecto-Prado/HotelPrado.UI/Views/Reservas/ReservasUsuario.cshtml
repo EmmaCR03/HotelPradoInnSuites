@@ -43,6 +43,21 @@
                             <a href="@Url.Action("DetalleReserva", "Reservas", new { id = reserva.IdReserva })" class="btn btn-info btn-sm" title="Ver Detalles">
                                 <i class="fas fa-info-circle"></i> Detalles
                             </a>
+                            <!-- Botones -->
+                            <div class="row g-2 mt-4">
+                                <div class="col-md-4">
+                                    <a href="@($"https://wa.me/{reserva.NumeroEmpresa}?text=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
+                                       class="btn btn-success w-100" target="_blank">
+                                        <i class="fab fa-whatsapp"></i> WhatsApp
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="@($"mailto:{reserva.CorreoEmpresa}?subject=Solicitud%20de%20cotización&body=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
+                                       class="btn btn-primary w-100" target="_blank">
+                                        <i class="fas fa-envelope"></i> Correo
+                                    </a>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     count++;

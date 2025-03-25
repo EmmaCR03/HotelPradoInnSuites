@@ -6,6 +6,9 @@ using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Reservas.Registrar;
 using HotelPrado.Abstracciones.Modelos.Bitacora;
 using HotelPrado.Abstracciones.Modelos.Reservas;
 using HotelPrado.AccesoADatos;
+using HotelPrado.AccesoADatos.Reservas.Editar;
+using HotelPrado.AccesoADatos.Reservas.ObtenerPorId;
+using HotelPrado.AccesoADatos.Reservas.Registrar;
 using HotelPrado.LN.Bitacora.Registrar;
 using HotelPrado.LN.Reservas.Editar;
 using HotelPrado.LN.Reservas.Listar;
@@ -71,9 +74,9 @@ namespace HotelPrado.UI.Controllers
 
 
         // GET: ReservasA/Edit/5
-        public async Task<ActionResult> Edit(int id)
+        public async Task<ActionResult> Edit(int IdReserva)
         {
-            var reserva = await _obtenerReservaPorId.Obtener(id);
+            var reserva = await _obtenerReservaPorId.Obtener(IdReserva);
             if (reserva == null)
             {
                 return HttpNotFound();
