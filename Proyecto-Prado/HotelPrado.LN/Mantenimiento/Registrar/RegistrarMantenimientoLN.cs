@@ -91,6 +91,8 @@ namespace HotelPrado.LN.Mantenimiento.Registrar
                 IdMantenimiento = losMantenimientos.IdMantenimiento,
                 Descripcion = losMantenimientos.Descripcion,
                 Estado = losMantenimientos.Estado,
+                idDepartamento = losMantenimientos.idDepartamento,
+                idHabitacion = losMantenimientos.idHabitacion
             };
         }
     }

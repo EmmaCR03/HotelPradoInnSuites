@@ -72,7 +72,7 @@
     <Compile Include="Habitacion\Editar\EditarHabitacionesAD.cs" />
     <Compile Include="Habitacion\HabDisponibles\HabDisponiblesAD.cs" />
     <Compile Include="Habitacion\Listar\ListarHabitacionesAD.cs" />
-    <Compile Include="Habitacion\ObtenerEnlaces\ObtenerEnlacesHAD.cs" />
+    <Compile Include="Habitacion\ObtenerEnlaces\ObtenerEnlacesAD.cs" />
     <Compile Include="Habitacion\ObtenerPorId\ObtenerHabitacionesPorIdAD.cs" />
     <Compile Include="Habitacion\Registrar\RegistrarHabitacionesAD.cs" />
     <Compile Include="Mantenimiento\Editar\EditarMantenimientoAD.cs" />

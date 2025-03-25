@@ -177,6 +177,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MantenimientoController.cs" />
+    <Compile Include="Controllers\ReservasAController.cs" />
     <Compile Include="Controllers\ReservasController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -597,6 +598,9 @@
     <Content Include="Views\Reservas\ConfirmarReserva.cshtml" />
     <Content Include="Views\Reservas\Confirmacion.cshtml" />
     <Content Include="Views\Reservas\ReservasUsuario.cshtml" />
+    <Content Include="Views\ReservasA\IndexReservasA.cshtml" />
+    <Content Include="Views\ReservasA\Create.cshtml" />
+    <Content Include="Views\ReservasA\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

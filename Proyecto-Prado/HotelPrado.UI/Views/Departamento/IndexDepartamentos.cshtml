@@ -48,7 +48,6 @@
                         @Html.ActionLink("Editar", "Edit", new { IdDepartamento = item.IdDepartamento }, new { @class = "btn btn-outline-warning btn-sm me-2" })
                         @Html.ActionLink("Editar Imágenes", "EditarImagenes", "Departamento", new { id = item.IdDepartamento }, new { @class = "btn btn-outline-info btn-sm me-2" })
                     </div>
-
                     <div class="d-flex justify-content-end mt-3">
                         @using (Html.BeginForm("ToggleEstado", "Departamento", FormMethod.Post, new { id = "form-estado-" + item.IdDepartamento, @class = "d-inline" }))
                         {
@@ -62,6 +61,8 @@
                                 </select>
                             </div>
                         }
+                        @Html.ActionLink("Solicitar Mantenimiento", "Create", "Mantenimiento", new { IdDepartamento = item.IdDepartamento }, new { @class = "btn btn-outline-warning btn-sm me-2" })
+
                     </div>
 
                     <!-- Botón de Cerrar Información -->

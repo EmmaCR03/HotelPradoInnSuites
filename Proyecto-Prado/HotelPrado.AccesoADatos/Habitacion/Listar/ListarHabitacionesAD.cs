@@ -3,8 +3,6 @@ using HotelPrado.Abstracciones.Modelos.Habitaciones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelPrado.AccesoADatos.Habitacion.HabDisponibles
 {
@@ -19,24 +17,20 @@ namespace HotelPrado.AccesoADatos.Habitacion.HabDisponibles
 
         public List<HabitacionesDTO> Listar(int? capacidad = null, string estado = null)
         {
-            var laListaDeHabitaciones = (from laHabitacion in _contexto.HabitacionesTabla
-                                         join tipoHab in _contexto.TipoHabitacionTabla
-                                         on laHabitacion.IdTipoHabitacion equals tipoHab.IdTipoHabitacion into tipoHabJoin
-                                         from tipo in tipoHabJoin.DefaultIfEmpty()  // LEFT JOIN
-                                         select new HabitacionesDTO
-                                         {
-                                             IdHabitacion = laHabitacion.IdHabitacion,
-                                             NumeroHabitacion = laHabitacion.NumeroHabitacion,
-                                             PrecioPorNoche1P = laHabitacion.PrecioPorNoche1P,
-                                             PrecioPorNoche2P = laHabitacion.PrecioPorNoche2P,
-                                             PrecioPorNoche3P = laHabitacion.PrecioPorNoche3P,
-                                             PrecioPorNoche4P = laHabitacion.PrecioPorNoche4P,
-                                             Estado = laHabitacion.Estado,
-                                             UrlImagenes = laHabitacion.UrlImagenes,
-                                             CapacidadMin = laHabitacion.CapacidadMin,
-                                             CapacidadMax = laHabitacion.CapacidadMax,
-                                             IdTipoHabitacion = laHabitacion.IdTipoHabitacion
-                                         });
+            var laListaDeHabitaciones = from laHabitacion in _contexto.HabitacionesTabla
+                                        select new HabitacionesDTO
+                                        {
+                                            IdHabitacion = laHabitacion.IdHabitacion,
+                                            NumeroHabitacion = laHabitacion.NumeroHabitacion,
+                                            PrecioPorNoche1P = laHabitacion.PrecioPorNoche1P,
+                                            PrecioPorNoche2P = laHabitacion.PrecioPorNoche2P,
+                                            PrecioPorNoche3P = laHabitacion.PrecioPorNoche3P,
+                                            PrecioPorNoche4P = laHabitacion.PrecioPorNoche4P,
+                                            Estado = laHabitacion.Estado,
+                                            UrlImagenes = laHabitacion.UrlImagenes,
+                                            CapacidadMin = laHabitacion.CapacidadMin,
+                                            CapacidadMax = laHabitacion.CapacidadMax,
+                                        };
 
             if (capacidad.HasValue)
             {
@@ -48,10 +42,7 @@ namespace HotelPrado.AccesoADatos.Habitacion.HabDisponibles
                 laListaDeHabitaciones = laListaDeHabitaciones.Where(h => h.Estado == estado);
             }
 
-
             return laListaDeHabitaciones.ToList();
         }
-
-
     }
 }

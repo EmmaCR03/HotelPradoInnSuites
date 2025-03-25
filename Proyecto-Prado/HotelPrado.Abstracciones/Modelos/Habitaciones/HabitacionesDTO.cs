@@ -12,20 +12,19 @@ namespace HotelPrado.Abstracciones.Modelos.Habitaciones
         [Key]
         public int IdHabitacion { get; set; }
         public string NumeroHabitacion { get; set; }
-   
+
         public decimal PrecioPorNoche1P { get; set; }
-    
+
         public decimal PrecioPorNoche2P { get; set; }
-      
+
         public decimal PrecioPorNoche3P { get; set; }
-     
+
         public decimal PrecioPorNoche4P { get; set; }
 
         public decimal PrecioFinal { get; set; }
         public decimal TotalPrecio { get; set; }
 
-        public int IdTipoHabitacion { get; set; }
-      
+
         public string Estado { get; set; }
 
         public int CapacidadMin { get; set; }

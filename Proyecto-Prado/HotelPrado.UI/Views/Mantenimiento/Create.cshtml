@@ -2,12 +2,17 @@
 
 <div class="card mt-5">
     <div class="card-header">
-        <h2>Agregar Mantenimiento</h2>
+        <h2>@ViewBag.Titulo</h2>
     </div>
     <div class="card-body">
-        @using (Html.BeginForm("Create", "Mantenimiento", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        @using (Html.BeginForm("Create", "Mantenimiento", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
+
+            <!-- Campos ocultos para los IDs y el tipo -->
+            @Html.HiddenFor(model => model.idDepartamento)
+            @Html.HiddenFor(model => model.idHabitacion)
+            <input type="hidden" name="tipo" value="@ViewBag.Tipo" />
 
             <div class="form-horizontal">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -15,7 +20,7 @@
                 <div class="form-group row">
                     @Html.LabelFor(model => model.Descripcion, new { @class = "control-label col-md-3 text-wrap" })
                     <div class="col-md-9 w-100">
-                        @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control w-100" } })
+                        @Html.TextAreaFor(model => model.Descripcion, new { @class = "form-control w-100", rows = 4 })
                         @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -24,23 +29,30 @@
                     @Html.LabelFor(model => model.Estado, new { @class = "control-label col-md-3 text-wrap" })
                     <div class="col-md-9 w-100">
                         @Html.DropDownListFor(model => model.Estado, new SelectList(new List<SelectListItem>
-                                {
-                            new SelectListItem { Value = "Pendiente", Text = "Pendiente" },
+                        {
+                            new SelectListItem { Value = "Pendiente", Text = "Pendiente", Selected = true },
                             new SelectListItem { Value = "Realizado", Text = "Realizado" }
-                        }, "Value", "Text"), "Seleccione un tipo", new { @class = "form-control w-100" })
+                        }, "Value", "Text"), new { @class = "form-control w-100" })
                         @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
                 <div class="form-group row">
                     <div class="col-md-9 offset-md-3 w-100">
-                        <input type="button" value="Crear Mantenimiento" class="btn btn-primary w-100" id="submitButton" onclick="showConfirmation()" />
+                        <input type="submit" value="Crear Mantenimiento" class="btn btn-primary w-100" />
                     </div>
                 </div>
             </div>
         }
         <div>
-            @Html.ActionLink("Volver", "Index", null, new { @class = "btn btn-secondary w-100" })
+            @if (ViewBag.Tipo == "departamento")
+            {
+                @Html.ActionLink("Volver", "Index", "Departamento", null, new { @class = "btn btn-secondary w-100" })
+            }
+            else
+            {
+                @Html.ActionLink("Volver", "Index", "Habitacion", null, new { @class = "btn btn-secondary w-100" })
+            }
         </div>
     </div>
 </div>
@@ -48,4 +60,3 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-

@@ -117,7 +117,7 @@ namespace HotelPrado.UI.Controllers
         // GET: Habitacion/Create
         public ActionResult Create()
         {
-            
+
 
             return View();
         }
@@ -128,14 +128,7 @@ namespace HotelPrado.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                Console.WriteLine("IdTipoHabitacion recibido: " + modeloDeHabitaciones.IdTipoHabitacion);
 
-                // Si el valor es null o 0, el problema está en la vista
-                if (modeloDeHabitaciones.IdTipoHabitacion == null || modeloDeHabitaciones.IdTipoHabitacion == 0)
-                {
-                    ModelState.AddModelError("IdTipoHabitacion", "Debe seleccionar un tipo de habitación.");
-                    return View(modeloDeHabitaciones);
-                }
 
                 // Lista de archivos a almacenar
                 var archivos = new List<string>();
@@ -246,7 +239,7 @@ namespace HotelPrado.UI.Controllers
                     }
 
                     // Guardar cambios en la base de datos (las URLs de las imágenes)
-                    habitacion.UrlImagenes = string.Join(",", habitacion.ListaImagenes) ??"";
+                    habitacion.UrlImagenes = string.Join(",", habitacion.ListaImagenes) ?? "";
 
                     // Actualizar la habitacion en la base de datos
                     int cantidadDeDatosActualizados = await _editarHabitacionesLN.Actualizar(lahabitacion);
@@ -389,7 +382,7 @@ namespace HotelPrado.UI.Controllers
         {
             var habitaciones = _contexto.HabitacionesTabla.Find(id);
 
-            if (habitaciones == null || string.IsNullOrEmpty(imagenUrl))        
+            if (habitaciones == null || string.IsNullOrEmpty(imagenUrl))
             {
                 return HttpNotFound();
             }
@@ -468,7 +461,6 @@ namespace HotelPrado.UI.Controllers
                     ""PrecioPorNoche2P"": ""{habitaciones.PrecioPorNoche2P}"",
                     ""PrecioPorNoche3P"": ""{habitaciones.PrecioPorNoche3P}"",
                     ""PrecioPorNoche4P"": ""{habitaciones.PrecioPorNoche4P}"",
-                    ""IdTipoHabitacion"": ""{habitaciones.IdTipoHabitacion}"",
                     ""CapacidadMax"": ""{habitaciones.CapacidadMax}"",
                     ""CapacidadMin"": ""{habitaciones.CapacidadMin}"",
                     ""Estado"": ""{habitaciones.Estado}""

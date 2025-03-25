@@ -4,6 +4,7 @@ using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Mantenimiento.Listar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Mantenimiento.ObtenerPorId;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Mantenimiento.Registrar;
 using HotelPrado.Abstracciones.Modelos.Bitacora;
+using HotelPrado.Abstracciones.Modelos.Citas;
 using HotelPrado.Abstracciones.Modelos.Mantenimiento;
 using HotelPrado.AccesoADatos;
 using HotelPrado.LN.Bitacora.Registrar;
@@ -53,61 +54,38 @@ namespace HotelPrado.UI.Controllers
             return View();
         }
 
-        // GET: Mantenimiento/Create
-        public ActionResult Create()
+
+
+        // GET: Mantenimiento/CreateHabitacion/5
+        public ActionResult CreateHabitacion(int id)
         {
-            // Inicializar el modelo con valores predeterminados
             var modelo = new MantenimientoDTO
             {
-                Descripcion = "",
-                Estado = "Pendiente" // Valor predeterminado
+                idHabitacion = id,
+                Estado = "Pendiente"
             };
-            return View(modelo);
+
+            ViewBag.Titulo = "Mantenimiento para Habitación";
+            return View("Create", modelo);
         }
 
         // POST: Mantenimiento/Create
         [HttpPost]
-        public async Task<ActionResult> Create(MantenimientoDTO modeloDeMantenimiento)
+        public async Task<ActionResult> Create(MantenimientoDTO modelo)
         {
             try
             {
-                if (ModelState.IsValid) // Verifica si el modelo es válido
-                {
-                    Console.WriteLine("El modelo es válido. Intentando guardar...");
-                    int cantidadDeDatosGuardados = await _registrarMantenimientoLN.Guardar(modeloDeMantenimiento);
+                await _registrarMantenimientoLN.Guardar(modelo);
+                TempData["SuccessMessage"] = "Mantenimiento creado!";
 
-                    if (cantidadDeDatosGuardados > 0)
-                    {
-                        // Registro guardado correctamente
-                        return RedirectToAction("IndexMantenimiento");
-                    }
-                    else
-                    {
-                        // No se guardó ningún registro
-                        ViewBag.mensaje = "No se pudo guardar el registro. Intente nuevamente.";
-                        return View(modeloDeMantenimiento);
-                    }
-                }
-                else
-                {
-                    // El modelo no es válido
-                    Console.WriteLine("El modelo no es válido. Errores:");
-                    foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                    {
-                        Console.WriteLine(error.ErrorMessage);
-                    }
-                    ViewBag.mensaje = "Por favor, corrija los errores en el formulario.";
-                    return View(modeloDeMantenimiento);
-                }
+                return RedirectToAction("Index", "Habitacion");
             }
-            catch (Exception ex)
+            catch
             {
-                // Manejo de errores
-                Console.WriteLine($"Ocurrió un error: {ex.Message}");
-                ViewBag.mensaje = $"Ocurrió un error: {ex.Message}";
-                return View(modeloDeMantenimiento);
+                return View(modelo);
             }
         }
+
 
         // GET: Mantenimiento/Edit/5
         public ActionResult Edit(int IdMantenimiento)

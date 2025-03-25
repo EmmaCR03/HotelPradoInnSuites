@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HotelPrado.LN.Reservas.ObtenerPorId
 {
-    class ObtenerReservaPorIdLN : IObtenerReservaPorIdLN
+    public class ObtenerReservaPorIdLN : IObtenerReservaPorIdLN
     {
         IObtenerReservaPorIdAD _obtenerporId;
 

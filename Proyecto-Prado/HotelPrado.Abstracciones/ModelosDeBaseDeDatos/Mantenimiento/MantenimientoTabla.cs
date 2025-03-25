@@ -17,7 +17,8 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Mantenimiento
         public string Descripcion { get; set; }
 
         public string Estado { get; set; }
-
+        public int idDepartamento { get; set; }
+        public int idHabitacion { get; set; }
 
     }
 }
