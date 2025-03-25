@@ -598,7 +598,6 @@
     <Content Include="Views\Reservas\Confirmacion.cshtml" />
     <Content Include="Views\Reservas\ReservasUsuario.cshtml" />
     <Content Include="Views\ReservasA\IndexReservasA.cshtml" />
-    <Content Include="Views\ReservasA\Create.cshtml" />
     <Content Include="Views\ReservasA\Edit.cshtml" />
     <Content Include="Views\Mantenimiento\Create.cshtml" />
   </ItemGroup>

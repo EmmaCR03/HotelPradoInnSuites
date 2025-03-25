@@ -54,6 +54,14 @@ namespace HotelPrado.UI.Controllers
         // GET: ReservasA/Create
         public ActionResult Create()
         {
+            ViewBag.IdCliente = _contexto.ClienteTabla
+                .Select(c => new SelectListItem
+                {
+                    Value = c.IdCliente.ToString(),
+                    Text = c.NombreCliente
+                })
+                .ToList();
+
             return View();
         }
 
