@@ -79,6 +79,20 @@ namespace HotelPrado.UI.Models
         [Display(Name = "Confirmar contraseña")]
         [Compare("Password", ErrorMessage = "La contraseña y la contraseña de confirmación no coinciden.")]
         public string ConfirmPassword { get; set; }
+        [Required]
+        [Display(Name = "Nombre")]
+        public string NombreCliente { get; set; }
+
+        [Required]
+        [Display(Name = "Primer Apellido")]
+        public string PrimerApellidoCliente { get; set; }
+
+        [Display(Name = "Segundo Apellido")]
+        public string SegundoApellidoCliente { get; set; }
+
+        [Required]
+        [Display(Name = "Teléfono")]
+        public string TelefonoCliente { get; set; }
     }
 
     public class ResetPasswordViewModel

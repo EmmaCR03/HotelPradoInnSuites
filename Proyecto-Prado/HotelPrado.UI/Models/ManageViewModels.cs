@@ -37,6 +37,7 @@ namespace HotelPrado.UI.Models
         [Display(Name = "Confirme la contraseña nueva")]
         [Compare("NewPassword", ErrorMessage = "La contraseña nueva y la contraseña de confirmación no coinciden.")]
         public string ConfirmPassword { get; set; }
+      
     }
 
     public class ChangePasswordViewModel

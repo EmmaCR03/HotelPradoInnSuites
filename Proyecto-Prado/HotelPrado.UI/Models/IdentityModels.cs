@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -9,6 +10,21 @@ namespace HotelPrado.UI.Models
     // Para agregar datos de perfil del usuario, agregue más propiedades a su clase ApplicationUser. Visite https://go.microsoft.com/fwlink/?LinkID=317594 para obtener más información.
     public class ApplicationUser : IdentityUser
     {
+        [Required]
+        [Display(Name = "Nombre")]
+        public string NombreCliente { get; set; }
+
+        [Required]
+        [Display(Name = "Primer Apellido")]
+        public string PrimerApellidoCliente { get; set; }
+
+        [Display(Name = "Segundo Apellido")]
+        public string SegundoApellidoCliente { get; set; }
+
+        [Required]
+        [Display(Name = "Teléfono")]
+        public string TelefonoCliente { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Tenga en cuenta que authenticationType debe coincidir con el valor definido en CookieAuthenticationOptions.AuthenticationType

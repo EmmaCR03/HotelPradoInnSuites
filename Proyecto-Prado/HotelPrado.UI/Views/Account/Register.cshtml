@@ -31,6 +31,32 @@
             </div>
         </div>
         <div class="row">
+            @Html.LabelFor(m => m.NombreCliente, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.NombreCliente, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="row">
+            @Html.LabelFor(m => m.PrimerApellidoCliente, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.PrimerApellidoCliente, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.SegundoApellidoCliente, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.SegundoApellidoCliente, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.TelefonoCliente, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.TelefonoCliente, new { @class = "form-control", type = "tel" })
+                @Html.ValidationMessageFor(m => m.TelefonoCliente)
+            </div>
+        </div>
+        <div class="row">
             <div class="offset-md-2 col-md-10">
                 <input type="submit" value="Registrarse" class="btn btn-outline-dark" />
             </div>
