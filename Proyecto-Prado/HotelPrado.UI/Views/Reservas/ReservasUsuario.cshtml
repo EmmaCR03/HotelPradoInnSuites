@@ -4,113 +4,121 @@
     ViewBag.Title = "Mis Reservas";
 }
 
-<div class="container mt-5">
-    <h2 class="text-center mb-4">Mis Reservas</h2>
+<div class="container-fluid mt-4">
+    <h2 class="text-center mb-4 text-primary fw-bold">Mis Reservas</h2>
 
-    <table class="table table-bordered table-striped table-hover shadow-lg">
-        <thead class="thead-dark">
-            <tr>
-                <th>#</th>
-                <th>Id Reserva</th>
-                <th>Nombre Cliente</th>
-                <th>Habitación</th>
-                <th>Cantidad Personas</th>
-                <th>Fecha Inicio</th>
-                <th>Fecha Final</th>
-                <th>Estado</th>
-                <th>Monto Total</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null && Model.Any())
-            {
-                int count = 1;
-                foreach (var reserva in Model)
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover shadow-lg w-100">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Id Reserva</th>
+                    <th>Nombre Cliente</th>
+                    <th>Habitación</th>
+                    <th>Cantidad Personas</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Final</th>
+                    <th>Estado</th>
+                    <th>Monto Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
                 {
-                    <tr>
-                        <td>@count</td>
-                        <td>@reserva.IdReserva</td>
-                        <td>@reserva.NombreCliente</td>
-                        <td>@reserva.IdHabitacion</td>
-                        <td>@reserva.cantidadPersonas</td>
-                        <td>@(reserva.FechaInicio.HasValue ? reserva.FechaInicio.Value.ToString("dd/MM/yyyy") : "No definida")</td>
-                        <td>@(reserva.FechaFinal.HasValue ? reserva.FechaFinal.Value.ToString("dd/MM/yyyy") : "No definida")</td>
-                        <td>@reserva.EstadoReserva</td>
-                        <td>$@reserva.MontoTotal.ToString("0.00")</td>
-                        <td>
-                            <!-- Botón de acción para ver más detalles -->
-                            <a href="@Url.Action("DetalleReserva", "Reservas", new { id = reserva.IdReserva })" class="btn btn-info btn-sm" title="Ver Detalles">
-                                <i class="fas fa-info-circle"></i> Detalles
-                            </a>
-                            <!-- Botones -->
-                            <div class="row g-2 mt-4">
-                                <div class="col-md-4">
-                                    <a href="@($"https://wa.me/{reserva.NumeroEmpresa}?text=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
-                                       class="btn btn-success w-100" target="_blank">
+                    int count = 1;
+                    foreach (var reserva in Model)
+                    {
+                        <tr>
+                            <td>@count</td>
+                            <td>@reserva.IdReserva</td>
+                            <td>@reserva.NombreCliente</td>
+                            <td>@reserva.IdHabitacion</td>
+                            <td>@reserva.cantidadPersonas</td>
+                            <td>@(reserva.FechaInicio.HasValue ? reserva.FechaInicio.Value.ToString("dd/MM/yyyy") : "No definida")</td>
+                            <td>@(reserva.FechaFinal.HasValue ? reserva.FechaFinal.Value.ToString("dd/MM/yyyy") : "No definida")</td>
+                            <td><span class="badge bg-success p-2">@reserva.EstadoReserva</span></td>
+                            <td class="fw-bold text-success">₡@reserva.MontoTotal.ToString("0.00")</td>
+                            <td class="text-center">
+                                <a href="@Url.Action("DetalleReserva", "Reservas", new { id = reserva.IdReserva })" class="btn btn-outline-info btn-sm" title="Ver Detalles">
+                                    <i class="fas fa-info-circle"></i> Detalles
+                                </a>
+                                <div class="d-flex justify-content-center gap-2 mt-2">
+                                    <a href="@($"https://wa.me/{reserva.NumeroEmpresa}?text=Hola,%20estoy%20interesado%20en%20una%20cotizaci%C3%B3n%20del%20departamento%20")"
+                                       class="btn btn-outline-success btn-sm" target="_blank">
                                         <i class="fab fa-whatsapp"></i> WhatsApp
                                     </a>
-                                </div>
-                                <div class="col-md-4">
-                                    <a href="@($"mailto:{reserva.CorreoEmpresa}?subject=Solicitud%20de%20cotización&body=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
-                                       class="btn btn-primary w-100" target="_blank">
+                                    <a href="@($"mailto:{reserva.CorreoEmpresa}?subject=Solicitud%20de%20cotizaci%C3%B3n&body=Hola,%20estoy%20interesado%20en%20una%20cotizaci%C3%B3n%20del%20departamento%20")"
+                                       class="btn btn-outline-primary btn-sm" target="_blank">
                                         <i class="fas fa-envelope"></i> Correo
                                     </a>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                    count++;
+                            </td>
+                        </tr>
+                        count++;
+                    }
                 }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="9" class="text-center text-danger">No tienes reservas.</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                else
+                {
+                    <tr>
+                        <td colspan="10" class="text-center text-danger fw-bold">No tienes reservas.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<!-- Scripts para iconos de Font Awesome -->
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
-<!-- Estilos personalizados -->
 <style>
-    .table th, .table td {
-        text-align: center;
+    .container-fluid {
+        max-width: 95%;
     }
 
-    .table th {
-        background-color: #4CAF50;
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table {
+        font-size: 1rem;
+        border-radius: 10px;
+    }
+
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 12px;
+        }
+
+        .table thead {
+            background-color: #212529;
+            color: white;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+            transition: 0.3s ease-in-out;
+        }
+
+    .btn {
+        font-size: 0.85rem;
+        padding: 6px 10px;
+        border-radius: 8px;
+    }
+
+    .btn-outline-info:hover {
+        background-color: #17a2b8;
         color: white;
     }
 
-    .table td {
-        background-color: #f9f9f9;
+    .btn-outline-success:hover {
+        background-color: #28a745;
+        color: white;
     }
 
-    .table-striped tbody tr:nth-child(odd) {
-        background-color: #f2f2f2;
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: #f1f1f1;
-        cursor: pointer;
-    }
-
-    .btn-info {
-        background-color: #17a2b8;
-        border-color: #17a2b8;
-    }
-
-        .btn-info:hover {
-            background-color: #138496;
-            border-color: #117a8b;
-        }
-
-    .shadow-lg {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: white;
     }
 </style>
