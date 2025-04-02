@@ -10,6 +10,6 @@ namespace HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Mantenimiento.Conv
 {
     public interface IConvertirMantenimientoDTOAMantenimientoTabla
     {
-        MantenimientoTabla Convertir(MantenimientoDTO elMantenimiento);
+       MantenimientoTabla Convertir(MantenimientoDTO elMantenimiento);
     }
 }

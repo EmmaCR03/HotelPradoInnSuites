@@ -10,9 +10,6 @@ using HotelPrado.LN.Bitacora.Registrar;
 using HotelPrado.LN.Mantenimiento.Conversion;
 using HotelPrado.LN.Mantenimiento.ObtenerPorId;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HotelPrado.LN.Mantenimiento.Editar
@@ -36,29 +33,36 @@ namespace HotelPrado.LN.Mantenimiento.Editar
         {
             try
             {
-                // Obtener los datos anteriores del mantenimiento
-                var datosAnteriores = _obtenerMantenimientoPorIdLN.Obtener(elMantenimientoEnVista.IdMantenimiento);
+                // Obtener los datos anteriores
+                var datosAnteriores = await _obtenerMantenimientoPorIdLN.Obtener(elMantenimientoEnVista.IdMantenimiento);
 
                 // Convertir los datos anteriores a JSON
                 string datosAnterioresJson = $@"
-                {{
-                   ""IdMantenimiento"": {datosAnteriores.IdMantenimiento},
-                    ""Descripcion"": {datosAnteriores.Descripcion},
-                    ""Estado"": {datosAnteriores.Estado},
-                }}";
+            {{
+                ""IdMantenimiento"": {datosAnteriores.IdMantenimiento},
+                ""Descripcion"": ""{datosAnteriores.Descripcion}"",
+                ""Estado"": ""{datosAnteriores.Estado}"",
+                ""idDepartamento"": ""{datosAnteriores.idDepartamento}"",
+                ""idHabitacion"": ""{datosAnteriores.idHabitacion}""
+            }}";
 
-                // Realizar la actualización del mantenimiento
-                int cantidadDeDatosActualizados = await _editarMantenimiento.Editar(_convertir.Convertir(elMantenimientoEnVista));
+                // Convertir el DTO a la entidad para su actualización
+                var mantenimiento = _convertir.Convertir(elMantenimientoEnVista);
+
+                // Realizar la actualización con el método 'Update'
+                int cantidadDeDatosActualizados = await _editarMantenimiento.Editar(mantenimiento);
 
                 // Convertir los datos actualizados a JSON
                 string datosPosterioresJson = $@"
-                {{
-                   ""IdMantenimiento"": {datosAnteriores.IdMantenimiento},
-                    ""Descripcion"": {datosAnteriores.Descripcion},
-                    ""Estado"": {datosAnteriores.Estado},
-                }}";
+            {{
+                ""IdMantenimiento"": {elMantenimientoEnVista.IdMantenimiento},
+                ""Descripcion"": ""{elMantenimientoEnVista.Descripcion}"",
+                ""Estado"": ""{elMantenimientoEnVista.Estado}"",
+                ""idDepartamento"": ""{elMantenimientoEnVista.idDepartamento}"",
+                ""idHabitacion"": ""{elMantenimientoEnVista.idHabitacion}""
+            }}";
 
-                // Registrar el evento en la bitácora
+                // Registrar en la bitácora
                 var bitacora = new BitacoraEventosDTO
                 {
                     IdEvento = 0,

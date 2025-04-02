@@ -26,17 +26,15 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Estado, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Estado, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownListFor(model => model.Estado, new SelectList(new[] { "Pendiente", "Realizado" }, "Pendiente"), new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.idDepartamento, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.idDepartamento, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.idDepartamento, "", new { @class = "text-danger" })
-            </div>
+            <label for="IdDepartamento">IdDepartamento</label>
+            <input type="text" id="IdDepartamento" name="IdDepartamento" class="form-control" value="@ViewBag.IdDepartamento" readonly />
+        </div>
         </div>
 
         <div class="form-group">
@@ -49,9 +47,9 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.DepartamentoNombre, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DepartamentoNombre, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DepartamentoNombre, "", new { @class = "text-danger" })
+            <div>
+                <label for="DepartamentoNombre"></label>
+                <input type="text" name="DepartamentoNombre" value="@ViewBag.DepartamentoNombre" class="form-control" readonly />
             </div>
         </div>
 
@@ -68,11 +66,11 @@
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
-    </div>
+   
 }
 
 <div>
-    @Html.ActionLink("Back to List", "IndexMantenimiento")
+    @Html.ActionLink("Volver", "IndexMantenimiento")
 </div>
 
 @section Scripts {

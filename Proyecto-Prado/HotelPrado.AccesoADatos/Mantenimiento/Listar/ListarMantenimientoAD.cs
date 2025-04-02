@@ -1,10 +1,7 @@
 ﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Mantenimiento.Listar;
 using HotelPrado.Abstracciones.Modelos.Mantenimiento;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelPrado.AccesoADatos.Mantenimiento.Listar
 {
@@ -17,20 +14,20 @@ namespace HotelPrado.AccesoADatos.Mantenimiento.Listar
             _contexto = new Contexto();
         }
 
-        public List<MantenimientoDTO> Listar(int IdMantenimiento)
+        public List<MantenimientoDTO> Listar()
         {
-            var laListaDeMantenimiento = (from elMantenimiento in _contexto.MantenimientoTabla
+            var laListaDeMantenimientos = (from elMantenimiento in _contexto.MantenimientoTabla
                                           select new MantenimientoDTO
                                           {
                                               IdMantenimiento = elMantenimiento.IdMantenimiento,
                                               Descripcion = elMantenimiento.Descripcion,
                                               Estado = elMantenimiento.Estado,
                                               idDepartamento = elMantenimiento.idDepartamento,
-                                              idHabitacion = elMantenimiento.idHabitacion
+                                              idHabitacion = elMantenimiento.idHabitacion,
                                           }).ToList();
 
 
-            return laListaDeMantenimiento;
+            return laListaDeMantenimientos;
         }
     }
 }

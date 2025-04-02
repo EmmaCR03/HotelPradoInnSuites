@@ -4,7 +4,6 @@ using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Mantenimiento.Listar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Mantenimiento.ObtenerPorId;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Mantenimiento.Registrar;
 using HotelPrado.Abstracciones.Modelos.Bitacora;
-using HotelPrado.Abstracciones.Modelos.Citas;
 using HotelPrado.Abstracciones.Modelos.Mantenimiento;
 using HotelPrado.AccesoADatos;
 using HotelPrado.LN.Bitacora.Registrar;
@@ -13,10 +12,8 @@ using HotelPrado.LN.Mantenimiento.Listar;
 using HotelPrado.LN.Mantenimiento.ObtenerPorId;
 using HotelPrado.LN.Mantenimiento.Registrar;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace HotelPrado.UI.Controllers
@@ -27,7 +24,7 @@ namespace HotelPrado.UI.Controllers
         private readonly IRegistrarMantenimientoLN _registrarMantenimientoLN;
         private readonly IEditarMantenimientoLN _editarMantenimientoLN;
         private readonly Contexto _contexto;
-        private readonly IObtenerMantenimientoPorIdLN _obtenerMantenimientoPorId;
+        private readonly IObtenerMantenimientoPorIdLN _obtenerMantenimientoPorIdLN;
         private readonly IRegistrarBitacoraEventosLN _registrarBitacoraEventosLN;
 
         public MantenimientoController()
@@ -36,15 +33,15 @@ namespace HotelPrado.UI.Controllers
             _listarMantenimientoLN = new ListarMantenimientoLN();
             _editarMantenimientoLN = new EditarMantenimientoLN();
             _contexto = new Contexto();
-            _obtenerMantenimientoPorId = new ObtenerMantenimientoPorIdLN();
+            _obtenerMantenimientoPorIdLN = new ObtenerMantenimientoPorIdLN();
             _registrarBitacoraEventosLN = new RegistrarBitacoraEventosLN();
         }
 
         // GET: Mantenimiento
-        public ActionResult IndexMantenimiento(int? Id)
+        public ActionResult IndexMantenimiento()
         {
             ViewBag.Title = "El Mantenimiento";
-            var laListaDeMantenimiento = _listarMantenimientoLN.Listar(Id ?? 0);
+            var laListaDeMantenimiento = _listarMantenimientoLN.Listar();
             return View(laListaDeMantenimiento);
         }
 
@@ -53,67 +50,59 @@ namespace HotelPrado.UI.Controllers
         {
             return View();
         }
+
         // GET: Mantenimiento/Create
-        public ActionResult Create()
+        public ActionResult Create(int? IdDepartamento)
         {
-            ViewBag.Titulo = "Nuevo Mantenimiento";
-            return View();
-        }
-
-
-        // GET: Mantenimiento/CreateHabitacion/5
-        public ActionResult CreateHabitacion(int id)
-        {
-            var modelo = new MantenimientoDTO
+            if (IdDepartamento.HasValue)
             {
-                idHabitacion = id,
-                Estado = "Pendiente"
-            };
-
-            ViewBag.Titulo = "Mantenimiento para Habitación";
-            return View("Create", modelo);
+                // Obtener el nombre del departamento basado en el IdDepartamento
+                var departamento = _contexto.DepartamentoTabla.FirstOrDefault(d => d.IdDepartamento == IdDepartamento.Value);
+                if (departamento != null)
+                {
+                    ViewBag.IdDepartamento = IdDepartamento.Value;
+                    ViewBag.DepartamentoNombre = departamento.Nombre; // Pasar el nombre del departamento
+                }
+            }
+            return View();
         }
 
         // POST: Mantenimiento/Create
         [HttpPost]
-        public async Task<ActionResult> Create(MantenimientoDTO modelo)
+        public async Task<ActionResult> Create(MantenimientoDTO modeloDeMantenimiento)
         {
             try
             {
-                await _registrarMantenimientoLN.Guardar(modelo);
-                TempData["SuccessMessage"] = "Mantenimiento creado!";
+                if (modeloDeMantenimiento.idDepartamento == 0)
+                {
+                    ViewBag.Error = "El ID del departamento es obligatorio.";
+                    return View(modeloDeMantenimiento);
+                }
 
+                // Obtener el nombre del departamento desde la base de datos
+                var departamento = _contexto.DepartamentoTabla.FirstOrDefault(d => d.IdDepartamento == modeloDeMantenimiento.idDepartamento);
+                if (departamento != null)
+                {
+                    modeloDeMantenimiento.DepartamentoNombre = departamento.Nombre;
+                }
+
+                int cantidadDeDatosGuardados = await _registrarMantenimientoLN.Guardar(modeloDeMantenimiento);
                 return RedirectToAction("IndexMantenimiento");
             }
             catch
             {
-                return View(modelo);
+                return View();
             }
         }
 
-
         // GET: Mantenimiento/Edit/5
-        public ActionResult Edit(int IdMantenimiento)
+        public async Task<ActionResult> Edit(int IdMantenimiento)
         {
-            // Obtener el Mantenimiento desde la base de datos
-            var mantenimiento = _obtenerMantenimientoPorId.Obtener(IdMantenimiento);
-
+            var mantenimiento = await _obtenerMantenimientoPorIdLN.Obtener(IdMantenimiento);
             if (mantenimiento == null)
             {
                 return HttpNotFound();
             }
-
-            // Lista de estados predefinidos (fuertemente tipada)
-            var estadoDb = new List<SelectListItem>
-            {
-                new SelectListItem { Text = "Pendiente", Value = "Pendiente" },
-                new SelectListItem { Text = "Realizado", Value = "Realizado" }
-            };
-
-            // Asignar la lista a ViewBag
-            ViewBag.Estado = new SelectList(estadoDb, "Value", "Text", mantenimiento.Estado);
-
-            // Retornar la vista con el mantenimiento obtenido
             return View(mantenimiento);
         }
 
@@ -121,6 +110,8 @@ namespace HotelPrado.UI.Controllers
         [HttpPost]
         public async Task<ActionResult> Edit(MantenimientoDTO elmantenimiento)
         {
+            Console.WriteLine($"Estado recibido: {elmantenimiento.Estado}");
+
             if (ModelState.IsValid)
             {
                 try
@@ -155,8 +146,8 @@ namespace HotelPrado.UI.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
-                return RedirectToAction("IndexMantenimiento");
+                // TODO: Agregar lógica de eliminación
+                return RedirectToAction("Index");
             }
             catch
             {
@@ -172,16 +163,17 @@ namespace HotelPrado.UI.Controllers
                 var mantenimiento = _contexto.MantenimientoTabla.FirstOrDefault(d => d.IdMantenimiento == IdMantenimiento);
                 if (mantenimiento != null)
                 {
-                    // Actualiza el estado con el valor recibido del formulario
                     mantenimiento.Estado = Estado;
                     _contexto.SaveChanges();
 
                     string datosJson = $@"
-            {{
-                    ""IdMantenimiento"": {mantenimiento.IdMantenimiento},
-                    ""Descripcion"": ""{mantenimiento.Descripcion}"",
-                    ""Estado"": ""{mantenimiento.Estado}""
-            }}";
+                    {{
+                        ""IdMantenimiento"": {mantenimiento.IdMantenimiento},
+                        ""Descripcion"": ""{mantenimiento.Descripcion}"",
+                        ""Estado"": ""{mantenimiento.Estado}"",
+                        ""idDepartamento"": {mantenimiento.idDepartamento},
+                        ""idHabitacion"": {mantenimiento.idHabitacion}
+                    }}";
 
                     var bitacora = new BitacoraEventosDTO
                     {
@@ -200,7 +192,6 @@ namespace HotelPrado.UI.Controllers
                     return RedirectToAction("IndexMantenimiento");
                 }
 
-                // Si no se encuentra el Mantenimiento, redirigir a IndexMantenimiento
                 return RedirectToAction("IndexMantenimiento");
             }
             catch (Exception ex)

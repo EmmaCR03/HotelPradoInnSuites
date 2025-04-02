@@ -1,33 +1,27 @@
 ﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Mantenimiento.Registrar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Bitacora.Registrar;
-using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.General.Fecha;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Mantenimiento.Registrar;
 using HotelPrado.Abstracciones.Modelos.Bitacora;
 using HotelPrado.Abstracciones.Modelos.Mantenimiento;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Mantenimiento;
 using HotelPrado.AccesoADatos.Mantenimiento.Registrar;
 using HotelPrado.LN.Bitacora.Registrar;
-using HotelPrado.LN.General.Fecha;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HotelPrado.LN.Mantenimiento.Registrar
 {
     public class RegistrarMantenimientoLN : IRegistrarMantenimientoLN
     {
-        IRegistrarMantenimientoAD _registrarMantenimientoAD;
-        IRegistrarBitacoraEventosLN _registrarBitacoraEventosLN;
-        IFechaActual _fecha;
+        private readonly IRegistrarMantenimientoAD _registrarMantenimientoAD;
+        private readonly IRegistrarBitacoraEventosLN _registrarBitacoraEventosLN;
 
         public RegistrarMantenimientoLN()
         {
             _registrarMantenimientoAD = new RegistrarMantenimientoAD();
             _registrarBitacoraEventosLN = new RegistrarBitacoraEventosLN();
-            _fecha = new FechaActual();
         }
+
         public async Task<int> Guardar(MantenimientoDTO modelo)
         {
             try
@@ -40,9 +34,10 @@ namespace HotelPrado.LN.Mantenimiento.Registrar
                 {{
                     ""IdMantenimiento"": {modelo.IdMantenimiento},
                     ""Descripcion"": {modelo.Descripcion},
-                    ""Estado"": {modelo.Estado},
-                    
-                    
+                    ""Estado"": ""{modelo.Estado}"",
+                    ""idDepartamento"": ""{modelo.idDepartamento}"",
+                    ""idHabitacion"": {modelo.idHabitacion},
+
                 }}";
 
                 var bitacora = new BitacoraEventosDTO
@@ -84,15 +79,15 @@ namespace HotelPrado.LN.Mantenimiento.Registrar
             }
         }
 
-        private MantenimientoTabla ConvertirObjetoMantenimientoTabla(MantenimientoDTO losMantenimientos)
+        private MantenimientoTabla ConvertirObjetoMantenimientoTabla(MantenimientoDTO elMantenimiento)
         {
             return new MantenimientoTabla
             {
-                IdMantenimiento = losMantenimientos.IdMantenimiento,
-                Descripcion = losMantenimientos.Descripcion,
-                Estado = losMantenimientos.Estado,
-                idDepartamento = losMantenimientos.idDepartamento,
-                idHabitacion = losMantenimientos.idHabitacion
+                IdMantenimiento = elMantenimiento.IdMantenimiento,
+                Descripcion = elMantenimiento.Descripcion,
+                Estado = elMantenimiento.Estado,
+                idDepartamento = elMantenimiento.idDepartamento,
+                idHabitacion = elMantenimiento.idHabitacion
             };
         }
     }

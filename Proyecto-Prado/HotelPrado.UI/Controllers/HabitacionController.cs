@@ -65,7 +65,6 @@ namespace HotelPrado.UI.Controllers
         }
 
         // GET: Habitacion/IndexHabitacionesUsuario
-        // GET: Habitacion/IndexHabitacionesUsuario
         public ActionResult IndexHabitacionesUsuario(DateTime check_in, DateTime check_out, int capacidad)
         {
             ViewBag.CheckIn = check_in;

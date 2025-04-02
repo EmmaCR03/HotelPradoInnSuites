@@ -9,6 +9,6 @@ namespace HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Mantenimiento.Obte
 {
     public interface IObtenerMantenimientoPorIdLN
     {
-        MantenimientoDTO Obtener(int IdMantenimiento);
+        Task<MantenimientoDTO> Obtener(int IdMantenimiento);
     }
 }

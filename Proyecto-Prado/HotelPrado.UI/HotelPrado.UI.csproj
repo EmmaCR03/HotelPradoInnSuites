@@ -616,16 +616,16 @@
     <Content Include="Views\Habitacion\Create.cshtml" />
     <Content Include="Views\Habitacion\Details.cshtml" />
     <Content Include="Views\Habitacion\habitacionesInfo.cshtml" />
-    <Content Include="Views\Mantenimiento\IndexMantenimiento.cshtml" />
-    <Content Include="Views\Mantenimiento\Edit.cshtml" />
     <Content Include="Views\Habitacion\EditarImagenes.cshtml" />
     <Content Include="Views\Reservas\ConfirmarReserva.cshtml" />
     <Content Include="Views\Reservas\Confirmacion.cshtml" />
     <Content Include="Views\Reservas\ReservasUsuario.cshtml" />
     <Content Include="Views\ReservasA\IndexReservasA.cshtml" />
     <Content Include="Views\ReservasA\Edit.cshtml" />
-    <Content Include="Views\Mantenimiento\Create.cshtml" />
     <Content Include="Views\ReservasA\Create.cshtml" />
+    <Content Include="Views\Mantenimiento\IndexMantenimiento.cshtml" />
+    <Content Include="Views\Mantenimiento\Create.cshtml" />
+    <Content Include="Views\Mantenimiento\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

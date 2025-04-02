@@ -1,25 +1,43 @@
 ﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Mantenimiento.ObtenerPorId;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Mantenimiento;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Data.Entity;
 using System.Threading.Tasks;
 
 namespace HotelPrado.AccesoADatos.Mantenimiento.ObtenerPorId
 {
     public class ObtenerMantenimientoPorIdAD : IObtenerMantenimientoPorIdAD
     {
-        Contexto _contexto;
+        private readonly Contexto _contexto;
 
         public ObtenerMantenimientoPorIdAD()
         {
             _contexto = new Contexto();
         }
 
-        public MantenimientoTabla Obtener(int IdMantenimiento)
+        public async Task<MantenimientoTabla> Obtener(int IdMantenimiento)
         {
-            return _contexto.MantenimientoTabla.FirstOrDefault(d => d.IdMantenimiento == IdMantenimiento);
+            return await _contexto.MantenimientoTabla
+                                   .FirstOrDefaultAsync(d => d.IdMantenimiento == IdMantenimiento);
+        }
+
+        public async Task<bool> ActualizarMantenimiento(MantenimientoTabla mantenimiento)
+        {
+            var mantenimientoExistente = await _contexto.MantenimientoTabla
+                                                       .FirstOrDefaultAsync(c => c.IdMantenimiento == mantenimiento.IdMantenimiento);
+            if (mantenimientoExistente != null)
+            {
+                // Actualizar los campos
+                mantenimientoExistente.Descripcion = mantenimiento.Descripcion;
+                mantenimientoExistente.Estado = mantenimiento.Estado;
+                mantenimientoExistente.idDepartamento = mantenimiento.idDepartamento;
+                mantenimientoExistente.idHabitacion = mantenimiento.idHabitacion;
+
+                // Guardar los cambios en la base de datos
+                int filasAfectadas = await _contexto.SaveChangesAsync();
+                return filasAfectadas > 0; // Si se actualizó correctamente, se devuelve true
+            }
+
+            return false; 
         }
     }
 }
