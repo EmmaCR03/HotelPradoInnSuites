@@ -1,0 +1,60 @@
+﻿@model HotelPrado.UI.Models.ApplicationUser
+
+@{
+    ViewBag.Title = "Editar Usuario";
+}
+
+<h2>Editar Usuario</h2>
+
+@using (Html.BeginForm("Edit", "Usuario", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.UserName)
+        @Html.TextBoxFor(model => model.UserName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.UserName)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.NombreCompleto)
+        @Html.TextBoxFor(model => model.NombreCompleto, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.NombreCompleto)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Email)
+        @Html.TextBoxFor(model => model.Email, new { @class = "form-control", disabled = "disabled" })
+        @Html.ValidationMessageFor(model => model.Email)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.cedula)
+        @Html.TextBoxFor(model => model.cedula,new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.cedula)
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Telefono)
+        @Html.TextBoxFor(model => model.Telefono,new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Telefono)
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Rol")
+        @Html.DropDownList("Rol", ViewBag.Roles as IEnumerable<SelectListItem>, "- Selecciona un rol -", new { @class = "form-control" })
+        @Html.ValidationMessage("Rol")
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Contraseña (Opcional)")
+        @Html.Password("Password", null, new { @class = "form-control", placeholder = "Dejar en blanco para no cambiar" })
+        @Html.ValidationMessage("Password")
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    <a href="@Url.Action("Index", "Usuario")" class="btn btn-secondary">Cancelar</a>
+}

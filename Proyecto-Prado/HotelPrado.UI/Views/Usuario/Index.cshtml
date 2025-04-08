@@ -1,0 +1,47 @@
+﻿@model IEnumerable<HotelPrado.UI.Models.UsuarioConRoles>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Usuarios</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre de usuario</th>
+            <th>Nombre completo</th>
+            <th>Cédula</th>
+            <th>Correo electrónico</th>
+            <th>Teléfono</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.NombreCompleto</td>
+                <td>@user.cedula</td>
+                <td>@user.Email</td>
+                <td>@user.Telefono</td>
+                <td>
+                    @foreach (var role in user.Roles)
+                    {
+                        <span>@role</span><br />
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Editar", "Edit", new { id = user.id }) |
+                    @Html.ActionLink("Eliminar", "Delete", new { id = user.id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    @Html.ActionLink("Crear Usuario", "Create")
+</p>

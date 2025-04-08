@@ -69,6 +69,23 @@ namespace HotelPrado.UI.Models
         [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "El nombre completo es obligatorio.")]
+        [StringLength(100, ErrorMessage = "El nombre completo no puede tener más de 100 caracteres.")]
+        public string NombreCompleto { get; set; }
+
+        public string UserName { get; set; }
+
+
+        [Required(ErrorMessage = "El número de cédula es obligatorio.")]
+        [StringLength(9, ErrorMessage = "El número de cédula no puede tener más de 20 caracteres.")]
+        public string cedula { get; set; }
+
+        [Required(ErrorMessage = "El telefono es obligatorio.")]
+        [StringLength(20, ErrorMessage = "El telefono debe ser valido")]
+        public string Telefono { get; set; }
+
+        public string Rol { get; set; }
+
         [Required]
         [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]
         [DataType(DataType.Password)]

@@ -1,0 +1,61 @@
+﻿@model HotelPrado.UI.Models.RegisterViewModel
+
+@{
+    ViewBag.Title = "Crear Usuario";
+}
+
+<h2>Crear Usuario</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.UserName)
+        @Html.TextBoxFor(model => model.UserName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.UserName)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.NombreCompleto)
+        @Html.TextBoxFor(model => model.NombreCompleto, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.NombreCompleto)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.cedula)
+        @Html.TextBoxFor(model => model.cedula, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.cedula)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Email)
+        @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Email)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Telefono)
+        @Html.TextBoxFor(model => model.Telefono, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Telefono)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Rol)
+        @Html.DropDownListFor(model => model.Rol, new SelectList(ViewBag.Roles, "Value", "Text"), "- Selecciona un rol -", new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Rol)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Password)
+        @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Password)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.ConfirmPassword)
+        @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.ConfirmPassword)
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Crear Usuario</button>
+}

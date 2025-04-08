@@ -151,7 +151,13 @@ namespace HotelPrado.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { 
+                    UserName = model.Email, 
+                    Email = model.Email,
+                    NombreCompleto=model.NombreCompleto,
+                    cedula=model.cedula,
+                    Telefono=model.Telefono
+                };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

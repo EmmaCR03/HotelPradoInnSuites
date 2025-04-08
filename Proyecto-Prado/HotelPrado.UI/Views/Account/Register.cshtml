@@ -11,11 +11,37 @@
         @Html.AntiForgeryToken()
         <h4>Cree una cuenta nueva.</h4>
         <hr />
+
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        <div class="row">
+            @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+            </div>
+        </div>
         @Html.ValidationSummary("", new { @class = "text-danger" })
         <div class="row">
             @Html.LabelFor(m => m.Email, new { @class = "col-md-2 col-form-label" })
             <div class="col-md-10">
                 @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.NombreCompleto, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.NombreCompleto, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.cedula, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.cedula, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.Telefono, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control" })
             </div>
         </div>
         <div class="row">
