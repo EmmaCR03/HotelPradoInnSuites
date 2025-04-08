@@ -1,0 +1,79 @@
+﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Reservas.ReservasDTO>
+
+@{
+    ViewBag.Title = "IndexReservasA";
+}
+
+<h2>IndexReservasA</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.IdReserva)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdCliente)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.cantidadPersonas)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NombreCliente)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdHabitacion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaInicio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaFinal)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EstadoReserva)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MontoTotal)
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdReserva)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdCliente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.cantidadPersonas)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreCliente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdHabitacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaInicio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaFinal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EstadoReserva)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MontoTotal)
+
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { IdReserva = item.IdReserva }, new { @class = "btn btn-outline-warning btn-sm" })
+
+            </td>
+        </tr>
+    }
+
+</table>

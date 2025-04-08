@@ -43,12 +43,10 @@ namespace HotelPrado.LN.Habitaciones.Editar
                 string datosAnterioresJson = $@"
                 {{
                     ""IdHabitacion"": {datosAnteriores.IdHabitacion},
-                    ""NumeroHabitacion"": {datosAnteriores.NumeroHabitacion},
                     ""PrecioPorNoche1P"": ""{datosAnteriores.PrecioPorNoche1P}"",
                     ""PrecioPorNoche2P"": ""{datosAnteriores.PrecioPorNoche2P}"",
                     ""PrecioPorNoche3P"": ""{datosAnteriores.PrecioPorNoche3P}"",
                     ""PrecioPorNoche4P"": ""{datosAnteriores.PrecioPorNoche4P}"",
-                    ""IdTipoHabitacion"": ""{datosAnteriores.IdTipoHabitacion}"",
                     ""CapacidadMax"": ""{datosAnteriores.CapacidadMax}"",
                     ""CapacidadMin"": ""{datosAnteriores.CapacidadMin}"",
                     ""Estado"": ""{datosAnteriores.Estado}""
@@ -61,12 +59,10 @@ namespace HotelPrado.LN.Habitaciones.Editar
                 string datosPosterioresJson = $@"
                 {{
                     ""IdHabitacion"": {laHabitacionEnVista.IdHabitacion},
-                    ""NumeroHabitacion"": {laHabitacionEnVista.NumeroHabitacion},
                     ""PrecioPorNoche1P"": ""{laHabitacionEnVista.PrecioPorNoche1P}"",
                     ""PrecioPorNoche2P"": ""{laHabitacionEnVista.PrecioPorNoche2P}"",
                     ""PrecioPorNoche3P"": ""{laHabitacionEnVista.PrecioPorNoche3P}"",
                     ""PrecioPorNoche4P"": ""{laHabitacionEnVista.PrecioPorNoche4P}"",
-                    ""IdTipoHabitacion"": {laHabitacionEnVista.IdTipoHabitacion},
                     ""CapacidadMax"": ""{laHabitacionEnVista.CapacidadMax}"",
                     ""CapacidadMin"": ""{laHabitacionEnVista.CapacidadMin}"",
                     ""Estado"": ""{laHabitacionEnVista.Estado}""

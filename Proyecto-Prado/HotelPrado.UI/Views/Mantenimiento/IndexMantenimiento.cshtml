@@ -17,6 +17,18 @@
         <th>
             @Html.DisplayNameFor(model => model.Estado)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.idDepartamento)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.idHabitacion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DepartamentoNombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HabitacionNumero)
+        </th>
         <th></th>
     </tr>
 
@@ -29,7 +41,21 @@
             @Html.DisplayFor(modelItem => item.Estado)
         </td>
         <td>
-            @Html.ActionLink("Editar", "Edit", new { IdMantenimiento = item.IdMantenimiento }, new { @class = "btn btn-outline-warning btn-sm" }) 
+            @Html.DisplayFor(modelItem => item.idDepartamento)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.idHabitacion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DepartamentoNombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.HabitacionNumero)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IdMantenimiento }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IdMantenimiento }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IdMantenimiento })
         </td>
     </tr>
 }

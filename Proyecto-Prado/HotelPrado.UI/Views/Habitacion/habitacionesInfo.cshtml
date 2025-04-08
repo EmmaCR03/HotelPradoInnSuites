@@ -1,139 +1,326 @@
 ﻿@{
-    ViewBag.Title = "Habitaciones Info";
+    ViewBag.Title = "Habitaciones de Lujo";
 }
 
-<!-- Estilos -->
-<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<!-- Estilos mejorados -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="~/Content/site.css" rel="stylesheet" />
-
-<div class="container mt-5">
-    <h2 class="text-center mb-4">Información de Habitaciones</h2>
-
-    <!-- Carrusel de imágenes -->
-    <div id="habitacionesCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="~\Img\images\imgHYD/img1H.jpg" class="d-block w-100" alt="Habitación 1">
-            </div>
-            <div class="carousel-item">
-                <img src="~\Img\images\imgHYD/img2H.jpg" class="d-block w-100" alt="Habitación 2">
-            </div>
-            <div class="carousel-item">
-                <img src="~\Img\images\imgHYD/img3H.jpg" class="d-block w-100" alt="Habitación 3">
-            </div>
-            <div class="carousel-item">
-                <img src="~\Img\images\imgHYD/img4H.jpg" class="d-block w-100" alt="Habitación 4">
-            </div>
-        </div>
-
-        <!-- Controles del carrusel -->
-        <a class="carousel-control-prev" href="#habitacionesCarousel" role="button" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#habitacionesCarousel" role="button" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </a>
-    </div>
-
-    <!-- Información de la Habitación -->
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-header text-center">
-                    <h5 class="card-title">Descripción</h5>
-                </div>
-                <div class="card-body text-center">
-                    <p>Todas nuestras habitaciones cuentan con dos camas matrimoniales, un amplio baño, pantalla inteligente, WI-FI y todas las comodidades para nuestros clientes.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-header text-center">
-                    <h5 class="card-title">Capacidad</h5>
-                </div>
-                <div class="card-body text-center">
-                    <p>Todas nuestras habitaciones tienen una capacidad de mínimo una persona y máximo 4</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-header text-center">
-                    <h5 class="card-title">Precio por Noche</h5>
-                </div>
-                <div class="card-body text-center">
-                    <p>Nuestros precios varían dependiendo de la cantidad de personas que se hospeden en nuestro hotel:</p>
-                    <ul>
-                        <li>1 Persona: ₡35.700</li>
-                        <li>2 Personas: ₡40.000</li>
-                        <li>3 Personas: ₡45.000</li>
-                        <li>4 Personas: ₡50.000</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 d-flex justify-content-center mt-5">
-            <form id="form" class="form-group bg-white p-5 rounded-4 w-50"
-                  method="get"
-                  action="@Url.Action("IndexHabitacionesUsuario", "Habitacion")">
-                <h6 class="display-6 text-center">Comprobar Disponibilidad</h6>
-
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 my-4">
-                        <label class="form-label text-uppercase">Check-In</label>
-                        <input type="date" name="check_in" class="form-control text-black-50 ps-3" required>
-                    </div>
-
-                    <div class="col-lg-8 my-4">
-                        <label class="form-label text-uppercase">Check-Out</label>
-                        <input type="date" name="check_out" class="form-control text-black-50 ps-3" required>
-                    </div>
-
-                    <div class="col-lg-8 my-4">
-                        <label class="form-label text-uppercase">Personas</label>
-                        <input type="number" name="capacidad" class="form-control text-black-50 ps-3" value="1" min="1" required>
-                    </div>
-                </div>
-
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-arrow btn-primary mt-3">
-                        <span>
-                            Comprobar<svg width="18" height="18">
-                                <use xlink:href="#arrow-right"></use>
-                            </svg>
-                        </span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-
-    </div>
-</div>
-
-<!-- Scripts -->
-<script src="~/Scripts/bootstrap.bundle.min.js"></script>
-
-<!-- Estilos adicionales -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-    .card {
-        transition: transform 0.3s ease-in-out;
+    :root {
+        --primary-color: #7f8c8d; /* Gris medio */
+        --secondary-color: #95a5a6; /* Gris claro */
+        --accent-color: #bdc3c7; /* Gris más claro */
+        --light-bg: #ffffff; /* Fondo blanco */
+        --dark-text: #2c3e50; /* Texto oscuro */
+        --card-bg: #f8f9fa; /* Fondo de tarjetas gris claro */
     }
 
-        .card:hover {
-            transform: scale(1.05);
-        }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--dark-text);
+        background-color: var(--light-bg);
+    }
+
+    .hero-section {
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/Img/images/imgHYD/img1H.jpg');
+        background-size: cover;
+        background-position: center;
+        height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-bottom: 3rem;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
 
     .carousel-item img {
         height: 500px;
         object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        background: var(--card-bg);
+    }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+    .card-header {
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: 600;
+        border-bottom: none;
+    }
+
+    .amenities-list {
+        list-style: none;
+        padding: 0;
+    }
+
+        .amenities-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+            .amenities-list li:last-child {
+                border-bottom: none;
+            }
+
+        .amenities-list i {
+            color: var(--primary-color);
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+    .availability-form {
+        background: var(--card-bg);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        padding: 2rem;
+        margin-top: 3rem;
+        border: 1px solid #e0e0e0;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border: none;
+        padding: 10px 25px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+    .section-title {
+        position: relative;
+        margin-bottom: 2rem;
+        text-align: center;
+        color: var(--dark-text);
+    }
+
+        .section-title:after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--primary-color);
+            margin: 15px auto;
+        }
+
+    .feature-icon {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .form-control, .input-group-text {
+        background-color: white;
+        border: 1px solid #ddd;
+        color: var(--dark-text);
+    }
+
+        .form-control:focus {
+            background-color: white;
+            color: var(--dark-text);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(127, 140, 141, 0.25);
+        }
+
+    /* Animaciones */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade {
+        animation: fadeIn 1s ease-out forwards;
+    }
+
+    .delay-1 {
+        animation-delay: 0.2s;
+    }
+
+    .delay-2 {
+        animation-delay: 0.4s;
+    }
+
+    .delay-3 {
+        animation-delay: 0.6s;
     }
 </style>
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container text-center">
+        <h1 class="hero-title animate__animated animate__fadeInDown">Nuestras Habitaciones</h1>
+        <p class="lead animate__animated animate__fadeInUp">Descubre el confort y elegancia de nuestros espacios</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Carrusel mejorado -->
+    <div id="habitacionesCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#habitacionesCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#habitacionesCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#habitacionesCarousel" data-bs-slide-to="2"></button>
+            <button type="button" data-bs-target="#habitacionesCarousel" data-bs-slide-to="3"></button>
+        </div>
+
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="~/Img/images/imgHYD/img1H.jpg" class="d-block w-100" alt="Suite Presidencial">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Suite Presidencial</h5>
+                    <p>Amplio espacio con vista panorámica</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="~/Img/images/imgHYD/img2H.jpg" class="d-block w-100" alt="Habitación Ejecutiva">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Habitación Ejecutiva</h5>
+                    <p>Confort y tecnología para viajeros de negocios</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="~/Img/images/imgHYD/img3H.jpg" class="d-block w-100" alt="Habitación Familiar">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Habitación Familiar</h5>
+                    <p>Espacio perfecto para disfrutar en familia</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="~/Img/images/imgHYD/img4H.jpg" class="d-block w-100" alt="Habitación Estándar">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Habitación Estándar</h5>
+                    <p>Todas las comodidades que necesitas</p>
+                </div>
+            </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#habitacionesCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#habitacionesCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+        </button>
+    </div>
+
+    <!-- Información de Habitaciones -->
+    <h2 class="section-title animate-fade">Detalles de Nuestras Habitaciones</h2>
+
+    <div class="row">
+        <!-- Tarjeta de Descripción -->
+        <div class="col-md-6 animate-fade delay-1">
+            <div class="card h-100">
+                <div class="card-header text-center">
+                    <h5><i class="fas fa-home feature-icon"></i><br>Descripción</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="amenities-list">
+                        <li><i class="fas fa-bed"></i> 2 camas matrimoniales premium</li>
+                        <li><i class="fas fa-tv"></i> Pantalla inteligente 55"</li>
+                        <li><i class="fas fa-wifi"></i> WiFi de alta velocidad</li>
+                        <li><i class="fas fa-snowflake"></i> Aire acondicionado</li>
+                        <li><i class="fas fa-bath"></i> Baño con amenities de lujo</li>
+                        <li><i class="fas fa-coffee"></i> Cafetera Nespresso</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta de Capacidad -->
+        <div class="col-md-6 animate-fade delay-2">
+            <div class="card h-100">
+                <div class="card-header text-center">
+                    <h5><i class="fas fa-users feature-icon"></i><br>Capacidad</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="d-flex justify-content-center mb-4">
+                        <div class="text-center mx-3">
+                            <i class="fas fa-user fa-3x mb-2" style="color: var(--primary-color);"></i>
+                            <p>1 persona</p>
+                        </div>
+                        <div class="text-center mx-3">
+                            <i class="fas fa-user-friends fa-3x mb-2" style="color: var(--primary-color);"></i>
+                            <p>2-4 personas</p>
+                        </div>
+                    </div>
+                    <p class="text-muted">Nuestras habitaciones están diseñadas para brindar comodidad tanto para viajeros individuales como para grupos.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario de Disponibilidad -->
+    <div class="availability-form animate-fade">
+        <h3 class="text-center mb-4"><i class="fas fa-calendar-check"></i> Comprobar Disponibilidad</h3>
+
+        <form id="reservationForm" method="get" action="@Url.Action("IndexHabitacionesUsuario", "Habitacion")">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Fecha de Entrada</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                        <input type="date" name="check_in" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Fecha de Salida</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                        <input type="date" name="check_out" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Número de Personas</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="number" name="capacidad" class="form-control" value="1" min="1" max="4" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-search"></i> Ver Disponibilidad
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

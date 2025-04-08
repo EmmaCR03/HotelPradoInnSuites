@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HotelPrado.Abstracciones.Interfaces.AccesoADatos.Habitaciones.ObtenerEnlaces
 {
-    public interface IObtenerEnlacesHAD
+    public interface IObtenerEnlacesAD
     {
         List<HabitacionesTabla> ObtenerHabitaciones();
     }

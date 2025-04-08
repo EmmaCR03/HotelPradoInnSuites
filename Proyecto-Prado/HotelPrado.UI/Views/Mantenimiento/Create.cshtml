@@ -1,51 +1,78 @@
 ﻿@model HotelPrado.Abstracciones.Modelos.Mantenimiento.MantenimientoDTO
 
-<div class="card mt-5">
-    <div class="card-header">
-        <h2>Agregar Mantenimiento</h2>
-    </div>
-    <div class="card-body">
-        @using (Html.BeginForm("Create", "Mantenimiento", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-            @Html.AntiForgeryToken()
+@{
+    ViewBag.Title = "Create";
+}
 
-            <div class="form-horizontal">
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<h2>Create</h2>
 
-                <div class="form-group row">
-                    @Html.LabelFor(model => model.Descripcion, new { @class = "control-label col-md-3 text-wrap" })
-                    <div class="col-md-9 w-100">
-                        @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control w-100" } })
-                        @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
-                    </div>
-                </div>
 
-                <div class="form-group row">
-                    @Html.LabelFor(model => model.Estado, new { @class = "control-label col-md-3 text-wrap" })
-                    <div class="col-md-9 w-100">
-                        @Html.DropDownListFor(model => model.Estado, new SelectList(new List<SelectListItem>
-                                {
-                            new SelectListItem { Value = "Pendiente", Text = "Pendiente" },
-                            new SelectListItem { Value = "Realizado", Text = "Realizado" }
-                        }, "Value", "Text"), "Seleccione un tipo", new { @class = "form-control w-100" })
-                        @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-md-9 offset-md-3 w-100">
-                        <input type="button" value="Crear Mantenimiento" class="btn btn-primary w-100" id="submitButton" onclick="showConfirmation()" />
-                    </div>
-                </div>
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>MantenimientoDTO</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
             </div>
-        }
-        <div>
-            @Html.ActionLink("Volver", "Index", null, new { @class = "btn btn-secondary w-100" })
         </div>
-    </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Estado, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Estado, new SelectList(new[] { "Pendiente", "Realizado" }, "Pendiente"), new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="IdDepartamento">IdDepartamento</label>
+            <input type="text" id="IdDepartamento" name="IdDepartamento" class="form-control" value="@ViewBag.IdDepartamento" readonly />
+        </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.idHabitacion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.idHabitacion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.idHabitacion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DepartamentoNombre, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div>
+                <label for="DepartamentoNombre"></label>
+                <input type="text" name="DepartamentoNombre" value="@ViewBag.DepartamentoNombre" class="form-control" readonly />
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.HabitacionNumero, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.HabitacionNumero, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HabitacionNumero, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+   
+}
+
+<div>
+    @Html.ActionLink("Volver", "IndexMantenimiento")
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-

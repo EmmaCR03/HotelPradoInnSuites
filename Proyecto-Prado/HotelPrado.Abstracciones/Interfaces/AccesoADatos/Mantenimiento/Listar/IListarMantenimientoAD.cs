@@ -9,6 +9,6 @@ namespace HotelPrado.Abstracciones.Interfaces.AccesoADatos.Mantenimiento.Listar
 {
     public interface IListarMantenimientoAD
     {
-        List<MantenimientoDTO> Listar(int idMantenimiento);
+        List<MantenimientoDTO> Listar();
     }
 }

@@ -1,6 +1,5 @@
 ﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO>
 
-
 <p>
     @Html.ActionLink("Crear Departamento", "Create", new { id = ViewBag.IdTipoDeDepartamento }, new { @class = "btn btn-success" })
 </p>
@@ -48,20 +47,12 @@
                         @Html.ActionLink("Editar", "Edit", new { IdDepartamento = item.IdDepartamento }, new { @class = "btn btn-outline-warning btn-sm me-2" })
                         @Html.ActionLink("Editar Imágenes", "EditarImagenes", "Departamento", new { id = item.IdDepartamento }, new { @class = "btn btn-outline-info btn-sm me-2" })
                     </div>
-
                     <div class="d-flex justify-content-end mt-3">
-                        @using (Html.BeginForm("ToggleEstado", "Departamento", FormMethod.Post, new { id = "form-estado-" + item.IdDepartamento, @class = "d-inline" }))
-                        {
-                            @Html.Hidden("IdDepartamento", item.IdDepartamento)
-                            <div class="form-group d-inline">
-                                <label for="Estado" class="sr-only">Estado</label>
-                                <select name="Estado" id="Estado" class="form-select form-select-sm" onchange="this.form.submit();">
-                                    <option value="Disponible" @(item.Estado == "Disponible" ? "selected" : "")>Disponible</option>
-                                    <option value="Mantenimiento" @(item.Estado == "Mantenimiento" ? "selected" : "")>Mantenimiento</option>
-                                    <option value="Ocupado" @(item.Estado == "Ocupado" ? "selected" : "")>Ocupado</option>
-                                </select>
-                            </div>
-                        }
+                        <button class="btn btn-outline-warning btn-sm me-2"
+                                onclick="window.location.href = '/Mantenimiento/Create?IdDepartamento=@item.IdDepartamento'">
+                            Solicitar Mantenimiento
+                        </button>
+
                     </div>
 
                     <!-- Botón de Cerrar Información -->
@@ -76,6 +67,10 @@
 
 <!-- Scripts para interactividad -->
 <script>
+    function solicitarMantenimiento(idDepartamento) {
+        window.location.href = `/Mantenimiento/Create?IdDepartamento=${idDepartamento}`;
+    }
+
     // Filtro de búsqueda
     document.getElementById("search").addEventListener("input", function () {
         let filter = this.value.toLowerCase();
@@ -153,4 +148,3 @@
         margin-right: 0.5rem;
     }
 </style>
-

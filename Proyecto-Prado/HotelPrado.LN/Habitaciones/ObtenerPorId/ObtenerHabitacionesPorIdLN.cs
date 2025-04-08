@@ -34,7 +34,6 @@ namespace HotelPrado.LN.Habitaciones.ObtenerPorId
                 PrecioPorNoche2P = habitacionEnBaseDeDatos.PrecioPorNoche2P,
                 PrecioPorNoche3P = habitacionEnBaseDeDatos.PrecioPorNoche3P,
                 PrecioPorNoche4P = habitacionEnBaseDeDatos.PrecioPorNoche4P,
-                IdTipoHabitacion = habitacionEnBaseDeDatos.IdTipoHabitacion,
                 Estado = habitacionEnBaseDeDatos.Estado,
                 CapacidadMax = habitacionEnBaseDeDatos.CapacidadMax,
                 CapacidadMin = habitacionEnBaseDeDatos.CapacidadMin,

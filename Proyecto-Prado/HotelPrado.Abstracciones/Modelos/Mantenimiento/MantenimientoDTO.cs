@@ -12,9 +12,17 @@ namespace HotelPrado.Abstracciones.Modelos.Mantenimiento
         [Key]
         public int IdMantenimiento { get; set; }
 
+        [Required(ErrorMessage = "La descripción es requerida")]
         public string Descripcion { get; set; }
 
-        public string Estado { get; set; }  
+        public string Estado { get; set; } = "Pendiente"; // Valor por defecto
+
+        public int idDepartamento { get; set; } = 0; // Valor por defecto 0
+        public int idHabitacion { get; set; } = 0;  // Nullable para cuando es departamento
+
+        // Propiedades de navegación (opcionales para mostrar info en vistas)
+        public string DepartamentoNombre { get; set; }
+        public string HabitacionNumero { get; set; }
 
 
     }

@@ -9,6 +9,6 @@ namespace HotelPrado.Abstracciones.Interfaces.AccesoADatos.Mantenimiento.Registr
 {
     public interface IRegistrarMantenimientoAD
     {
-        Task<int> Guardar(MantenimientoTabla mantenimiento);
+        Task<int> Guardar(MantenimientoTabla elMantenimientoAGuardar);
     }
 }

@@ -9,6 +9,6 @@ namespace HotelPrado.Abstracciones.Interfaces.AccesoADatos.Mantenimiento.Editar
 {
     public interface IEditarMantenimientoAD
     {
-        Task<int> Editar(MantenimientoTabla elMantenimientoAActualizar);
+        Task<int> Editar(MantenimientoTabla elMantenimientoActualizar);
     }
 }

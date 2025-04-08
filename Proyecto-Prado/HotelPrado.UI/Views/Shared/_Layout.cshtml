@@ -16,21 +16,42 @@
     @Scripts.Render("~/bundles/modernizr")
     <style>
         html, body {
-            height: 100%;
+            height: 100vh;
             margin: 0;
-            display: flex;
-            flex-direction: column;
+            padding: 0;
+            /*display: flex;*/
+            /*flex-direction: column;*/
         }
-
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+            box-sizing: border-box;
+        }
         .body-content {
-            flex: 1;
+           /* flex-grow: 1;*/
+            box-sizing: border-box;
+            margin-top: 100px;
+            /*margin-bottom: 400px;*/
+            padding:20px;
+            box-sizing:border-box;
+            min-height:calc(100vh-140px);
+            
         }
 
         #footer {
-            margin-top: auto;
+            /*margin-top: auto;*/
+            position: fixed;
+            left: 0;
+            bottom: 0;
             width: 100%;
             background-color: #f8f9fa;
             padding: 10px 0;
+            z-index: 10;
+            box-sizing: border-box;
+
         }
     </style>
 </head>
@@ -129,6 +150,7 @@
                                     <li>@Html.ActionLink("Departamentos", "IndexDepartamentos", "Departamento", new { area = "" }, new { @class = "dropdown-item" })</li>
                                     <li>@Html.ActionLink("Colaboradores", "IndexColaborador", "Colaborador", new { area = "" }, new { @class = "dropdown-item" })</li>
                                     <li>@Html.ActionLink("Habitaciones", "IndexHabitaciones", "Habitacion", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                    <li>@Html.ActionLink("Reservas", "IndexReservasA", "ReservasA", new { area = "" }, new { @class = "dropdown-item" })</li>
                                     <li>@Html.ActionLink("Mantenimientos", "IndexMantenimiento", "Mantenimiento", new { area = "" }, new { @class = "dropdown-item" })</li>
                                     <li>@Html.ActionLink("Bitácora de Eventos", "IndexBitacoraEventos", "Bitacora", new { area = "" }, new { @class = "dropdown-item" })</li>
                                 </ul>
@@ -220,7 +242,7 @@
     <script src="~/Scripts/bootstrap-datepicker.min.js"></script>
     <script src="~/Scripts/flatpickr.js"></script>
     <script src="~/Scripts/bootstrap.bundle.js"></script>
-    <a href="~/Scripts/bootstrap.bundle.js.map">~/Scripts/bootstrap.bundle.js.map</a>
+    <a href="~/Scripts/bootstrap.bundle.js.map"></a>
     <script src="js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="js/plugins.js"></script>

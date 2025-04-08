@@ -9,6 +9,6 @@ namespace HotelPrado.Abstracciones.Interfaces.AccesoADatos.Mantenimiento.Obtener
 {
     public interface IObtenerMantenimientoPorIdAD
     {
-        MantenimientoTabla Obtener(int IdMantenimiento);
+        Task<MantenimientoTabla> Obtener(int IdMantenimiento);
     }
 }

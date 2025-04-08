@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace HotelPrado.LN.Habitaciones.Listar
 {
-   public class ListarHabitacionesLN : IListarHabitacionesLN
+    public class ListarHabitacionesLN : IListarHabitacionesLN
     {
         IListarHabitacionesAD _listarHabitacionesAD;
 

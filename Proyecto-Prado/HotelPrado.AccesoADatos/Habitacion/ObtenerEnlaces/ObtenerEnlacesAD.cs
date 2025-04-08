@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace HotelPrado.AccesoADatos.Habitacion.ObtenerEnlaces
 {
-     public class ObtenerEnlacesHAD : IObtenerEnlacesHAD
+    public class ObtenerEnlacesAD : IObtenerEnlacesAD
     {
         private readonly Contexto _contexto;
 
-        public ObtenerEnlacesHAD()
+        public ObtenerEnlacesAD()
         {
             _contexto = new Contexto();
         }
@@ -23,3 +23,5 @@ namespace HotelPrado.AccesoADatos.Habitacion.ObtenerEnlaces
         }
     }
 }
+
+

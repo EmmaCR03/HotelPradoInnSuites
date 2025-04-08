@@ -66,10 +66,10 @@ namespace HotelPrado.LN.Reservas.Registrar
                 var bitacora = new BitacoraEventosDTO
                 {
                     IdEvento = 0,
-                    TablaDeEvento = "ModuloColaborador",
+                    TablaDeEvento = "ModuloReservas",
                     TipoDeEvento = "Error",
                     FechaDeEvento = DateTime.Now.ToString("dd-MM-yyyy"),
-                    DescripcionDeEvento = "Error al registrar el Colaborador.",
+                    DescripcionDeEvento = "Error al registrar la Reservas.",
                     StackTrace = ex.StackTrace,
                     DatosAnteriores = "NA",
                     DatosPosteriores = "NA"

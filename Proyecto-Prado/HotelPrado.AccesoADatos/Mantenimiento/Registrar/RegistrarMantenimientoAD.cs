@@ -1,41 +1,36 @@
 ﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Mantenimiento.Registrar;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Mantenimiento;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace HotelPrado.AccesoADatos.Mantenimiento.Registrar
 {
     public class RegistrarMantenimientoAD : IRegistrarMantenimientoAD
     {
-        private readonly Contexto _contexto;
+        Contexto _contexto;
 
         public RegistrarMantenimientoAD()
         {
             _contexto = new Contexto();
         }
 
-        public async Task<int> Guardar(MantenimientoTabla modelo)
+        public async Task<int> Guardar(MantenimientoTabla elMantenimientoAGuardar)
         {
             try
             {
-                // Agregar la entidad al contexto
-                _contexto.MantenimientoTabla.Add(modelo);
 
-                // Guardar los cambios en la base de datos
-                int resultado = await _contexto.SaveChangesAsync();
-
-                return resultado; // Retorna el número de registros afectados
+                _contexto.MantenimientoTabla.Add(elMantenimientoAGuardar);
+                EntityState estado = _contexto.Entry(elMantenimientoAGuardar).State = System.Data.Entity.EntityState.Added;
+                int cantidadDeDatosAlmacenados = await _contexto.SaveChangesAsync();
+                return cantidadDeDatosAlmacenados;
             }
             catch (Exception ex)
             {
-                // Manejo de errores
-                Console.WriteLine($"Error al guardar: {ex.Message}");
-                return 0; // Retorna 0 si no se guardó nada
+                Console.WriteLine("Error al guardar el Mantenimiento:  " + ex.Message);
+                return 0;
             }
         }
+
     }
 }

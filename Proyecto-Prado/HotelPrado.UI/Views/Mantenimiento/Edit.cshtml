@@ -1,49 +1,82 @@
 ﻿@model HotelPrado.Abstracciones.Modelos.Mantenimiento.MantenimientoDTO
 
-<div class="card mt-5">
-    <div class="card-header">
-        <h2>Editar Mantenimiento</h2>
-    </div>
-    <div class="card-body">
-        @using (Html.BeginForm("Edit", "Mantenimiento", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-            @Html.AntiForgeryToken()
+@{
+    ViewBag.Title = "Edit";
+}
 
-            <div class="form-horizontal">
-                @Html.HiddenFor(model => model.IdMantenimiento)
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<h2>Edit</h2>
 
-                <div class="form-group row">
-                    @Html.LabelFor(model => model.Descripcion, new { @class = "control-label col-md-3 text-wrap" })
-                    <div class="col-md-9 w-100">
-                        @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control w-100" } })
-                        @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
-                    </div>
-                </div>
 
-                <div class="form-group row">
-                    @Html.LabelFor(model => model.Estado, new { @class = "control-label col-md-3 text-wrap" })
-                    <div class="col-md-9 w-100">
-                        @Html.DropDownListFor(model => model.Estado, (SelectList)ViewBag.Estado, "Seleccione un estado", new { @class = "form-control w-100" })
-                        @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
-                    </div>
-                </div>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>MantenimientoDTO</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.IdMantenimiento)
 
-                <div class="form-group row">
-                    <div class="col-md-9 offset-md-3 w-100">
-                        <input type="submit" value="Guardar Cambios" class="btn btn-primary w-100" />
-                    </div>
-                </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
             </div>
-        }
-        <div>
-            @Html.ActionLink("Volver", "IndexMantenimiento", null, new { @class = "btn btn-secondary w-100" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Estado, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Estado, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.idDepartamento, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.idDepartamento, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.idDepartamento, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.idHabitacion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.idHabitacion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.idHabitacion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DepartamentoNombre, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DepartamentoNombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DepartamentoNombre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.HabitacionNumero, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.HabitacionNumero, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HabitacionNumero, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
         </div>
     </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-
-

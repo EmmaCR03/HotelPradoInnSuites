@@ -10,22 +10,31 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Reservas
     public class ReservasTabla
     {
         [Key]
+         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdReserva { get; set; }
 
-        public string  IdCliente { get; set; }  
+        public string IdCliente { get; set; }
+
+
 
         public string NombreCliente { get; set; }
         public int cantidadPersonas { get; set; }
         public int IdHabitacion { get; set; }
+        public int NumeroHabitacion { get; set; }
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFinal { get; set; }
         public string EstadoReserva { get; set; }
         public Decimal MontoTotal { get; set; }
+        public string NumeroEmpresa { get; set; }
+        public string CorreoEmpresa { get; set; }
+
 
         [ForeignKey("IdHabitacion")]
         public virtual HabitacionesTabla Habitacion { get; set; }
+        [ForeignKey("NumeroHabitacion")]
+        public virtual HabitacionesTabla Numero { get; set; }
 
         [ForeignKey("IdCliente")]
-        public virtual ApplicationUser Usuario { get; set; }  
+        public virtual ApplicationUser Usuario { get; set; }
     }
 }

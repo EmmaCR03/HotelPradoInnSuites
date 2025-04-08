@@ -1,212 +1,521 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
-
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
+<main class="home-container">
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+        <div class="hero-overlay"></div>
+        <div class="container-fluid hero-container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <h1 class="hero-title">Prado Inn Suites<br><span>tu lugar de comfort</span></h1>
+                        <a href="@Url.Action("habitacionesInfo", "Habitacion")" class="btn btn-primary btn-lg">
+                            Ver información de las habitaciones <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="booking-form-container">
+                        <form class="booking-form" method="get" action="@Url.Action("IndexHabitacionesUsuario", "Habitacion")">
+                            <h3 class="form-title">Comprobar Disponibilidad</h3>
+                            <div class="form-group">
+                                <label>Check-In</label>
+                                <input type="date" name="check_in" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Check-Out</label>
+                                <input type="date" name="check_out" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Personas</label>
+                                <input type="number" name="capacidad" class="form-control" value="1" min="1" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">
+                                Comprobar <i class="fas fa-search"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="author" content="">
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <div class="row">
 
-        <section id="slider" data-aos="fade-up" class="col-xl-12">
-            <div class="container-fluid p-0">
-                <div class="d-flex rounded-5"
-                     style="background-image: url('../../img/images/img_3.jpg'); background-size: cover; background-repeat: no-repeat; height: 75vh; background-position: center;">
-                    <div class="row align-items-center m-auto pt-5 px-4 px-lg-0 w-100">
-                        <div class="text-start col-md-6 col-lg-5 col-xl-6 offset-lg-1">
-                            <h2 class="display-1 fw-normal text-white">Prado Inn Suites tu lugar de comfort.</h2>
-                            <a href="@Url.Action("habitacionesInfo", "Habitacion")" class="btn btn-arrow btn-primary mt-3">
-                                <span>
-                                    Ver información de las habitaciones <svg width="18" height="18">
-                                        <use xlink:href="#arrow-right"></use>
-                                    </svg>
-                                </span>
-                            </a>
+    <!-- Gallery Section -->
+    <section class="gallery-section">
+        <div class="container-fluid">
+            <div class="section-header">
+                <h2>Nuestra Galería</h2>
+                <p class="section-description">
+                    Descubre fotos de nuestras habitaciones súper cómodas, con todas las comodidades modernas y un diseño con estilo pensado para que tu estadía sea inolvidable.
+                </p>
+            </div>
+            <div class="gallery-container">
+                <div class="swiper gallery-swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <img src="~/Img/images/IMG_4.JPG" alt="Habitación Deluxe" class="swiper-img">
                         </div>
-                        <div class="col-md-6 col-lg-6 col-xl-5 mt-5 mt-md-0">
-                            <form id="form" class="form-group flex-wrap bg-white p-5 rounded-4 ms-md-5"
-                                  method="get"
-                                  action="@Url.Action("IndexHabitacionesUsuario", "Habitacion")">
-                                <h6 class="display-6 justify-content-center">Comprobar Disponibilidad</h6>
-
-                                <div class="col-lg-12 my-4">
-                                    <label class="form-label text-uppercase">Check-In</label>
-                                    <input type="date" name="check_in" class="form-control text-black-50 ps-3" required>
-                                </div>
-
-                                <div class="col-lg-12 my-4">
-                                    <label class="form-label text-uppercase">Check-Out</label>
-                                    <input type="date" name="check_out" class="form-control text-black-50 ps-3" required>
-                                </div>
-
-                                <div class="col-lg-12 my-4">
-                                    <label class="form-label text-uppercase">Personas</label>
-                                    <input type="number" name="capacidad" class="form-control text-black-50 ps-3" value="1" min="1" required>
-                                </div>
-
-                                <div class="d-grid">
-                                    <button type="submit" class="btn btn-arrow btn-primary mt-3">
-                                        <span>
-                                            Comprobar<svg width="18" height="18">
-                                                <use xlink:href="#arrow-right"></use>
-                                            </svg>
-                                        </span>
-                                    </button>
-                                </div>
-                            </form>
-
+                        <div class="swiper-slide">
+                            <img src="~/Img/images/IMG_5.JPG" alt="Sala de estar" class="swiper-img">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="~/Img/images/IMG_6.JPG" alt="Vista desde la habitación" class="swiper-img">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="~/Img/images/img_1.JPG" alt="Área de recepción" class="swiper-img">
                         </div>
                     </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-pagination"></div>
                 </div>
             </div>
-        </section>
-        <section id="gallery" data-aos="fade-up" class="mt-5">
-            <h3 class="display-3 fw-normal text-center">Nuestra Galeria</h3>
-            <p class="text-center col-lg-4 offset-lg-4 mb-5">
-                Descubre fotos de nuestras habitaciones súper cómodas, con todas las comodidades modernas y un diseño con estilo pensado para que tu estadía sea inolvidable. Disfruta las increíbles vistas de la ciudad,
-                el lugar perfecto para relajarte después de un día de paseo por la ciudad.
-            </p>
-            <div class="container position-relative">
-                <div class="row">
-                    <div class="swiper gallery-swiper offset-1 col-10">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <img src="~/Img/images/IMG_4.JPG" alt="img" class="img-fluid rounded-4">
-                            </div>
-                            <div class="swiper-slide">
-                                <img src="~/Img/images/IMG_5.JPG" alt="img" class="img-fluid rounded-4">
-                            </div>
-                            <div class="swiper-slide">
-                                <img src="~/Img/images/IMG_6.JPG" alt="img" class="img-fluid rounded-4">
-                            </div>
-                            <div class="swiper-slide">
-                                <
-                                <img src="~/Img/images/img_1.JPG" alt="img" class="img-fluid rounded-4">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="position-absolute top-50 start-0 translate-middle-y main-slider-button-prev d-none d-md-block">
-                    <svg class="bg-secondary rounded-circle p-3" width="70" height="70">
-                        <use xlink:href="#arrow-left"></use>
-                    </svg>
-                </div>
-                <div class="position-absolute top-50 end-0 translate-middle-y main-slider-button-next d-none d-md-block">
-                    <svg class="bg-secondary rounded-circle p-3" width="70" height="70">
-                        <use xlink:href="#arrow-right"></use>
-                    </svg>
-                </div>
-                <div class="position-absolute top-100 end-50 translate-middle main-slider-button-prev mt-5 d-md-none d-block">
-                    <svg class="bg-secondary rounded-circle p-2" width="50" height="50">
-                        <use xlink:href="#arrow-left"></use>
-                    </svg>
-                </div>
-                <div class="position-absolute top-100 start-50 translate-middle main-slider-button-next mt-5 ms-4 d-md-none d-block">
-                    <svg class="bg-secondary rounded-circle p-2" width="50" height="50">
-                        <use xlink:href="#arrow-right"></use>
-                    </svg>
-                </div>
+        </div>
+    </section>
+
+    <!-- Blog Section - AHORA VISIBLE -->
+    <section class="blog-section">
+        <div class="container-fluid">
+            <div class="section-header">
+                <h2>Nuestros Blogs y Eventos</h2>
+                <a href="#" class="btn btn-outline btn-lg">
+                    Más Blogs <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
-        </section>
 
-
-
-        <section id="blog" class="padding-medium pt-0">
-            <div class="container-fluid padding-side" data-aos="fade-up">
-                <div class="d-flex flex-wrap align-items-center justify-content-between">
-                    <div>
-                        <h3 class="display-3 fw-normal text-center">Nuestros Blogs y eventos</h3>
-                    </div>
-                    <a href="index.html" class="btn btn-arrow btn-primary mt-3">
-                        <span>
-                            Más Blogs<svg width="18" height="18">
-                                <use xlink:href="#arrow-right"></use>
-                            </svg>
-                        </span>
-                    </a>
-                </div>
-                <div class="row mt-5">
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="blog-post position-relative overflow-hidden rounded-4">
-                            <img src="~/Img/images/FOTOS/IMG_7632.JPG" class="blog-img img-fluid rounded-4" style="height: 400px; width: auto;" alt="img">
-                            <div class="position-absolute bottom-0 p-5">
-                                <a href="#"><span class="bg-secondary text-body m-0 px-2 py-1 rounded-2 fs-6">Hotel</span></a>
-                                <h4 class="display-6 fw-normal mt-2"><a href="index.html"></a></h4>
-                                <p class="m-0 align-items-center">
-                                    <svg width="19" height="19">
-                                        <use xlink:href="#clock"></use>
-                                    </svg> 22 Feb, 2024
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="blog-post position-relative overflow-hidden rounded-4">
-                            <img src="~/Img/images/FOTOS/IMG_7800.JPG" class="blog-img img-fluid rounded-4" style="height: 400px; width: auto;" alt="img">
-                            <div class="position-absolute bottom-0 p-5">
-                                <a href="#"><span class="bg-secondary text-body m-0 px-2 py-1 rounded-2 fs-6">Actividades</span></a>
-                                <h4 class="display-6 fw-normal mt-2 "><a href="index.html"></a></h4>
-                                <p class="m-0 align-items-center">
-                                    <svg width="19" height="19">
-                                        <use xlink:href="#clock"></use>
-                                    </svg> 22 Feb, 2024
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="blog-post position-relative overflow-hidden rounded-4">
-                            <img src="~/Img/images/FOTOS/IMG_7545.JPG" class="blog-img img-fluid rounded-4" style="height: 400px; width: auto;" alt="img">
-                            <div class="position-absolute bottom-0 p-5">
-                                <a href="#"><span class="bg-secondary text-body m-0 px-2 py-1 rounded-2 fs-6">Habitaciones</span></a>
-                                <h4 class="display-6 fw-normal mt-2">
-                                    <a href="index.html"></a>
-                                </h4>
-                                <p class="m-0 align-items-center">
-                                    <svg width="19" height="19">
-                                        <use xlink:href="#clock"></use>
-                                    </svg> 22 Feb, 2024
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-8 mb-4">
-                        <div class="blog-post position-relative overflow-hidden rounded-4">
-                            <img src="~/Img/images/FOTOS/IMG_7788.JPG" class="blog-img img-fluid rounded-4" style="height: 400px; width: 1000px;" alt="img">
-                            <div class="position-absolute bottom-0 p-4">
-                                <a href="#"><span class="bg-secondary text-body m-0 px-2 py-1 rounded-2 fs-6">Actividades</span></a>
-                                <h4 class="display-6 fw-normal mt-2"><a href="index.html"></a></h4>
-                                <p class="m-0 align-items-center">
-                                    <svg width="19" height="19">
-                                        <use xlink:href="#clock"></use>
-                                    </svg> 22 Feb, 2024
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="blog-post position-relative overflow-hidden rounded-4">
-                            <img src="~/Img/images/FOTOS/IMG_7521.JPG" class="blog-img img-fluid rounded-4" style="height: 400px; width: auto;" alt="img">
-                            <div class="position-absolute bottom-0 p-5">
-                                <a href="#"><span class="bg-secondary text-body m-0 px-2 py-1 rounded-2 fs-6">Habitaciones</span></a>
-                                <h4 class="display-6 fw-normal mt-2">
-                                    <a href="index.html"></a>
-                                </h4>
-                                <p class="m-0 align-items-center">
-                                    <svg width="19" height="19">
-                                        <use xlink:href="#clock"></use>
-                                    </svg> 22 Feb, 2024
-                                </p>
-                            </div>
+            <div class="blog-grid">
+                <!-- Blog Item 1 -->
+                <div class="blog-card">
+                    <img src="~/Img/images/FOTOS/IMG_7632.JPG" alt="Experiencias en el hotel" class="blog-img">
+                    <div class="blog-content">
+                        <span class="blog-category">Hotel</span>
+                        <h3 class="blog-title">Experiencias únicas en Prado Inn</h3>
+                        <div class="blog-meta">
+                            <i class="far fa-clock"></i> 22 Feb, 2024
                         </div>
                     </div>
                 </div>
+
+                <!-- Blog Item 2 -->
+                <div class="blog-card">
+                    <img src="~/Img/images/FOTOS/IMG_7800.JPG" alt="Actividades recreativas" class="blog-img">
+                    <div class="blog-content">
+                        <span class="blog-category">Actividades</span>
+                        <h3 class="blog-title">Eventos exclusivos para huéspedes</h3>
+                        <div class="blog-meta">
+                            <i class="far fa-clock"></i> 22 Feb, 2024
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </section>
-    </div>
+        </div>
+
+
+    </section>
 </main>
+
+<!-- Incluir Swiper JS -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<style>
+    /* Estilos base */
+    .home-container {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        color: #333;
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+
+    /* Hero Section */
+    .hero-banner {
+        position: relative;
+        background: url('../../img/images/img_3.jpg') center/cover no-repeat;
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+    }
+
+    .hero-container {
+        padding: 4rem;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        color: white;
+        padding: 3rem;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        line-height: 1.2;
+    }
+
+        .hero-title span {
+            font-weight: 300;
+            display: block;
+            font-size: 2.5rem;
+        }
+
+    /* Formulario */
+    .booking-form-container {
+        background: white;
+        border-radius: 12px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        margin-left: 2rem;
+    }
+
+    /* Secciones */
+    .section-header {
+        text-align: center;
+        padding: 5rem 2rem 3rem;
+        margin: 0 auto;
+    }
+
+        .section-header h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+        }
+
+    .section-description {
+        color: #666;
+        font-size: 1.1rem;
+        max-width: 800px;
+        margin: 0 auto 2rem;
+        line-height: 1.7;
+    }
+
+    /* Galería */
+    .gallery-section {
+        padding: 4rem 0;
+        background-color: #f9f9f9;
+    }
+
+    .gallery-container {
+        padding: 0 3rem;
+    }
+
+    .gallery-swiper {
+        height: 550px;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .swiper-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .swiper-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Controles del carrusel */
+    .swiper-button-next,
+    .swiper-button-prev {
+        width: 50px;
+        height: 50px;
+        background: white;
+        border-radius: 50%;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        color: #2c3e50;
+        transition: all 0.3s ease;
+    }
+
+        .swiper-button-next:hover,
+        .swiper-button-prev:hover {
+            transform: scale(1.1);
+        }
+
+        .swiper-button-next::after,
+        .swiper-button-prev::after {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+    .swiper-pagination {
+        position: relative;
+        margin-top: 1.5rem;
+    }
+
+    .swiper-pagination-bullet {
+        width: 12px;
+        height: 12px;
+        background: #ccc;
+        opacity: 1;
+    }
+
+    .swiper-pagination-bullet-active {
+        background: #2c3e50;
+        transform: scale(1.2);
+    }
+
+    /* Blog Section - AHORA VISIBLE */
+    .blog-section {
+        padding: 5rem 0;
+        background-color: white;
+    }
+
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2.5rem;
+        padding: 0 4rem;
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+
+    .blog-card {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+        .blog-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+
+        .blog-card.featured {
+            grid-column: span 2;
+        }
+
+    .blog-img {
+        width: 100%;
+        height: 260px;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .blog-card:hover .blog-img {
+        transform: scale(1.05);
+    }
+
+    .blog-content {
+        padding: 2rem;
+    }
+
+    .blog-category {
+        display: inline-block;
+        background: #e74c3c;
+        color: white;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .blog-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #2c3e50;
+        line-height: 1.3;
+    }
+
+    .blog-meta {
+        color: #7f8c8d;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+    }
+
+        .blog-meta i {
+            margin-right: 0.5rem;
+            color: #bdc3c7;
+        }
+
+    /* Botones */
+    .btn {
+        padding: 0.8rem 1.8rem;
+        border-radius: 50px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.9rem;
+    }
+
+    .btn-primary {
+        background: #3498db;
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+    .btn-outline {
+        border: 2px solid #3498db;
+        color: #3498db;
+        background: transparent;
+    }
+
+        .btn-outline:hover {
+            background: #3498db;
+            color: white;
+        }
+
+    .btn-lg {
+        padding: 1rem 2.5rem;
+        font-size: 1rem;
+    }
+
+    /* Responsive */
+    @@media (max-width: 1200px) {
+        .hero-title {
+            font-size: 3rem;
+        }
+
+            .hero-title span {
+                font-size: 2rem;
+            }
+
+        .gallery-swiper {
+            height: 450px;
+        }
+    }
+
+    @@media (max-width: 992px) {
+        .hero-banner {
+            min-height: auto;
+            padding: 4rem 0;
+        }
+
+        .hero-container {
+            padding: 2rem;
+        }
+
+        .hero-content {
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .booking-form-container {
+            margin: 0 auto;
+            max-width: 500px;
+        }
+
+        .blog-card.featured {
+            grid-column: span 1;
+        }
+
+        .blog-grid {
+            padding: 0 2rem;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.2rem;
+        }
+
+            .hero-title span {
+                font-size: 1.6rem;
+            }
+
+        .section-header h2 {
+            font-size: 2rem;
+        }
+
+        .gallery-swiper {
+            height: 350px;
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            width: 40px;
+            height: 40px;
+        }
+
+        .blog-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .hero-container {
+            padding: 1.5rem;
+        }
+
+        .booking-form-container {
+            padding: 1.5rem;
+        }
+
+        .gallery-container {
+            padding: 0 1rem;
+        }
+
+        .gallery-swiper {
+            height: 250px;
+        }
+    }
+</style>
+
+<script>
+    // Inicialización del Swiper
+    document.addEventListener('DOMContentLoaded', function () {
+        var gallerySwiper = new Swiper('.gallery-swiper', {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            loop: true,
+            autoplay: {
+                delay: 10000, // 10 segundos
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                768: {
+                    slidesPerView: 1.2,
+                    centeredSlides: true
+                }
+            }
+        });
+
+        // Efecto hover para los botones de navegación
+        const navButtons = document.querySelectorAll('.swiper-button-next, .swiper-button-prev');
+        navButtons.forEach(button => {
+            button.addEventListener('mouseenter', () => {
+                button.style.transform = 'scale(1.15)';
+                button.style.boxShadow = '0 6px 20px rgba(0,0,0,0.2)';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'scale(1)';
+                button.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            });
+        });
+    });
+</script>
