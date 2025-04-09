@@ -10,6 +10,7 @@ using System.Web.Mvc;
 
 namespace HotelPrado.UI.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class BitacoraController : Controller
     {
         IListarBitacoraEventosLN _ListarBitacoraLN;

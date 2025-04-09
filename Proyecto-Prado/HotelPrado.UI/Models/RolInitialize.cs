@@ -39,7 +39,7 @@ namespace HotelPrado.UI.Models
             // Crear el usuario admin si no existe
             var adminUser = new ApplicationUser
             {
-                UserName = "AdminHotel",
+                UserName = "adminHotel@hotelPrado.com",
                 Email = "adminHotel@hotelPrado.com",
                 Telefono="809-5555",
                 NombreCompleto = "Admin Hotel",

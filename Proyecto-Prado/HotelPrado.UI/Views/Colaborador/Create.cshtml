@@ -49,7 +49,13 @@
                 <div class="form-group row">
                     @Html.LabelFor(model => model.PuestoColaborador, new { @class = "control-label col-md-3 text-wrap" })
                     <div class="col-md-9 w-100">
-                        @Html.EditorFor(model => model.PuestoColaborador, new { htmlAttributes = new { @class = "form-control w-100" } })
+                        @Html.DropDownListFor(model => model.PuestoColaborador, new SelectList(new List<SelectListItem>
+                                {
+                            new SelectListItem { Value = "Recepcionista", Text = "Recepcionista" },
+                            new SelectListItem { Value = "Guarda de seguridad", Text = "Guarda de seguridad" },
+                            new SelectListItem { Value = "Limpieza", Text = "Limpieza" },
+                            new SelectListItem { Value = "Administrador", Text = "Administrador" }
+                        }, "Value", "Text"), "Seleccione un puesto", new { @class = "form-control w-100" })
                         @Html.ValidationMessageFor(model => model.PuestoColaborador, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -57,7 +63,7 @@
                     @Html.LabelFor(model => model.EstadoLaboral, new { @class = "control-label col-md-3 text-wrap" })
                     <div class="col-md-9 w-100">
                         @Html.DropDownListFor(model => model.EstadoLaboral, new SelectList(new List<SelectListItem>
-                                {
+                                        {
                             new SelectListItem { Value = "Activo", Text = "Activo" },
                             new SelectListItem { Value = "De Vacaciones", Text = "De Vacaciones" },
                             new SelectListItem { Value = "Incapacitado", Text = "Incapacitado" },
@@ -84,4 +90,3 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-
