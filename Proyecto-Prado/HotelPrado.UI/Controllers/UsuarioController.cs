@@ -97,6 +97,13 @@ namespace HotelPrado.UI.Controllers
 
                 if (ModelState.IsValid)
                 {
+
+                    model.UserName = model.UserName?.Trim();
+                    model.NombreCompleto = model.NombreCompleto?.Trim();
+                    model.cedula = model.cedula?.Trim();
+                    model.Email = model.Email?.Trim();
+                    model.Telefono = model.Telefono?.Trim();
+
                     var user = new ApplicationUser
                     {
 

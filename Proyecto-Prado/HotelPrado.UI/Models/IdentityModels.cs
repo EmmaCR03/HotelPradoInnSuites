@@ -16,7 +16,7 @@ namespace HotelPrado.UI.Models
         public string NombreCompleto { get; set; }
 
         [Required(ErrorMessage = "El número de cédula es obligatorio.")]
-        [StringLength(9, ErrorMessage = "El número de cédula no puede tener más de 20 caracteres.")]
+        [StringLength(20, ErrorMessage = "El número de cédula no puede tener más de 20 caracteres.")]
         public string cedula { get; set; }
 
         [Required(ErrorMessage = "El telefono es obligatorio.")]

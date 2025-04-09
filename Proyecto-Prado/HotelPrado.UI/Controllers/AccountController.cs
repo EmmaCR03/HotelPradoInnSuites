@@ -86,7 +86,7 @@ namespace HotelPrado.UI.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Intento de inicio de sesión no válido.");
+                    ModelState.AddModelError("", $"Intento de inicio de sesión no válido para el correo: {model.Email}");
                     return View(model);
             }
         }
