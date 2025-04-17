@@ -627,6 +627,12 @@
     <Content Include="Views\Usuario\Create.cshtml" />
     <Content Include="Views\Usuario\Edit.cshtml" />
     <Content Include="Views\Usuario\Delete.cshtml" />
+    <Content Include="Views\Mantenimiento\IndexMantenimiento.cshtml" />
+    <Content Include="Views\Mantenimiento\Create.cshtml" />
+    <Content Include="Views\Mantenimiento\Edit.cshtml" />
+    <Content Include="Views\Mantenimiento\Details.cshtml" />
+    <Content Include="Views\ReservasA\IndexReservasA.cshtml" />
+    <Content Include="Views\ReservasA\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

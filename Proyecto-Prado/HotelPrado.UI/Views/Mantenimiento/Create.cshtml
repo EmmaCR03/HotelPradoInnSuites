@@ -1,0 +1,126 @@
+﻿@model HotelPrado.Abstracciones.Modelos.Mantenimiento.MantenimientoDTO
+
+@{
+    ViewBag.Title = "Crear Mantenimiento";
+}
+
+<style>
+    .card {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,.08);
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid rgba(0,0,0,.05);
+        padding: 1rem 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: .5rem;
+        font-size: 0.9rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 6px;
+        border: 1px solid #dee2e6;
+        padding: .5rem .75rem;
+        font-size: 0.9rem;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+
+    .btn-primary {
+        padding: .5rem 1.5rem;
+        font-weight: 500;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+        padding: .5rem 1.5rem;
+        font-weight: 500;
+    }
+
+    .text-danger {
+        font-size: 0.8rem;
+        margin-top: .25rem;
+    }
+</style>
+
+<div class="container-fluid px-4">
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">Crear Nuevo Mantenimiento</h2>
+                <a href="@Url.Action("IndexMantenimiento")" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Volver
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="card-body p-4">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                        <div class="row g-4">
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Descripcion, "Descripción", new { @class = "form-label" })
+                                    @Html.TextAreaFor(model => model.Descripcion, new { @class = "form-control", rows = "3", placeholder = "Ingrese la descripción del mantenimiento" })
+                                    @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Estado, "Estado", new { @class = "form-label" })
+                                    @Html.DropDownListFor(model => model.Estado,
+                                        new SelectList(new[] { "Pendiente", "En Proceso", "Completado" }),
+                                        "Seleccione un estado",
+                                        new { @class = "form-select" })
+                                    @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Departamento</label>
+                                    @Html.DropDownList("idDepartamento",
+                                        (SelectList)ViewBag.Departamentos,
+                                        "Seleccione un departamento",
+                                        new { @class = "form-select", required = "required" })
+                                    @Html.ValidationMessageFor(model => model.idDepartamento, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="@Url.Action("IndexMantenimiento")" class="btn btn-secondary">
+                                        <i class="fas fa-times me-2"></i>Cancelar
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Guardar Mantenimiento
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
