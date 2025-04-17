@@ -13,8 +13,6 @@ using System.Web.Mvc;
 
 namespace HotelPrado.UI.Controllers
 {
-
-    [Authorize(Roles = "Administrador, Colaborador")]
     public class UsuarioController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -100,6 +98,7 @@ namespace HotelPrado.UI.Controllers
                 if (ModelState.IsValid)
                 {
 
+                    model.UserName = model.UserName?.Trim();
                     model.NombreCompleto = model.NombreCompleto?.Trim();
                     model.cedula = model.cedula?.Trim();
                     model.Email = model.Email?.Trim();
@@ -108,7 +107,7 @@ namespace HotelPrado.UI.Controllers
                     var user = new ApplicationUser
                     {
 
-                        UserName = model.Email,
+                        UserName = model.UserName,
                         NombreCompleto = model.NombreCompleto,
                         cedula = model.cedula,
                         Email = model.Email,
@@ -202,6 +201,7 @@ namespace HotelPrado.UI.Controllers
                     return HttpNotFound("El usuario no existe.");
                 }
                 user.cedula = model.cedula;
+                user.UserName = model.UserName;
                 user.NombreCompleto = model.NombreCompleto;
                 user.Telefono = model.Telefono;
 

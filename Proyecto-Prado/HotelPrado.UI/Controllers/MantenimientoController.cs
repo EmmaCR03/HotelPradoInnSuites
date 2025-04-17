@@ -19,7 +19,6 @@ using System.Web.Mvc;
 
 namespace HotelPrado.UI.Controllers
 {
-    [Authorize(Roles = "Administrador, Colaborador")]
     public class MantenimientoController : Controller
     {
         private readonly IListarMantenimientoLN _listarMantenimientoLN;

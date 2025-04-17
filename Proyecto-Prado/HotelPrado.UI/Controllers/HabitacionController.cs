@@ -52,7 +52,6 @@ namespace HotelPrado.UI.Controllers
         }
 
         // GET: Habitacion
-        [Authorize(Roles = "Administrador, Colaborador")]
         public ActionResult IndexHabitaciones(int? capacidad, string estado)
         {
             ViewBag.Title = "La Habitacion";
@@ -66,7 +65,6 @@ namespace HotelPrado.UI.Controllers
         }
 
         // GET: Habitacion/IndexHabitacionesUsuario
-        [AllowAnonymous]
         public ActionResult IndexHabitacionesUsuario(DateTime check_in, DateTime check_out, int capacidad)
         {
             ViewBag.CheckIn = check_in;
@@ -74,28 +72,6 @@ namespace HotelPrado.UI.Controllers
             ViewBag.Title = "La Habitacion";
             var laListaDeHabitacionesDisponibles = _habDisponibles.ListarDisponibles(check_in, check_out, capacidad);
 
-            // Validar que las fechas sean actuales o futuras
-            if (check_in.Date < DateTime.Now.Date)
-            {
-                ModelState.AddModelError("check_in", "La fecha de Check-In debe ser actual o futura.");
-            }
-
-            if (check_out.Date < DateTime.Now.Date)
-            {
-                ModelState.AddModelError("check_out", "La fecha de Check-Out debe ser actual o futura.");
-            }
-
-            // Validar que Check-In sea menor que Check-Out
-            if (check_in >= check_out)
-            {
-                ModelState.AddModelError("check_out", "La fecha de Check-Out debe ser mayor que la fecha de Check-In.");
-            }
-
-            // Si hay errores, regresar a la vista con los mensajes
-            if (!ModelState.IsValid)
-            {
-                return RedirectToAction("Index", "Home");
-            }
             // Si hay habitaciones disponibles, solo mostrar una
             if (laListaDeHabitacionesDisponibles.Any())
             {
@@ -108,8 +84,6 @@ namespace HotelPrado.UI.Controllers
         }
 
         // GET: Habitacion/Details/5
-        [Authorize(Roles = "Administrador, Colaborador")]
-
         public ActionResult Details(int id)
         {
             HabitacionesDTO hab = _obtenerHabitacionesPorId.Obtener(id);
@@ -146,7 +120,7 @@ namespace HotelPrado.UI.Controllers
 
             return View();
         }
-        [Authorize(Roles = "Administrador, Colaborador")]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(HabitacionesDTO modeloDeHabitaciones, IEnumerable<HttpPostedFileBase> Image)
@@ -212,8 +186,6 @@ namespace HotelPrado.UI.Controllers
         }
 
         // GET: Habitacion/Edit/5
-        [Authorize(Roles = "Administrador, Colaborador")]
-
         public ActionResult Edit(int id)
         {
             var datosHabitacion = _obtenerHabitacionesPorId.Obtener(id);
@@ -227,8 +199,6 @@ namespace HotelPrado.UI.Controllers
         }
 
         // POST: Habitacion/Edit/5
-        [Authorize(Roles = "Administrador, Colaborador")]
-
         [HttpPost]
         public async Task<ActionResult> Edit(HabitacionesDTO lahabitacion, List<string> eliminarImagenes)
         {
@@ -292,16 +262,12 @@ namespace HotelPrado.UI.Controllers
         }
 
         // GET: Departamento/Delete/5
-        [Authorize(Roles = "Administrador, Colaborador")]
-
         public ActionResult Delete(int id)
         {
             return View();
         }
 
         // POST: Departamento/Delete/5
-        [Authorize(Roles = "Administrador, Colaborador")]
-
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
@@ -328,7 +294,6 @@ namespace HotelPrado.UI.Controllers
             return View(habitaciones);
         }
 
-        [Authorize(Roles = "Administrador, Colaborador")]
 
         [HttpPost]
         public ActionResult ActualizarImagenes(int id, IEnumerable<HttpPostedFileBase> imagenes)

@@ -21,8 +21,6 @@ using System.Web.Mvc;
 
 namespace HotelPrado.UI.Controllers
 {
-    [Authorize(Roles = "Administrador, Colaborador")]
-
     public class ReservasAController : Controller
     {
         IListarReservasLN _listarReservasLN;
@@ -42,7 +40,6 @@ namespace HotelPrado.UI.Controllers
             _registrarBitacoraEventosLN = new RegistrarBitacoraEventosLN();
         }
         // GET: ReservasA
-
         public ActionResult IndexReservasA()
         {
             ViewBag.Title = "La Reserva";

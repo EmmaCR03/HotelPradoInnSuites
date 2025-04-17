@@ -518,38 +518,4 @@
             });
         });
     });
-
-
-        document.querySelector(".booking-form").addEventListener("submit", function (event) {
-        const checkInInput = document.querySelector("input[name='check_in']");
-        const checkOutInput = document.querySelector("input[name='check_out']");
-        const checkInDate = new Date(checkInInput.value);
-        const checkOutDate = new Date(checkOutInput.value);
-        const today = new Date();
-
-        // Validar que las fechas sean actuales o futuras
-        if (checkInDate < today.setHours(0, 0, 0, 0)) {
-            alert("La fecha de Check-In debe ser actual o futura.");
-        event.preventDefault();
-        return;
-        }
-
-        if (checkOutDate < today.setHours(0, 0, 0, 0)) {
-            alert("La fecha de Check-Out debe ser actual o futura.");
-        event.preventDefault();
-        return;
-        }
-
-        // Validar que Check-In sea menor que Check-Out
-        if (checkInDate >= checkOutDate) {
-            alert("La fecha de Check-In debe ser menor que la fecha de Check-Out.");
-        event.preventDefault();
-        return;
-            }
-            if (checkInDate == checkOutDate) {
-                alert("Las fechas no pueden ser iguales");
-                event.preventDefault();
-                return;
-    });
-
 </script>

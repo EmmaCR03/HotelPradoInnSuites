@@ -3,74 +3,65 @@
     ViewBag.Title = "Registrarse";
 }
 
-<main class="d-flex justify-content-center align-items-center min-vh-100">
-    <div class="card shadow-lg border-0 p-5 w-100" style="max-width: 1200px; border-radius: 25px;">
-        <h2 class="text-center text-dark fw-bold mb-5 fs-2">@ViewBag.Title</h2>
+<main aria-labelledby="title">
+    <h2 id="title">@ViewBag.Title.</h2>
 
-        @using (Html.BeginForm("Register", "Account", FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <h4>Cree una cuenta nueva.</h4>
+        <hr />
 
-            <div class="row g-4">
-                <div class="col-md-6">
-                    @Html.LabelFor(m => m.UserName, new { @class = "form-label fw-semibold text-dark fs-5" })
-                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control form-control-lg", placeholder = "Nombre de usuario" })
-                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="col-md-6">
-                    @Html.LabelFor(m => m.Email, new { @class = "form-label fw-semibold text-dark fs-5" })
-                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control form-control-lg", placeholder = "Correo electrónico" })
-                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                </div>
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        <div class="row">
+            @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
             </div>
-
-            <div class="row g-4">
-                <div class="col-md-6">
-                    @Html.LabelFor(m => m.NombreCompleto, new { @class = "form-label fw-semibold text-dark fs-5" })
-                    @Html.TextBoxFor(m => m.NombreCompleto, new { @class = "form-control form-control-lg", placeholder = "Nombre completo" })
-                    @Html.ValidationMessageFor(m => m.NombreCompleto, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="col-md-6">
-                    @Html.LabelFor(m => m.cedula, new { @class = "form-label fw-semibold text-dark fs-5" })
-                    @Html.TextBoxFor(m => m.cedula, new { @class = "form-control form-control-lg", placeholder = "Cédula" })
-                    @Html.ValidationMessageFor(m => m.cedula, "", new { @class = "text-danger" })
-                </div>
+        </div>
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        <div class="row">
+            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
             </div>
-
-            <div class="row g-4">
-                <div class="col-md-6">
-                    @Html.LabelFor(m => m.Telefono, new { @class = "form-label fw-semibold text-dark fs-5" })
-                    @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control form-control-lg", placeholder = "Teléfono" })
-                    @Html.ValidationMessageFor(m => m.Telefono, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="col-md-6">
-                    @Html.LabelFor(m => m.Password, new { @class = "form-label fw-semibold text-dark fs-5" })
-                    @Html.PasswordFor(m => m.Password, new { @class = "form-control form-control-lg", placeholder = "Contraseña" })
-                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.NombreCompleto, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.NombreCompleto, new { @class = "form-control" })
             </div>
-
-            <div class="row g-4">
-                <div class="col-md-6">
-                    @Html.LabelFor(m => m.ConfirmPassword, new { @class = "form-label fw-semibold text-dark fs-5" })
-                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control form-control-lg", placeholder = "Confirmar contraseña" })
-                    @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
-                </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.cedula, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.cedula, new { @class = "form-control" })
             </div>
-
-            <div class="d-grid mt-4">
-                <button type="submit" class="btn btn-primary btn-lg rounded-pill py-3">Registrarse</button>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.Telefono, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control" })
             </div>
-
-            <div class="text-center mt-4">
-                @Html.ActionLink("¿Ya tienes cuenta? Inicia sesión aquí", "Login", null, new { @class = "text-decoration-none text-dark fw-semibold" })
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
             </div>
-        }
-    </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset-md-2 col-md-10">
+                <input type="submit" value="Registrarse" class="btn btn-outline-dark" />
+            </div>
+        </div>
+    }
 </main>
 
 @section Scripts {

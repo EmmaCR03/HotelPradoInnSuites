@@ -9,6 +9,7 @@
 <table class="table">
     <thead>
         <tr>
+            <th>Nombre de usuario</th>
             <th>Nombre completo</th>
             <th>Cédula</th>
             <th>Correo electrónico</th>
@@ -21,6 +22,7 @@
         @foreach (var user in Model)
         {
             <tr>
+                <td>@user.UserName</td>
                 <td>@user.NombreCompleto</td>
                 <td>@user.cedula</td>
                 <td>@user.Email</td>

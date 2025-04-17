@@ -10,6 +10,11 @@
 {
     @Html.AntiForgeryToken()
 
+    <div class="form-group">
+        @Html.LabelFor(model => model.UserName)
+        @Html.TextBoxFor(model => model.UserName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.UserName)
+    </div>
 
     <div class="form-group">
         @Html.LabelFor(model => model.NombreCompleto)

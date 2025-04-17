@@ -47,8 +47,6 @@ namespace HotelPrado.UI.Controllers
         }
 
         // GET: Departamento
-        [Authorize(Roles = "Administrador, Colaborador")]
-
         public ActionResult IndexDepartamentos()
         {
             var laListaDeDepartamentos = _listarDepartamentosLN.Listar();
@@ -56,7 +54,7 @@ namespace HotelPrado.UI.Controllers
             return View(laListaDeDepartamentos);
         }
 
-        [AllowAnonymous]
+
         public ActionResult IndexDepartamentosClientes()
         {
             ViewBag.Title = "Explora Nuestros Departamentos";
@@ -93,7 +91,6 @@ namespace HotelPrado.UI.Controllers
 
 
         // GET: Departamento/Details/5
-        [AllowAnonymous]
         public ActionResult Details(int id)
         {
             DepartamentoDTO depto = _obtenerDepartamentoPorId.Obtener(id);
@@ -127,7 +124,6 @@ namespace HotelPrado.UI.Controllers
 
 
         // GET: Departamento/Create
-        [Authorize(Roles = "Administrador, Colaborador")]
 
         public ActionResult Create()
         {
@@ -155,10 +151,9 @@ namespace HotelPrado.UI.Controllers
 
             return View();
         }
-        [Authorize(Roles = "Administrador, Colaborador")]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public async Task<ActionResult> Create(DepartamentoDTO modeloDeDepartamento)
         {
             if (ModelState.IsValid)
@@ -230,7 +225,6 @@ namespace HotelPrado.UI.Controllers
             return View(modeloDeDepartamento);
         }
 
-        [Authorize(Roles = "Administrador, Colaborador")]
 
         // GET: Departamento/Edit/5
         public ActionResult Edit(int IdDepartamento)
@@ -262,8 +256,8 @@ namespace HotelPrado.UI.Controllers
             return View(eldepartamento);
         }
 
-        [Authorize(Roles = "Administrador, Colaborador")]
 
+        // POST: Persona/Edit/5
         [HttpPost]
         public async Task<ActionResult> Edit(DepartamentoDTO eldepartamento, List<string> eliminarImagenes)
         {
@@ -327,7 +321,6 @@ namespace HotelPrado.UI.Controllers
         }
 
 
-        [Authorize(Roles = "Administrador, Colaborador")]
 
         // GET: Departamento/Delete/5
         public ActionResult Delete(int id)
@@ -335,7 +328,7 @@ namespace HotelPrado.UI.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Administrador, Colaborador")]
+        // POST: Departamento/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
@@ -350,8 +343,6 @@ namespace HotelPrado.UI.Controllers
                 return View();
             }
         }
-        [Authorize(Roles = "Administrador, Colaborador")]
-
         public ActionResult EditarImagenes(int id)
         {
             var departamento = _listarDepartamentosLN.Listar().FirstOrDefault(d => d.IdDepartamento == id);
@@ -364,7 +355,7 @@ namespace HotelPrado.UI.Controllers
             return View(departamento);
         }
 
-        [Authorize(Roles = "Administrador, Colaborador")]
+
         [HttpPost]
         public ActionResult ActualizarImagenes(int id, IEnumerable<HttpPostedFileBase> imagenes)
         {
@@ -446,7 +437,7 @@ namespace HotelPrado.UI.Controllers
             return RedirectToAction("IndexDepartamentos");
         }
 
-        [Authorize(Roles = "Administrador, Colaborador")]
+
         [HttpPost]
         public ActionResult EliminarImagen(int id, string imagenUrl)
         {
