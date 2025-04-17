@@ -17,19 +17,19 @@ namespace HotelPrado.AccesoADatos.Reservas.Listar
 
         public List<ReservasDTO> Listar()
         {
-            var laListaDeReservas = _contexto.ReservasTabla
-                .Select(laReserva => new ReservasDTO
-                {
-                    IdReserva = laReserva.IdReserva,
-                    IdCliente = laReserva.IdCliente,
-                    cantidadPersonas = laReserva.cantidadPersonas,
-                    NombreCliente = laReserva.NombreCliente,
-                    IdHabitacion = laReserva.IdHabitacion,
-                    FechaInicio = laReserva.FechaInicio,
-                    FechaFinal = laReserva.FechaFinal,
-                    EstadoReserva = laReserva.EstadoReserva,
-                    MontoTotal = laReserva.MontoTotal,
-                }).ToList();
+            var laListaDeReservas = (from r in _contexto.ReservasTabla
+                                     select new ReservasDTO
+                                     {
+                                         IdReserva = r.IdReserva,
+                                         IdCliente = r.IdCliente,
+                                         cantidadPersonas = r.cantidadPersonas,
+                                         NombreCliente = r.NombreCliente,
+                                         IdHabitacion = r.IdHabitacion,
+                                         FechaInicio = r.FechaInicio,
+                                         FechaFinal = r.FechaFinal,
+                                         EstadoReserva = r.EstadoReserva,
+                                         MontoTotal = r.MontoTotal
+                                     }).ToList();
 
             return laListaDeReservas;
         }

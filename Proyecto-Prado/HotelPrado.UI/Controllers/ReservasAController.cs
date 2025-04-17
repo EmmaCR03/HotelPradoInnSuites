@@ -57,6 +57,8 @@ namespace HotelPrado.UI.Controllers
         // GET: ReservasA/Create
         public ActionResult Create()
         {
+            //el campo en clientetabla.cs tiene un idcliente de tipo string el cual 
+            //en BD el tipo es int, eso causa el error, sin embargo si se cambia aqui en el codigo a int, causa mas errores
             ViewBag.IdCliente = _contexto.ClienteTabla
                 .Select(c => new SelectListItem
                 {

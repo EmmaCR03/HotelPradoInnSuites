@@ -32,7 +32,7 @@ namespace HotelPrado.LN.Mantenimiento.ObtenerPorId
                 Descripcion = mantenimientoEnBaseDeDatos.Descripcion,
                 Estado = mantenimientoEnBaseDeDatos.Estado,
                 idDepartamento = mantenimientoEnBaseDeDatos.idDepartamento,
-                idHabitacion = mantenimientoEnBaseDeDatos.idHabitacion
+                DepartamentoNombre = mantenimientoEnBaseDeDatos.DepartamentoNombre
             };
         }
     }

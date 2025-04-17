@@ -36,7 +36,7 @@ namespace HotelPrado.LN.Mantenimiento.Registrar
                     ""Descripcion"": {modelo.Descripcion},
                     ""Estado"": ""{modelo.Estado}"",
                     ""idDepartamento"": ""{modelo.idDepartamento}"",
-                    ""idHabitacion"": {modelo.idHabitacion},
+                    ""DepartamentoNombre"": {modelo.DepartamentoNombre},
 
                 }}";
 
@@ -87,7 +87,7 @@ namespace HotelPrado.LN.Mantenimiento.Registrar
                 Descripcion = elMantenimiento.Descripcion,
                 Estado = elMantenimiento.Estado,
                 idDepartamento = elMantenimiento.idDepartamento,
-                idHabitacion = elMantenimiento.idHabitacion
+                DepartamentoNombre = elMantenimiento.DepartamentoNombre
             };
         }
     }

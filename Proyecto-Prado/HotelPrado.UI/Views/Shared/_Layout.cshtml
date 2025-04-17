@@ -13,9 +13,164 @@
     <link href="~/Views/mellow-1.0.0/mellow-1.0.0/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Views/mellow-1.0.0/mellow-1.0.0/css/vendor.css" rel="stylesheet" />
     <link href="~/Content/DepartamentoClientes/site.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("Styles", required: false)
     <style>
+        html, body {
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1030;
+            background-color: #fff;
+        }
+        .body-content {
+            position: relative;
+            margin-top: 160px;
+            padding: 20px;
+            min-height: calc(100vh - 160px - 400px);
+        }
 
+        .header-top {
+            padding: 2px 0 !important;
+            font-size: 0.8em;
+        }
+
+        .header-top .info li {
+            margin-right: 15px !important;
+        }
+
+        #primary-header {
+            padding: 5px 0 !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            padding: 0;
+        }
+
+        .navbar-brand img {
+            max-height: 50px;
+            width: auto;
+        }
+
+        .navbar-nav {
+            gap: 5px;
+        }
+
+        .nav-link {
+            padding: 5px 10px !important;
+            font-size: 0.9em;
+        }
+
+        .dropdown-menu {
+            margin-top: 0;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border: none;
+            padding: 5px 0;
+        }
+
+        .dropdown-item {
+            font-size: 0.9em;
+            padding: 5px 15px;
+        }
+
+        .search {
+            max-width: 200px;
+        }
+
+        .search .form-control {
+            height: 32px;
+            font-size: 0.9em;
+        }
+
+        @@media (max-width: 991px) {
+            .header-top {
+                display: none;
+            }
+
+            #primary-header {
+                padding: 5px 0 !important;
+            }
+
+            .navbar-brand img {
+                max-height: 40px;
+            }
+
+            .navbar-toggler {
+                padding: 4px 8px;
+            }
+
+            .offcanvas-body {
+                padding: 10px;
+            }
+
+            .nav-link {
+                padding: 8px 15px !important;
+            }
+        }
+
+        .body-content {
+            margin-top: 120px;
+        }
+
+        @@media (max-width: 991px) {
+            .body-content {
+                margin-top: 80px;
+            }
+        }
+
+        #footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 2px 0;
+            z-index: 10;
+            font-size: 0.8em;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+        }
+
+        }
+
+        #footer img {
+            max-width: 40px;
+            height: auto;
+        }
+
+        #footer .small {
+            font-size: 0.85em;
+        }
+
+        #footer a {
+            text-decoration: none;
+        }
+
+        #footer .row {
+            margin: 0;
+            padding: 0;
+        }
+
+        @@media (max-width: 768px) {
+            #footer {
+                position: relative;
+                margin-top: 10px;
+            }
+            
+            .body-content {
+                margin-bottom: 0;
+                padding-bottom: 60px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -146,59 +301,37 @@
         <hr />
 
         <section id="footer" class="bg-light text-dark mt-5 w-100">
-            <div class="padding-side padding-small pt-4 px-3" data-aos="fade-up">
-                <footer class="row justify-content-center">
-                    <!-- Columna 1: Logo y redes sociales -->
-                    <div class="col-md-4 col-lg-3 mb-3 text-center text-md-start">
-                        <img src="~/Img/images/main-Prado-removebg-preview.png" style="max-width: 80px; height: auto;" alt="logo-footer" class="img-fluid">
-                        <p class="mt-2">
-                            ¡Bienvenido al Hotel Prado Inn Suites! Un lugar donde la comodidad y la tranquilidad van de la mano.
-                        </p>
-                        <ul class="social-links d-flex list-unstyled mt-3 justify-content-center justify-content-md-start">
-                            <li><a href="#"><svg class="social me-3" width="18" height="18"><use xlink:href="#facebook"></use></svg></a></li>
-                            <li><a href="#"><svg class="social me-3" width="18" height="18"><use xlink:href="#twitter"></use></svg></a></li>
-                            <li><a href="#"><svg class="social me-3" width="18" height="18"><use xlink:href="#linkedin"></use></svg></a></li>
-                            <li><a href="#"><svg class="social me-3" width="18" height="18"><use xlink:href="#instagram"></use></svg></a></li>
-                            <li><a href="#"><svg class="social me-3" width="18" height="18"><use xlink:href="#youtube"></use></svg></a></li>
-                        </ul>
+            <div class="padding-side padding-small pt-2 px-3" data-aos="fade-up">
+                <footer class="row justify-content-between align-items-center">
+                    <!-- Logo y descripción -->
+                    <div class="col-md-3 text-center text-md-start d-flex align-items-center">
+                        <img src="~/Img/images/main-Prado-removebg-preview.png" style="max-width: 50px; height: auto;" alt="logo-footer" class="img-fluid me-2">
+                        <div class="d-none d-md-block">
+                            <p class="small mb-0">Hotel Prado Inn Suites</p>
+                        </div>
                     </div>
 
-                    <!-- Columna 2: Información de contacto -->
-                    <div class="col-md-4 col-lg-3 mb-3">
-                        <h5 class="fw-bold">Nuestra info</h5>
-                        <ul class="nav flex-column">
-                            <li class="d-flex align-items-center"><svg class="color me-1" width="18" height="18"><use xlink:href="#location"></use></svg> Prado Inn Suites</li>
-                            <li class="ms-3">Torre Mercedes</li>
-                            <li class="ms-3">Tranquilidad garantizada</li>
-                            <li class="ms-3">Relaxingland</li>
-                            <li class="d-flex align-items-center mt-2"><svg class="color me-1" width="18" height="18"><use xlink:href="#phone"></use></svg> +506 2256-0106</li>
-                            <li class="d-flex align-items-center mt-2"><svg class="color me-1" width="18" height="18"><use xlink:href="#email"></use></svg> info@pradoinn.com</li>
-                        </ul>
+                    <!-- Información de contacto -->
+                    <div class="col-md-5 text-center my-1">
+                        <span class="small me-3"><i class="fas fa-phone"></i> +506 2256-0106</span>
+                        <span class="small"><i class="fas fa-envelope"></i> info@pradoinn.com</span>
                     </div>
 
-                    <!-- Columna 3: Servicios -->
-                    <div class="col-md-4 col-lg-3 mb-3">
-                        <h5 class="fw-bold">Servicios</h5>
-                        <ul class="nav flex-column">
-                            <li class="nav-item"><a href="#" class="p-0 text-decoration-none text-dark">Lavandería</a></li>
-                            <li class="nav-item"><a href="#" class="p-0 text-decoration-none text-dark">Gimnasio</a></li>
-                            <li class="nav-item"><a href="#" class="p-0 text-decoration-none text-dark">Transporte</a></li>
-                            <li class="nav-item"><a href="#" class="p-0 text-decoration-none text-dark">Wi-Fi</a></li>
-                        </ul>
+                    <!-- Redes sociales -->
+                    <div class="col-md-3 text-center text-md-end">
+                        <a href="#" class="text-dark me-2"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-dark me-2"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-dark"><i class="fab fa-twitter"></i></a>
                     </div>
                 </footer>
             </div>
 
-            <hr class="text-black">
-
-            <!-- Pie de página con copyright -->
-            <div class="text-center py-2">
-                <p class="m-0">© 2024 Hotel Prado Inn Suites.</p>
+            <!-- Copyright -->
+            <div class="text-center py-1">
+                <p class="small m-0">© 2024 Hotel Prado Inn Suites</p>
             </div>
         </section>
     </div>
-
-
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

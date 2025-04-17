@@ -13,6 +13,7 @@ using HotelPrado.LN.Mantenimiento.ObtenerPorId;
 using HotelPrado.LN.Mantenimiento.Registrar;
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -47,24 +48,65 @@ namespace HotelPrado.UI.Controllers
         }
 
         // GET: Mantenimiento/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            try
+            {
+                var mantenimiento = await _obtenerMantenimientoPorIdLN.Obtener(id);
+                if (mantenimiento == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(mantenimiento);
+            }
+            catch (Exception ex)
+            {
+                // Registrar el error en la bitácora
+                var bitacora = new BitacoraEventosDTO
+                {
+                    IdEvento = 0,
+                    TablaDeEvento = "ModuloMantenimiento",
+                    TipoDeEvento = "Error",
+                    FechaDeEvento = DateTime.Now.ToString("dd-MM-yyyy"),
+                    DescripcionDeEvento = "Error al obtener los detalles del mantenimiento.",
+                    StackTrace = ex.StackTrace,
+                    DatosAnteriores = "NA",
+                    DatosPosteriores = "NA"
+                };
+
+                await _registrarBitacoraEventosLN.RegistrarBitacora(bitacora);
+                return RedirectToAction("IndexMantenimiento");
+            }
         }
 
         // GET: Mantenimiento/Create
         public ActionResult Create(int? IdDepartamento)
         {
+            // Obtener todos los departamentos
+            var departamentosQuery = _contexto.DepartamentoTabla
+                .Where(d => d.Estado == "Disponible");  // Solo departamentos disponibles
+
+            var departamentos = departamentosQuery
+                .ToList()  // Ejecutar la consulta primero
+                .Select(d => new SelectListItem  // Luego hacer la transformación en memoria
+                {
+                    Value = d.IdDepartamento.ToString(),
+                    Text = d.NumeroDepartamento + " - " + d.Nombre
+                })
+                .ToList();
+
+            ViewBag.Departamentos = new SelectList(departamentos, "Value", "Text");
+
             if (IdDepartamento.HasValue)
             {
-                // Obtener el nombre del departamento basado en el IdDepartamento
+                // Si se proporciona un ID de departamento, seleccionarlo en el dropdown
                 var departamento = _contexto.DepartamentoTabla.FirstOrDefault(d => d.IdDepartamento == IdDepartamento.Value);
                 if (departamento != null)
                 {
                     ViewBag.IdDepartamento = IdDepartamento.Value;
-                    ViewBag.DepartamentoNombre = departamento.Nombre; // Pasar el nombre del departamento
                 }
             }
+
             return View();
         }
 
@@ -74,9 +116,22 @@ namespace HotelPrado.UI.Controllers
         {
             try
             {
-                if (modeloDeMantenimiento.idDepartamento == 0)
+                if (!ModelState.IsValid)
                 {
-                    ViewBag.Error = "El ID del departamento es obligatorio.";
+                    // Recargar la lista de departamentos si el modelo no es válido
+                    var departamentosQuery = _contexto.DepartamentoTabla
+                        .Where(d => d.Estado == "Disponible");
+
+                    var departamentos = departamentosQuery
+                        .ToList()  // Ejecutar la consulta primero
+                        .Select(d => new SelectListItem  // Luego hacer la transformación en memoria
+                        {
+                            Value = d.IdDepartamento.ToString(),
+                            Text = d.NumeroDepartamento + " - " + d.Nombre
+                        })
+                        .ToList();
+
+                    ViewBag.Departamentos = new SelectList(departamentos, "Value", "Text");
                     return View(modeloDeMantenimiento);
                 }
 
@@ -86,52 +141,119 @@ namespace HotelPrado.UI.Controllers
                 {
                     modeloDeMantenimiento.DepartamentoNombre = departamento.Nombre;
                 }
+                else
+                {
+                    ModelState.AddModelError("", "El departamento seleccionado no existe.");
+                    return View(modeloDeMantenimiento);
+                }
 
                 int cantidadDeDatosGuardados = await _registrarMantenimientoLN.Guardar(modeloDeMantenimiento);
                 return RedirectToAction("IndexMantenimiento");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                // Recargar la lista de departamentos en caso de error
+                var departamentosQuery = _contexto.DepartamentoTabla
+                    .Where(d => d.Estado == "Disponible");
+
+                var departamentos = departamentosQuery
+                    .ToList()  // Ejecutar la consulta primero
+                    .Select(d => new SelectListItem  // Luego hacer la transformación en memoria
+                    {
+                        Value = d.IdDepartamento.ToString(),
+                        Text = d.NumeroDepartamento + " - " + d.Nombre
+                    })
+                    .ToList();
+
+                ViewBag.Departamentos = new SelectList(departamentos, "Value", "Text");
+                ModelState.AddModelError("", "Error al guardar el mantenimiento: " + ex.Message);
+                return View(modeloDeMantenimiento);
             }
         }
 
         // GET: Mantenimiento/Edit/5
-        public async Task<ActionResult> Edit(int IdMantenimiento)
+        public async Task<ActionResult> Edit(int? id)
         {
-            var mantenimiento = await _obtenerMantenimientoPorIdLN.Obtener(IdMantenimiento);
+            if (!id.HasValue)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "El ID del mantenimiento es requerido.");
+            }
+
+            var mantenimiento = await _obtenerMantenimientoPorIdLN.Obtener(id.Value);
             if (mantenimiento == null)
             {
                 return HttpNotFound();
             }
+
+            // Obtener la lista de departamentos
+            var departamentosQuery = _contexto.DepartamentoTabla
+                .Where(d => d.Estado == "Disponible");
+
+            var departamentos = departamentosQuery
+                .ToList()
+                .Select(d => new SelectListItem
+                {
+                    Value = d.IdDepartamento.ToString(),
+                    Text = d.NumeroDepartamento + " - " + d.Nombre,
+                    Selected = d.IdDepartamento == mantenimiento.idDepartamento
+                })
+                .ToList();
+
+            ViewBag.Departamentos = new SelectList(departamentos, "Value", "Text");
+            ViewBag.Estados = new SelectList(new[] { "Pendiente", "En Proceso", "Completado" }, mantenimiento.Estado);
+
             return View(mantenimiento);
         }
 
         // POST: Mantenimiento/Edit/5
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(MantenimientoDTO elmantenimiento)
         {
-            Console.WriteLine($"Estado recibido: {elmantenimiento.Estado}");
-
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Obtener el nombre del departamento
+                    var departamento = _contexto.DepartamentoTabla.FirstOrDefault(d => d.IdDepartamento == elmantenimiento.idDepartamento);
+                    if (departamento != null)
+                    {
+                        elmantenimiento.DepartamentoNombre = departamento.Nombre;
+                    }
+
                     var cantidadDeDatosActualizados = await _editarMantenimientoLN.Actualizar(elmantenimiento);
                     if (cantidadDeDatosActualizados == 0)
                     {
-                        ViewBag.mensaje = "Ocurrió un error inesperado, favor intente nuevamente.";
-                        return View(elmantenimiento);
+                        ModelState.AddModelError("", "Ocurrió un error al actualizar el mantenimiento.");
                     }
-                    return RedirectToAction("IndexMantenimiento");
+                    else
+                    {
+                        return RedirectToAction("IndexMantenimiento");
+                    }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error al actualizar: {ex.Message}");
-                    ViewBag.mensaje = "Ocurrió un error inesperado, favor intente nuevamente.";
-                    return View(elmantenimiento);
+                    ModelState.AddModelError("", "Error al actualizar: " + ex.Message);
                 }
             }
+
+            // Si llegamos aquí, algo falló, volvemos a cargar los dropdowns
+            var departamentosQuery = _contexto.DepartamentoTabla
+                .Where(d => d.Estado == "Disponible");
+
+            var departamentos = departamentosQuery
+                .ToList()
+                .Select(d => new SelectListItem
+                {
+                    Value = d.IdDepartamento.ToString(),
+                    Text = d.NumeroDepartamento + " - " + d.Nombre,
+                    Selected = d.IdDepartamento == elmantenimiento.idDepartamento
+                })
+                .ToList();
+
+            ViewBag.Departamentos = new SelectList(departamentos, "Value", "Text");
+            ViewBag.Estados = new SelectList(new[] { "Pendiente", "En Proceso", "Completado" }, elmantenimiento.Estado);
+
             return View(elmantenimiento);
         }
 
@@ -173,7 +295,7 @@ namespace HotelPrado.UI.Controllers
                         ""Descripcion"": ""{mantenimiento.Descripcion}"",
                         ""Estado"": ""{mantenimiento.Estado}"",
                         ""idDepartamento"": {mantenimiento.idDepartamento},
-                        ""idHabitacion"": {mantenimiento.idHabitacion}
+                        ""DepartamentoNombre"": {mantenimiento.DepartamentoNombre}
                     }}";
 
                     var bitacora = new BitacoraEventosDTO

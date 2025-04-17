@@ -21,8 +21,8 @@ namespace HotelPrado.AccesoADatos.Mantenimiento.Editar
                 .Where(elMantenimiento => elMantenimiento.IdMantenimiento == elMantenimientoActualizar.IdMantenimiento)
                 .FirstOrDefault();
             elMantenimientoEnBaseDeDatos.Descripcion = elMantenimientoActualizar.Descripcion;
-            elMantenimientoEnBaseDeDatos.idDepartamento = elMantenimientoActualizar.idDepartamento;
-            elMantenimientoEnBaseDeDatos.idHabitacion = elMantenimientoActualizar.idHabitacion;
+            elMantenimientoEnBaseDeDatos.Estado = elMantenimientoActualizar.Estado;
+            elMantenimientoEnBaseDeDatos.DepartamentoNombre = elMantenimientoActualizar.DepartamentoNombre;
             EntityState estado = _contexto.Entry(elMantenimientoEnBaseDeDatos).State = System.Data.Entity.EntityState.Modified;
             int cantidadDeDatosAlmacenados = await _contexto.SaveChangesAsync();
             return cantidadDeDatosAlmacenados;

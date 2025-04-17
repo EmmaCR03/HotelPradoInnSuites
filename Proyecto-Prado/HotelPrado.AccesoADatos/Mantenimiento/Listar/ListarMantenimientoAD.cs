@@ -23,7 +23,7 @@ namespace HotelPrado.AccesoADatos.Mantenimiento.Listar
                                               Descripcion = elMantenimiento.Descripcion,
                                               Estado = elMantenimiento.Estado,
                                               idDepartamento = elMantenimiento.idDepartamento,
-                                              idHabitacion = elMantenimiento.idHabitacion,
+                                              DepartamentoNombre = elMantenimiento.DepartamentoNombre,
                                           }).ToList();
 
 

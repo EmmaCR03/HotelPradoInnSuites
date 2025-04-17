@@ -43,7 +43,7 @@ namespace HotelPrado.LN.Mantenimiento.Editar
                 ""Descripcion"": ""{datosAnteriores.Descripcion}"",
                 ""Estado"": ""{datosAnteriores.Estado}"",
                 ""idDepartamento"": ""{datosAnteriores.idDepartamento}"",
-                ""idHabitacion"": ""{datosAnteriores.idHabitacion}""
+                ""DepartamentoNombre"": ""{datosAnteriores.DepartamentoNombre}""
             }}";
 
                 // Convertir el DTO a la entidad para su actualización
@@ -59,7 +59,7 @@ namespace HotelPrado.LN.Mantenimiento.Editar
                 ""Descripcion"": ""{elMantenimientoEnVista.Descripcion}"",
                 ""Estado"": ""{elMantenimientoEnVista.Estado}"",
                 ""idDepartamento"": ""{elMantenimientoEnVista.idDepartamento}"",
-                ""idHabitacion"": ""{elMantenimientoEnVista.idHabitacion}""
+                ""DepartamentoNombre"": ""{elMantenimientoEnVista.DepartamentoNombre}""
             }}";
 
                 // Registrar en la bitácora

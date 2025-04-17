@@ -14,7 +14,7 @@ namespace HotelPrado.LN.Mantenimiento.Conversion
                 Descripcion = elMantenimiento.Descripcion,
                 Estado = elMantenimiento.Estado,
                 idDepartamento = elMantenimiento.idDepartamento,
-                idHabitacion = elMantenimiento.idHabitacion,
+                DepartamentoNombre = elMantenimiento.DepartamentoNombre,
 
             };
         }

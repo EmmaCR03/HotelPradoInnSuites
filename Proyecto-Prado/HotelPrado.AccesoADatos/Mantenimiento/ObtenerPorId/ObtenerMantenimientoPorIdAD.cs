@@ -30,7 +30,7 @@ namespace HotelPrado.AccesoADatos.Mantenimiento.ObtenerPorId
                 mantenimientoExistente.Descripcion = mantenimiento.Descripcion;
                 mantenimientoExistente.Estado = mantenimiento.Estado;
                 mantenimientoExistente.idDepartamento = mantenimiento.idDepartamento;
-                mantenimientoExistente.idHabitacion = mantenimiento.idHabitacion;
+                mantenimientoExistente.DepartamentoNombre = mantenimiento.DepartamentoNombre;
 
                 // Guardar los cambios en la base de datos
                 int filasAfectadas = await _contexto.SaveChangesAsync();
