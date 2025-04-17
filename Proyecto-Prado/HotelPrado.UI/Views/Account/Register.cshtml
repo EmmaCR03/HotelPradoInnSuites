@@ -3,65 +3,77 @@
     ViewBag.Title = "Registrarse";
 }
 
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
+<main aria-labelledby="title" class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow rounded-4">
+                <div class="card-header bg-dark text-white text-center rounded-top-4">
+                    <h2 id="title" class="mb-0">@ViewBag.Title</h2>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <h4 class="text-center mb-4">Cree una cuenta nueva</h4>
+                        @Html.ValidationSummary("", new { @class = "alert alert-danger" })
 
-    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
-    {
-        @Html.AntiForgeryToken()
-        <h4>Cree una cuenta nueva.</h4>
-        <hr />
+                        <div class="mb-3 row">
+                            @Html.LabelFor(m => m.UserName, new { @class = "col-md-3 col-form-label text-end" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Nombre de usuario" })
+                            </div>
+                        </div>
 
-        @Html.ValidationSummary("", new { @class = "text-danger" })
-        <div class="row">
-            @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 col-form-label" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                        <div class="mb-3 row">
+                            @Html.LabelFor(m => m.Email, new { @class = "col-md-3 col-form-label text-end" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", placeholder = "Correo electrónico" })
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            @Html.LabelFor(m => m.NombreCompleto, new { @class = "col-md-3 col-form-label text-end" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.NombreCompleto, new { @class = "form-control", placeholder = "Nombre completo" })
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            @Html.LabelFor(m => m.cedula, new { @class = "col-md-3 col-form-label text-end" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.cedula, new { @class = "form-control", placeholder = "Cédula" })
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            @Html.LabelFor(m => m.Telefono, new { @class = "col-md-3 col-form-label text-end" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", placeholder = "Teléfono" })
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            @Html.LabelFor(m => m.Password, new { @class = "col-md-3 col-form-label text-end" })
+                            <div class="col-md-9">
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Contraseña" })
+                            </div>
+                        </div>
+
+                        <div class="mb-4 row">
+                            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-3 col-form-label text-end" })
+                            <div class="col-md-9">
+                                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Confirmar contraseña" })
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <input type="submit" value="Registrarse" class="btn btn-dark px-4 py-2 rounded-pill" />
+                        </div>
+                    }
+                </div>
             </div>
         </div>
-        @Html.ValidationSummary("", new { @class = "text-danger" })
-        <div class="row">
-            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 col-form-label" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="row">
-            @Html.LabelFor(m => m.NombreCompleto, new { @class = "col-md-2 col-form-label" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(m => m.NombreCompleto, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="row">
-            @Html.LabelFor(m => m.cedula, new { @class = "col-md-2 col-form-label" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(m => m.cedula, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="row">
-            @Html.LabelFor(m => m.Telefono, new { @class = "col-md-2 col-form-label" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="row">
-            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 col-form-label" })
-            <div class="col-md-10">
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="row">
-            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 col-form-label" })
-            <div class="col-md-10">
-                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="row">
-            <div class="offset-md-2 col-md-10">
-                <input type="submit" value="Registrarse" class="btn btn-outline-dark" />
-            </div>
-        </div>
-    }
+    </div>
 </main>
 
 @section Scripts {
