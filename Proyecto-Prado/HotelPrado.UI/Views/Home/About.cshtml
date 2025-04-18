@@ -1,9 +1,109 @@
 ﻿@{
-    ViewBag.Title = "About";
+    ViewBag.Title = "About Prado Inn Suites";
+    ViewBag.Message = "Bienvenido a Prado Inn Suites, donde la comodidad se encuentra con la elegancia. Ubicado en el corazón de la ciudad, nuestro hotel ofrece un refugio tranquilo tanto para viajeros de negocios como de placer.";
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>@ViewBag.Message</h3>
 
-    <p>Use this area to provide additional information.</p>
+<main aria-labelledby="title" class="about-page">
+    <h2 id="title" class="text-center">@ViewBag.Title</h2>
+    <h3 class="text-center">@ViewBag.Message</h3>
+
+    <section id="about-us" class="about-section">
+        <div class="container text-center" data-aos="fade-up">
+            <h3 class="display-3 fw-normal">Prado Inn Suites</h3>
+            <div class="row align-items-start mt-5">
+                <div class="col-lg-12">
+                    <p class="about-text">
+                        Bienvenido a Prado Inn Suites, donde la comodidad se encuentra con la elegancia.
+                        Ubicado en el corazón de la ciudad, nuestro hotel ofrece un refugio tranquilo tanto
+                        para viajeros de negocios como de placer. Con instalaciones modernas y una atmósfera cálida y acogedora,
+                        nos esforzamos por hacer que su estancia con nosotros sea inolvidable.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="info" class="info-section">
+        <div class="container" data-aos="fade-up">
+            <div class="row">
+                <div class="col-md-4 text-center mb-4">
+                    <h3 class="display-1 fw-normal text-primary">25K</h3>
+                    <p class="text-capitalize">Huéspedes Felices</p>
+                </div>
+                <div class="col-md-4 text-center mb-4">
+                    <h3 class="display-1 fw-normal text-primary">160</h3>
+                    <p class="text-capitalize">Total Habitaciones</p>
+                </div>
+                <div class="col-md-4 text-center mb-4">
+                    <h3 class="display-1 fw-normal text-primary">25</h3>
+                    <p class="text-capitalize">Premios Ganados</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </main>
+
+<style>
+    .about-page {
+        padding: 20px;
+        background-color: #f8f9fa;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .about-section {
+        background-color: #ffffff;
+        padding: 40px 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-top: 30px;
+        border-radius: 10px;
+    }
+
+    .about-text {
+        font-size: 1.1rem;
+        color: #555;
+        line-height: 1.6;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .info-section {
+        margin-top: 50px;
+    }
+
+    .display-1 {
+        font-size: 4rem;
+        font-weight: 700;
+    }
+
+    .text-primary {
+        color: #007bff;
+    }
+
+    .fw-normal {
+        font-weight: normal;
+    }
+
+    .text-capitalize {
+        text-transform: capitalize;
+    }
+
+    .row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .col-md-4 {
+        flex: 1 1 30%;
+        margin: 15px;
+        text-align: center;
+    }
+
+    .col-lg-12 {
+        width: 100%;
+    }
+</style>
