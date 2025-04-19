@@ -27,6 +27,7 @@ namespace HotelPrado.AccesoADatos.Departamentos.Editar
             eldepartamentoEnBaseDeDatos.Descripcion = elDepartamentoActualizar.Descripcion;
             eldepartamentoEnBaseDeDatos.IdTipoDepartamento = elDepartamentoActualizar.IdTipoDepartamento;
             eldepartamentoEnBaseDeDatos.Precio = elDepartamentoActualizar.Precio;
+            eldepartamentoEnBaseDeDatos.Estado = elDepartamentoActualizar.Estado;
             EntityState estado = _contexto.Entry(eldepartamentoEnBaseDeDatos).State = System.Data.Entity.EntityState.Modified;
             int cantidadDeDatosAlmacenados = await _contexto.SaveChangesAsync();
             return cantidadDeDatosAlmacenados;

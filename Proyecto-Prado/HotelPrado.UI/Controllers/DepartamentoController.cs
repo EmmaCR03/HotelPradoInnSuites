@@ -261,6 +261,9 @@ namespace HotelPrado.UI.Controllers
         [HttpPost]
         public async Task<ActionResult> Edit(DepartamentoDTO eldepartamento, List<string> eliminarImagenes)
         {
+            // Eliminar las propiedades del ModelState para evitar errores
+            ModelState.Remove("NumeroDepartamento");
+
             if (ModelState.IsValid)
             {
                 try

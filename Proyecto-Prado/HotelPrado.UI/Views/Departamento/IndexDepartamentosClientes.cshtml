@@ -55,15 +55,16 @@
                                 <table class="table table-borderless text-center">
                                     <tbody>
                                         <tr>
-                                            <td>Habitaciones:</td>
-                                            <td>@depto.NumeroHabitaciones</td>
+                                            <td class="no-bg">Habitaciones:</td>
+                                            <td class="no-bg">@depto.NumeroHabitaciones</td>
                                         </tr>
                                         <tr>
-                                            <td>Amueblado:</td>
-                                            <td>@(depto.Amueblado ? "Sí" : "No")</td>
+                                            <td class="no-bg">Amueblado:</td>
+                                            <td class="no-bg">@(depto.Amueblado ? "Sí" : "No")</td>
                                         </tr>
                                     </tbody>
                                 </table>
+
                             </div>
 
                             <!-- Botón Ver Detalles -->
@@ -91,6 +92,11 @@
         top: 50%;
         transform: translateY(-50%);
     }
+
+    .no-bg {
+        background-color: transparent !important;
+    }
+
 
     /* Ajuste general de las tarjetas */
     .room-item {
