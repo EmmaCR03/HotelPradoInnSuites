@@ -1,109 +1,205 @@
 ﻿@{
-    ViewBag.Title = "About Prado Inn Suites";
-    ViewBag.Message = "Bienvenido a Prado Inn Suites, donde la comodidad se encuentra con la elegancia. Ubicado en el corazón de la ciudad, nuestro hotel ofrece un refugio tranquilo tanto para viajeros de negocios como de placer.";
+    ViewBag.Title = "Sobre Nosotros | Prado Inn Suites";
+    ViewBag.Message = "Descubre la esencia de nuestra hospitalidad";
 }
 
-<main aria-labelledby="title" class="about-page">
-    <h2 id="title" class="text-center">@ViewBag.Title</h2>
-    <h3 class="text-center">@ViewBag.Message</h3>
-
-    <section id="about-us" class="about-section">
-        <div class="container text-center" data-aos="fade-up">
-            <h3 class="display-3 fw-normal">Prado Inn Suites</h3>
-            <div class="row align-items-start mt-5">
-                <div class="col-lg-12">
-                    <p class="about-text">
-                        Bienvenido a Prado Inn Suites, donde la comodidad se encuentra con la elegancia.
-                        Ubicado en el corazón de la ciudad, nuestro hotel ofrece un refugio tranquilo tanto
-                        para viajeros de negocios como de placer. Con instalaciones modernas y una atmósfera cálida y acogedora,
-                        nos esforzamos por hacer que su estancia con nosotros sea inolvidable.
-                    </p>
-                </div>
-            </div>
+<div class="about-page">
+    <section class="about-hero">
+        <div class="container">
+            <h1 class="hero-title">Nuestra Historia</h1>
+            <p class="hero-subtitle">Más que un hotel, una experiencia memorable</p>
         </div>
     </section>
 
-    <section id="info" class="info-section">
-        <div class="container" data-aos="fade-up">
-            <div class="row">
-                <div class="col-md-4 text-center mb-4">
-                    <h3 class="display-1 fw-normal text-primary">25K</h3>
-                    <p class="text-capitalize">Huéspedes Felices</p>
+    <div class="container">
+        <div class="about-card">
+            <div class="about-content">
+                <h2 class="section-title">Bienvenido a Prado Inn Suites</h2>
+                <div class="divider"></div>
+                <p class="about-description">
+                    En el corazón de la ciudad, Prado Inn Suites se erige como un refugio donde la comodidad se encuentra con la elegancia.
+                    Desde nuestra apertura, nos hemos dedicado a crear experiencias memorables para viajeros de negocios y placer por igual.
+                </p>
+                <p class="about-description">
+                    Nuestras instalaciones modernas y ambiente acogedor reflejan el espíritu cálido de la hospitalidad costarricense,
+                    mientras que nuestro equipo se esfuerza cada día por superar sus expectativas.
+                </p>
+            </div>
+
+            <div class="about-stats">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="25000">25,000+</div>
+                    <div class="stat-label">Huéspedes Felices</div>
                 </div>
-                <div class="col-md-4 text-center mb-4">
-                    <h3 class="display-1 fw-normal text-primary">160</h3>
-                    <p class="text-capitalize">Total Habitaciones</p>
+                <div class="stat-item">
+                    <div class="stat-number">160</div>
+                    <div class="stat-label">Habitaciones Elegantes</div>
                 </div>
-                <div class="col-md-4 text-center mb-4">
-                    <h3 class="display-1 fw-normal text-primary">25</h3>
-                    <p class="text-capitalize">Premios Ganados</p>
+                <div class="stat-item">
+                    <div class="stat-number">25</div>
+                    <div class="stat-label">Premios de Excelencia</div>
+                </div>
+            </div>
+
+            <div class="mission-vision">
+                <div class="mission">
+                    <h3 class="mv-title">Nuestra Misión</h3>
+                    <p>Ofrecer experiencias excepcionales a través de servicio personalizado, comodidades de lujo y atención meticulosa a cada detalle.</p>
+                </div>
+                <div class="vision">
+                    <h3 class="mv-title">Nuestra Visión</h3>
+                    <p>Ser reconocidos como el hotel boutique líder en Costa Rica, donde cada visita se convierte en un recuerdo inolvidable.</p>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-</main>
+
+</div>
 
 <style>
-    .about-page {
-        padding: 20px;
-        background-color: #f8f9fa;
+    :root {
+        --primary: #2a5a78;
+        --secondary: #3a7d9a;
+        --accent: #e8c37e;
+        --light: #f8f9fa;
+        --dark: #343a40;
+        --text: #495057;
     }
 
-    .text-center {
+    .about-page {
+        font-family: 'Montserrat', 'Segoe UI', sans-serif;
+        color: var(--text);
+        line-height: 1.6;
+    }
+
+    .about-hero {
+        background: linear-gradient(rgba(42, 90, 120, 0.8), rgba(58, 125, 154, 0.8)),
+                    url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
+        color: white;
+        padding: 6rem 0 4rem;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.25rem;
+        max-width: 700px;
+        margin: 0 auto;
+        opacity: 0.9;
+    }
+
+    .about-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        margin-top: -4rem;
+        position: relative;
+        z-index: 1;
+        padding: 3rem;
+    }
+
+    .section-title {
+        color: var(--primary);
+        font-size: 2rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .divider {
+        width: 80px;
+        height: 3px;
+        background: var(--accent);
+        margin: 0 auto 2rem;
+    }
+
+    .divider-center {
+        width: 80px;
+        height: 3px;
+        background: var(--accent);
+        margin: 0 auto 2rem;
+    }
+
+    .about-description {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 1.5rem;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
         text-align: center;
     }
 
-    .about-section {
-        background-color: #ffffff;
-        padding: 40px 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        margin-top: 30px;
-        border-radius: 10px;
-    }
-
-    .about-text {
-        font-size: 1.1rem;
-        color: #555;
-        line-height: 1.6;
-        max-width: 800px;
-        margin: 0 auto;
-    }
-
-    .info-section {
-        margin-top: 50px;
-    }
-
-    .display-1 {
-        font-size: 4rem;
-        font-weight: 700;
-    }
-
-    .text-primary {
-        color: #007bff;
-    }
-
-    .fw-normal {
-        font-weight: normal;
-    }
-
-    .text-capitalize {
-        text-transform: capitalize;
-    }
-
-    .row {
+    .about-stats {
         display: flex;
-        justify-content: center;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin: 4rem 0;
+        gap: 2rem;
+    }
+
+    .stat-item {
+        text-align: center;
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 1.1rem;
+        color: var(--text);
+        font-weight: 500;
+    }
+
+    .mission-vision {
+        display: flex;
+        gap: 3rem;
+        margin: 4rem 0;
         flex-wrap: wrap;
     }
 
-    .col-md-4 {
-        flex: 1 1 30%;
-        margin: 15px;
+    .mission, .vision {
+        flex: 1;
+        min-width: 300px;
+        padding: 2rem;
+        background: rgba(42, 90, 120, 0.03);
+        border-radius: 8px;
+    }
+
+    .mv-title {
+        color: var(--primary);
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
         text-align: center;
     }
 
-    .col-lg-12 {
-        width: 100%;
+    .team-section {
+        background: var(--light);
+        padding: 4rem 0;
+        margin-top: 3rem;
     }
+
+    .section-subtitle {
+        text-align: center;
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 3rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    } 
 </style>

@@ -633,6 +633,7 @@
     <Content Include="Views\Mantenimiento\Details.cshtml" />
     <Content Include="Views\ReservasA\IndexReservasA.cshtml" />
     <Content Include="Views\ReservasA\Edit.cshtml" />
+    <Content Include="Views\Home\Services.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

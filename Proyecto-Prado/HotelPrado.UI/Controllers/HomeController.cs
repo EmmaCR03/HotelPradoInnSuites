@@ -26,5 +26,9 @@ namespace HotelPrado.UI.Controllers
 
             return View();
         }
+        public ActionResult Services()
+        {
+            return View();
+        }
     }
 }
