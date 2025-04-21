@@ -41,7 +41,7 @@ namespace HotelPrado.UI.Controllers
             _registrarBitacoraEventosLN = new RegistrarBitacoraEventosLN();
             _obtenerEnlaces = new ObtenerEnlacesLN();
         }
-
+        [Authorize(Roles = "Administrador, Colaborador")]
         public ActionResult IndexCitas(int id)
         {
             ViewBag.Title = "La Cita";
@@ -63,7 +63,7 @@ namespace HotelPrado.UI.Controllers
 
             return View(model);
         }
-
+        [AllowAnonymous]
         public ActionResult Create(int id)
         {
             return View(new CitasDTO { IdDepartamento = id });
@@ -83,13 +83,13 @@ namespace HotelPrado.UI.Controllers
                 return View(citas);
             }
         }
-
+        [Authorize(Roles = "Administrador, Colaborador")]
         public ActionResult Details(int id)
         {
             var cita = _obtenerCitaPorId.Obtener(id);
             return cita == null ? HttpNotFound() : (ActionResult)View(cita);
         }
-
+        [Authorize(Roles = "Administrador, Colaborador")]
         public ActionResult Edit(int IdCita)
         {
             var lacita = _obtenerCitaPorId.Obtener(IdCita);
@@ -105,7 +105,7 @@ namespace HotelPrado.UI.Controllers
             ViewBag.Colaborador = colaboradores.Any() ? colaboradores : new List<SelectListItem>();
             return View(lacita);
         }
-
+        [Authorize(Roles = "Administrador, Colaborador")]
         [HttpPost]
         public async Task<ActionResult> Edit(CitasDTO laCita)
         {

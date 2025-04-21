@@ -20,6 +20,7 @@ using System.Web.Mvc;
 
 namespace HotelPrado.UI.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class ColaboradorController : Controller
     {
         IListarColaboradorLN _listarColaboradorLN;

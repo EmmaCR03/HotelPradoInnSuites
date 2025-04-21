@@ -21,7 +21,7 @@ namespace HotelPrado.UI.Controllers
             _obtenerEnlaces = new ObtenerEnlacesLN();
         }
 
-
+        [Authorize]
         [HttpGet]
         public ActionResult ConfirmarReserva(int id, DateTime checkIn, DateTime checkOut, decimal totalPrecio, int cantidadPersonas)
         {
@@ -36,7 +36,7 @@ namespace HotelPrado.UI.Controllers
             return View(model);
         }
 
-
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ConfirmarReserva(ReservasDTO model)
@@ -62,7 +62,7 @@ namespace HotelPrado.UI.Controllers
             return View();
         }
 
-
+        [Authorize]
         [HttpGet]
         public ActionResult ReservasUsuario()
         {

@@ -2,46 +2,93 @@
 
 @{
     ViewBag.Title = "Index";
+    var rolesUnicos = Model.SelectMany(u => u.Roles).Distinct().ToList();
+    var coloresRoles = new[] { "primary", "success", "danger", "warning", "info", "dark" };
+    int colorIndex = 0;
 }
 
-<h2>Usuarios</h2>
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <h2 class="fw-bold">Lista de Usuarios</h2>
+        @Html.ActionLink("Crear Usuario", "Create", null, new { @class = "btn btn-primary shadow-sm px-4 py-2 rounded-3" })
+    </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Nombre de usuario</th>
-            <th>Nombre completo</th>
-            <th>Cédula</th>
-            <th>Correo electrónico</th>
-            <th>Teléfono</th>
-            <th>Rol</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.UserName</td>
-                <td>@user.NombreCompleto</td>
-                <td>@user.cedula</td>
-                <td>@user.Email</td>
-                <td>@user.Telefono</td>
-                <td>
-                    @foreach (var role in user.Roles)
-                    {
-                        <span>@role</span><br />
-                    }
-                </td>
-                <td>
-                    @Html.ActionLink("Editar", "Edit", new { id = user.id }) |
-                    @Html.ActionLink("Eliminar", "Delete", new { id = user.id })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <!-- Filtro por rol -->
+    <div class="card rounded-4 mb-4">
+        <div class="card-body">
+            <label for="filtroRol" class="form-label fw-semibold">Filtrar por Rol:</label>
+            <select id="filtroRol" class="form-select d-inline-block w-auto ms-2 border-primary">
+                <option value="todos">Todos</option>
+                @foreach (var rol in rolesUnicos)
+                {
+                    <option value="@rol">@rol</option>
+                }
+            </select>
+        </div>
+    </div>
 
-<p>
-    @Html.ActionLink("Crear Usuario", "Create")
-</p>
+    <!-- Tabla de usuarios -->
+    <div class="table rounded-5 shadow-sm">
+        <table class="table table-hover align-middle table-striped table-bordered text-center">
+            <thead class="table-dark text-white">
+                <tr>
+                    <th>Usuario</th>
+                    <th>Nombre Completo</th>
+                    <th>Cédula</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Rol(es)</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    var roles = string.Join(" ", user.Roles).ToLower();
+                    <tr data-roles="@roles">
+                        <td>@user.UserName</td>
+                        <td>@user.NombreCompleto</td>
+                        <td>@user.cedula</td>
+                        <td>@user.Email</td>
+                        <td>@user.Telefono</td>
+                        <td>
+                            @{
+                                colorIndex = 0;
+                            }
+                            @foreach (var role in user.Roles)
+                            {
+                                var badgeColor = coloresRoles[colorIndex % coloresRoles.Length];
+                                <span class="badge bg-@badgeColor px-3 py-2 fs-6 rounded-pill text-uppercase">@role</span>
+                                colorIndex++;
+                            }
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="@Url.Action("Edit", new { id = user.id })" class="btn btn-warning btn-sm rounded-pill px-3 shadow-sm">
+                                    Editar
+                                </a>
+                                <a href="@Url.Action("Delete", new { id = user.id })" class="btn btn-danger btn-sm rounded-pill px-3 shadow-sm">
+                                    Eliminar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('filtroRol').addEventListener('change', function () {
+            const filtro = this.value.toLowerCase();
+            const filas = document.querySelectorAll('#tablaUsuarios tbody tr');
+
+            filas.forEach(fila => {
+                const roles = fila.getAttribute('data-roles');
+                fila.style.display = (filtro === 'todos' || roles.includes(filtro)) ? '' : 'none';
+            });
+        });
+    </script>
+}

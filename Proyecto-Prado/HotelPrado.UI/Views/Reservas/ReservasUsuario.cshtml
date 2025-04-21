@@ -7,7 +7,7 @@
 <div class="container-fluid mt-4">
     <h2 class="text-center mb-4 text-primary fw-bold">Mis Reservas</h2>
 
-    <div class="table-responsive">
+    <div class="table">
         <table class="table table-bordered table-hover shadow-lg w-100">
             <thead class="table-dark">
                 <tr>
@@ -40,9 +40,7 @@
                             <td><span class="badge bg-success p-2">@reserva.EstadoReserva</span></td>
                             <td class="fw-bold text-success">₡@reserva.MontoTotal.ToString("0.00")</td>
                             <td class="text-center">
-                                <a href="@Url.Action("DetalleReserva", "Reservas", new { id = reserva.IdReserva })" class="btn btn-outline-info btn-sm" title="Ver Detalles">
-                                    <i class="fas fa-info-circle"></i> Detalles
-                                </a>
+                                
                                 <div class="d-flex justify-content-center gap-2 mt-2">
                                     <a href="@($"https://wa.me/{reserva.NumeroEmpresa}?text=Hola,%20estoy%20interesado%20en%20una%20cotizaci%C3%B3n%20del%20departamento%20")"
                                        class="btn btn-outline-success btn-sm" target="_blank">

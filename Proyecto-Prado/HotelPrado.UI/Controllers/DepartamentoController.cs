@@ -47,6 +47,7 @@ namespace HotelPrado.UI.Controllers
         }
 
         // GET: Departamento
+        [Authorize(Roles = "Administrador, Colaborador")]
         public ActionResult IndexDepartamentos()
         {
             var laListaDeDepartamentos = _listarDepartamentosLN.Listar();
@@ -54,7 +55,7 @@ namespace HotelPrado.UI.Controllers
             return View(laListaDeDepartamentos);
         }
 
-
+        [AllowAnonymous]
         public ActionResult IndexDepartamentosClientes()
         {
             ViewBag.Title = "Explora Nuestros Departamentos";
@@ -91,6 +92,7 @@ namespace HotelPrado.UI.Controllers
 
 
         // GET: Departamento/Details/5
+        [AllowAnonymous]
         public ActionResult Details(int id)
         {
             DepartamentoDTO depto = _obtenerDepartamentoPorId.Obtener(id);
@@ -124,7 +126,7 @@ namespace HotelPrado.UI.Controllers
 
 
         // GET: Departamento/Create
-
+        [Authorize(Roles = "Administrador, Colaborador")]
         public ActionResult Create()
         {
             // Obtener los datos desde la base de datos
@@ -151,7 +153,7 @@ namespace HotelPrado.UI.Controllers
 
             return View();
         }
-
+        [Authorize(Roles = "Administrador, Colaborador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(DepartamentoDTO modeloDeDepartamento)
@@ -227,6 +229,7 @@ namespace HotelPrado.UI.Controllers
 
 
         // GET: Departamento/Edit/5
+        [Authorize(Roles = "Administrador, Colaborador")]
         public ActionResult Edit(int IdDepartamento)
         {
             // Obtener los datos desde la base de datos
@@ -258,6 +261,7 @@ namespace HotelPrado.UI.Controllers
 
 
         // POST: Persona/Edit/5
+        [Authorize(Roles = "Administrador, Colaborador")]
         [HttpPost]
         public async Task<ActionResult> Edit(DepartamentoDTO eldepartamento, List<string> eliminarImagenes)
         {
@@ -326,6 +330,7 @@ namespace HotelPrado.UI.Controllers
 
 
         // GET: Departamento/Delete/5
+        [Authorize(Roles = "Administrador, Colaborador")]
         public ActionResult Delete(int id)
         {
             return View();
@@ -358,7 +363,7 @@ namespace HotelPrado.UI.Controllers
             return View(departamento);
         }
 
-
+        [Authorize(Roles = "Administrador, Colaborador")]
         [HttpPost]
         public ActionResult ActualizarImagenes(int id, IEnumerable<HttpPostedFileBase> imagenes)
         {
@@ -440,7 +445,7 @@ namespace HotelPrado.UI.Controllers
             return RedirectToAction("IndexDepartamentos");
         }
 
-
+        [Authorize(Roles = "Administrador, Colaborador")]
         [HttpPost]
         public ActionResult EliminarImagen(int id, string imagenUrl)
         {

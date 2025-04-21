@@ -4,57 +4,65 @@
     ViewBag.Title = "Editar Usuario";
 }
 
-<h2>Editar Usuario</h2>
+<div class="container py-4">
+    <div class="card shadow-sm rounded-4">
+        <div class="card-body px-5 py-4">
+            <h2 class="mb-4 fw-bold text-primary">Editar Usuario</h2>
 
-@using (Html.BeginForm("Edit", "Usuario", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
+            @using (Html.BeginForm("Edit", "Usuario", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.UserName)
 
-    @Html.HiddenFor(model => model.Id)
+                <div class="row g-3">
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.UserName)
-        @Html.TextBoxFor(model => model.UserName, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.UserName)
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.NombreCompleto, htmlAttributes: new { @class = "form-label fw-semibold" })
+                        @Html.TextBoxFor(model => model.NombreCompleto, new { @class = "form-control rounded-3 shadow-sm" })
+                        @Html.ValidationMessageFor(model => model.NombreCompleto, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "form-label fw-semibold" })
+                        @Html.TextBoxFor(model => model.Email, new { @class = "form-control rounded-3 shadow-sm", disabled = "disabled" })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.cedula, htmlAttributes: new { @class = "form-label fw-semibold" })
+                        @Html.TextBoxFor(model => model.cedula, new { @class = "form-control rounded-3 shadow-sm" })
+                        @Html.ValidationMessageFor(model => model.cedula, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "form-label fw-semibold" })
+                        @Html.TextBoxFor(model => model.Telefono, new { @class = "form-control rounded-3 shadow-sm" })
+                        @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="col-md-6">
+                        @Html.Label("Rol", htmlAttributes: new { @class = "form-label fw-semibold" })
+                        @Html.DropDownList("Rol", ViewBag.Roles as IEnumerable<SelectListItem>, "- Selecciona un rol -", new { @class = "form-select rounded-3 shadow-sm" })
+                        @Html.ValidationMessage("Rol", "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="col-md-6">
+                        @Html.Label("Contraseña (Opcional)", htmlAttributes: new { @class = "form-label fw-semibold" })
+                        @Html.Password("Password", null, new { @class = "form-control rounded-3 shadow-sm", placeholder = "Dejar en blanco para no cambiar" })
+                        @Html.ValidationMessage("Password", "", new { @class = "text-danger small" })
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary fw-semibold px-4 py-2 rounded-3 shadow-sm">
+                        Guardar Cambios
+                    </button>
+                    <a href="@Url.Action("Index", "Usuario")" class="btn btn-secondary fw-semibold px-4 py-2 rounded-3 shadow-sm">
+                        Cancelar
+                    </a>
+                </div>
+            }
+        </div>
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.NombreCompleto)
-        @Html.TextBoxFor(model => model.NombreCompleto, new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.NombreCompleto)
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Email)
-        @Html.TextBoxFor(model => model.Email, new { @class = "form-control", disabled = "disabled" })
-        @Html.ValidationMessageFor(model => model.Email)
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.cedula)
-        @Html.TextBoxFor(model => model.cedula,new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.cedula)
-    </div>
-
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Telefono)
-        @Html.TextBoxFor(model => model.Telefono,new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.Telefono)
-    </div>
-
-    <div class="form-group">
-        @Html.Label("Rol")
-        @Html.DropDownList("Rol", ViewBag.Roles as IEnumerable<SelectListItem>, "- Selecciona un rol -", new { @class = "form-control" })
-        @Html.ValidationMessage("Rol")
-    </div>
-
-    <div class="form-group">
-        @Html.Label("Contraseña (Opcional)")
-        @Html.Password("Password", null, new { @class = "form-control", placeholder = "Dejar en blanco para no cambiar" })
-        @Html.ValidationMessage("Password")
-    </div>
-
-    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-    <a href="@Url.Action("Index", "Usuario")" class="btn btn-secondary">Cancelar</a>
-}
+</div>

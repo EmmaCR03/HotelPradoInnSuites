@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace HotelPrado.UI.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class UsuarioController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -107,7 +108,7 @@ namespace HotelPrado.UI.Controllers
                     var user = new ApplicationUser
                     {
 
-                        UserName = model.UserName,
+                        UserName = model.Email,
                         NombreCompleto = model.NombreCompleto,
                         cedula = model.cedula,
                         Email = model.Email,

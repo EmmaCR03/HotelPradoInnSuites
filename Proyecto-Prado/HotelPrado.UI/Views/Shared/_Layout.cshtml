@@ -429,20 +429,24 @@
                             </li>
 
                             <!-- Opciones del administrador -->
-                            <li class="nav-item dropdown px-3">
-                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Administrador
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                    <li>@Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "dropdown-item" })</li>
-                                    <li>@Html.ActionLink("Departamentos", "IndexDepartamentos", "Departamento", new { area = "" }, new { @class = "dropdown-item" })</li>
-                                    <li>@Html.ActionLink("Colaboradores", "IndexColaborador", "Colaborador", new { area = "" }, new { @class = "dropdown-item" })</li>
-                                    <li>@Html.ActionLink("Habitaciones", "IndexHabitaciones", "Habitacion", new { area = "" }, new { @class = "dropdown-item" })</li>
-                                    <li>@Html.ActionLink("Reservas", "IndexReservasA", "ReservasA", new { area = "" }, new { @class = "dropdown-item" })</li>
-                                    <li>@Html.ActionLink("Mantenimientos", "IndexMantenimiento", "Mantenimiento", new { area = "" }, new { @class = "dropdown-item" })</li>
-                                    <li>@Html.ActionLink("Bitácora de Eventos", "IndexBitacoraEventos", "Bitacora", new { area = "" }, new { @class = "dropdown-item" })</li>
-                                </ul>
-                            </li>
+                            @if (User.IsInRole("Administrador") || User.IsInRole("Colaborador"))
+                            {
+                                <li class="nav-item dropdown px-3">
+                                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Administrador
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                        <li>@Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                        <li>@Html.ActionLink("Departamentos", "IndexDepartamentos", "Departamento", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                        <li>@Html.ActionLink("Colaboradores", "IndexColaborador", "Colaborador", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                        <li>@Html.ActionLink("Habitaciones", "IndexHabitaciones", "Habitacion", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                        <li>@Html.ActionLink("Reservas", "IndexReservasA", "ReservasA", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                        <li>@Html.ActionLink("Mantenimientos", "IndexMantenimiento", "Mantenimiento", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                        <li>@Html.ActionLink("Bitácora de Eventos", "IndexBitacoraEventos", "Bitacora", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                        <li>@Html.ActionLink("Usuarios", "Index", "Usuario", new { area = "" }, new { @class = "dropdown-item" })</li>
+                                    </ul>
+                                </li>
+                            }
 
                         </ul>
                     </div>

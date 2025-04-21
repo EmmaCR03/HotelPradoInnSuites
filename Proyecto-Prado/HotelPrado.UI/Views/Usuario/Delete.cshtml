@@ -4,13 +4,28 @@
     ViewBag.Title = "Eliminar Usuario";
 }
 
-<h2>Eliminar Usuario</h2>
+<div class="container py-4">
+    <div class="card shadow-sm rounded-4 border-danger">
+        <div class="card-body px-5 py-4">
+            <h2 class="mb-4 fw-bold text-danger">Eliminar Usuario</h2>
 
-<p>¿Estás seguro de que deseas eliminar al usuario <strong>@Model.UserName</strong>?</p>
+            <p class="fs-5">
+                ¿Estás seguro de que deseas eliminar al usuario
+                <strong class="text-dark">@Model.UserName</strong>?
+            </p>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    <button type="submit" class="btn btn-danger">Eliminar</button>
-@Html.ActionLink("Cancelar", "Index");
-}
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <div class="d-flex gap-3 mt-4">
+                    <button type="submit" class="btn btn-danger fw-semibold px-4 py-2 rounded-3 shadow-sm">
+                        Sí, Eliminar
+                    </button>
+                    <a href="@Url.Action("Index", "Usuario")" class="btn btn-secondary fw-semibold px-4 py-2 rounded-3 shadow-sm">
+                        Cancelar
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
