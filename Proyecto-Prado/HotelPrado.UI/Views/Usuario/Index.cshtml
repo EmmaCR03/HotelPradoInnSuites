@@ -1,94 +1,316 @@
 ﻿@model IEnumerable<HotelPrado.UI.Models.UsuarioConRoles>
 
 @{
-    ViewBag.Title = "Index";
-    var rolesUnicos = Model.SelectMany(u => u.Roles).Distinct().ToList();
-    var coloresRoles = new[] { "primary", "success", "danger", "warning", "info", "dark" };
-    int colorIndex = 0;
+    ViewBag.Title = "Gestión de Usuarios";
+    var rolesUnicos = Model.SelectMany(u => u.Roles).Distinct().OrderBy(r => r).ToList();
+    var coloresRoles = new Dictionary<string, string> {
+        {"Administrador", "linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)"},
+        {"Recepcionista", "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)"},
+        {"Limpieza", "linear-gradient(135deg, #00c6fb 0%, #005bea 100%)"},
+        {"Mantenimiento", "linear-gradient(135deg, #f46b45 0%, #eea849 100%)"},
+        {"Gerente", "linear-gradient(135deg, #434343 0%, #000000 100%)"},
+        {"Cocina", "linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%)"}
+    };
 }
 
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center my-4">
-        <h2 class="fw-bold">Lista de Usuarios</h2>
-        @Html.ActionLink("Crear Usuario", "Create", null, new { @class = "btn btn-primary shadow-sm px-4 py-2 rounded-3" })
-    </div>
-
-    <!-- Filtro por rol -->
-    <div class="card rounded-4 mb-4">
-        <div class="card-body">
-            <label for="filtroRol" class="form-label fw-semibold">Filtrar por Rol:</label>
-            <select id="filtroRol" class="form-select d-inline-block w-auto ms-2 border-primary">
-                <option value="todos">Todos</option>
-                @foreach (var rol in rolesUnicos)
-                {
-                    <option value="@rol">@rol</option>
-                }
-            </select>
+<div class="container-fluid px-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 fw-bold text-gray-800 mb-2">
+                <i class="fas fa-users-cog me-2 text-primary"></i>Gestión de Usuarios
+            </h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent p-0">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Inicio</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
+                </ol>
+            </nav>
         </div>
+        @Html.ActionLink("Nuevo Usuario", "Create", null,
+           new { @class = "btn btn-primary px-4 py-2 rounded-pill d-flex align-items-center shadow-sm" })
     </div>
 
-    <!-- Tabla de usuarios -->
-    <div class="table rounded-5 shadow-sm">
-        <table class="table table-hover align-middle table-striped table-bordered text-center">
-            <thead class="table-dark text-white">
-                <tr>
-                    <th>Usuario</th>
-                    <th>Nombre Completo</th>
-                    <th>Cédula</th>
-                    <th>Correo</th>
-                    <th>Teléfono</th>
-                    <th>Rol(es)</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var user in Model)
-                {
-                    var roles = string.Join(" ", user.Roles).ToLower();
-                    <tr data-roles="@roles">
-                        <td>@user.UserName</td>
-                        <td>@user.NombreCompleto</td>
-                        <td>@user.cedula</td>
-                        <td>@user.Email</td>
-                        <td>@user.Telefono</td>
-                        <td>
-                            @{
-                                colorIndex = 0;
-                            }
-                            @foreach (var role in user.Roles)
+    <!-- Card Container -->
+    <div class="card shadow-sm rounded-4 border-0 overflow-hidden">
+        <div class="card-header bg-white py-3 border-bottom">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-list me-2"></i>Listado de Usuarios
+                    </h6>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="d-inline-flex align-items-center bg-light rounded-pill px-3 py-1">
+                        <label for="filtroRol" class="form-label mb-0 me-2 text-muted small">
+                            <i class="fas fa-filter me-1"></i>Filtrar por rol:
+                        </label>
+                        <select id="filtroRol" class="form-select form-select-sm border-0 bg-transparent shadow-none">
+                            <option value="todos">Todos los roles</option>
+                            @foreach (var rol in rolesUnicos)
                             {
-                                var badgeColor = coloresRoles[colorIndex % coloresRoles.Length];
-                                <span class="badge bg-@badgeColor px-3 py-2 fs-6 rounded-pill text-uppercase">@role</span>
-                                colorIndex++;
+                                <option value="@rol">@rol</option>
                             }
-                        </td>
-                        <td>
-                            <div class="d-flex justify-content-center gap-2">
-                                <a href="@Url.Action("Edit", new { id = user.id })" class="btn btn-warning btn-sm rounded-pill px-3 shadow-sm">
-                                    Editar
-                                </a>
-                                <a href="@Url.Action("Delete", new { id = user.id })" class="btn btn-danger btn-sm rounded-pill px-3 shadow-sm">
-                                    Eliminar
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="tablaUsuarios" class="table table-hover align-middle mb-0">
+                    <thead class="bg-light-primary">
+                        <tr>
+                            <th class="ps-4">Usuario</th>
+                            <th>Nombre Completo</th>
+                            <th>Cédula</th>
+                            <th>Correo</th>
+                            <th>Teléfono</th>
+                            <th>Rol(es)</th>
+                            <th class="text-end pe-4">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr data-roles="@string.Join(" ", user.Roles.Select(r => r.ToLower()))" class="user-row">
+                                <td class="ps-4 fw-semibold">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-sm bg-light rounded-circle d-flex align-items-center justify-content-center me-2">
+                                            <i class="fas fa-user text-muted"></i>
+                                        </div>
+                                        <span>@user.UserName</span>
+                                    </div>
+                                </td>
+                                <td>@user.NombreCompleto</td>
+                                <td>@user.cedula</td>
+                                <td>
+                                    <a href="mailto:@user.Email" class="text-primary text-decoration-none d-flex align-items-center">
+                                        <i class="fas fa-envelope me-2"></i>@user.Email
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="tel:@user.Telefono" class="text-muted text-decoration-none d-flex align-items-center">
+                                        <i class="fas fa-phone-alt me-2"></i>@user.Telefono
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        @foreach (var role in user.Roles)
+                                        {
+                                            var gradient = coloresRoles.ContainsKey(role) ? coloresRoles[role] : "linear-gradient(135deg, #6c757d 0%, #495057 100%)";
+                                            <span class="badge px-3 py-1 rounded-pill text-white small d-flex align-items-center shadow-sm"
+                                                  style="background: @gradient; border: none;">
+                                                @role
+                                            </span>
+                                        }
+                                    </div>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a href="@Url.Action("Edit", new { id = user.id })"
+                                           class="btn btn-sm btn-outline-primary rounded-pill px-3 d-flex align-items-center action-btn"
+                                           title="Editar">
+                                            <i class="fas fa-edit me-1"></i> Editar
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = user.id })"
+                                           class="btn btn-sm btn-outline-danger rounded-pill px-3 d-flex align-items-center action-btn"
+                                           title="Eliminar">
+                                            <i class="fas fa-trash-alt me-1"></i> Eliminar
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-footer bg-white py-3 border-top">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <span class="text-muted small">
+                        <i class="fas fa-info-circle me-1"></i>Mostrando @Model.Count() de @Model.Count() usuarios
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
+@section Styles {
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+            --light-primary: rgba(58, 123, 213, 0.1);
+        }
+
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.12);
+            }
+
+        .card-header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .bg-light-primary {
+            background-color: var(--light-primary);
+        }
+
+        .table {
+            margin-bottom: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+            .table thead th {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+                text-transform: uppercase;
+                font-size: 0.75rem;
+                letter-spacing: 0.5px;
+                color: #4a5568;
+                font-weight: 700;
+                padding: 1rem;
+                background-color: #f8fafc;
+            }
+
+            .table tbody tr {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+                transition: all 0.2s ease;
+            }
+
+                .table tbody tr:hover {
+                    background-color: #f8fafc;
+                    transform: scale(1.005);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                }
+
+        .user-row td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+
+        .avatar-sm {
+            width: 32px;
+            height: 32px;
+        }
+
+        .badge {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-select {
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background-color: transparent;
+        }
+
+            .form-select:focus {
+                box-shadow: none;
+            }
+
+        .btn {
+            transition: all 0.2s ease;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-outline-primary {
+            border-color: #3a7bd5;
+            color: #3a7bd5;
+        }
+
+            .btn-outline-primary:hover {
+                background: var(--primary-gradient);
+                color: white;
+                border-color: transparent;
+                box-shadow: 0 4px 12px rgba(58, 123, 213, 0.2);
+            }
+
+        .btn-outline-danger {
+            border-color: #ff4b2b;
+            color: #ff4b2b;
+        }
+
+            .btn-outline-danger:hover {
+                background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+                color: white;
+                border-color: transparent;
+                box-shadow: 0 4px 12px rgba(255, 75, 43, 0.2);
+            }
+
+        .action-btn {
+            min-width: 100px;
+            justify-content: center;
+        }
+
+        .breadcrumb {
+            font-size: 0.85rem;
+        }
+
+        .breadcrumb-item a {
+            color: #6c757d;
+            text-decoration: none;
+        }
+
+        .breadcrumb-item.active {
+            color: #495057;
+        }
+
+        .rounded-4 {
+            border-radius: 1rem !important;
+        }
+    </style>
+}
+
 @section Scripts {
     <script>
-        document.getElementById('filtroRol').addEventListener('change', function () {
-            const filtro = this.value.toLowerCase();
-            const filas = document.querySelectorAll('#tablaUsuarios tbody tr');
-
-            filas.forEach(fila => {
-                const roles = fila.getAttribute('data-roles');
-                fila.style.display = (filtro === 'todos' || roles.includes(filtro)) ? '' : 'none';
+        $(document).ready(function () {
+            // Filtrado por rol
+            $('#filtroRol').change(function () {
+                const filtro = $(this).val().toLowerCase();
+                $('#tablaUsuarios tbody tr').each(function () {
+                    const roles = $(this).data('roles');
+                    if (filtro === 'todos' || roles.includes(filtro.toLowerCase())) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
             });
+
+            // Tooltips para botones
+            $('[title]').tooltip({
+                trigger: 'hover',
+                placement: 'top',
+                animation: true
+            });
+
+            // Efecto hover en filas
+            $('.user-row').hover(
+                function () {
+                    $(this).css('transform', 'scale(1.005)');
+                    $(this).css('box-shadow', '0 4px 12px rgba(0, 0, 0, 0.05)');
+                },
+                function () {
+                    $(this).css('transform', 'scale(1)');
+                    $(this).css('box-shadow', 'none');
+                }
+            );
         });
     </script>
 }

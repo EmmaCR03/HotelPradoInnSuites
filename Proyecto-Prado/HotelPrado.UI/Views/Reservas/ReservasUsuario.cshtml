@@ -5,118 +5,159 @@
 }
 
 <div class="container-fluid mt-4">
-    <h2 class="text-center mb-4 text-primary fw-bold">Mis Reservas</h2>
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="card-header bg-gradient-primary text-white py-3">
+            <h2 class="text-center mb-0 fw-bold"><i class="fas fa-calendar-check me-2"></i>Mis Reservas</h2>
+        </div>
 
-    <div class="table">
-        <table class="table table-bordered table-hover shadow-lg w-100">
-            <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    <th>Id Reserva</th>
-                    <th>Nombre Cliente</th>
-                    <th>Habitación</th>
-                    <th>Cantidad Personas</th>
-                    <th>Fecha Inicio</th>
-                    <th>Fecha Final</th>
-                    <th>Estado</th>
-                    <th>Monto Total</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model != null && Model.Any())
-                {
-                    int count = 1;
-                    foreach (var reserva in Model)
-                    {
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light-primary">
                         <tr>
-                            <td>@count</td>
-                            <td>@reserva.IdReserva</td>
-                            <td>@reserva.NombreCliente</td>
-                            <td>@reserva.IdHabitacion</td>
-                            <td>@reserva.cantidadPersonas</td>
-                            <td>@(reserva.FechaInicio.HasValue ? reserva.FechaInicio.Value.ToString("dd/MM/yyyy") : "No definida")</td>
-                            <td>@(reserva.FechaFinal.HasValue ? reserva.FechaFinal.Value.ToString("dd/MM/yyyy") : "No definida")</td>
-                            <td><span class="badge bg-success p-2">@reserva.EstadoReserva</span></td>
-                            <td class="fw-bold text-success">₡@reserva.MontoTotal.ToString("0.00")</td>
-                            <td class="text-center">
-                                
-                                <div class="d-flex justify-content-center gap-2 mt-2">
-                                    <a href="@($"https://wa.me/{reserva.NumeroEmpresa}?text=Hola,%20estoy%20interesado%20en%20una%20cotizaci%C3%B3n%20del%20departamento%20")"
-                                       class="btn btn-outline-success btn-sm" target="_blank">
-                                        <i class="fab fa-whatsapp"></i> WhatsApp
-                                    </a>
-                                    <a href="@($"mailto:{reserva.CorreoEmpresa}?subject=Solicitud%20de%20cotizaci%C3%B3n&body=Hola,%20estoy%20interesado%20en%20una%20cotizaci%C3%B3n%20del%20departamento%20")"
-                                       class="btn btn-outline-primary btn-sm" target="_blank">
-                                        <i class="fas fa-envelope"></i> Correo
-                                    </a>
-                                </div>
-                            </td>
+                            <th class="ps-4">#</th>
+                            <th>ID Reserva</th>
+                            <th>Cliente</th>
+                            <th>Habitación</th>
+                            <th>Personas</th>
+                            <th>Check-In</th>
+                            <th>Check-Out</th>
+                            <th>Estado</th>
+                            <th>Total</th>
+                            <th class="text-center pe-4">Acciones</th>
                         </tr>
-                        count++;
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="10" class="text-center text-danger fw-bold">No tienes reservas.</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            int count = 1;
+                            foreach (var reserva in Model)
+                            {
+                                <tr class="border-top">
+                                    <td class="ps-4 fw-semibold">@count</td>
+                                    <td><span class="badge bg-light text-dark">#@reserva.IdReserva</span></td>
+                                    <td>@reserva.NombreCliente</td>
+                                    <td class="fw-medium">@reserva.IdHabitacion</td>
+                                    <td class="fw-medium">@reserva.cantidadPersonas</td>
+                                    <td><span class="d-inline-block px-2 py-1 rounded-3 bg-light">@(reserva.FechaInicio.HasValue ? reserva.FechaInicio.Value.ToString("dd/MM/yyyy") : "N/D")</span></td>
+                                    <td><span class="d-inline-block px-2 py-1 rounded-3 bg-light">@(reserva.FechaFinal.HasValue ? reserva.FechaFinal.Value.ToString("dd/MM/yyyy") : "N/D")</span></td>
+                                    <td>
+                                        @{
+                                            var estadoClass = reserva.EstadoReserva == "Confirmada" ? "bg-success" :
+                                                            reserva.EstadoReserva == "Pendiente" ? "bg-warning" : "bg-secondary";
+                                        }
+                                        <span class="badge @estadoClass bg-opacity-25 text-dark p-2 rounded-pill">
+                                            <i class="fas fa-circle small me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>
+                                            @reserva.EstadoReserva
+                                        </span>
+                                    </td>
+                                    <td class="fw-bold text-success">₡@reserva.MontoTotal.ToString("0.00")</td>
+                                    <td class="pe-4">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a href="@($"https://wa.me/{reserva.NumeroEmpresa}?text=Hola,%20estoy%20interesado%20en%20una%20cotizaci%C3%B3n%20del%20departamento%20")"
+                                               class="btn btn-sm btn-success rounded-pill px-3 d-flex align-items-center"
+                                               target="_blank">
+                                                <i class="fab fa-whatsapp me-1"></i> WhatsApp
+                                            </a>
+                                            <a href="@($"mailto:{reserva.CorreoEmpresa}?subject=Solicitud%20de%20cotizaci%C3%B3n&body=Hola,%20estoy%20interesado%20en%20una%20cotizaci%C3%B3n%20del%20departamento%20")"
+                                               class="btn btn-sm btn-primary rounded-pill px-3 d-flex align-items-center"
+                                               target="_blank">
+                                                <i class="fas fa-envelope me-1"></i> Correo
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                count++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="10" class="text-center py-4">
+                                    <div class="d-flex flex-column align-items-center justify-content-center">
+                                        <i class="fas fa-calendar-times text-muted mb-3" style="font-size: 3rem;"></i>
+                                        <h5 class="text-muted mb-2">No tienes reservas</h5>
+                                        <p class="text-muted small">Cuando hagas una reserva, aparecerá aquí</p>
+                                        <a href="#" class="btn btn-primary mt-2 rounded-pill px-4">Explorar habitaciones</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
-<script src="https://kit.fontawesome.com/a076d05399.js"></script>
-
 <style>
-    .container-fluid {
-        max-width: 95%;
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
     }
 
-    .table-responsive {
-        overflow-x: auto;
+    .bg-light-primary {
+        background-color: rgba(58, 123, 213, 0.1);
+    }
+
+    .card {
+        border: none;
+        overflow: hidden;
     }
 
     .table {
-        font-size: 1rem;
-        border-radius: 10px;
+        font-size: 0.95rem;
     }
 
-        .table th, .table td {
-            text-align: center;
-            vertical-align: middle;
-            padding: 12px;
+        .table th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            color: #4a5568;
         }
 
-        .table thead {
-            background-color: #212529;
-            color: white;
+        .table td {
+            padding: 1rem 0.5rem;
         }
 
-        .table tbody tr:hover {
-            background-color: #f8f9fa;
-            transition: 0.3s ease-in-out;
+        .table tr:not(:last-child) {
+            border-bottom: 1px solid #edf2f7;
         }
+
+        .table tr:hover {
+            background-color: #f8fafc !important;
+        }
+
+    .badge {
+        font-weight: 500;
+    }
+
+    .rounded-4 {
+        border-radius: 1rem !important;
+    }
 
     .btn {
-        font-size: 0.85rem;
-        padding: 6px 10px;
-        border-radius: 8px;
+        transition: all 0.2s ease;
+        font-weight: 500;
     }
 
-    .btn-outline-info:hover {
-        background-color: #17a2b8;
-        color: white;
+    .btn-sm {
+        padding: 0.35rem 0.75rem;
+        font-size: 0.8rem;
     }
 
-    .btn-outline-success:hover {
-        background-color: #28a745;
-        color: white;
+    .btn-success {
+        background-color: #25D366;
+        border-color: #25D366;
     }
 
-    .btn-outline-primary:hover {
-        background-color: #007bff;
-        color: white;
+    .btn-primary {
+        background-color: #3a7bd5;
+        border-color: #3a7bd5;
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 </style>

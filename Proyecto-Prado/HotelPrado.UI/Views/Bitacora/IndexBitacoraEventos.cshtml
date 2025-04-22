@@ -1,63 +1,286 @@
 ﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Bitacora.BitacoraEventosDTO>
-
 @{
-    ViewBag.Title = "IndexBitacoraEventos";
+    ViewBag.Title = "Bitácora de Eventos";
 }
 
-<h2>IndexBitacoraEventos</h2>
+<div class="container-fluid mt-4">
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+        <div class="card-header bg-gradient-primary text-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="h4 mb-0 fw-bold">
+                    <i class="fas fa-clipboard-list me-2"></i>Bitácora de Eventos
+                </h2>
+                <div class="dropdown">
+                    <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-filter me-1"></i>Filtrar
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="#" data-filter="todos">Todos los eventos</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        @foreach (var tipo in Model.Select(e => e.TipoDeEvento).Distinct().OrderBy(t => t))
+                        {
+                            <li><a class="dropdown-item" href="#" data-filter="@tipo">@tipo</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
 
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="tablaBitacora">
+                    <thead class="bg-light-primary">
+                        <tr>
+                            <th class="ps-4">Tabla</th>
+                            <th>Tipo de Evento</th>
+                            <th>Descripción</th>
+                            <th class="text-end pe-4">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var badgeClass = item.TipoDeEvento switch
+                            {
+                                "Error" => "bg-danger",
+                                "Advertencia" => "bg-warning",
+                                "Información" => "bg-info",
+                                "Creación" => "bg-success",
+                                "Modificación" => "bg-primary",
+                                "Eliminación" => "bg-secondary",
+                                _ => "bg-dark"
+                            };
+                            <tr data-tipo="@item.TipoDeEvento" class="evento-row">
+                                <td class="ps-4 fw-semibold">@item.TablaDeEvento</td>
+                                <td>
+                                    <span class="badge @badgeClass text-white rounded-pill px-3 py-1">
+                                        @item.TipoDeEvento
+                                    </span>
+                                </td>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.TablaDeEvento)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TipoDeEvento)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FechaDeEvento)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DescripcionDeEvento)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.StackTrace)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DatosAnteriores)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DatosPosteriores)
-        </th>
-        
-    </tr>
+                                <td class="text-truncate" style="max-width: 300px;" title="@item.DescripcionDeEvento">
+                                    @item.DescripcionDeEvento
+                                </td>
+                                <td class="text-end pe-4">
+                                    <button class="btn btn-sm btn-outline-primary rounded-pill detalles-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#detallesModal"
+                                            data-tabla="@item.TablaDeEvento"
+                                            data-tipo="@item.TipoDeEvento"
+                                            data-fecha="@item.FechaDeEvento"
+                                            data-descripcion="@item.DescripcionDeEvento"
+                                            data-stacktrace="@item.StackTrace"
+                                            data-anteriores="@item.DatosAnteriores"
+                                            data-posteriores="@item.DatosPosteriores">
+                                        <i class="fas fa-eye me-1"></i> Detalles
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.TablaDeEvento)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TipoDeEvento)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FechaDeEvento)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DescripcionDeEvento)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StackTrace)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DatosAnteriores)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DatosPosteriores)
-        </td>
-       
-    </tr>
+        <div class="card-footer bg-white py-3">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <span class="text-muted small">
+                        <i class="fas fa-info-circle me-1"></i>Mostrando @Model.Count() registros
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para detalles -->
+<div class="modal fade" id="detallesModal" tabindex="-1" aria-labelledby="detallesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-gradient-primary text-white">
+                <h5 class="modal-title" id="detallesModalLabel">Detalles del Evento</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <h6 class="text-muted">Tabla:</h6>
+                        <p id="modalTabla" class="fw-bold"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-muted">Tipo:</h6>
+                        <p id="modalTipo" class="fw-bold"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-muted">Fecha:</h6>
+                        <p id="modalFecha" class="fw-bold"></p>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <h6 class="text-muted">Descripción:</h6>
+                    <div class="card bg-light p-3">
+                        <p id="modalDescripcion" class="mb-0"></p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h6 class="text-muted">Datos Anteriores:</h6>
+                        <div class="card bg-light p-3" style="height: 200px; overflow-y: auto;">
+                            <pre id="modalAnteriores" class="mb-0 small"></pre>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h6 class="text-muted">Datos Posteriores:</h6>
+                        <div class="card bg-light p-3" style="height: 200px; overflow-y: auto;">
+                            <pre id="modalPosteriores" class="mb-0 small"></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3" id="stackTraceSection">
+                    <h6 class="text-muted">Stack Trace:</h6>
+                    <div class="card bg-light p-3" style="max-height: 200px; overflow-y: auto;">
+                        <pre id="modalStackTrace" class="mb-0 small text-danger"></pre>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+        }
+
+        .bg-light-primary {
+            background-color: rgba(58, 123, 213, 0.1);
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+        }
+
+        .table {
+            font-size: 0.9rem;
+        }
+
+            .table thead th {
+                text-transform: uppercase;
+                font-size: 0.75rem;
+                letter-spacing: 0.5px;
+                color: #4a5568;
+                font-weight: 700;
+                padding: 1rem;
+                background-color: #f8fafc;
+            }
+
+            .table tbody tr {
+                transition: all 0.2s ease;
+            }
+
+                .table tbody tr:hover {
+                    background-color: #f8fafc;
+                    transform: scale(1.005);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                }
+
+        .evento-row td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+
+        .badge {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .detalles-btn {
+            min-width: 100px;
+            transition: all 0.2s ease;
+        }
+
+            .detalles-btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 2px 8px rgba(58, 123, 213, 0.2);
+            }
+
+        .rounded-4 {
+            border-radius: 1rem !important;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .modal-header {
+            border-bottom: none;
+        }
+
+        .modal-content {
+            border: none;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+    </style>
 }
 
-</table>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Filtrado por tipo de evento
+            $('.dropdown-item[data-filter]').click(function (e) {
+                e.preventDefault();
+                const filtro = $(this).data('filter');
+
+                if (filtro === 'todos') {
+                    $('.evento-row').show();
+                } else {
+                    $('.evento-row').hide();
+                    $(`.evento-row[data-tipo="${filtro}"]`).show();
+                }
+
+                $('#dropdownMenuButton').text($(this).text());
+            });
+
+            // Configurar modal de detalles
+            $('.detalles-btn').click(function () {
+                $('#modalTabla').text($(this).data('tabla'));
+                $('#modalTipo').text($(this).data('tipo'));
+                $('#modalFecha').text($(this).data('fecha'));
+                $('#modalDescripcion').text($(this).data('descripcion'));
+                $('#modalStackTrace').text($(this).data('stacktrace'));
+                $('#modalAnteriores').text($(this).data('anteriores'));
+                $('#modalPosteriores').text($(this).data('posteriores'));
+
+                // Mostrar u ocultar stack trace según el tipo de evento
+                if ($(this).data('tipo') === 'Error') {
+                    $('#stackTraceSection').show();
+                } else {
+                    $('#stackTraceSection').hide();
+                }
+            });
+
+            // Tooltips para texto truncado
+            $('[title]').tooltip({
+                trigger: 'hover'
+            });
+        });
+    </script>
+}
