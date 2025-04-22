@@ -4,84 +4,111 @@
     ViewBag.Title = "Detalles del Departamento";
 }
 
-<div class="container mt-5">
-    <div class="row">
-        <!-- Carrusel de imágenes -->
-        <div class="col-md-6 d-flex align-items-center">
-            @{
-                var images = !string.IsNullOrEmpty(Model.UrlImagenes)
-                    ? Model.UrlImagenes.Split(',').Select(img => img.Trim()).Where(img => !string.IsNullOrEmpty(img)).ToList()
-                    : new List<string>(); // Si no hay imágenes, creamos una lista vacía
-            }
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-            <div id="carousel-@Model.IdDepartamento" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    @if (images.Any())
-                    {
-                        for (int i = 0; i < images.Count; i++)
+<div class="container py-5">
+    <div class="department-detail-card">
+        <div class="row g-4">
+            <!-- Image Gallery -->
+            <div class="col-lg-7">
+                @{
+                    var images = !string.IsNullOrEmpty(Model.UrlImagenes)
+                        ? Model.UrlImagenes.Split(',').Select(img => img.Trim()).Where(img => !string.IsNullOrEmpty(img)).ToList()
+                        : new List<string>();
+                }
+
+                <div id="departmentGallery" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner rounded-4">
+                        @if (images.Any())
                         {
-                            <div class="carousel-item @(i == 0 ? "active" : "")">
-                                <img src="@Url.Content(images[i])" class="d-block w-100" alt="Imagen de @Model.Nombre">
-
+                            for (int i = 0; i < images.Count; i++)
+                            {
+                                <div class="carousel-item @(i == 0 ? "active" : "")">
+                                    <img src="@Url.Content(images[i])" class="d-block w-100 department-main-image" alt="Imagen de @Model.Nombre">
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="carousel-item active">
+                                <img src="@Url.Content("~/imagenes/default.jpg")" class="d-block w-100 department-main-image" alt="Imagen por defecto">
                             </div>
                         }
-                    }
-                    else
+                    </div>
+
+                    <!-- Thumbnail Navigation -->
+                    @if (images.Count > 1)
                     {
-                        <div class="carousel-item active">
-                            <img src="@Url.Content("~/imagenes/default.jpg")" class="d-block w-100 rounded" alt="Imagen por defecto">
+                        <div class="thumbnail-container mt-3">
+                            @for (int i = 0; i < images.Count; i++)
+                            {
+                                <a data-bs-target="#departmentGallery" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")">
+                                    <img src="@Url.Content(images[i])" class="thumbnail-img" alt="Thumbnail @(i+1)">
+                                </a>
+                            }
                         </div>
                     }
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#departmentGallery" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#departmentGallery" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
             </div>
 
-            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@Model.IdDepartamento" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carousel-@Model.IdDepartamento" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            </button>
-        </div>
+            <!-- Department Info -->
+            <div class="col-lg-5">
+                <div class="department-info">
+                    <h1 class="department-title">@Model.Nombre</h1>
 
-        <!-- Información del Departamento -->
-        <div class="col-md-6">
-            <h2 class="fw-bold">@Model.Nombre</h2>
-            <p class="text-muted">@Model.Descripcion</p>
 
-            <table class="table table-striped">
-                <tbody>
-                    <tr>
-                        <td><strong>Habitaciones:</strong></td>
-                        <td>@Model.NumeroHabitaciones</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Amueblado:</strong></td>
-                        <td>@(Model.Amueblado ? "Sí" : "No")</td>
-                    </tr>
-                </tbody>
-            </table>
+                    <p class="department-description">@Model.Descripcion</p>
 
-            <!-- Botones -->
-            <div class="row g-2 mt-4">
-                <div class="col-md-4">
-                    <a href="@($"https://wa.me/{Model.NumeroEmpresa}?text=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
-                       class="btn btn-success w-100" target="_blank">
-                        <i class="fab fa-whatsapp"></i> WhatsApp
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a href="@($"mailto:{Model.CorreoEmpresa}?subject=Solicitud%20de%20cotización&body=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
-                       class="btn btn-primary w-100" target="_blank">
-                        <i class="fas fa-envelope"></i> Correo
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    @Html.ActionLink("Solicitar Visita", "Create", "Citas", new { id = Model.IdDepartamento }, new { @class = "btn btn-outline-secondary w-100" })
-                </div>
-                <div class="col-md-12">
-                    <a href="@Url.Action("IndexDepartamentosClientes", "Departamento")" class="btn btn-dark w-100 mt-2">
-                        <i class="fas fa-home"></i> Volver al Inicio
-                    </a>
+                    <div class="department-highlights">
+                        <div class="highlight-item">
+                            <i class="fas fa-bed highlight-icon"></i>
+                            <span>@Model.NumeroHabitaciones Habitaciones</span>
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-couch highlight-icon"></i>
+                            <span>@(Model.Amueblado ? "Amueblado" : "Sin amueblar")</span>
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-ruler-combined highlight-icon"></i>
+                            <span>90 m²</span>
+                        </div>
+                    </div>
+
+
+                    <div class="action-buttons mt-5">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <a href="@($"https://wa.me/{Model.NumeroEmpresa}?text=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
+                                   class="btn btn-success w-100 whatsapp-btn" target="_blank">
+                                    <i class="fab fa-whatsapp me-2"></i> WhatsApp
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="@($"mailto:{Model.CorreoEmpresa}?subject=Solicitud%20de%20cotización&body=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
+                                   class="btn btn-primary w-100 email-btn" target="_blank">
+                                    <i class="fas fa-envelope me-2"></i> Correo
+                                </a>
+                            </div>
+                            <div class="col-12">
+                                @Html.ActionLink("Solicitar Visita", "Create", "Citas", new { id = Model.IdDepartamento }, new { @class = "btn btn-outline-primary w-100 visit-btn" })
+                            </div>
+                            <div class="col-12">
+                                <a href="@Url.Action("IndexDepartamentosClientes", "Departamento")" class="btn btn-light w-100 back-btn">
+                                    <i class="fas fa-arrow-left me-2"></i> Volver al listado
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -89,19 +116,196 @@
 </div>
 
 <style>
-
-    .carousel-inner img {
-        max-height: 300px; /* Ajusta la altura máxima */
-        width: auto; /* Permite que el ancho sea automático */
-        transition: transform 0.5s ease-in-out; /* Transición suave */
+    :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --light-color: #f8f9fa;
+        --dark-color: #212529;
+        --text-color: #495057;
+        --border-radius: 0.5rem;
+        --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
     }
 
-    .carousel-control-prev-icon, .carousel-control-next-icon {
-        background-color: black;
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f5f5;
+        color: var(--text-color);
     }
 
+    .department-detail-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+        padding: 2rem;
+    }
 
-    .carousel-item-next, .carousel-item-prev, .carousel-item.active {
-        transition: transform 0.5s ease-in-out; /* Suaviza el cambio entre las imágenes */
+    .department-main-image {
+        height: 400px;
+        object-fit: cover;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+    }
+
+    .thumbnail-container {
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+    }
+
+    .thumbnail-img {
+        width: 80px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: calc(var(--border-radius) / 2);
+        cursor: pointer;
+        opacity: 0.7;
+        transition: var(--transition);
+        border: 2px solid transparent;
+    }
+
+        .thumbnail-img:hover,
+        .thumbnail-container a.active .thumbnail-img {
+            opacity: 1;
+            border-color: var(--secondary-color);
+        }
+
+    .department-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .rating {
+        font-size: 1.1rem;
+        color: #ffc107;
+    }
+
+    .department-description {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: var(--text-color);
+        margin: 1.5rem 0;
+    }
+
+    .department-highlights {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin: 1.5rem 0;
+        padding: 1rem 0;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+    }
+
+    .highlight-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .highlight-icon {
+        color: var(--secondary-color);
+        font-size: 1.2rem;
+    }
+
+    .department-price {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: var(--border-radius);
+    }
+
+    .price-label {
+        display: block;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .price-amount {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .price-period {
+        font-size: 1rem;
+        color: #6c757d;
+    }
+
+    .action-buttons .btn {
+        padding: 0.75rem;
+        font-weight: 500;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+    }
+
+    .whatsapp-btn {
+        background-color: #25D366;
+        border-color: #25D366;
+    }
+
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+            border-color: #128C7E;
+            transform: translateY(-2px);
+        }
+
+    .email-btn:hover,
+    .visit-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .back-btn {
+        border: 1px solid #dee2e6;
+    }
+
+        .back-btn:hover {
+            background-color: #e9ecef;
+        }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 50px;
+        height: 50px;
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    #departmentGallery:hover .carousel-control-prev,
+    #departmentGallery:hover .carousel-control-next {
+        opacity: 1;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        filter: invert(1);
+    }
+
+    @@media (max-width: 992px) {
+        .department-main-image {
+            height: 350px;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .department-title {
+            font-size: 1.8rem;
+        }
+
+        .department-main-image {
+            height: 300px;
+        }
+
+        .department-highlights {
+            gap: 1rem;
+        }
     }
 </style>

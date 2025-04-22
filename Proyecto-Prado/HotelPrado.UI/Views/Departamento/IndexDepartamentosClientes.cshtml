@@ -4,73 +4,80 @@
     ViewBag.Title = "IndexDepartamentosClientes";
 }
 
-<!-- Link a Bootstrap -->
-<link href="~/Content/aos.css" rel="stylesheet" />
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+<!-- Custom CSS -->
 <link href="~/Content/DepartamentoClientes/departamentosgeneral.css" rel="stylesheet" />
 
-<section id="room" class="py-4">
+<section id="departments" class="py-5">
     <div class="container">
-        <div class="text-center mb-4">
-            <h3 class="display-4 fw-bold">Explora Nuestros Departamentos</h3>
+        <div class="text-center mb-5">
+            <h2 class="section-title">Nuestros Exclusivos Departamentos</h2>
+            <p class="section-subtitle">Descubre el confort y elegancia que tenemos para ofrecerte</p>
         </div>
-        <div class="row">
+
+        <div class="row g-4">
             @foreach (var depto in Model)
             {
-                <div class="col-md-5 mb-5">
-                    <div class="room-item">
-                        <!-- Slider (Carrusel) -->
-                        <div id="carousel-@depto.IdDepartamento" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="false">
-                            <div class="carousel-inner">
+                <div class="col-lg-4 col-md-6">
+                    <div class="department-card">
+                        <!-- Image Carousel -->
+                        <div id="carousel-@depto.IdDepartamento" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner rounded-top">
                                 @if (!string.IsNullOrEmpty(depto.UrlImagenes))
                                 {
                                     var images = depto.UrlImagenes.Split(',').ToList();
                                     for (int i = 0; i < images.Count; i++)
                                     {
                                         <div class="carousel-item @(i == 0 ? "active" : "")">
-                                            <img src="@Url.Content(images[i])" class="d-block w-100" alt="Imagen de @depto.Nombre">
+                                            <img src="@Url.Content(images[i])" class="d-block w-100 department-img" alt="Imagen de @depto.Nombre">
                                         </div>
                                     }
                                 }
                                 else
                                 {
                                     <div class="carousel-item active">
-                                        <img src="@Url.Content("/imagenes/default.jpg")" class="d-block w-100" alt="Imagen de @depto.Nombre">
+                                        <img src="@Url.Content("~/imagenes/default.jpg")" class="d-block w-100 department-img" alt="Imagen de @depto.Nombre">
                                     </div>
                                 }
                             </div>
-                            <a class="carousel-control-prev" href="#carousel-@depto.IdDepartamento" role="button" data-bs-slide="prev">
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@depto.IdDepartamento" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            </a>
-                            <a class="carousel-control-next" href="#carousel-@depto.IdDepartamento" role="button" data-bs-slide="next">
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carousel-@depto.IdDepartamento" data-bs-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            </a>
+                                <span class="visually-hidden">Next</span>
+                            </button>
                         </div>
 
-                        <!-- Overlay con información -->
-                        <div class="overlay-info">
-                            <div class="product-description text-center">
-                                <h4>@depto.Nombre</h4>
-                                <p>@depto.Descripcion</p>
-                                <table class="table table-borderless text-center">
-                                    <tbody>
-                                        <tr>
-                                            <td class="no-bg">Habitaciones:</td>
-                                            <td class="no-bg">@depto.NumeroHabitaciones</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="no-bg">Amueblado:</td>
-                                            <td class="no-bg">@(depto.Amueblado ? "Sí" : "No")</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
+                        <!-- Card Body -->
+                        <div class="department-card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h3 class="department-title">@depto.Nombre</h3>
+                                <span class="badge bg-primary">Disponible</span>
                             </div>
 
-                            <!-- Botón Ver Detalles -->
-                            <a href="@Url.Action("Details", "Departamento", new { id = depto.IdDepartamento })" class="btn btn-dark btn-sm w-100">
-                                Ver Detalles
-                            </a>
+                            <p class="department-description">@depto.Descripcion</p>
+
+                            <div class="department-features">
+                                <div class="feature-item">
+                                    <i class="fas fa-bed feature-icon"></i>
+                                    <span>@depto.NumeroHabitaciones Habitaciones</span>
+                                </div>
+                                <div class="feature-item">
+                                    <i class="fas fa-couch feature-icon"></i>
+                                    <span>@(depto.Amueblado ? "Amueblado" : "Sin amueblar")</span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-4">
+
+                                <a href="@Url.Action("Details", "Departamento", new { id = depto.IdDepartamento })" class="btn btn-primary btn-details">
+                                    <i class="fas fa-eye me-2"></i>Ver Detalles
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -79,75 +86,188 @@
     </div>
 </section>
 
-<!-- Scripts de Bootstrap -->
-<script src="~/Scripts/aos.js"></script>
-<script>
-    AOS.init();
-</script>
+<!-- Scripts -->
 <script src="~/Scripts/bootstrap.bundle.min.js"></script>
 
 <style>
-    /* Ajustes del Carrusel */
-    .carousel-control-prev, .carousel-control-next {
-        top: 50%;
-        transform: translateY(-50%);
+    :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --light-color: #ecf0f1;
+        --dark-color: #2c3e50;
+        --text-color: #34495e;
+        --shadow: 0 10px 20px rgba(0,0,0,0.1);
+        --transition: all 0.3s ease;
     }
 
-    .no-bg {
-        background-color: transparent !important;
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text-color);
+        background-color: #f9f9f9;
     }
 
-
-    /* Ajuste general de las tarjetas */
-    .room-item {
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
         position: relative;
-        width: 100%;
-        height: auto;
-        transition: transform 0.3s ease-in-out;
-        overflow: hidden;
-        border-radius: 15px;
+        display: inline-block;
     }
 
-        .room-item img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 15px;
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--secondary-color);
+            border-radius: 2px;
         }
 
-    /* Overlay */
-    .overlay-info {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(128, 128, 128, 0.6);
-        color: white;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 15px;
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
+    .section-subtitle {
+        font-size: 1.1rem;
+        color: #7f8c8d;
+        max-width: 700px;
+        margin: 0 auto;
     }
 
-    .room-item:hover .overlay-info {
+    .department-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .department-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+    .department-img {
+        height: 250px;
+        object-fit: cover;
+        transition: var(--transition);
+    }
+
+    .department-card:hover .department-img {
+        opacity: 0.9;
+    }
+
+    .department-card-body {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .department-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 0;
+    }
+
+    .department-description {
+        color: #7f8c8d;
+        margin: 1rem 0;
+        flex-grow: 1;
+    }
+
+    .department-features {
+        display: flex;
+        gap: 1.5rem;
+        margin: 1rem 0;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .feature-icon {
+        color: var(--secondary-color);
+        font-size: 1.1rem;
+    }
+
+    .department-price {
+        text-align: left;
+    }
+
+    .price-label {
+        display: block;
+        font-size: 0.8rem;
+        color: #7f8c8d;
+    }
+
+    .price-amount {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .price-period {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+    }
+
+    .btn-details {
+        background-color: var(--secondary-color);
+        border: none;
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        font-weight: 500;
+        transition: var(--transition);
+    }
+
+        .btn-details:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+    .badge {
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+    }
+
+    .carousel-control-prev, .carousel-control-next {
+        width: 40px;
+        height: 40px;
+        background: rgba(0,0,0,0.3);
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    .department-card:hover .carousel-control-prev,
+    .department-card:hover .carousel-control-next {
         opacity: 1;
     }
 
-    /* Botón mejorado */
-    .btn-dark {
-        background-color: #333;
-        border-color: #222;
-    }
-
-        .btn-dark:hover {
-            background-color: #222;
-            border-color: #111;
+    @@media (max-width: 768px) {
+        .section-title {
+            font-size: 2rem;
         }
+
+        .department-features {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .department-card-body {
+            padding: 1.25rem;
+        }
+    }
 </style>
-
-
