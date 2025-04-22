@@ -27,7 +27,6 @@ namespace HotelPrado.Abstracciones.Modelos.Colaborador
         [Range(1, int.MaxValue, ErrorMessage = "El salario debe ser un número mayor que 0.")]
         public int IngresoColaborador { get; set; }
         [Required]
-        [RegularExpression(@"^[a-zA-ZÀ-ÿ]+$", ErrorMessage = "El Puesto solo puede contener letras.")]
         public string PuestoColaborador { get; set; }
         [Required]
         public string EstadoLaboral { get; set; }

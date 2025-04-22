@@ -1,11 +1,7 @@
-﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Bitacora.Listar;
-using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Bitacora.Listar;
+﻿using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Bitacora.Listar;
 using HotelPrado.Abstracciones.Modelos.Bitacora;
 using HotelPrado.LN.Bitacora;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace HotelPrado.UI.Controllers

@@ -71,63 +71,72 @@
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 
-                        <div class="row g-4">
-                            <div class="col-md-6 mb-3">
-                                @Html.LabelFor(model => model.NombreColaborador, new { @class = "form-label" })
-                                @Html.EditorFor(model => model.NombreColaborador, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.NombreColaborador, "", new { @class = "text-danger" })
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                @Html.LabelFor(model => model.PrimerApellidoColaborador, new { @class = "form-label" })
-                                @Html.EditorFor(model => model.PrimerApellidoColaborador, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.PrimerApellidoColaborador, "", new { @class = "text-danger" })
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                @Html.LabelFor(model => model.SegundoApellidoColaborador, new { @class = "form-label" })
-                                @Html.EditorFor(model => model.SegundoApellidoColaborador, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.SegundoApellidoColaborador, "", new { @class = "text-danger" })
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                @Html.LabelFor(model => model.CedulaColaborador, new { @class = "form-label" })
-                                @Html.EditorFor(model => model.CedulaColaborador, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.CedulaColaborador, "", new { @class = "text-danger" })
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                @Html.LabelFor(model => model.IngresoColaborador, new { @class = "form-label" })
-                                @Html.EditorFor(model => model.IngresoColaborador, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.IngresoColaborador, "", new { @class = "text-danger" })
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                @Html.LabelFor(model => model.PuestoColaborador, new { @class = "form-label" })
-                                @Html.EditorFor(model => model.PuestoColaborador, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.PuestoColaborador, "", new { @class = "text-danger" })
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                @Html.LabelFor(model => model.EstadoLaboral, new { @class = "form-label" })
-                                @Html.DropDownListFor(model => model.EstadoLaboral,
-                                    new SelectList(new List<SelectListItem> {
-                                        new SelectListItem { Value = "Activo", Text = "Activo" },
-                                        new SelectListItem { Value = "De Vacaciones", Text = "De Vacaciones" },
-                                        new SelectListItem { Value = "Incapacitado", Text = "Incapacitado" },
-                                        new SelectListItem { Value = "Licencia con goce de salario", Text = "Licencia con goce de salario" },
-                                        new SelectListItem { Value = "Licencia sin goce de salario", Text = "Licencia sin goce de salario" },
-                                        new SelectListItem { Value = "Permiso Especial", Text = "Permiso Especial" }
-                                    }, "Value", "Text"),
-                                    "Seleccione un tipo",
-                                    new { @class = "form-select" })
-                                @Html.ValidationMessageFor(model => model.EstadoLaboral, "", new { @class = "text-danger" })
-                            </div>
-
-                            <div class="col-12 mt-4 d-flex justify-content-end">
-                                <input type="submit" value="Crear Colaborador" class="btn btn-primary" />
-                            </div>
+                    <div class="row g-4">
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(model => model.NombreColaborador, new { @class = "form-label" })
+                            @Html.EditorFor(model => model.NombreColaborador, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.NombreColaborador, "", new { @class = "text-danger" })
                         </div>
+
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(model => model.PrimerApellidoColaborador, new { @class = "form-label" })
+                            @Html.EditorFor(model => model.PrimerApellidoColaborador, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.PrimerApellidoColaborador, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(model => model.SegundoApellidoColaborador, new { @class = "form-label" })
+                            @Html.EditorFor(model => model.SegundoApellidoColaborador, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.SegundoApellidoColaborador, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(model => model.CedulaColaborador, new { @class = "form-label" })
+                            @Html.EditorFor(model => model.CedulaColaborador, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CedulaColaborador, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(model => model.IngresoColaborador, new { @class = "form-label" })
+                            @Html.EditorFor(model => model.IngresoColaborador, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.IngresoColaborador, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(model => model.PuestoColaborador, new { @class = "form-label" })
+                            @Html.DropDownListFor(model => model.PuestoColaborador,
+                                new SelectList(new List<SelectListItem> {
+                                    new SelectListItem { Value = "Recepcionista", Text = "Recepcionista" },
+                                    new SelectListItem { Value = "Seguridad", Text = "Guarda de seguridad" },
+                                    new SelectListItem { Value = "Limpieza", Text = "Limpieza" },
+                                    new SelectListItem { Value = "Administrador", Text = "Administrador" }
+                                }, "Value", "Text"),
+                                "Seleccione un puesto",
+                                new { @class = "form-select" })
+                            @Html.ValidationMessageFor(model => model.PuestoColaborador, "", new { @class = "text-danger" })
+                        </div>
+
+
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(model => model.EstadoLaboral, new { @class = "form-label" })
+                            @Html.DropDownListFor(model => model.EstadoLaboral,
+                                new SelectList(new List<SelectListItem> {
+                                    new SelectListItem { Value = "Activo", Text = "Activo" },
+                                    new SelectListItem { Value = "De Vacaciones", Text = "De Vacaciones" },
+                                    new SelectListItem { Value = "Incapacitado", Text = "Incapacitado" },
+                                    new SelectListItem { Value = "Licencia con goce de salario", Text = "Licencia con goce de salario" },
+                                    new SelectListItem { Value = "Licencia sin goce de salario", Text = "Licencia sin goce de salario" },
+                                    new SelectListItem { Value = "Permiso Especial", Text = "Permiso Especial" }
+                                }, "Value", "Text"),
+                                "Seleccione un tipo",
+                                new { @class = "form-select" })
+                            @Html.ValidationMessageFor(model => model.EstadoLaboral, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-12 mt-4 d-flex justify-content-end">
+                            <input type="submit" value="Crear Colaborador" class="btn btn-primary" />
+                        </div>
+                    </div>
                     }
                 </div>
             </div>

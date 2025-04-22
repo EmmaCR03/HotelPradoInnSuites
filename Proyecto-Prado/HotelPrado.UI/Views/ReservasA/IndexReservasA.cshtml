@@ -124,11 +124,9 @@
                         <table class="table table-hover">
                             <thead class="table-light">
                                 <tr>
-                                    <th>@Html.DisplayNameFor(model => model.First().IdReserva)</th>
-                                    <th>@Html.DisplayNameFor(model => model.First().IdCliente)</th>
+
                                     <th>@Html.DisplayNameFor(model => model.First().cantidadPersonas)</th>
                                     <th>@Html.DisplayNameFor(model => model.First().NombreCliente)</th>
-                                    <th>@Html.DisplayNameFor(model => model.First().IdHabitacion)</th>
                                     <th>@Html.DisplayNameFor(model => model.First().FechaInicio)</th>
                                     <th>@Html.DisplayNameFor(model => model.First().FechaFinal)</th>
                                     <th>@Html.DisplayNameFor(model => model.First().EstadoReserva)</th>
@@ -140,11 +138,9 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td>@Html.DisplayFor(modelItem => item.IdReserva)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.IdCliente)</td>
+
                                         <td>@Html.DisplayFor(modelItem => item.cantidadPersonas)</td>
                                         <td>@Html.DisplayFor(modelItem => item.NombreCliente)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.IdHabitacion)</td>
                                         <td>@Html.DisplayFor(modelItem => item.FechaInicio)</td>
                                         <td>@Html.DisplayFor(modelItem => item.FechaFinal)</td>
                                         <td>

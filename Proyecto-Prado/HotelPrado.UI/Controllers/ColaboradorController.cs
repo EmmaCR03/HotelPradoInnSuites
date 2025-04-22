@@ -85,6 +85,17 @@ namespace HotelPrado.UI.Controllers
                 return HttpNotFound();
             }
 
+
+            var puestosDb = new List<dynamic>
+{
+    new { Id = "Recepcionista", Descripcion = "Recepcionista" },
+    new { Id = "Limpieza", Descripcion = "Limpieza" },
+    new { Id = "Administrador", Descripcion = "Administrador" },
+    new { Id = "Seguridad", Descripcion = "Seguridad" }
+};
+
+            ViewBag.PuestoColaborador = new SelectList(puestosDb, "Id", "Descripcion");
+
             // Lista de estados laborales predefinidos
             var estadosLaboralesDb = new List<dynamic>
     {

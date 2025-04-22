@@ -11,6 +11,8 @@ namespace HotelPrado.Abstracciones.Modelos.Habitaciones
     {
         [Key]
         public int IdHabitacion { get; set; }
+        [Required]
+        [Range(1, 10, ErrorMessage = "El número de habitacion debe estar entre 1 y 10.")]
         public string NumeroHabitacion { get; set; }
 
         public decimal PrecioPorNoche1P { get; set; }
