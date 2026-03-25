@@ -1,0 +1,557 @@
+/* ============================================
+   NAVBAR NUEVO - SIMPLE Y LIMPIO
+   Sin conflictos, solo lo esencial
+   ============================================ */
+
+/* HEADER ESTÁTICO - SE QUEDA ARRIBA DE LA PÁGINA */
+header#header.navbar-new {
+    position: relative !important; /* NO fixed - se scrollea con la página */
+    width: 100% !important;
+    z-index: 999 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: transparent;
+}
+
+/* NAVBAR TOP */
+.navbar-top {
+    background-color: #2B2B2B;
+    padding: 2px 0;
+    min-height: 30px;
+    font-size: 0.75rem; /* Letra más pequeña */
+}
+
+.navbar-container {
+    max-width: 100%;
+    padding: 0 1rem;
+    margin: 0 auto;
+}
+
+.navbar-top-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.navbar-info {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.navbar-info li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #FFFFFF; /* Blanco puro */
+    font-size: 11px; /* Más pequeña */
+}
+
+.navbar-info i {
+    color: #FFFFFF; /* Blanco puro */
+}
+
+.waze-btn {
+    padding: 0.15rem 0.5rem;
+    font-size: 11px;
+    background-color: #33CCFF;
+    border-color: #33CCFF;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.navbar-social {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 1rem;
+}
+
+.navbar-social a {
+    color: #FFFFFF; /* Blanco puro */
+    font-size: 14px; /* Más pequeño */
+}
+
+/* NAVBAR MAIN */
+.navbar-main {
+    background-color: rgba(58, 58, 58, 0.95); /* Con transparencia como original */
+    backdrop-filter: blur(10px); /* Efecto blur original */
+    -webkit-backdrop-filter: blur(10px);
+    padding: 8px 0;
+    min-height: 70px;
+    border-bottom: 3px solid #6D7BB8;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-main .navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+/* LOGO */
+.navbar-logo {
+    flex-shrink: 0;
+}
+
+.navbar-logo img {
+    max-height: 50px;
+    width: auto;
+}
+
+/* MENÚ DESKTOP */
+.navbar-menu-desktop {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 10px;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.navbar-menu-desktop li {
+    position: relative;
+}
+
+.navbar-menu-desktop a {
+    color: #FFFFFF !important; /* Blanco puro */
+    text-decoration: none;
+    padding: 6px 12px; /* Más compacto */
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s ease;
+    font-size: 0.8rem; /* Más pequeña - 12.8px */
+}
+
+.navbar-menu-desktop a i {
+    color: #FFFFFF !important; /* Iconos blancos */
+}
+
+.navbar-menu-desktop a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* DROPDOWN */
+.navbar-menu-desktop .dropdown {
+    position: relative;
+}
+
+.navbar-menu-desktop .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #3a3a3a;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 4px 0;
+    min-width: 220px;
+    list-style: none;
+    margin: 5px 0 0 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 10000;
+}
+
+.navbar-menu-desktop .dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.navbar-menu-desktop .dropdown-menu li {
+    margin: 0;
+}
+
+.navbar-menu-desktop .dropdown-menu a {
+    padding: 8px 16px;
+    color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar-menu-desktop .dropdown-menu a {
+    color: #FFFFFF !important; /* Blanco puro */
+    font-size: 0.75rem; /* Más pequeño */
+}
+
+.navbar-menu-desktop .dropdown-menu a i {
+    color: #FFFFFF !important; /* Iconos blancos */
+}
+
+.navbar-menu-desktop .dropdown-menu a:hover {
+    background-color: #6D7BB8;
+    color: #FFFFFF !important;
+    padding-left: 20px;
+}
+
+.navbar-menu-desktop .dropdown-menu a:hover i {
+    color: #FFFFFF !important; /* Iconos blancos en hover */
+}
+
+.navbar-menu-desktop .dropdown-menu hr {
+    margin: 4px 0;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* LOGIN DESKTOP */
+.navbar-login-desktop {
+    flex-shrink: 0;
+}
+
+/* Estilos para los botones de login/registro */
+.navbar-login-desktop .navbar-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-login-desktop .navbar-nav li {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-login-desktop .navbar-nav .nav-link {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    color: #FFFFFF !important;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.navbar-login-desktop .navbar-nav .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Estilos para dropdown de usuario autenticado */
+.navbar-login-desktop .nav-item.dropdown {
+    position: relative;
+}
+
+.navbar-login-desktop .nav-item.dropdown .nav-link {
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.navbar-login-desktop .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #2B2B2B;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    min-width: 200px;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+}
+
+.navbar-login-desktop .dropdown-menu .dropdown-item {
+    color: #FFFFFF !important;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    text-decoration: none;
+    display: block;
+}
+
+.navbar-login-desktop .dropdown-menu .dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-login-desktop .dropdown-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 0.5rem 0;
+}
+
+/* BOTÓN HAMBURGER */
+.navbar-toggle {
+    display: none;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    color: #FFFFFF !important; /* Blanco puro */
+    cursor: pointer;
+}
+
+.navbar-toggle i {
+    color: #FFFFFF !important; /* Icono hamburguesa blanco */
+}
+
+.navbar-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.navbar-toggle:hover i {
+    color: #FFFFFF !important; /* Icono hamburguesa blanco en hover */
+}
+
+/* OFFCANVAS MÓVIL */
+.offcanvas {
+    background-color: #3a3a3a !important;
+    color: #FFFFFF !important;
+    transition: transform 0.3s ease-in-out !important;
+}
+
+.offcanvas.showing {
+    transform: translateX(0) !important;
+}
+
+.offcanvas:not(.show) {
+    transform: translateX(100%) !important;
+}
+
+.offcanvas-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.25rem 1.5rem;
+}
+
+.offcanvas-title {
+    color: #FFFFFF !important;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.offcanvas-body {
+    padding: 1rem 1.5rem;
+    overflow-y: auto;
+    max-height: calc(100vh - 60px);
+}
+
+/* Animación suave para el backdrop */
+.offcanvas-backdrop {
+    transition: opacity 0.3s ease-in-out !important;
+}
+
+.offcanvas-backdrop.show {
+    opacity: 0.5 !important;
+}
+
+/* Botón cerrar con hover suave */
+.btn-close-white {
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.btn-close-white:hover {
+    opacity: 1;
+}
+
+/* Secciones del menú móvil */
+.mobile-menu-section {
+    margin-bottom: 1.5rem;
+}
+
+.mobile-menu-section:last-of-type {
+    margin-bottom: 0;
+}
+
+.mobile-menu-section-title {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    padding: 0 0.5rem;
+}
+
+.navbar-menu-mobile {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-menu-mobile li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 0.25rem;
+}
+
+.navbar-menu-mobile li:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.navbar-menu-mobile a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    color: #FFFFFF !important;
+    text-decoration: none;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.navbar-menu-mobile a i {
+    color: #FFFFFF !important;
+    width: 20px;
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+.navbar-menu-mobile a:hover,
+.navbar-menu-mobile a:focus {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: #FFFFFF !important;
+    transform: translateX(4px);
+}
+
+.navbar-menu-mobile a:hover i,
+.navbar-menu-mobile a:focus i {
+    color: #FFFFFF !important;
+}
+
+.navbar-menu-mobile .dropdown-menu {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: none;
+    box-shadow: none;
+    padding-left: 15px;
+}
+
+.navbar-menu-mobile .dropdown-menu a {
+    padding: 8px 25px;
+}
+
+.navbar-login-mobile {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+/* RESPONSIVE */
+@media (max-width: 991px) {
+    .navbar-menu-desktop {
+        display: none !important;
+    }
+    
+    .navbar-login-desktop {
+        display: none !important;
+    }
+    
+    .navbar-toggle {
+        display: block !important;
+        flex-shrink: 0 !important;
+        margin-left: auto !important;
+    }
+    
+    .navbar-main .navbar-container {
+        flex-wrap: nowrap !important;
+        gap: 0.5rem !important;
+    }
+    
+    .navbar-logo {
+        flex-shrink: 0 !important;
+    }
+    
+    .navbar-top {
+        display: none;
+    }
+    
+    .body-content {
+        margin-top: 70px !important;
+    }
+}
+
+/* Estilos para login mobile */
+.navbar-login-mobile .navbar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 1rem 0;
+    padding: 0;
+}
+
+.navbar-login-mobile .navbar-nav li {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-login-mobile .navbar-nav .nav-link {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: #FFFFFF !important;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.navbar-login-mobile .navbar-nav .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.navbar-login-mobile .nav-item.dropdown .nav-link {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.navbar-login-mobile .dropdown-menu {
+    background-color: transparent;
+    border: none;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+}
+
+.navbar-login-mobile .dropdown-menu .dropdown-item {
+    color: #FFFFFF !important;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    text-decoration: none;
+    display: block;
+    border-radius: 4px;
+}
+
+.navbar-login-mobile .dropdown-menu .dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-login-mobile .dropdown-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 0.5rem 0;
+}
+
+@media (min-width: 992px) {
+    .navbar-toggle {
+        display: none !important;
+    }
+    
+    .offcanvas {
+        display: none !important;
+    }
+}
+
+/* Asegurar que el body-content tenga margin-top */
+.body-content {
+    margin-top: 105px !important;
+}
+

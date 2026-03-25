@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,9 +18,17 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Mantenimiento
 
         public string Estado { get; set; } 
 
+        [Column("idDepartamento")]
         public int idDepartamento { get; set; } 
 
+        [Column("DepartamentoNombre")]
         public string DepartamentoNombre { get; set; }
+
+        [Column("IdHabitacion")]
+        public int idHabitacion { get; set; }
+
+        [NotMapped]
+        public string HabitacionNombre { get; set; }
 
 
 

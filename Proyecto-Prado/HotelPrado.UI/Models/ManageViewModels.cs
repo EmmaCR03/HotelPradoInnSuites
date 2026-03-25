@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
@@ -7,16 +7,48 @@ namespace HotelPrado.UI.Models
 {
     public class IndexViewModel
     {
+        [Display(Name = "Tiene contraseña")]
         public bool HasPassword { get; set; }
         public IList<UserLoginInfo> Logins { get; set; }
+        [Display(Name = "Teléfono")]
         public string PhoneNumber { get; set; }
+        [Display(Name = "Autenticación en dos pasos")]
         public bool TwoFactor { get; set; }
+        [Display(Name = "Navegador recordado")]
         public bool BrowserRemembered { get; set; }
+        [Display(Name = "Nombre de usuario")]
         public string UserName { get; set; }
+        [Display(Name = "Nombre completo")]
         public string NombreCompleto { get; set; }
+        [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
+        [Display(Name = "Cédula")]
         public string Cedula { get; set; }
+        [Display(Name = "Teléfono")]
         public string Telefono { get; set; }
+    }
+
+    public class EditProfileViewModel
+    {
+        [Required(ErrorMessage = "El nombre completo es obligatorio.")]
+        [StringLength(100, ErrorMessage = "El nombre completo no puede tener más de 100 caracteres.")]
+        [Display(Name = "Nombre Completo")]
+        public string NombreCompleto { get; set; }
+
+        [Required(ErrorMessage = "El correo electrónico es obligatorio.")]
+        [EmailAddress(ErrorMessage = "El correo electrónico no es válido.")]
+        [Display(Name = "Correo Electrónico")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "El teléfono es obligatorio.")]
+        [StringLength(20, ErrorMessage = "El teléfono debe ser válido.")]
+        [Display(Name = "Teléfono")]
+        public string Telefono { get; set; }
+
+        [Required(ErrorMessage = "La cédula es obligatoria.")]
+        [StringLength(20, ErrorMessage = "La cédula no puede tener más de 20 caracteres.")]
+        [Display(Name = "Cédula")]
+        public string Cedula { get; set; }
     }
 
     public class ManageLoginsViewModel
@@ -27,6 +59,7 @@ namespace HotelPrado.UI.Models
 
     public class FactorViewModel
     {
+        [Display(Name = "Propósito")]
         public string Purpose { get; set; }
     }
 
@@ -86,6 +119,7 @@ namespace HotelPrado.UI.Models
 
     public class ConfigureTwoFactorViewModel
     {
+        [Display(Name = "Proveedor seleccionado")]
         public string SelectedProvider { get; set; }
         public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }
     }

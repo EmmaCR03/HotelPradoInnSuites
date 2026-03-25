@@ -1,0 +1,328 @@
+@model IEnumerable<HotelPrado.Abstracciones.Modelos.Reservas.ReservasDTO>
+@using System
+@using System.Web.Mvc
+
+@{
+    ViewBag.Title = "Lista de Espera";
+}
+
+<style>
+    .solicitud-card {
+        border-left: 4px solid #17a2b8;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .solicitud-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .badge-lista-espera {
+        background-color: #17a2b8;
+        color: #fff;
+    }
+
+    .btn-accion {
+        margin: 0.25rem;
+        min-width: 120px;
+    }
+
+    .info-cliente {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+
+    .header-lista-espera {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">
+                        <i class="fas fa-hourglass-half me-2"></i>@ViewBag.Title
+                    </h2>
+                    <p class="text-muted mb-0">Gestionar reservas en lista de espera</p>
+                </div>
+                <div>
+                    <a href="@Url.Action("SolicitudesPendientes", "ReservasA")" class="btn btn-outline-warning me-2">
+                        <i class="fas fa-clipboard-list me-2"></i>Solicitudes Pendientes
+                    </a>
+                    <a href="@Url.Action("IndexReservasA", "ReservasA")" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Volver a Reservas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        var habitacionesEnLista = ViewBag.HabitacionesEnLista as IEnumerable<SelectListItem>;
+        var ordenarPor = ViewBag.OrdenarPor as string ?? "posicion";
+        var filtroHabitacion = ViewBag.FiltroHabitacion as string ?? "";
+
+        <div class="alert alert-info d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <span><i class="fas fa-info-circle me-2"></i><strong>Total en lista de espera:</strong> @Model.Count()</span>
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+                <label class="mb-0 me-1">Filtrar por habitación:</label>
+                <form method="get" action="@Url.Action("ListaEspera")" class="d-inline">
+                    <input type="hidden" name="ordenarPor" value="@ordenarPor" />
+                    <select name="filtroHabitacion" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
+                        <option value="">Todas</option>
+                        @if (habitacionesEnLista != null)
+                        {
+                            foreach (var h in habitacionesEnLista)
+                            {
+                                <option value="@h.Value" @(filtroHabitacion == h.Value ? "selected" : "")>@h.Text</option>
+                            }
+                        }
+                    </select>
+                </form>
+                <label class="mb-0 me-1 ms-2">Ordenar por:</label>
+                <form method="get" action="@Url.Action("ListaEspera")" class="d-inline">
+                    <input type="hidden" name="filtroHabitacion" value="@filtroHabitacion" />
+                    <select name="ordenarPor" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
+                        <option value="posicion" @(ordenarPor == "posicion" ? "selected" : "")>Posición (quién entró primero)</option>
+                        <option value="habitacion" @(ordenarPor == "habitacion" ? "selected" : "")>Habitación</option>
+                        <option value="fecha" @(ordenarPor == "fecha" ? "selected" : "")>Fecha check-in</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            @{ var posicion = 0; }
+            @foreach (var reserva in Model)
+            {
+                posicion++;
+                <div class="col-md-6 col-lg-4">
+                    <div class="card solicitud-card shadow-sm">
+                        <div class="card-header bg-info bg-opacity-25">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <span class="badge bg-secondary me-2" title="Posición en lista de espera">#@posicion</span>
+                                    <i class="fas fa-user me-2"></i>@reserva.NombreCliente
+                                </h5>
+                                <span class="badge badge-lista-espera rounded-pill">
+                                    <i class="fas fa-hourglass-half me-1"></i>@reserva.EstadoReserva
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="info-cliente">
+                                <p class="mb-2">
+                                    <strong><i class="fas fa-bed me-2"></i>Habitación:</strong> 
+                                    @(reserva.NumeroHabitacion > 0 ? $"Habitación {reserva.NumeroHabitacion}" : $"Habitación {reserva.IdHabitacion}")
+                                </p>
+                                <p class="mb-2">
+                                    <strong><i class="fas fa-users me-2"></i>Personas:</strong> 
+                                    @reserva.cantidadPersonas
+                                </p>
+                                <p class="mb-2">
+                                    <strong><i class="fas fa-calendar-check me-2"></i>Check-in:</strong> 
+                                    @(reserva.FechaInicio?.ToString("dd/MM/yyyy") ?? "N/A")
+                                </p>
+                                <p class="mb-2">
+                                    <strong><i class="fas fa-calendar-times me-2"></i>Check-out:</strong> 
+                                    @(reserva.FechaFinal?.ToString("dd/MM/yyyy") ?? "N/A")
+                                </p>
+                                @if (reserva.FechaInicio.HasValue && reserva.FechaFinal.HasValue)
+                                {
+                                    var noches = (reserva.FechaFinal.Value - reserva.FechaInicio.Value).Days;
+                                    <p class="mb-0">
+                                        <strong><i class="fas fa-moon me-2"></i>Noches:</strong> 
+                                        @noches
+                                    </p>
+                                }
+                            </div>
+                            
+                            <div class="mb-3">
+                                <strong><i class="fas fa-money-bill-wave me-2"></i>Monto Total:</strong>
+                                <span class="text-success fw-bold">₡@reserva.MontoTotal.ToString("N2")</span>
+                            </div>
+
+                            @{
+                                var contactos = ViewBag.Contactos as Dictionary<int, Dictionary<string, string>>;
+                                var contactoInfo = contactos != null && contactos.ContainsKey(reserva.IdReserva) 
+                                    ? contactos[reserva.IdReserva] 
+                                    : null;
+                                var nombreCompleto = contactoInfo != null && contactoInfo.ContainsKey("NombreCompleto") 
+                                    ? contactoInfo["NombreCompleto"] 
+                                    : reserva.NombreCliente;
+                                var cedulaCliente = contactoInfo != null && contactoInfo.ContainsKey("Cedula") 
+                                    ? contactoInfo["Cedula"] 
+                                    : null;
+                                var emailCliente = contactoInfo != null && contactoInfo.ContainsKey("Email") 
+                                    ? contactoInfo["Email"] 
+                                    : null;
+                                var telefonoCliente = contactoInfo != null && contactoInfo.ContainsKey("Telefono") 
+                                    ? contactoInfo["Telefono"] 
+                                    : null;
+                            }
+
+                            <div class="mb-3 p-2 rounded border border-light bg-white">
+                                <strong class="d-block mb-2 text-secondary"><i class="fas fa-user-circle me-2"></i>Detalles del cliente</strong>
+                                <p class="mb-1 small"><strong>Nombre:</strong> @(nombreCompleto ?? reserva.NombreCliente ?? "—")</p>
+                                @if (!string.IsNullOrEmpty(cedulaCliente))
+                                {
+                                    <p class="mb-1 small"><strong>Cédula:</strong> @cedulaCliente</p>
+                                }
+                                @if (!string.IsNullOrEmpty(emailCliente))
+                                {
+                                    <p class="mb-1 small"><strong>Correo:</strong> <a href="mailto:@emailCliente">@emailCliente</a></p>
+                                }
+                                @if (!string.IsNullOrEmpty(telefonoCliente))
+                                {
+                                    <p class="mb-0 small"><strong>Teléfono:</strong> @telefonoCliente</p>
+                                }
+                                @if (string.IsNullOrEmpty(cedulaCliente) && string.IsNullOrEmpty(emailCliente) && string.IsNullOrEmpty(telefonoCliente))
+                                {
+                                    <p class="mb-0 small text-muted">Solo nombre en reserva: @(reserva.NombreCliente ?? "—")</p>
+                                }
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(emailCliente) || !string.IsNullOrEmpty(telefonoCliente))
+                            {
+                                <div class="mb-3 p-2 bg-light rounded">
+                                    <strong class="d-block mb-2"><i class="fas fa-address-book me-2"></i>Contacto:</strong>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        @if (!string.IsNullOrEmpty(emailCliente))
+                                        {
+                                            var asuntoCorreo = $"Reserva en Lista de Espera #{reserva.IdReserva} - {reserva.NombreCliente}";
+                                            var cuerpoCorreo = $"Estimado/a {reserva.NombreCliente},%0D%0A%0D%0A" +
+                                                $"Le contactamos respecto a su reserva en lista de espera:%0D%0A%0D%0A" +
+                                                $"ID Reserva: {reserva.IdReserva}%0D%0A" +
+                                                $"Habitación: {(reserva.NumeroHabitacion > 0 ? reserva.NumeroHabitacion.ToString() : reserva.IdHabitacion.ToString())}%0D%0A" +
+                                                $"Check-in: {(reserva.FechaInicio.HasValue ? reserva.FechaInicio.Value.ToString("dd/MM/yyyy") : "N/A")}%0D%0A" +
+                                                $"Check-out: {(reserva.FechaFinal.HasValue ? reserva.FechaFinal.Value.ToString("dd/MM/yyyy") : "N/A")}%0D%0A" +
+                                                $"Personas: {reserva.cantidadPersonas}%0D%0A" +
+                                                $"Monto: ₡{reserva.MontoTotal:N2}%0D%0A%0D%0A" +
+                                                $"Saludos cordiales,%0D%0AHotel Prado Inn & Suites";
+                                            <a href="mailto:@emailCliente?subject=@Uri.EscapeDataString(asuntoCorreo)&body=@cuerpoCorreo" 
+                                               class="btn btn-sm btn-outline-primary" 
+                                               title="Enviar correo a @emailCliente">
+                                                <i class="fas fa-envelope me-1"></i>Correo
+                                            </a>
+                                        }
+                                        @if (!string.IsNullOrEmpty(telefonoCliente))
+                                        {
+                                            var telefonoWhatsApp = telefonoCliente.Replace(" ", "").Replace("-", "").Replace("(", "").Replace(")", "");
+                                            if (!telefonoWhatsApp.StartsWith("+"))
+                                            {
+                                                telefonoWhatsApp = "+506" + telefonoWhatsApp;
+                                            }
+                                            var fechaInicio = reserva.FechaInicio.HasValue ? reserva.FechaInicio.Value.ToString("dd/MM/yyyy") : "N/A";
+                                            var fechaFinal = reserva.FechaFinal.HasValue ? reserva.FechaFinal.Value.ToString("dd/MM/yyyy") : "N/A";
+                                            var numeroHab = reserva.NumeroHabitacion > 0 ? reserva.NumeroHabitacion.ToString() : reserva.IdHabitacion.ToString();
+                                            var mensajeWhatsApp = $"Hola {reserva.NombreCliente}, le contactamos del Hotel Prado Inn & Suites respecto a su reserva en lista de espera #{reserva.IdReserva}.%0A%0A" +
+                                                $"Habitación: {numeroHab}%0A" +
+                                                $"Check-in: {fechaInicio}%0A" +
+                                                $"Check-out: {fechaFinal}%0A" +
+                                                $"Personas: {reserva.cantidadPersonas}%0A" +
+                                                $"Monto: ₡{reserva.MontoTotal:N2}%0A%0A" +
+                                                $"¿En qué podemos ayudarle?";
+                                            <a href="https://wa.me/@telefonoWhatsApp?text=@mensajeWhatsApp" 
+                                               target="_blank"
+                                               class="btn btn-sm btn-outline-success" 
+                                               title="Contactar por WhatsApp: @telefonoCliente">
+                                                <i class="fab fa-whatsapp me-1"></i>WhatsApp
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-success btn-accion" onclick="aprobarSolicitud(@reserva.IdReserva)">
+                                    <i class="fas fa-check me-2"></i>Aprobar (Verificar Disponibilidad)
+                                </button>
+                                <button class="btn btn-danger btn-accion" onclick="rechazarSolicitud(@reserva.IdReserva)">
+                                    <i class="fas fa-times me-2"></i>Rechazar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            <i class="fas fa-hourglass-half fa-3x mb-3"></i>
+            <h4>No hay reservas en lista de espera</h4>
+            <p>Todas las reservas han sido procesadas.</p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function aprobarSolicitud(idReserva) {
+            if (!confirm('¿Está seguro de que desea aprobar esta reserva? Se verificará la disponibilidad antes de confirmar.')) {
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("AprobarSolicitud", "ReservasA")',
+                type: 'POST',
+                data: { IdReserva: idReserva },
+                success: function (response) {
+                    if (response.success) {
+                        alert('Reserva aprobada exitosamente');
+                        location.reload();
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function () {
+                    alert('Error al procesar la solicitud');
+                }
+            });
+        }
+
+        function rechazarSolicitud(idReserva) {
+            var motivo = prompt('Ingrese el motivo del rechazo (opcional):');
+            if (motivo === null) {
+                return; // Usuario canceló
+            }
+
+            if (!confirm('¿Está seguro de que desea rechazar esta reserva?')) {
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("RechazarSolicitud", "ReservasA")',
+                type: 'POST',
+                data: { 
+                    IdReserva: idReserva,
+                    motivo: motivo || ''
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert('Reserva rechazada exitosamente');
+                        location.reload();
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function () {
+                    alert('Error al procesar la solicitud');
+                }
+            });
+        }
+    </script>
+}
+

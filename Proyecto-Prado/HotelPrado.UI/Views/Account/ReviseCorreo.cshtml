@@ -1,0 +1,19 @@
+@{
+    ViewBag.Title = "Revise su correo";
+    Layout = "~/Views/Shared/_LayoutSimple.cshtml";
+    var email = ViewBag.Email as string ?? "";
+    var linkEnlace = ViewBag.LinkEnlace as string ?? "";
+}
+<div class="container" style="max-width: 560px; margin: 2rem auto; padding: 2rem; background: rgba(255,255,255,0.95); border-radius: 8px;">
+    <h2>Cuenta creada</h2>
+    <p>Hemos enviado un enlace de activación a <strong>@email</strong>.</p>
+    <p>Haga clic en ese enlace para activar su cuenta y poder iniciar sesión.</p>
+    @if (!string.IsNullOrWhiteSpace(linkEnlace))
+    {
+        <p style="margin-top: 1rem;">Si no recibe el correo, puede usar este enlace para activar su cuenta:</p>
+        <p><a href="@linkEnlace" style="word-break: break-all;">@linkEnlace</a></p>
+    }
+    <p style="margin-top: 1.5rem;">
+        @Html.ActionLink("Ir a iniciar sesión", "Login", "Account", null, new { @class = "btn btn-primary" })
+    </p>
+</div>

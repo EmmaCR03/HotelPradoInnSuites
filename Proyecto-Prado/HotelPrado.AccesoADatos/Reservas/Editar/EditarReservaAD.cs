@@ -1,8 +1,7 @@
 ﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Reservas.Editar;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Reservas;
 using System;
-using System.Data.Entity;
-using System.Linq;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace HotelPrado.AccesoADatos.Reservas.Editar
@@ -20,29 +19,48 @@ namespace HotelPrado.AccesoADatos.Reservas.Editar
         {
             try
             {
-                // Buscar el colaborador en la base de datos
-                var laReservaEnBaseDeDatos = await _contexto.ReservasTabla
-                    .Where(c => c.IdReserva == laReservaActualizar.IdReserva)
-                    .FirstOrDefaultAsync();
+                // IMPORTANTE: IdCliente en Reservas es NVARCHAR(128) que referencia a AspNetUsers.Id (GUID)
+                // NO convertir a INT, usar el GUID directamente
+                if (string.IsNullOrEmpty(laReservaActualizar.IdCliente))
+                {
+                    throw new Exception("IdCliente (GUID del usuario) es requerido.");
+                }
 
-
-                // Actualizar los campos con los nuevos valores
-                laReservaEnBaseDeDatos.cantidadPersonas = laReservaActualizar.cantidadPersonas;
-                laReservaEnBaseDeDatos.NombreCliente = laReservaActualizar.NombreCliente;
-                laReservaEnBaseDeDatos.IdHabitacion = laReservaActualizar.IdHabitacion;
-                laReservaEnBaseDeDatos.FechaInicio = laReservaActualizar.FechaInicio;
-                laReservaEnBaseDeDatos.FechaFinal = laReservaActualizar.FechaFinal;
-                laReservaEnBaseDeDatos.EstadoReserva = laReservaActualizar.EstadoReserva;
-                laReservaEnBaseDeDatos.MontoTotal = laReservaActualizar.MontoTotal;
-
-                // Cambiar el estado de la entidad a "Modified" para que Entity Framework realice el seguimiento del cambio
-                _contexto.Entry(laReservaEnBaseDeDatos).State = EntityState.Modified;
-
-                // Guardar los cambios en la base de datos
-                int cantidadDeDatosAlmacenados = await _contexto.SaveChangesAsync();
-
-                // Devolver la cantidad de registros actualizados
-                return cantidadDeDatosAlmacenados;
+                // Usar SQL directo para evitar problemas de mapeo
+                using (var connection = new SqlConnection(_contexto.Database.Connection.ConnectionString))
+                {
+                    await connection.OpenAsync();
+                    
+                    string query = @"
+                        UPDATE Reservas 
+                        SET 
+                            IdCliente = @IdCliente,
+                            NombreCliente = @NombreCliente,
+                            cantidadPersonas = @cantidadPersonas,
+                            IdHabitacion = @IdHabitacion,
+                            FechaInicio = @FechaInicio,
+                            FechaFinal = @FechaFinal,
+                            EstadoReserva = @EstadoReserva,
+                            MontoTotal = @MontoTotal
+                        WHERE IdReserva = @IdReserva";
+                    
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@IdReserva", laReservaActualizar.IdReserva);
+                        // Usar el GUID directamente, no convertir a INT
+                        command.Parameters.AddWithValue("@IdCliente", laReservaActualizar.IdCliente);
+                        command.Parameters.AddWithValue("@NombreCliente", (object)laReservaActualizar.NombreCliente ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@cantidadPersonas", laReservaActualizar.cantidadPersonas);
+                        command.Parameters.AddWithValue("@IdHabitacion", laReservaActualizar.IdHabitacion);
+                        command.Parameters.AddWithValue("@FechaInicio", (object)laReservaActualizar.FechaInicio ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@FechaFinal", (object)laReservaActualizar.FechaFinal ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@EstadoReserva", (object)laReservaActualizar.EstadoReserva ?? DBNull.Value);
+                        command.Parameters.AddWithValue("@MontoTotal", laReservaActualizar.MontoTotal);
+                        
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
+                        return rowsAffected;
+                    }
+                }
             }
             catch (Exception ex)
             {

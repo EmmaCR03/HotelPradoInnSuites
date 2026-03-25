@@ -1,326 +1,842 @@
-﻿@{
-    ViewBag.Title = "Habitaciones de Lujo";
+@{
+    ViewBag.Title = "Nuestras Habitaciones";
+    ViewBag.BodyClass = "pagina-habitaciones-info"; /* Layout usa esto para quitar padding y centrar hero */
 }
 
 <!-- Estilos mejorados -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="~/Content/site.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
+    /* ============================================
+       VARIABLES Y RESET
+    ============================================ */
     :root {
-        --primary-color: #7f8c8d; /* Gris medio */
-        --secondary-color: #95a5a6; /* Gris claro */
-        --accent-color: #bdc3c7; /* Gris más claro */
-        --light-bg: #ffffff; /* Fondo blanco */
-        --dark-text: #2c3e50; /* Texto oscuro */
-        --card-bg: #f8f9fa; /* Fondo de tarjetas gris claro */
+        --color-primary: #3a3a3a;
+        --color-secondary: #2a2a2a;
+        --color-accent: #007bff;
+        --color-gold: #d4af37;
+        --color-dark: #1a1a1a;
+        --color-light: #f8f9fa;
+        --color-text: #333;
+        --color-text-light: #666;
     }
 
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        color: var(--dark-text);
-        background-color: var(--light-bg);
-    }
-
-    .hero-section {
-        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/Img/images/imgHYD/img1H.jpg');
-        background-size: cover;
-        background-position: center;
-        height: 60vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        margin-bottom: 3rem;
-    }
-
-    .hero-title {
-        font-size: 3.5rem;
-        font-weight: 700;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    }
-
-    .carousel-item img {
-        height: 500px;
-        object-fit: cover;
-        border-radius: 10px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-
-    .card {
-        border: none;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        transition: all 0.3s ease;
-        margin-bottom: 20px;
-        background: var(--card-bg);
-    }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-        }
-
-    .card-header {
-        background-color: var(--primary-color);
-        color: white;
-        font-weight: 600;
-        border-bottom: none;
-    }
-
-    .amenities-list {
-        list-style: none;
+    * {
+        margin: 0;
         padding: 0;
+        box-sizing: border-box;
     }
 
-        .amenities-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-            .amenities-list li:last-child {
-                border-bottom: none;
-            }
-
-        .amenities-list i {
-            color: var(--primary-color);
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-
-    .availability-form {
-        background: var(--card-bg);
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        padding: 2rem;
-        margin-top: 3rem;
-        border: 1px solid #e0e0e0;
+    /* Solo en esta página: sin padding horizontal para que el hero vaya de borde a borde (como Apartamentos) */
+    .pagina-habitaciones-info .body-content {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
     }
 
-    .btn-primary {
-        background-color: var(--primary-color);
-        border: none;
-        padding: 10px 25px;
+    /* Botón Cambiar Imagen visible en la esquina (como en Apartamentos/Contacto) */
+    .habitaciones-hero .btn-edit-hero {
+        position: absolute !important;
+        top: 20px !important;
+        right: 20px !important;
+        left: auto !important;
+        z-index: 10;
+        background: rgba(109, 123, 184, 0.9);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
         font-weight: 600;
-        transition: all 0.3s;
     }
+    .habitaciones-hero .btn-edit-hero:hover { color: white; text-decoration: none; }
 
-        .btn-primary:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
-        }
-
-    .section-title {
+    /* ============================================
+       HERO SECTION - Ancho 100% (body-content sin padding en esta página)
+    ============================================ */
+    .habitaciones-hero {
         position: relative;
-        margin-bottom: 2rem;
-        text-align: center;
-        color: var(--dark-text);
+        width: 100%;
+        max-width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 500px;
+        background-image: url('@(ViewBag.HeroBannerUrl ?? "/Img/images/IMG_2.JPG")');
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-attachment: scroll;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        color: white;
+        overflow: hidden;
+        box-sizing: border-box;
     }
 
-        .section-title:after {
-            content: "";
-            display: block;
-            width: 80px;
-            height: 4px;
-            background: var(--primary-color);
-            margin: 15px auto;
-        }
+    .habitaciones-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.8) 100%);
+        backdrop-filter: blur(2px);
+        z-index: 1;
+    }
 
-    .feature-icon {
-        font-size: 2.5rem;
-        color: var(--primary-color);
+    .hero-content-hab {
+        position: relative;
+        z-index: 2;
+        max-width: 900px;
+        padding: 3rem 2rem;
+        background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+        width: 100%;
+        margin: 0 auto !important;
+        text-align: center !important;
+        box-sizing: border-box;
+    }
+
+    .habitaciones-hero h1 {
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        font-weight: 800;
         margin-bottom: 1rem;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        text-shadow: 3px 3px 15px rgba(0,0,0,1);
+        color: white;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        text-align: center !important;
+        width: 100%;
+        max-width: 100%;
+        padding: 0 1rem;
+        box-sizing: border-box;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        display: block;
     }
 
-    .form-control, .input-group-text {
-        background-color: white;
-        border: 1px solid #ddd;
-        color: var(--dark-text);
+    .habitaciones-hero p {
+        font-size: 1.5rem;
+        font-weight: 300;
+        text-shadow: 2px 2px 8px rgba(0,0,0,1);
+        color: white;
+        letter-spacing: 1px;
+        text-align: center !important;
     }
 
-        .form-control:focus {
-            background-color: white;
-            color: var(--dark-text);
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(127, 140, 141, 0.25);
-        }
+    /* ============================================
+       CONTENEDOR PRINCIPAL
+    ============================================ */
+    .habitaciones-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+    }
 
-    /* Animaciones */
+    /* ============================================
+       NAVEGACIÓN DE TABS
+    ============================================ */
+    .habitaciones-tabs {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding: 1rem 0;
+        border-bottom: 2px solid #e0e0e0;
+    }
+
+    .habitaciones-tab {
+        background: transparent;
+        border: 2px solid var(--color-accent);
+        color: var(--color-accent);
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .habitaciones-tab:hover {
+        background: var(--color-accent);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+    }
+
+    .habitaciones-tab.active {
+        background: var(--color-accent);
+        color: white;
+        box-shadow: 0 4px 12px rgba(0,123,255,0.4);
+    }
+
+    /* ============================================
+       CONTENIDO DE TABS
+    ============================================ */
+    .tab-content-wrapper {
+        display: none;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .tab-content-wrapper.active {
+        display: block;
+    }
+
     @@keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================
+       SECCIÓN DE INFORMACIÓN
+    ============================================ */
+    .info-section {
+        background: linear-gradient(135deg, #f8f9fa, #ffffff);
+        padding: 3rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+        border-left: 5px solid var(--color-accent);
+    }
+
+    .info-section h2 {
+        color: var(--color-primary);
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        font-weight: 700;
+    }
+
+    .info-section p {
+        color: var(--color-text);
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin-bottom: 1.2rem;
+        text-align: justify;
+    }
+
+    .info-section p strong {
+        color: var(--color-accent);
+    }
+
+    /* ============================================
+       SECCIÓN DE SERVICIOS
+    ============================================ */
+    .servicios-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .servicio-card {
+        background: linear-gradient(135deg, #3a3a3a, #2a2a2a);
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .servicio-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(0,123,255,0.3);
+        border-color: var(--color-accent);
+    }
+
+    .servicio-card i {
+        font-size: 3.5rem;
+        color: var(--color-accent);
+        margin-bottom: 1.5rem;
+    }
+
+    .servicio-card h3 {
+        color: white;
+        font-size: 1.4rem;
+        margin-bottom: 0.8rem;
+        font-weight: 700;
+    }
+
+    .servicio-card p {
+        color: #e0e0e0;
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    /* ============================================
+       GALERÍA
+    ============================================ */
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        cursor: pointer;
+        height: 300px;
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .gallery-item:hover img {
+        transform: scale(1.1);
+    }
+
+    .gallery-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        color: white;
+        padding: 2rem 1rem 1rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-align: center;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-caption {
+        transform: translateY(0);
+    }
+
+    /* ============================================
+       FORMULARIO DE DISPONIBILIDAD
+    ============================================ */
+    .availability-section {
+        background: linear-gradient(135deg, #3a3a3a, #2a2a2a);
+        padding: 3rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        margin-top: 0;
+        border: 2px solid var(--color-accent);
+    }
+
+    .availability-section h2 {
+        color: white;
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .availability-form .form-label {
+        color: white;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .availability-form .input-group-text {
+        background: var(--color-accent);
+        border: none;
+        color: white;
+    }
+
+    .availability-form .form-control {
+        border: none;
+        padding: 0.75rem;
+        font-size: 1rem;
+    }
+
+    .availability-form .btn-submit {
+        background: var(--color-accent);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .availability-form .btn-submit:hover {
+        background: #0056b3;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,123,255,0.4);
+    }
+
+
+    /* ============================================
+       RESPONSIVE
+    ============================================ */
+    @@media (max-width: 992px) {
+        .habitaciones-hero {
+            height: 400px;
         }
 
-        to {
-            opacity: 1;
-            transform: translateY(0);
+        .habitaciones-hero h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            padding: 0 1.5rem;
+        }
+
+        .habitaciones-hero p {
+            font-size: 1.3rem;
+        }
+
+        .hero-content-hab {
+            padding: 2.5rem 1.5rem;
+            margin: 0 auto;
+            text-align: center;
+            width: 100%;
+            max-width: 100%;
+            left: 0;
+            right: 0;
+        }
+        
+        .habitaciones-hero h1 {
+            padding: 0 1rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .habitaciones-container {
+            padding: 2rem 1rem;
+        }
+
+        .info-section,
+        .availability-section {
+            padding: 2rem 1.5rem;
+        }
+
+        .servicios-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .gallery-grid {
+            grid-template-columns: 1fr;
         }
     }
 
-    .animate-fade {
-        animation: fadeIn 1s ease-out forwards;
+    @@media (max-width: 768px) {
+        .habitaciones-hero {
+            height: 350px;
+        }
+
+        .habitaciones-hero .btn-edit-hero {
+            position: fixed !important;
+            top: 72px !important;
+            right: 12px !important;
+            left: auto !important;
+            z-index: 999;
+        }
+
+        .habitaciones-hero h1 {
+            font-size: clamp(1.75rem, 6vw, 2.5rem);
+            letter-spacing: 2px;
+            padding: 0 1rem;
+        }
+
+        .habitaciones-hero p {
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .hero-content-hab {
+            padding: 2rem 1rem;
+            margin: 0 auto;
+            text-align: center;
+            width: 100%;
+            max-width: 100%;
+            left: 0;
+            right: 0;
+        }
+        
+        .habitaciones-hero h1 {
+            padding: 0 0.75rem;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: clamp(1.5rem, 7vw, 2.5rem);
+        }
+
+        .habitaciones-tab {
+            padding: 0.6rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .info-section h2 {
+            font-size: 2rem;
+        }
+
+        .servicio-card {
+            padding: 2rem;
+        }
+
+        .servicio-card i {
+            font-size: 3rem;
+        }
+
+        /* Tabs en móvil: scroll horizontal para que no se corten */
+        .habitaciones-tabs {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            justify-content: flex-start;
+            padding-bottom: 0.5rem;
+            margin-left: -0.5rem;
+            margin-right: -0.5rem;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .habitaciones-tab {
+            flex: 0 0 auto;
+            white-space: nowrap;
+            padding: 0.6rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Formulario disponibilidad: todo apilado y sin cortes */
+        .habitaciones-container {
+            padding: 1rem 0.75rem;
+            overflow-x: hidden;
+        }
+
+        .availability-section {
+            padding: 1.5rem 1rem;
+            margin-left: 0;
+            margin-right: 0;
+            border-radius: 12px;
+        }
+
+        .availability-section h2 {
+            font-size: 1.35rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .availability-form .row.availability-row > [class*="col-"] {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .availability-form .form-control {
+            font-size: 16px;
+        }
+
+        .availability-form .btn-submit {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            font-size: 1rem;
+        }
     }
 
-    .delay-1 {
-        animation-delay: 0.2s;
-    }
+    @@media (max-width: 480px) {
+        .habitaciones-tab {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+        }
 
-    .delay-2 {
-        animation-delay: 0.4s;
-    }
+        .habitaciones-tab i {
+            display: none;
+        }
 
-    .delay-3 {
-        animation-delay: 0.6s;
+        .availability-section h2 {
+            font-size: 1.2rem;
+        }
     }
 </style>
-
-<!-- Hero Section -->
-<div class="hero-section">
-    <div class="container text-center">
-        <h1 class="hero-title animate__animated animate__fadeInDown">Nuestras Habitaciones</h1>
-        <p class="lead animate__animated animate__fadeInUp">Descubre el confort y elegancia de nuestros espacios</p>
+<section class="habitaciones-hero">
+    @if (User.IsInRole("Administrador"))
+    {
+        <a href="@Url.Action("ConfigurarHeroBanners", "Admin")" class="btn-edit-hero" title="Cambiar imagen del hero banner">
+            <i class="fas fa-image"></i> Cambiar Imagen
+        </a>
+    }
+    <div class="hero-content-hab">
+        <h1>HABITACIONES</h1>
+        <p>Confort y elegancia en cada detalle</p>
     </div>
-</div>
+</section>
 
-<div class="container">
-    <!-- Carrusel mejorado -->
-    <div id="habitacionesCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#habitacionesCarousel" data-bs-slide-to="0" class="active"></button>
-            <button type="button" data-bs-target="#habitacionesCarousel" data-bs-slide-to="1"></button>
-            <button type="button" data-bs-target="#habitacionesCarousel" data-bs-slide-to="2"></button>
-            <button type="button" data-bs-target="#habitacionesCarousel" data-bs-slide-to="3"></button>
-        </div>
-
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="~/Img/images/imgHYD/img1H.jpg" class="d-block w-100" alt="Suite Presidencial">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Suite Presidencial</h5>
-                    <p>Amplio espacio con vista panorámica</p>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="~/Img/images/imgHYD/img2H.jpg" class="d-block w-100" alt="Habitación Ejecutiva">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Habitación Ejecutiva</h5>
-                    <p>Confort y tecnología para viajeros de negocios</p>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="~/Img/images/imgHYD/img3H.jpg" class="d-block w-100" alt="Habitación Familiar">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Habitación Familiar</h5>
-                    <p>Espacio perfecto para disfrutar en familia</p>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="~/Img/images/imgHYD/img4H.jpg" class="d-block w-100" alt="Habitación Estándar">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Habitación Estándar</h5>
-                    <p>Todas las comodidades que necesitas</p>
-                </div>
-            </div>
-        </div>
-
-        <button class="carousel-control-prev" type="button" data-bs-target="#habitacionesCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Anterior</span>
+<!-- Contenedor Principal -->
+<div class="habitaciones-container">
+    
+    <!-- Navegación de Tabs -->
+    <div class="habitaciones-tabs">
+        <button class="habitaciones-tab active" data-tab="disponibilidad">
+            <i class="fas fa-calendar-check"></i> Solicitar Reserva
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#habitacionesCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Siguiente</span>
+        <button class="habitaciones-tab" data-tab="info">
+            <i class="fas fa-info-circle"></i> Información
+        </button>
+        <button class="habitaciones-tab" data-tab="servicios">
+            <i class="fas fa-concierge-bell"></i> Servicios
+        </button>
+        <button class="habitaciones-tab" data-tab="galeria">
+            <i class="fas fa-images"></i> Galería
+        </button>
+        <button class="habitaciones-tab" data-tab="nosotros">
+            <i class="fas fa-building"></i> Nosotros
         </button>
     </div>
 
-    <!-- Información de Habitaciones -->
-    <h2 class="section-title animate-fade">Detalles de Nuestras Habitaciones</h2>
-
-    <div class="row">
-        <!-- Tarjeta de Descripción -->
-        <div class="col-md-6 animate-fade delay-1">
-            <div class="card h-100">
-                <div class="card-header text-center">
-                    <h5><i class="fas fa-home feature-icon"></i><br>Descripción</h5>
-                </div>
-                <div class="card-body">
-                    <ul class="amenities-list">
-                        <li><i class="fas fa-bed"></i> 2 camas matrimoniales premium</li>
-                        <li><i class="fas fa-tv"></i> Pantalla inteligente 55"</li>
-                        <li><i class="fas fa-wifi"></i> WiFi de alta velocidad</li>
-                        <li><i class="fas fa-snowflake"></i> Aire acondicionado</li>
-                        <li><i class="fas fa-bath"></i> Baño con amenities de lujo</li>
-                        <li><i class="fas fa-coffee"></i> Cafetera Nespresso</li>
-                    </ul>
-                </div>
-            </div>
+    <!-- Tab: Información -->
+    <div class="tab-content-wrapper" data-content="info">
+        <div class="info-section">
+            <h2>Nuestras Suites</h2>
+            <p>
+                Ofrecemos cómodas y modernas suites en un ambiente tranquilo y acogedor. 
+                Cada una está equipada con todo lo que necesita para una estadía práctica y confortable: 
+                <strong>baño privado</strong>, <strong>internet inalámbrico simétrico</strong>, 
+                <strong>pantalla FHD con conexión wifi</strong>, <strong>aire acondicionado</strong>, 
+                <strong>caja de seguridad</strong>, <strong>plancha y tabla de planchar</strong> 
+                y <strong>secador de cabello</strong>.
+            </p>
+            <p>
+                Además, nuestras suites cuentan con <strong>refrigerador</strong>, 
+                <strong>microondas</strong> y <strong>coffee maker</strong>, también las amenidades 
+                de un hotel corporativo, pensadas para brindarle libertad, comodidad y una experiencia 
+                sin complicaciones.
+            </p>
         </div>
+    </div>
 
-        <!-- Tarjeta de Capacidad -->
-        <div class="col-md-6 animate-fade delay-2">
-            <div class="card h-100">
-                <div class="card-header text-center">
-                    <h5><i class="fas fa-users feature-icon"></i><br>Capacidad</h5>
-                </div>
-                <div class="card-body text-center">
-                    <div class="d-flex justify-content-center mb-4">
-                        <div class="text-center mx-3">
-                            <i class="fas fa-user fa-3x mb-2" style="color: var(--primary-color);"></i>
-                            <p>1 persona</p>
-                        </div>
-                        <div class="text-center mx-3">
-                            <i class="fas fa-user-friends fa-3x mb-2" style="color: var(--primary-color);"></i>
-                            <p>2-4 personas</p>
-                        </div>
-                    </div>
-                    <p class="text-muted">Nuestras habitaciones están diseñadas para brindar comodidad tanto para viajeros individuales como para grupos.</p>
-                </div>
+    <!-- Tab: Servicios -->
+    <div class="tab-content-wrapper" data-content="servicios">
+        <div class="servicios-grid">
+            <div class="servicio-card">
+                <i class="fas fa-car"></i>
+                <h3>Parqueo</h3>
+                <p>Estacionamiento seguro y gratuito para nuestros huéspedes</p>
+            </div>
+            <div class="servicio-card">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Seguridad 24/7</h3>
+                <p>Vigilancia profesional las 24 horas para su tranquilidad</p>
+            </div>
+            <div class="servicio-card">
+                <i class="fas fa-dumbbell"></i>
+                <h3>Gimnasio</h3>
+                <p>Centro de fitness completamente equipado para mantenerse activo</p>
             </div>
         </div>
     </div>
 
-    <!-- Formulario de Disponibilidad -->
-    <div class="availability-form animate-fade">
-        <h3 class="text-center mb-4"><i class="fas fa-calendar-check"></i> Comprobar Disponibilidad</h3>
-
-        <form id="reservationForm" method="get" action="@Url.Action("IndexHabitacionesUsuario", "Habitacion")">
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Fecha de Entrada</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                        <input type="date" name="check_in" class="form-control" required>
+    <!-- Tab: Galería (las mismas fotos que configuras en Admin → Galería → Habitaciones) -->
+    <div class="tab-content-wrapper" data-content="galeria">
+        <div class="gallery-grid">
+            @{
+                var listaGaleriaHab = ViewBag.GaleriaHabitaciones as System.Collections.IList;
+                var hayGaleria = listaGaleriaHab != null && listaGaleriaHab.Count > 0;
+            }
+            @if (hayGaleria)
+            {
+                foreach (var item in ViewBag.GaleriaHabitaciones)
+                {
+                    <div class="gallery-item">
+                        <img src="@Url.Content((string)item.Item1)" alt="@(item.Item2 ?? "Imagen")" loading="lazy" onerror="this.style.display='none'">
+                        <div class="gallery-caption">@(item.Item2 ?? "Imagen")</div>
                     </div>
+                }
+            }
+            else
+            {
+                <div class="gallery-item">
+                    <img src="@Url.Content("~/Img/images/Habitaciones/WhatsApp Image 2025-12-11 at 3.24.28 PM.jpeg")" alt="Habitación" loading="lazy" onerror="this.style.display='none'">
+                    <div class="gallery-caption">Habitación</div>
                 </div>
-
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Fecha de Salida</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                        <input type="date" name="check_out" class="form-control" required>
-                    </div>
+                <div class="gallery-item">
+                    <img src="@Url.Content("~/Img/images/Habitaciones/WhatsApp Image cocina por fuera-12-11 at 3.24.28 PM.jpeg")" alt="Cocina" loading="lazy" onerror="this.style.display='none'">
+                    <div class="gallery-caption">Cocina</div>
                 </div>
-
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Número de Personas</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-user"></i></span>
-                        <input type="number" name="capacidad" class="form-control" value="1" min="1" max="4" required>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-grid mt-4">
-                <button type="submit" class="btn btn-primary btn-lg">
-                    <i class="fas fa-search"></i> Ver Disponibilidad
-                </button>
-            </div>
-        </form>
+            }
+        </div>
     </div>
+
+    <!-- Tab: Disponibilidad -->
+    <div class="tab-content-wrapper active" data-content="disponibilidad">
+        <div class="availability-section">
+            <h2><i class="fas fa-calendar-check"></i> Comprobar Disponibilidad</h2>
+            <form class="availability-form" method="get" action="@Url.Action("IndexHabitacionesUsuario", "Habitacion")" id="formBuscarHabitaciones" onsubmit="return validarFechas(this)">
+                <div class="row g-3 availability-row">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label">Fecha de Entrada</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            <input type="date" name="check_in" id="check_in" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label">Fecha de Salida</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            <input type="date" name="check_out" id="check_out" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label">Número de Personas</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input type="number" name="capacidad" class="form-control" value="1" min="1" max="4" required>
+                        </div>
+                    </div>
+                </div>
+                <div id="error-fechas" class="alert alert-danger mt-3" style="display: none;">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <span id="mensaje-error"></span>
+                </div>
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-submit">
+                        <i class="fas fa-search"></i> Ver Habitaciones Disponibles
+                    </button>
+                </div>
+            </form>
+            
+            <script>
+                function validarFechas(form) {
+                    var checkIn = document.getElementById('check_in').value;
+                    var checkOut = document.getElementById('check_out').value;
+                    var errorDiv = document.getElementById('error-fechas');
+                    var mensajeError = document.getElementById('mensaje-error');
+                    
+                    if (!checkIn || !checkOut) {
+                        errorDiv.style.display = 'block';
+                        mensajeError.textContent = 'Por favor, seleccione ambas fechas.';
+                        return false;
+                    }
+                    
+                    var fechaIn = new Date(checkIn + 'T00:00:00');
+                    var fechaOut = new Date(checkOut + 'T00:00:00');
+                    var hoy = new Date();
+                    hoy.setHours(0, 0, 0, 0);
+                    
+                    // Validar que la fecha de entrada no sea en el pasado (permitir hoy y fechas futuras)
+                    // Comparar solo las fechas sin la hora - usar getTime() para comparación precisa
+                    var fechaInTime = fechaIn.getTime();
+                    var hoyTime = hoy.getTime();
+                    
+                    // Permitir hoy (fechaInTime >= hoyTime) y fechas futuras
+                    if (fechaInTime < hoyTime) {
+                        errorDiv.style.display = 'block';
+                        mensajeError.textContent = 'La fecha de entrada no puede ser anterior a hoy.';
+                        return false;
+                    }
+                    
+                    // Validar que la fecha de salida sea después de la de entrada
+                    if (fechaOut <= fechaIn) {
+                        errorDiv.style.display = 'block';
+                        mensajeError.textContent = 'La fecha de salida debe ser posterior a la fecha de entrada.';
+                        return false;
+                    }
+                    
+                    // Calcular días
+                    var diffTime = fechaOut - fechaIn;
+                    var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    // Validar que sean al menos 1 día
+                    if (diffDays < 1) {
+                        errorDiv.style.display = 'block';
+                        mensajeError.textContent = 'La estadía debe ser de al menos 1 noche.';
+                        return false;
+                    }
+                    
+                    // Ocultar error si todo está bien
+                    errorDiv.style.display = 'none';
+                    return true;
+                }
+                
+                // Validar en tiempo real
+                document.addEventListener('DOMContentLoaded', function() {
+                    var checkIn = document.getElementById('check_in');
+                    var checkOut = document.getElementById('check_out');
+                    
+                    if (checkIn && checkOut) {
+                        checkIn.addEventListener('change', function() {
+                            if (checkOut.value) {
+                                validarFechas(document.getElementById('formBuscarHabitaciones'));
+                            }
+                        });
+                        
+                        checkOut.addEventListener('change', function() {
+                            if (checkIn.value) {
+                                validarFechas(document.getElementById('formBuscarHabitaciones'));
+                            }
+                        });
+                    }
+                });
+            </script>
+        </div>
+    </div>
+
+    <!-- Tab: Nosotros -->
+    <div class="tab-content-wrapper" data-content="nosotros">
+        <div class="info-section">
+            <h2>Nosotros</h2>
+            <p>
+                Aquí encontrará la combinación ideal entre comodidad, ubicación estratégica y un servicio diseñado 
+                para hacer de su estadía algo excepcional.
+            </p>
+            <p>
+                En <strong>Prado Inn & Suites</strong> nos enfocamos en brindarle más valor por su dinero: habitaciones amplias, 
+                atención personalizada, servicios pensados para su descanso y un ambiente seguro y acogedor. 
+                Nuestro objetivo es que disfrute cada momento, ya sea que nos visite por trabajo o por vacaciones.
+            </p>
+            <p>
+                Sabemos que su tiempo es importante, por eso queremos ofrecerle una experiencia sin complicaciones, 
+                agradable y memorable. Estamos aquí para atenderle, ayudarle y asegurarnos de que viva lo mejor 
+                de Costa Rica desde el primer día.
+            </p>
+            <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, #007bff, #0056b3); border-radius: 15px;">
+                <p style="color: white; font-size: 1.3rem; font-weight: 600; margin: 0;">
+                    <i class="fas fa-heart" style="color: #d4af37; margin-right: 0.5rem;"></i>
+                    Gracias por elegir Prado Inn & Suites. Su comodidad es nuestra prioridad.
+                    <i class="fas fa-heart" style="color: #d4af37; margin-left: 0.5rem;"></i>
+                </p>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+@section scripts {
+<script>
+    // Sistema de Tabs
+    document.addEventListener('DOMContentLoaded', function() {
+        var tabs = document.querySelectorAll('.habitaciones-tab');
+        var contents = document.querySelectorAll('.tab-content-wrapper');
+        
+        tabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                var targetTab = this.getAttribute('data-tab');
+                
+                // Remover active de todos los tabs
+                tabs.forEach(function(t) { t.classList.remove('active'); });
+                
+                // Remover active de todos los contenidos
+                contents.forEach(function(c) { c.classList.remove('active'); });
+                
+                // Agregar active al tab clickeado
+                this.classList.add('active');
+                
+                // Agregar active al contenido correspondiente
+                var targetContent = document.querySelector('[data-content="' + targetTab + '"]');
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                }
+            });
+        });
+    });
+</script>
+}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -6,13 +6,17 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using HotelPrado.UI.Models;
+using HotelPrado.AccesoADatos;
+using System.Configuration;
+using System.Data.Entity;
+using System.Data.SqlClient;
 
 namespace HotelPrado.UI.Controllers
 {
-    [Authorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -32,7 +36,7 @@ namespace HotelPrado.UI.Controllers
         {
             get
             {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+                return _signInManager ?? this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
             private set
             {
@@ -44,7 +48,7 @@ namespace HotelPrado.UI.Controllers
         {
             get
             {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                return _userManager ?? this.HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
             private set
             {
@@ -52,42 +56,216 @@ namespace HotelPrado.UI.Controllers
             }
         }
 
+        /// <summary>Obtiene la URL de imagen de fondo para Login/Registro desde ConfiguracionHeroBanner (con caché).</summary>
+        private string ObtenerImagenFondo(string pagina)
+        {
+            var cacheKey = "HeroBanner_" + pagina;
+            var cached = System.Web.HttpRuntime.Cache[cacheKey] as string;
+            if (cached != null) return cached;
+            try
+            {
+                using (var contexto = new Contexto())
+                {
+                    var url = contexto.ConfiguracionHeroBannerTabla
+                        .AsNoTracking()
+                        .Where(c => c.Pagina == pagina)
+                        .OrderByDescending(c => c.FechaActualizacion)
+                        .Select(c => c.UrlImagen)
+                        .FirstOrDefault();
+                    if (string.IsNullOrEmpty(url))
+                        url = "/Img/images/login/WhatsApp Image 2025-12-11 at 3.27.01 PM.jpeg";
+                    System.Web.HttpRuntime.Cache.Insert(cacheKey, url, null,
+                        DateTime.UtcNow.AddMinutes(5), System.Web.Caching.Cache.NoSlidingExpiration);
+                    return url;
+                }
+            }
+            catch { return "/Img/images/login/WhatsApp Image 2025-12-11 at 3.27.01 PM.jpeg"; }
+        }
+
+        /// <summary>Indica si el correo es la excepción del admin (no requiere verificación).</summary>
+        private static bool EsEmailAdminException(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email)) return false;
+            var excepcion = ConfigurationManager.AppSettings["EmailAdminException"];
+            return !string.IsNullOrWhiteSpace(excepcion) && string.Equals(email.Trim(), excepcion.Trim(), StringComparison.OrdinalIgnoreCase);
+        }
+
         //
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
+            try
+            {
+                // Evitar bucles: si ya estamos siendo redirigidos desde Login, ignorar returnUrl
+                returnUrl = SanitizeReturnUrl(returnUrl);
+                
+                // Verificar si hay un bucle de redirección detectado
+                var redirectCount = Session?["RedirectCount"] as int? ?? 0;
+                if (redirectCount > 3)
+                {
+                    Session["RedirectCount"] = 0; // Resetear contador
+                    // Mostrar página de error en lugar de redirigir
+                    return Content(
+                        "<!DOCTYPE html><html><head><meta charset='utf-8'><title>Error de Redirección</title></head><body style='font-family:sans-serif;padding:2rem;max-width:600px;margin:0 auto;'>" +
+                        "<h1 style='color:#c00'>Error de Redirección Detectado</h1>" +
+                        "<p>Se detectó un bucle de redirección. Por favor, limpie las cookies del navegador e intente nuevamente.</p>" +
+                        "<p><a href='/'>Ir al inicio</a> | <a href='/Account/Login'>Reintentar login</a></p>" +
+                        "</body></html>",
+                        "text/html");
+                }
+                
+                ViewBag.ReturnUrl = returnUrl;
+                
+                // Verificar que OWIN esté inicializado correctamente
+                try
+                {
+                    var owinContext = this.HttpContext.GetOwinContext();
+                    if (owinContext == null)
+                    {
+                        throw new InvalidOperationException("OWIN context no está disponible. Verifique que OWIN esté configurado correctamente.");
+                    }
+                }
+                catch (Exception owinEx)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error OWIN en Login: {owinEx.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Stack trace: {owinEx.StackTrace}");
+                    // Continuar con la carga de la vista aunque haya un problema con OWIN
+                }
+                
+                ViewBag.ImagenFondo = ObtenerImagenFondo("Login");
+                return View(new LoginViewModel());
+            }
+            catch (Exception ex)
+            {
+                // Log detallado del error
+                System.Diagnostics.Debug.WriteLine($"Error en Account/Login GET: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Tipo de excepción: {ex.GetType().FullName}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                
+                if (ex.InnerException != null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Inner stack trace: {ex.InnerException.StackTrace}");
+                }
+                
+                // Si algo falla (ej. BD no disponible), mostrar mensaje en vez de error genérico
+                // NO redirigir para evitar bucles
+                return Content(
+                    "<!DOCTYPE html><html><head><meta charset='utf-8'><title>Error</title></head><body style='font-family:sans-serif;padding:2rem;max-width:600px;margin:0 auto;'>" +
+                    "<h1 style='color:#c00'>No se pudo cargar la página de inicio de sesión</h1>" +
+                    "<p><strong>Error:</strong> " + HttpUtility.HtmlEncode(ex.Message) + "</p>" +
+                    "<p><strong>Tipo:</strong> " + HttpUtility.HtmlEncode(ex.GetType().FullName) + "</p>" +
+                    (ex.InnerException != null ? "<p><strong>Error interno:</strong> " + HttpUtility.HtmlEncode(ex.InnerException.Message) + "</p>" : "") +
+                    "<p><strong>Compruebe:</strong></p>" +
+                    "<ul><li>Que publicó en modo <b>Release</b> (para que use la cadena de conexión del host)</li>" +
+                    "<li>Que en el servidor el archivo Web.config tiene la cadena de conexión correcta (Data Source=... del hosting)</li>" +
+                    "<li>Que la base de datos del host tiene las tablas de Identity (AspNetUsers, AspNetRoles, etc.)</li>" +
+                    "<li>Que OWIN está configurado correctamente en Startup.cs</li></ul>" +
+                    "<p><a href='/'>Ir al inicio</a> | <a href='/Home/Ping'>Probar si la app responde (Ping)</a> | <a href='/Home/Diagnostico'>Diagnóstico</a></p>" +
+                    "</body></html>",
+                    "text/html");
+            }
         }
 
         //
         // POST: /Account/Login
+        // Sin ValidateAntiForgeryToken: en móvil la cookie antifalsificación a veces no se envía con el POST,
+        // lo que provoca Error 500 "cookie no está presente". El login sigue protegido por credenciales.
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            returnUrl = SanitizeReturnUrl(returnUrl);
+            ViewBag.ReturnUrl = returnUrl;
+            ViewBag.ImagenFondo = ObtenerImagenFondo("Login");
+
             if (!ModelState.IsValid)
             {
+                ModelState.AddModelError("", "Por favor complete correo y contraseña.");
                 return View(model);
             }
 
-            // No cuenta los errores de inicio de sesión para el bloqueo de la cuenta
-            // Para permitir que los errores de contraseña desencadenen el bloqueo de la cuenta, cambie a shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
+            try
             {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", $"Intento de inicio de sesión no válido para el correo: {model.Email}");
-                    return View(model);
+                var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+                
+                switch (result)
+                {
+                    case SignInStatus.Success:
+                        // Respaldo en Session para que el host muestre "Hola" aunque la cookie falle al leer (machineKey, proxy, etc.).
+                        var userLogin = await UserManager.FindByEmailAsync(model.Email);
+                        if (userLogin != null)
+                        {
+                            Session["UserId"] = userLogin.Id;
+                            Session["UserName"] = userLogin.UserName ?? userLogin.Email ?? "";
+                        }
+                        return RedirectToLocal(returnUrl);
+                    case SignInStatus.LockedOut:
+                        ModelState.AddModelError("", "La cuenta está bloqueada temporalmente.");
+                        return View(model);
+                    case SignInStatus.RequiresVerification:
+                        return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    case SignInStatus.Failure:
+                    default:
+                        var usuarioPorEmail = await UserManager.FindByEmailAsync(model.Email);
+                        if (usuarioPorEmail != null && !await UserManager.IsEmailConfirmedAsync(usuarioPorEmail.Id))
+                        {
+                            // Excepción: el admin no tiene correo real, puede iniciar sesión sin confirmar
+                            if (!EsEmailAdminException(usuarioPorEmail.Email))
+                            {
+                                ModelState.AddModelError("", "Debe confirmar su correo electrónico antes de iniciar sesión. Revise su bandeja o el enlace que le enviamos al registrarse.");
+                                return View(model);
+                            }
+                        }
+                        ModelState.AddModelError("", "Correo o contraseña incorrectos. Intente de nuevo.");
+                        return View(model);
+                }
+            }
+            catch (System.Data.SqlClient.SqlException sqlEx)
+            {
+                // Manejar errores específicos de SQL Server con más detalle
+                System.Diagnostics.Debug.WriteLine($"Error SQL en login: {sqlEx.Message}");
+                System.Diagnostics.Debug.WriteLine($"Número de error: {sqlEx.Number}");
+                System.Diagnostics.Debug.WriteLine($"Servidor: {sqlEx.Server}");
+                
+                string mensajeError = "Error al conectar con la base de datos. ";
+                
+                // Mensajes específicos según el tipo de error
+                if (sqlEx.Number == -1 || sqlEx.Number == 2)
+                {
+                    mensajeError += "No se puede conectar al servidor SQL Server. Verifique que el servicio esté ejecutándose.";
+                }
+                else if (sqlEx.Number == 4060)
+                {
+                    mensajeError += "No se puede abrir la base de datos 'HotelPrado'. Verifique que la base de datos exista.";
+                }
+                else if (sqlEx.Number == 18456)
+                {
+                    mensajeError += "Error de autenticación. Verifique las credenciales de SQL Server.";
+                }
+                else
+                {
+                    mensajeError += $"Error SQL ({sqlEx.Number}): {sqlEx.Message}";
+                }
+                
+                ModelState.AddModelError("", mensajeError);
+                return View(model);
+            }
+            catch (System.InvalidOperationException ioEx)
+            {
+                // Manejar errores de configuración de Entity Framework
+                System.Diagnostics.Debug.WriteLine($"Error de configuración en login: {ioEx.Message}");
+                ModelState.AddModelError("", "Error de configuración de la base de datos. Verifique la cadena de conexión en Web.config.");
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                // Manejar otros errores de conexión
+                System.Diagnostics.Debug.WriteLine($"Error en login: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                ModelState.AddModelError("", "Error al iniciar sesión. Por favor, intente nuevamente.");
+                return View(model);
             }
         }
 
@@ -139,13 +317,82 @@ namespace HotelPrado.UI.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            try
+            {
+                // Verificar que OWIN esté inicializado correctamente (sin lanzar excepción si falla)
+                try
+                {
+                    var owinContext = this.HttpContext.GetOwinContext();
+                    if (owinContext == null)
+                    {
+                        // Si OWIN no está disponible, intentar cargar la vista de todas formas
+                        System.Diagnostics.Debug.WriteLine("Advertencia: OWIN context no está disponible en Register GET");
+                    }
+                }
+                catch (Exception owinEx)
+                {
+                    // Log pero continuar
+                    System.Diagnostics.Debug.WriteLine($"Advertencia OWIN en Register: {owinEx.Message}");
+                }
+                
+                // Crear ViewModel de forma segura
+                ViewBag.ImagenFondo = ObtenerImagenFondo("Registro");
+                var model = new RegisterViewModel();
+                return View(model);
+            }
+            catch (System.Data.SqlClient.SqlException sqlEx)
+            {
+                // Error de base de datos - mostrar mensaje amigable
+                return Content(
+                    "<!DOCTYPE html><html><head><meta charset='utf-8'><title>Error de Base de Datos</title></head><body style='font-family:sans-serif;padding:2rem;max-width:600px;margin:0 auto;'>" +
+                    "<h1 style='color:#c00'>Error de Conexión a Base de Datos</h1>" +
+                    "<p><strong>Error SQL:</strong> " + HttpUtility.HtmlEncode(sqlEx.Message) + "</p>" +
+                    "<p><strong>Número:</strong> " + sqlEx.Number + "</p>" +
+                    "<p><strong>Servidor:</strong> " + HttpUtility.HtmlEncode(sqlEx.Server ?? "N/A") + "</p>" +
+                    "<p><strong>Verifique:</strong></p>" +
+                    "<ul><li>Que la cadena de conexión en Web.config sea correcta</li>" +
+                    "<li>Que el servidor SQL esté accesible</li>" +
+                    "<li>Que las credenciales sean correctas</li></ul>" +
+                    "<p><a href='/'>Ir al inicio</a> | <a href='/Account/Login'>Iniciar sesión</a></p>" +
+                    "</body></html>",
+                    "text/html");
+            }
+            catch (Exception ex)
+            {
+                // Log detallado del error
+                System.Diagnostics.Debug.WriteLine($"Error en Account/Register GET: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Tipo de excepción: {ex.GetType().FullName}");
+                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                
+                if (ex.InnerException != null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Inner stack trace: {ex.InnerException.StackTrace}");
+                }
+                
+                // Mostrar error detallado en lugar de lanzar excepción
+                return Content(
+                    "<!DOCTYPE html><html><head><meta charset='utf-8'><title>Error</title></head><body style='font-family:sans-serif;padding:2rem;max-width:600px;margin:0 auto;'>" +
+                    "<h1 style='color:#c00'>Error al cargar página de registro</h1>" +
+                    "<p><strong>Error:</strong> " + HttpUtility.HtmlEncode(ex.Message) + "</p>" +
+                    "<p><strong>Tipo:</strong> " + HttpUtility.HtmlEncode(ex.GetType().FullName) + "</p>" +
+                    (ex.InnerException != null ? "<p><strong>Error interno:</strong> " + HttpUtility.HtmlEncode(ex.InnerException.Message) + "</p>" : "") +
+                    "<p><strong>Compruebe:</strong></p>" +
+                    "<ul><li>Que publicó en modo <b>Release</b></li>" +
+                    "<li>Que el archivo Web.config tiene la cadena de conexión correcta</li>" +
+                    "<li>Que la base de datos tiene las tablas de Identity</li>" +
+                    "<li>Que OWIN está configurado correctamente</li></ul>" +
+                    "<p><a href='/'>Ir al inicio</a> | <a href='/Account/Login'>Iniciar sesión</a> | <a href='/Home/Ping'>Probar Ping</a> | <a href='/Home/Diagnostico'>Diagnóstico</a></p>" +
+                    "</body></html>",
+                    "text/html");
+            }
         }
 
         //
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -161,12 +408,105 @@ namespace HotelPrado.UI.Controllers
 
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                    return RedirectToAction("Index", "Home");
+                    // ==========================================
+                    // VINCULAR CLIENTE EXISTENTE O CREAR NUEVO
+                    // ==========================================
+                    try
+                    {
+                        using (var contexto = new Contexto())
+                        {
+                            // Buscar cliente existente por email o cédula - OPTIMIZADO
+                            var emailParam = new SqlParameter("@email", model.Email?.ToLower().Trim() ?? "");
+                            var cedulaParam = new SqlParameter("@cedula", model.cedula?.Trim() ?? "");
+                            
+                            // Query optimizada con índices sugeridos
+                            var clienteExistente = await contexto.Database.SqlQuery<ClienteVinculacion>(
+                                "SELECT TOP 1 IdCliente, EmailCliente, CedulaCliente FROM Cliente WITH (NOLOCK) WHERE " +
+                                "(LOWER(LTRIM(RTRIM(EmailCliente))) = @email OR " +
+                                "LTRIM(RTRIM(CedulaCliente)) = @cedula) AND (IdUsuario IS NULL OR IdUsuario = '')",
+                                emailParam, cedulaParam
+                            ).FirstOrDefaultAsync();
+
+                            if (clienteExistente != null)
+                            {
+                                // Vincular cliente existente con el nuevo usuario
+                                var userIdParam = new SqlParameter("@userId", user.Id);
+                                var clienteIdParam = new SqlParameter("@clienteId", clienteExistente.IdCliente);
+                                
+                                await contexto.Database.ExecuteSqlCommandAsync(
+                                    "UPDATE Cliente SET IdUsuario = @userId WHERE IdCliente = @clienteId",
+                                    userIdParam, clienteIdParam
+                                );
+                            }
+                            else
+                            {
+                                // Crear nuevo cliente si no existe
+                                var nombreParam = new SqlParameter("@nombre", model.NombreCompleto?.Trim() ?? "");
+                                var emailParam2 = new SqlParameter("@email", model.Email?.Trim() ?? "");
+                                var cedulaParam2 = new SqlParameter("@cedula", model.cedula?.Trim() ?? "");
+                                var telefonoParam = new SqlParameter("@telefono", model.Telefono?.Trim() ?? "");
+                                var userIdParam2 = new SqlParameter("@userId", user.Id);
+                                
+                                await contexto.Database.ExecuteSqlCommandAsync(
+                                    "INSERT INTO Cliente (NombreCliente, EmailCliente, CedulaCliente, TelefonoCliente, IdUsuario) " +
+                                    "VALUES (@nombre, @email, @cedula, @telefono, @userId)",
+                                    nombreParam, emailParam2, cedulaParam2, telefonoParam, userIdParam2
+                                );
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log del error pero no fallar el registro
+                        System.Diagnostics.Debug.WriteLine("Error al vincular cliente: " + ex.Message);
+                    }
+                    // ==========================================
+
+                    // Asignar automáticamente el rol "Cliente" al nuevo usuario
+                    var roleManager = new Microsoft.AspNet.Identity.RoleManager<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>(
+                        new Microsoft.AspNet.Identity.EntityFramework.RoleStore<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>(new ApplicationDbContext()));
+                    
+                    // Verificar que el rol "Cliente" existe, si no, crearlo
+                    if (!roleManager.RoleExists("Cliente"))
+                    {
+                        roleManager.Create(new Microsoft.AspNet.Identity.EntityFramework.IdentityRole("Cliente"));
+                    }
+                    
+                    // Asignar el rol "Cliente" al usuario
+                    var addRoleResult = await UserManager.AddToRoleAsync(user.Id, "Cliente");
+                    if (!addRoleResult.Succeeded)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Error al asignar rol Cliente: " + string.Join(", ", addRoleResult.Errors));
+                    }
+
+                    // Verificación de correo: generar token y enviar enlace (no iniciar sesión hasta confirmar)
+                    var token = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = token }, Request.Url.Scheme);
+                    try
+                    {
+                        await UserManager.SendEmailAsync(user.Id, "Active su cuenta - Hotel Prado",
+                            "Hola,<br/><br/>Para activar su cuenta haga clic en el siguiente enlace:<br/><br/><a href=\"" + callbackUrl + "\">Activar cuenta</a><br/><br/>Si no solicitó este registro, ignore este correo.");
+                    }
+                    catch
+                    {
+                        // Si falla el envío (ej. SMTP no configurado), el enlace se muestra en ReviseCorreo
+                    }
+                    return RedirectToAction("ReviseCorreo", "Account", new { email = model.Email, linkEnlace = callbackUrl });
                 }
                 AddErrors(result);
             }
             return View(model);
+        }
+
+        /// <summary>
+        /// Página tras registro: indica que revise su correo para activar la cuenta. Si no recibió el correo, se muestra el enlace.
+        /// </summary>
+        [AllowAnonymous]
+        public ActionResult ReviseCorreo(string email, string linkEnlace)
+        {
+            ViewBag.Email = email ?? "";
+            ViewBag.LinkEnlace = linkEnlace ?? "";
+            return View();
         }
 
         //
@@ -372,6 +712,8 @@ namespace HotelPrado.UI.Controllers
                     if (result.Succeeded)
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        Session["UserId"] = user.Id;
+                        Session["UserName"] = user.UserName ?? user.Email ?? "";
                         return RedirectToLocal(returnUrl);
                     }
                 }
@@ -385,9 +727,12 @@ namespace HotelPrado.UI.Controllers
         //
         // POST: /Account/LogOff
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        // Sin ValidateAntiForgeryToken: evita error "token diseñado para un usuario distinto" al cerrar sesión
+        // (p. ej. con SameSite=Strict o cuando la identidad ya cambió). Cerrar sesión no requiere protección CSRF.
         public ActionResult LogOff()
         {
+            Session["UserId"] = null;
+            Session["UserName"] = null;
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
@@ -428,7 +773,7 @@ namespace HotelPrado.UI.Controllers
         {
             get
             {
-                return HttpContext.GetOwinContext().Authentication;
+                return this.HttpContext.GetOwinContext().Authentication;
             }
         }
 
@@ -440,9 +785,49 @@ namespace HotelPrado.UI.Controllers
             }
         }
 
+        /// <summary>
+        /// Evita bucles de redirección: si ReturnUrl apunta a Login o está mal formado, se ignora.
+        /// </summary>
+        private static string SanitizeReturnUrl(string returnUrl)
+        {
+            if (string.IsNullOrWhiteSpace(returnUrl)) return null;
+            if (returnUrl.Length > 500) return null; // ReturnUrl codificado muchas veces
+            
+            // Lista de rutas que NO deben ser returnUrl para evitar bucles
+            var problematicPaths = new[] 
+            { 
+                "Account/Login", 
+                "Account/Register", 
+                "Entrar", 
+                "Registro",
+                "Error",
+                "Login",
+                "Register"
+            };
+            
+            var lowerReturnUrl = returnUrl.ToLowerInvariant();
+            foreach (var path in problematicPaths)
+            {
+                if (lowerReturnUrl.Contains(path.ToLowerInvariant()))
+                {
+                    return null; // Ignorar returnUrl problemático
+                }
+            }
+            
+            // Si contiene ReturnUrl codificado múltiples veces, es probablemente un bucle
+            if (returnUrl.IndexOf("ReturnUrl", StringComparison.OrdinalIgnoreCase) >= 0 && 
+                returnUrl.Split(new[] { "ReturnUrl" }, StringSplitOptions.None).Length > 3)
+            {
+                return null;
+            }
+            
+            return returnUrl;
+        }
+
         private ActionResult RedirectToLocal(string returnUrl)
         {
-            if (Url.IsLocalUrl(returnUrl))
+            returnUrl = SanitizeReturnUrl(returnUrl);
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);
             }
@@ -478,5 +863,13 @@ namespace HotelPrado.UI.Controllers
             }
         }
         #endregion
+
+        // Clase auxiliar para la vinculación de clientes
+        private class ClienteVinculacion
+        {
+            public int IdCliente { get; set; }
+            public string EmailCliente { get; set; }
+            public string CedulaCliente { get; set; }
+        }
     }
 }

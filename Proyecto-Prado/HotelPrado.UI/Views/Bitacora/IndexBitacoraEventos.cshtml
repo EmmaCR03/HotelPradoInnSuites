@@ -1,10 +1,18 @@
-﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Bitacora.BitacoraEventosDTO>
+@model IEnumerable<HotelPrado.Abstracciones.Modelos.Bitacora.BitacoraEventosDTO>
 @{
     ViewBag.Title = "Bitácora de Eventos";
 }
-
+<style>
+    .table-container {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        overflow-x: auto;
+    }
+</style>
 <div class="container-fluid mt-4">
-    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+    <div class="card shadow-lg border-0 rounded-4">
         <div class="card-header bg-gradient-primary text-white py-3">
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="h4 mb-0 fw-bold">
@@ -25,14 +33,15 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0" id="tablaBitacora">
+    <div class="table-container">
+        <table class="table table-hover align-middle mb-0" id="tablaBitacora">
                     <thead class="bg-light-primary">
                         <tr>
                             <th class="ps-4">Tabla</th>
                             <th>Tipo de Evento</th>
+                            <th>Usuario</th>
                             <th>Descripción</th>
                             <th class="text-end pe-4">Acciones</th>
                         </tr>
@@ -51,17 +60,21 @@
                                 _ => "bg-dark"
                             };
                             <tr data-tipo="@item.TipoDeEvento" class="evento-row">
-                                <td class="ps-4 fw-semibold">@item.TablaDeEvento</td>
-                                <td>
+                                <td class="ps-4 fw-semibold" data-label="Tabla">@item.TablaDeEvento</td>
+                                <td data-label="Tipo de Evento">
                                     <span class="badge @badgeClass text-white rounded-pill px-3 py-1">
                                         @item.TipoDeEvento
                                     </span>
                                 </td>
-
-                                <td class="text-truncate" style="max-width: 300px;" title="@item.DescripcionDeEvento">
+                                <td data-label="Usuario">
+                                    <span class="badge bg-secondary text-white rounded-pill px-2 py-1">
+                                        <i class="fas fa-user me-1"></i>@(item.Usuario ?? "Sistema")
+                                    </span>
+                                </td>
+                                <td class="text-truncate" style="max-width: 300px;" title="@item.DescripcionDeEvento" data-label="Descripción">
                                     @item.DescripcionDeEvento
                                 </td>
-                                <td class="text-end pe-4">
+                                <td class="text-end pe-4" data-label="Acciones">
                                     <button class="btn btn-sm btn-outline-primary rounded-pill detalles-btn"
                                             data-bs-toggle="modal"
                                             data-bs-target="#detallesModal"
@@ -69,6 +82,7 @@
                                             data-tipo="@item.TipoDeEvento"
                                             data-fecha="@item.FechaDeEvento"
                                             data-descripcion="@item.DescripcionDeEvento"
+                                            data-usuario="@(item.Usuario ?? "Sistema")"
                                             data-stacktrace="@item.StackTrace"
                                             data-anteriores="@item.DatosAnteriores"
                                             data-posteriores="@item.DatosPosteriores">
@@ -78,10 +92,10 @@
                             </tr>
                         }
                     </tbody>
-                </table>
-            </div>
-        </div>
+        </table>
+    </div>
 
+    <div class="card shadow-lg border-0 rounded-4">
         <div class="card-footer bg-white py-3">
             <div class="row align-items-center">
                 <div class="col-md-6">
@@ -104,15 +118,23 @@
             </div>
             <div class="modal-body">
                 <div class="row mb-3">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <h6 class="text-muted">Tabla:</h6>
                         <p id="modalTabla" class="fw-bold"></p>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <h6 class="text-muted">Tipo:</h6>
                         <p id="modalTipo" class="fw-bold"></p>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <h6 class="text-muted">Usuario:</h6>
+                        <p id="modalUsuario" class="fw-bold">
+                            <span class="badge bg-secondary text-white rounded-pill px-3 py-1">
+                                <i class="fas fa-user me-1"></i><span id="modalUsuarioText"></span>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-3">
                         <h6 class="text-muted">Fecha:</h6>
                         <p id="modalFecha" class="fw-bold"></p>
                     </div>
@@ -125,17 +147,97 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <h6 class="text-muted">Datos Anteriores:</h6>
-                        <div class="card bg-light p-3" style="height: 200px; overflow-y: auto;">
-                            <pre id="modalAnteriores" class="mb-0 small"></pre>
+                <!-- Comparación de Datos -->
+                <div class="mb-3" id="datosComparacionSection">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="text-muted mb-0">
+                            <i class="fas fa-exchange-alt me-2"></i>Comparación de Datos
+                        </h6>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-outline-primary active" id="btnVistaTabla">
+                                <i class="fas fa-table me-1"></i>Tabla
+                            </button>
+                            <button type="button" class="btn btn-outline-primary" id="btnVistaJSON">
+                                <i class="fas fa-code me-1"></i>JSON
+                            </button>
                         </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <h6 class="text-muted">Datos Posteriores:</h6>
-                        <div class="card bg-light p-3" style="height: 200px; overflow-y: auto;">
-                            <pre id="modalPosteriores" class="mb-0 small"></pre>
+                    
+                    <!-- Vista de Tabla (por defecto) -->
+                    <div id="vistaTabla">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="card border-danger">
+                                    <div class="card-header bg-danger text-white">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-arrow-left me-2"></i>Datos Anteriores
+                                        </h6>
+                                    </div>
+                                    <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
+                                        <div id="tablaAnteriores" class="table-responsive">
+                                            <!-- Se llena dinámicamente -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card border-success">
+                                    <div class="card-header bg-success text-white">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-arrow-right me-2"></i>Datos Posteriores
+                                        </h6>
+                                    </div>
+                                    <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
+                                        <div id="tablaPosteriores" class="table-responsive">
+                                            <!-- Se llena dinámicamente -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Tabla Comparativa -->
+                        <div class="card border-primary mt-3" id="tablaComparativaCard" style="display: none;">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-balance-scale me-2"></i>Vista Comparativa
+                                </h6>
+                            </div>
+                            <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
+                                <div id="tablaComparativa" class="table-responsive">
+                                    <!-- Se llena dinámicamente -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Vista JSON (alternativa) -->
+                    <div id="vistaJSON" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="card border-danger">
+                                    <div class="card-header bg-danger text-white">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-arrow-left me-2"></i>Datos Anteriores (JSON)
+                                        </h6>
+                                    </div>
+                                    <div class="card-body p-3" style="max-height: 300px; overflow-y: auto;">
+                                        <pre id="jsonAnteriores" class="mb-0 small bg-light p-3 rounded" style="font-family: 'Courier New', monospace;"></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="card border-success">
+                                    <div class="card-header bg-success text-white">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-arrow-right me-2"></i>Datos Posteriores (JSON)
+                                        </h6>
+                                    </div>
+                                    <div class="card-body p-3" style="max-height: 300px; overflow-y: auto;">
+                                        <pre id="jsonPosteriores" class="mb-0 small bg-light p-3 rounded" style="font-family: 'Courier New', monospace;"></pre>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -229,6 +331,35 @@
             margin: 0;
         }
 
+        /* Estilos para tablas de datos */
+        #tablaAnteriores table,
+        #tablaPosteriores table,
+        #tablaComparativa table {
+            font-size: 0.85rem;
+        }
+
+        #tablaAnteriores table td,
+        #tablaPosteriores table td,
+        #tablaComparativa table td {
+            padding: 0.5rem;
+            vertical-align: top;
+        }
+
+        #tablaComparativa table tbody tr:hover {
+            background-color: #fff3cd !important;
+        }
+
+        /* Mejoras visuales para el modal */
+        .card-header h6 {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .btn-group-sm .btn {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+
         .modal-header {
             border-bottom: none;
         }
@@ -259,22 +390,215 @@
                 $('#dropdownMenuButton').text($(this).text());
             });
 
+            // Función para parsear JSON de forma segura
+            function parseJSONSafely(jsonString) {
+                if (!jsonString || jsonString.trim() === '' || jsonString === 'null') {
+                    return null;
+                }
+                try {
+                    return JSON.parse(jsonString);
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            // Función para formatear JSON de forma legible
+            function formatJSON(jsonString) {
+                if (!jsonString || jsonString.trim() === '' || jsonString === 'null') {
+                    return 'Sin datos';
+                }
+                try {
+                    const obj = JSON.parse(jsonString);
+                    return JSON.stringify(obj, null, 2);
+                } catch (e) {
+                    return jsonString; // Si no es JSON válido, devolver el string original
+                }
+            }
+
+            // Función para crear tabla HTML desde objeto JSON
+            function crearTablaDesdeJSON(data, containerId) {
+                const container = $('#' + containerId);
+                container.empty();
+
+                if (!data || typeof data !== 'object') {
+                    container.html('<div class="p-3 text-center text-muted"><i class="fas fa-info-circle me-2"></i>Sin datos disponibles</div>');
+                    return;
+                }
+
+                let html = '<table class="table table-sm table-bordered mb-0">';
+                html += '<thead class="table-light"><tr><th style="width: 40%;">Campo</th><th>Valor</th></tr></thead>';
+                html += '<tbody>';
+
+                for (const [key, value] of Object.entries(data)) {
+                    let displayValue = value;
+                    let valueClass = '';
+
+                    if (value === null || value === undefined) {
+                        displayValue = '<span class="text-muted fst-italic">null</span>';
+                    } else if (typeof value === 'boolean') {
+                        displayValue = value ? '<span class="badge bg-success">true</span>' : '<span class="badge bg-secondary">false</span>';
+                    } else if (typeof value === 'object') {
+                        displayValue = '<code class="text-primary">' + JSON.stringify(value) + '</code>';
+                    } else if (typeof value === 'string' && value.length > 100) {
+                        displayValue = '<span title="' + value + '">' + value.substring(0, 100) + '...</span>';
+                    } else {
+                        displayValue = $('<div>').text(value).html();
+                    }
+
+                    html += '<tr>';
+                    html += '<td class="fw-semibold text-nowrap">' + $('<div>').text(key).html() + '</td>';
+                    html += '<td>' + displayValue + '</td>';
+                    html += '</tr>';
+                }
+
+                html += '</tbody></table>';
+                container.html(html);
+            }
+
+            // Función para crear tabla comparativa
+            function crearTablaComparativa(anteriores, posteriores, containerId) {
+                const container = $('#' + containerId);
+                container.empty();
+
+                if ((!anteriores || typeof anteriores !== 'object') && (!posteriores || typeof posteriores !== 'object')) {
+                    $('#tablaComparativaCard').hide();
+                    return;
+                }
+
+                // Obtener todas las claves únicas
+                const keys = new Set();
+                if (anteriores && typeof anteriores === 'object') {
+                    Object.keys(anteriores).forEach(k => keys.add(k));
+                }
+                if (posteriores && typeof posteriores === 'object') {
+                    Object.keys(posteriores).forEach(k => keys.add(k));
+                }
+
+                if (keys.size === 0) {
+                    $('#tablaComparativaCard').hide();
+                    return;
+                }
+
+                let html = '<table class="table table-sm table-bordered mb-0">';
+                html += '<thead class="table-light"><tr><th style="width: 30%;">Campo</th><th style="width: 35%;" class="bg-danger bg-opacity-10">Anterior</th><th style="width: 35%;" class="bg-success bg-opacity-10">Posterior</th></tr></thead>';
+                html += '<tbody>';
+
+                Array.from(keys).sort().forEach(key => {
+                    const valorAnterior = anteriores && anteriores[key] !== undefined ? anteriores[key] : null;
+                    const valorPosterior = posteriores && posteriores[key] !== undefined ? posteriores[key] : null;
+                    const cambio = JSON.stringify(valorAnterior) !== JSON.stringify(valorPosterior);
+
+                    let rowClass = '';
+                    if (cambio) {
+                        rowClass = 'table-warning';
+                    }
+
+                    html += '<tr class="' + rowClass + '">';
+                    html += '<td class="fw-semibold text-nowrap">' + $('<div>').text(key).html() + '</td>';
+
+                    // Valor anterior
+                    let displayAnterior = valorAnterior;
+                    if (valorAnterior === null || valorAnterior === undefined) {
+                        displayAnterior = '<span class="text-muted fst-italic">-</span>';
+                    } else if (typeof valorAnterior === 'boolean') {
+                        displayAnterior = valorAnterior ? '<span class="badge bg-success">true</span>' : '<span class="badge bg-secondary">false</span>';
+                    } else if (typeof valorAnterior === 'object') {
+                        displayAnterior = '<code class="text-primary">' + JSON.stringify(valorAnterior) + '</code>';
+                    } else {
+                        displayAnterior = $('<div>').text(valorAnterior).html();
+                    }
+                    html += '<td class="' + (cambio ? 'bg-danger bg-opacity-10' : '') + '">' + displayAnterior + '</td>';
+
+                    // Valor posterior
+                    let displayPosterior = valorPosterior;
+                    if (valorPosterior === null || valorPosterior === undefined) {
+                        displayPosterior = '<span class="text-muted fst-italic">-</span>';
+                    } else if (typeof valorPosterior === 'boolean') {
+                        displayPosterior = valorPosterior ? '<span class="badge bg-success">true</span>' : '<span class="badge bg-secondary">false</span>';
+                    } else if (typeof valorPosterior === 'object') {
+                        displayPosterior = '<code class="text-primary">' + JSON.stringify(valorPosterior) + '</code>';
+                    } else {
+                        displayPosterior = $('<div>').text(valorPosterior).html();
+                    }
+                    html += '<td class="' + (cambio ? 'bg-success bg-opacity-10' : '') + '">' + displayPosterior + '</td>';
+
+                    html += '</tr>';
+                });
+
+                html += '</tbody></table>';
+                container.html(html);
+                $('#tablaComparativaCard').show();
+            }
+
             // Configurar modal de detalles
             $('.detalles-btn').click(function () {
-                $('#modalTabla').text($(this).data('tabla'));
-                $('#modalTipo').text($(this).data('tipo'));
-                $('#modalFecha').text($(this).data('fecha'));
-                $('#modalDescripcion').text($(this).data('descripcion'));
-                $('#modalStackTrace').text($(this).data('stacktrace'));
-                $('#modalAnteriores').text($(this).data('anteriores'));
-                $('#modalPosteriores').text($(this).data('posteriores'));
+                const tabla = $(this).data('tabla');
+                const tipo = $(this).data('tipo');
+                const fecha = $(this).data('fecha');
+                const descripcion = $(this).data('descripcion');
+                const stacktrace = $(this).data('stacktrace');
+                const anterioresRaw = $(this).data('anteriores') || '';
+                const posterioresRaw = $(this).data('posteriores') || '';
 
-                // Mostrar u ocultar stack trace según el tipo de evento
-                if ($(this).data('tipo') === 'Error') {
+                // Llenar información básica
+                const usuario = $(this).data('usuario') || 'Sistema';
+                $('#modalTabla').text(tabla || 'N/A');
+                $('#modalTipo').text(tipo || 'N/A');
+                $('#modalUsuarioText').text(usuario);
+                $('#modalFecha').text(fecha || 'N/A');
+                $('#modalDescripcion').text(descripcion || 'Sin descripción');
+                $('#modalStackTrace').text(stacktrace || 'No disponible');
+
+                // Parsear JSON
+                const anteriores = parseJSONSafely(anterioresRaw);
+                const posteriores = parseJSONSafely(posterioresRaw);
+
+                // Mostrar en vista de tabla
+                crearTablaDesdeJSON(anteriores, 'tablaAnteriores');
+                crearTablaDesdeJSON(posteriores, 'tablaPosteriores');
+                crearTablaComparativa(anteriores, posteriores, 'tablaComparativa');
+
+                // Mostrar en vista JSON
+                $('#jsonAnteriores').text(formatJSON(anterioresRaw));
+                $('#jsonPosteriores').text(formatJSON(posterioresRaw));
+
+                // Mostrar u ocultar secciones según el tipo de evento
+                if (tipo === 'Error') {
                     $('#stackTraceSection').show();
                 } else {
                     $('#stackTraceSection').hide();
                 }
+
+                // Mostrar u ocultar sección de datos según si hay datos
+                const tieneDatos = (anterioresRaw && anterioresRaw.trim() !== '' && anterioresRaw !== 'null') || 
+                                  (posterioresRaw && posterioresRaw.trim() !== '' && posterioresRaw !== 'null');
+                
+                if (tieneDatos) {
+                    $('#datosComparacionSection').show();
+                } else {
+                    $('#datosComparacionSection').hide();
+                }
+
+                // Resetear a vista de tabla por defecto
+                $('#vistaTabla').show();
+                $('#vistaJSON').hide();
+                $('#btnVistaTabla').addClass('active');
+                $('#btnVistaJSON').removeClass('active');
+            });
+
+            // Toggle entre vista tabla y JSON
+            $('#btnVistaTabla').click(function() {
+                $('#vistaTabla').show();
+                $('#vistaJSON').hide();
+                $(this).addClass('active');
+                $('#btnVistaJSON').removeClass('active');
+            });
+
+            $('#btnVistaJSON').click(function() {
+                $('#vistaTabla').hide();
+                $('#vistaJSON').show();
+                $(this).addClass('active');
+                $('#btnVistaTabla').removeClass('active');
             });
 
             // Tooltips para texto truncado

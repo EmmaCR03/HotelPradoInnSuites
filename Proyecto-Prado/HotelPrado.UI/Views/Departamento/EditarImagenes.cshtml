@@ -1,46 +1,92 @@
-﻿@model HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO
+@model HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO
 
 @{
-    ViewBag.Title = "EditarImagenes";
+    ViewBag.Title = "Editar Imágenes - " + Model.Nombre;
+    var entradas = new List<(string urlPart, string leyenda, string valorCompleto)>();
+    if (!string.IsNullOrEmpty(Model.UrlImagenes))
+    {
+        foreach (var parte in Model.UrlImagenes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+            var p = (parte ?? "").Trim();
+            if (string.IsNullOrWhiteSpace(p)) { continue; }
+            var idx = p.IndexOf('|');
+            var urlPart = idx >= 0 ? p.Substring(0, idx).Trim() : p;
+            var leyenda = idx >= 0 ? p.Substring(idx + 1).Trim() : "";
+            entradas.Add((urlPart, leyenda, p));
+        }
+    }
 }
 
-<h2>Editar Imágenes del Departamento</h2>
+<h2 class="mb-4">Editar Imágenes del Departamento</h2>
 
-<div class="card p-3">
-    <h4>Departamento: @Model.Nombre</h4>
+@if (TempData["ErrorImagenes"] != null)
+{
+    <div class="alert alert-warning">@TempData["ErrorImagenes"]</div>
+}
+@if (TempData["MensajeImagenes"] != null)
+{
+    <div class="alert alert-success">@TempData["MensajeImagenes"]</div>
+}
 
-    @if (!string.IsNullOrEmpty(Model.UrlImagenes))
+<div class="card p-4 shadow-sm">
+    <h4 class="mb-4">Departamento: @Model.Nombre</h4>
+
+    @if (entradas.Any())
     {
-        <h5>Imágenes Actuales:</h5>
-        <div class="d-flex flex-wrap">
-            @foreach (var imagenUrl in Model.UrlImagenes.Split(','))
+        <h5 class="mb-3">Imágenes actuales – indique qué es cada parte</h5>
+        <form id="formLeyendas" method="post" action="@Url.Action("ActualizarLeyendas", "Departamento")">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.IdDepartamento" />
+            <button type="submit" class="btn btn-primary mb-3">Guardar descripciones</button>
+        </form>
+        <div class="row g-3 mb-4">
+            @for (int i = 0; i < entradas.Count; i++)
             {
-                <div class="m-2 text-center">
-                    <img src="@imagenUrl" alt="Imagen Departamento" class="img-thumbnail" style="width: 100px; height: 100px;">
-
-                    <!-- Botón para eliminar imagen -->
-                    @using (Html.BeginForm("EliminarImagen", "Departamento", FormMethod.Post))
-                    {
-                        <input type="hidden" name="id" value="@Model.IdDepartamento" />
-                        <input type="hidden" name="imagenUrl" value="@imagenUrl" />
-                        <button type="submit" class="btn btn-danger btn-sm mt-1">Eliminar</button>
-                    }
+                var e = entradas[i];
+                var urlNorm = e.urlPart.TrimStart('/');
+                if (urlNorm.StartsWith("imagenes/", StringComparison.OrdinalIgnoreCase) || urlNorm.StartsWith("Uploads/", StringComparison.OrdinalIgnoreCase))
+                {
+                    var fileName = urlNorm.Contains("/") ? urlNorm.Substring(urlNorm.LastIndexOf('/') + 1) : urlNorm;
+                    urlNorm = "Content/Imagenes/" + fileName;
+                }
+                var srcUrl = e.urlPart.StartsWith("~") ? Url.Content(e.urlPart) : Url.Content("~/" + urlNorm);
+                <div class="col-md-6 col-lg-4">
+                    <div class="border rounded p-2 h-100">
+                        <img src="@srcUrl" alt="Imagen @(i+1)" class="img-thumbnail d-block mx-auto mb-2" style="width: 100%; max-height: 180px; object-fit: cover;" onerror="this.style.background='#f0f0f0'; this.alt='No encontrada';" />
+                        <input type="hidden" name="urls" form="formLeyendas" value="@e.urlPart" />
+                        <label class="form-label small text-muted">Qué es esta parte (ej. Sala, Cocina, Baño)</label>
+                        <input type="text" name="leyendas" form="formLeyendas" class="form-control form-control-sm" value="@e.leyenda" placeholder="Ej. Sala, Cocina, Dormitorio..." />
+                        @using (Html.BeginForm("EliminarImagen", "Departamento", FormMethod.Post, new { @class = "mt-2" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@Model.IdDepartamento" />
+                            <input type="hidden" name="imagenUrl" value="@e.valorCompleto" />
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar imagen</button>
+                        }
+                    </div>
                 </div>
             }
         </div>
     }
+    else
+    {
+        <p class="text-muted">No hay imágenes. Agregue algunas abajo.</p>
+    }
 
-    <h5 class="mt-4">Agregar nuevas imágenes:</h5>
+    <hr class="my-4" />
+    <h5 class="mb-3">Agregar nuevas imágenes</h5>
 
     @using (Html.BeginForm("ActualizarImagenes", "Departamento", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
+        @Html.AntiForgeryToken()
         <input type="hidden" name="id" value="@Model.IdDepartamento" />
-
-        <div class="form-group mt-3">
-            <input type="file" name="imagenes" multiple class="form-control" />
+        <div class="form-group">
+            <input type="file" name="imagenes" multiple class="form-control" accept="image/*,.heic,image/heic" />
         </div>
-
-        <button type="submit" class="btn btn-success mt-3">Agregar Imágenes</button>
-        @Html.ActionLink("Cancelar", "IndexDepartamentos", null, new { @class = "btn btn-secondary mt-3" })
+        <button type="submit" class="btn btn-success mt-2">Agregar imágenes</button>
     }
+
+    <div class="mt-4">
+        @Html.ActionLink("Volver a departamentos", "IndexDepartamentos", null, new { @class = "btn btn-secondary" })
+    </div>
 </div>

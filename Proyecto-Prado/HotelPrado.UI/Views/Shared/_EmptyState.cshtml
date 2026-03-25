@@ -1,0 +1,17 @@
+@* Uso: @Html.Partial("_EmptyState", new { Icon = "fa-calendar-check", Title = "No hay reservas", Text = "Aún no hay reservas registradas.", ActionText = "Ver solicitudes", ActionUrl = Url.Action("SolicitudesPendientes", "ReservasA") }) *@
+@{
+    var icon = ViewData["Icon"] as string ?? "fa-inbox";
+    var title = ViewData["Title"] as string ?? "No hay datos";
+    var text = ViewData["Text"] as string ?? "No hay registros para mostrar.";
+    var actionText = ViewData["ActionText"] as string;
+    var actionUrl = ViewData["ActionUrl"] as string;
+}
+<div class="empty-state">
+    <div class="empty-state-icon"><i class="fas @icon"></i></div>
+    <h3 class="empty-state-title">@title</h3>
+    <p class="empty-state-text">@text</p>
+    @if (!string.IsNullOrEmpty(actionText) && !string.IsNullOrEmpty(actionUrl))
+    {
+        <a href="@actionUrl" class="btn-empty-state"><i class="fas fa-plus"></i> @actionText</a>
+    }
+</div>

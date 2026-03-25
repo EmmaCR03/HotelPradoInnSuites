@@ -1,22 +1,45 @@
-﻿@using Microsoft.AspNet.Identity
-@if (Request.IsAuthenticated)
+@using Microsoft.AspNet.Identity
+@{
+    // Mostrar "Hola" si Identity está bien O si hay Session (respaldo en host cuando la cookie no se lee).
+    var nombre = User?.Identity?.Name ?? "";
+    var porIdentity = Request.IsAuthenticated && !nombre.Contains("\\");
+    var porSession = Session["UserId"] != null;
+    var esSesionDeLaApp = porIdentity || porSession;
+    var nombreParaMostrar = (User?.Identity?.GetUserName() ?? Session["UserName"] ?? "Usuario") as string ?? "Usuario";
+}
+@if (esSesionDeLaApp)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
-    @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
+    <link rel="icon" type="image/png" href="@Url.Content("~/Img/images/main-Prado-removebg-preview.png")" />
 
     <ul class="navbar-nav navbar-right">
-        <li>
-            @Html.ActionLink("Hola " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class="nav-link" })
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user"></i> Hola @(nombreParaMostrar)!
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                <li>
+                    <a href="@Url.Action("Index", "Manage")" class="dropdown-item">
+                        <i class="fas fa-user-cog me-2"></i>Configurar Perfil
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">
+                        <i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión
+                    </a>
+                </li>
+            </ul>
         </li>
-        <li><a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">Cerrar sesión</a></li>
     </ul>
     }
 }
 else
 {
     <ul class="navbar-nav navbar-right">
-        <li>@Html.ActionLink("Registrarse", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class="nav-link" })</li>
-        <li>@Html.ActionLink("Iniciar sesión", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class="nav-link" })</li>
+        <li><a href="@Url.Action("Register", "Account")" id="registerLink" class="nav-link">Registrarse</a></li>
+        <li><a href="@Url.Action("Login", "Account")" id="loginLink" class="nav-link">Iniciar sesión</a></li>
     </ul>
 }

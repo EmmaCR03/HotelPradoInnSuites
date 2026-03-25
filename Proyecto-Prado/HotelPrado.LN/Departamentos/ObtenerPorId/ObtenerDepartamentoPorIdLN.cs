@@ -1,4 +1,4 @@
-﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Departamentos.ObtenerPorId;
+using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Departamentos.ObtenerPorId;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Departamentos.ObtenerPorId;
 using HotelPrado.Abstracciones.Modelos.Departamento;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Departamento;
@@ -30,8 +30,9 @@ namespace HotelPrado.LN.Departamentos.ObtenerPorId
             return new DepartamentoDTO
             {
                 IdDepartamento = departamentoEnBaseDeDatos.IdDepartamento,
-                IdCliente = departamentoEnBaseDeDatos.IdCliente ?? 0,
+                IdCliente = departamentoEnBaseDeDatos.IdCliente,
                 Nombre = departamentoEnBaseDeDatos.Nombre,
+                NumeroDepartamento = departamentoEnBaseDeDatos.NumeroDepartamento,
                 Descripcion = departamentoEnBaseDeDatos.Descripcion,
                 IdTipoDepartamento = departamentoEnBaseDeDatos.IdTipoDepartamento,
                 Precio = departamentoEnBaseDeDatos.Precio,

@@ -1,323 +1,446 @@
-﻿@{
+@{
     ViewBag.Title = "Nuestros Servicios";
-    ViewBag.Message = "Experimente la excelencia en hospitalidad con nuestros servicios premium";
 }
-
-<main aria-labelledby="title" class="services-page">
-    <div class="services-header">
-        <div class="container">
-            <h1 id="title">@ViewBag.Title</h1>
-            <p class="lead">@ViewBag.Message</p>
-        </div>
-    </div>
-
-    <section id="services" class="services-section">
-        <div class="container">
-            <div class="row g-4 justify-content-center">
-                <!-- Servicio Lavandería -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <svg width="48" height="48" fill="currentColor">
-                                <use xlink:href="#laundry-icon"></use>
-                            </svg>
-                        </div>
-                        <div class="service-content">
-                            <h3>Lavandería Premium</h3>
-                            <p>
-                                Deja que nosotros nos encarguemos de tu ropa mientras tú disfrutas de tu estadía.
-                                Nuestro servicio de lavandería es rápido, confiable y está diseñado para adaptarse a tus necesidades
-                                Ya sea que necesites lavar una prenda urgente o todo tu equipaje,
-                                estamos aquí para asegurarnos de que siempre luzcas impecable sin preocuparte por nada.
-                            </p>
-                            <ul class="service-features">
-                                <li>Lavado y planchado profesional</li>
-                                <li>Servicio en 4 horas</li>
-                                <li>Productos hipoalergénicos</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Servicio Gimnasio -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <svg width="48" height="48" fill="currentColor">
-                                <use xlink:href="#dumbbells-icon"></use>
-                            </svg>
-                        </div>
-                        <div class="service-content">
-                            <h3>Wellness Center</h3>
-                            <p>
-                                Pon tu cuerpo en movimiento y despeja tu mente en nuestro gimnasio, equipado con todo
-                                lo que necesitas para entrenar a tu ritmo. Tanto si estás empezando como si ya eres un experto,
-                                aquí encontrarás el espacio perfecto para superar tus límites. Escápate del ajetreo
-                                de la ciudad mientras disfrutas de un ambiente motivador y el mejor equipo a tu disposición.
-                            </p>
-                            <ul class="service-features">
-                                <li>Equipos Life Fitness®</li>
-                                <li>Entrenador disponible</li>
-                                <li>Toallas y agua fría</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Servicio Transporte -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <svg width="48" height="48" fill="currentColor">
-                                <use xlink:href="#car-icon"></use>
-                            </svg>
-                        </div>
-                        <div class="service-content">
-                            <h3>Transporte Ejecutivo</h3>
-                            <p>
-                                Haz tu viaje aún más cómodo con nuestro servicio de transporte al aeropuerto.
-                                Olvídate del estrés de buscar un taxi o preocuparte por el tráfico.
-                                Te llevamos directamente al aeropuerto de manera rápida y segura,
-                                para que puedas disfrutar de un traslado sin complicaciones y de manera eficiente.
-                            </p>
-                            <ul class="service-features">
-                                <li>Variedad De vehiculos</li>
-                                <li>Monitoreo de vuelos</li>
-                                <li>Reserva anticipada</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Servicio Wi-Fi -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <svg width="48" height="48" fill="currentColor">
-                                <use xlink:href="#wifi-icon"></use>
-                            </svg>
-                        </div>
-                        <div class="service-content">
-                            <h3>Conectividad Total</h3>
-                            <p>
-                                Disfruta de internet gratis durante toda tu estadía y mantente siempre conectado.
-                                Ya sea para trabajar, revisar tus redes sociales,
-                                hacer videollamadas o simplemente navegar por la web,
-                                nuestra conexión rápida y confiable te permitirá hacerlo sin preocupaciones.
-                                Con acceso en todas las áreas del hotel, podrás estar conectado en todo momento, ya sea desde tu habitación,
-                                el área común o incluso mientras te relajas en el restaurante.
-                            </p>
-                            <ul class="service-features">
-                                <li>Fibra óptica 1Gbps</li>
-                                <li>Conexión segura VPN</li>
-                                <li>Soporte técnico 24/7</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
-    </section>
-
-    <section class="service-cta">
-        <div class="container">
-            <div class="cta-content">
-                <h2>¿Necesita un servicio especial?</h2>
-                <p>Nuestro equipo de conserjería está disponible para satisfacer cualquier necesidad durante su estadía.</p>
-                <a href="@Url.Action("Contact", "Home")" class="btn btn-primary">Contáctenos</a>
-            </div>
-        </div>
-    </section>
-</main>
 
 <style>
     :root {
-        --primary-color: #2a5a78;
-        --secondary-color: #3a7d9a;
-        --accent-color: #e8c37e;
-        --light-color: #f8f9fa;
-        --dark-color: #343a40;
-        --text-color: #495057;
+        --color-primary: #3a3a3a;
+        --color-secondary: #2a2a2a;
+        --color-accent: #007bff;
+        --color-dark: #1a1a1a;
+        --color-light: #f8f9fa;
+        --color-text: #333;
+        --color-text-light: #666;
     }
 
-    .services-page {
-        font-family: 'Montserrat', 'Segoe UI', sans-serif;
-        color: var(--text-color);
-        line-height: 1.6;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
-    .services-header {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: white;
-        padding: 5rem 0 4rem;
-        text-align: center;
-        margin-bottom: 3rem;
+    /* Hero Section */
+    .servicios-hero {
         position: relative;
+        height: 500px;
+        background-image: url('@(ViewBag.HeroBannerUrl ?? "/Img/images/Servicios/WhatsApp SIPEPE2025-12-11 at 3.27.00 PM.jpeg")');
+        background-size: cover;
+        background-position: center;
+        background-attachment: scroll;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        margin: 0 !important;
+        margin-top: 0 !important;
+        padding: 0 !important;
         overflow: hidden;
     }
+    
+    .btn-edit-hero {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 10;
+        background: rgba(109, 123, 184, 0.9);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    
+    .btn-edit-hero:hover {
+        background: rgba(109, 123, 184, 1);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        color: white;
+        text-decoration: none;
+    }
 
-    .services-header::before {
+    .servicios-hero::before {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
-        opacity: 0.15;
-        z-index: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.8) 100%);
+        backdrop-filter: blur(2px);
+        z-index: 1;
     }
 
-    .services-header h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
+    .hero-content-servicios {
+        position: relative;
+        z-index: 2;
+        max-width: 900px;
+        padding: 3rem 2rem;
+        background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+        width: 100%;
+    }
+
+    .servicios-hero h1 {
+        font-size: 4rem;
+        font-weight: 800;
         margin-bottom: 1rem;
-        position: relative;
-    }
-
-    .services-header .lead {
-        font-size: 1.25rem;
-        max-width: 700px;
-        margin: 0 auto;
-        position: relative;
-    }
-
-    .services-section {
-        padding: 0 0 4rem;
-    }
-
-    .service-card {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .service-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    }
-
-    .service-icon {
-        background: var(--primary-color);
+        text-shadow: 3px 3px 15px rgba(0,0,0,1);
         color: white;
-        padding: 1.5rem 0;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+    }
+
+    .servicios-hero p {
+        font-size: 1.5rem;
+        font-weight: 300;
+        text-shadow: 2px 2px 8px rgba(0,0,0,1);
+        color: white;
+        letter-spacing: 1px;
+    }
+
+    /* Container */
+    .servicios-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+    }
+
+    .section-title {
         text-align: center;
+        font-size: 2.5rem;
+        color: var(--color-primary);
+        margin-bottom: 3rem;
+        font-weight: 700;
     }
 
-    .service-icon svg {
-        display: inline-block;
+    /* Services Grid */
+    .servicios-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2.5rem;
+        margin-bottom: 4rem;
     }
 
-    .service-content {
-        padding: 2rem;
-        flex-grow: 1;
+    .servicio-card {
+        background: linear-gradient(135deg, #3a3a3a, #2a2a2a);
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
     }
 
-    .service-card h3 {
-        color: var(--primary-color);
-        font-size: 1.4rem;
-        margin-bottom: 1rem;
-        font-weight: 600;
+    .servicio-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(0,123,255,0.1), transparent);
+        transition: left 0.5s ease;
     }
 
-    .service-card p {
+    .servicio-card:hover::before {
+        left: 100%;
+    }
+
+    .servicio-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0,123,255,0.3);
+        border-color: var(--color-accent);
+    }
+
+    .servicio-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--color-accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         margin-bottom: 1.5rem;
-        color: var(--text-color);
+        box-shadow: 0 5px 15px rgba(0,123,255,0.3);
     }
 
-    .service-features {
+    .servicio-icon i {
+        font-size: 2.5rem;
+        color: white;
+    }
+
+    .servicio-card h3 {
+        color: white;
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .servicio-card p {
+        color: #e0e0e0;
+        font-size: 1rem;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+    }
+
+    .servicio-features {
         list-style: none;
         padding: 0;
         margin: 0;
     }
 
-    .service-features li {
+    .servicio-features li {
+        color: #e0e0e0;
+        padding: 0.5rem 0;
+        padding-left: 2rem;
         position: relative;
-        padding-left: 1.75rem;
-        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
     }
 
-    .service-features li::before {
-        content: '';
+    .servicio-features li::before {
+        content: '✓';
         position: absolute;
         left: 0;
-        top: 0.5em;
-        width: 0.75rem;
-        height: 0.75rem;
-        background-color: var(--accent-color);
-        border-radius: 50%;
+        color: var(--color-accent);
+        font-weight: bold;
+        font-size: 1.2rem;
     }
 
-    .service-cta {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: white;
-        padding: 4rem 0;
+    /* CTA Section */
+    .servicios-cta {
+        background: linear-gradient(135deg, var(--color-accent), #0056b3);
+        padding: 4rem 2rem;
+        border-radius: 20px;
         text-align: center;
+        color: white;
+        box-shadow: 0 10px 30px rgba(0,123,255,0.3);
     }
 
-    .service-cta h2 {
-        font-size: 2rem;
+    .servicios-cta h2 {
+        font-size: 2.5rem;
         margin-bottom: 1rem;
+        font-weight: 700;
     }
 
-    .service-cta p {
-        font-size: 1.1rem;
-        max-width: 600px;
-        margin: 0 auto 2rem;
+    .servicios-cta p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
-    .btn-primary {
-        background-color: var(--accent-color);
+    .btn-contacto {
+        background: white;
+        color: var(--color-accent);
+        padding: 1rem 3rem;
         border: none;
-        color: var(--dark-color);
-        padding: 0.75rem 2rem;
-        font-weight: 600;
         border-radius: 50px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-block;
         transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
 
-    .btn-primary:hover {
-        background-color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    .btn-contacto:hover {
+        background: var(--color-dark);
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
     }
 
+    /* Responsive */
+    @@media (max-width: 992px) {
+        .servicios-hero {
+            height: 400px;
+        }
 
+        .servicios-hero h1 {
+            font-size: 3rem;
+        }
 
+        .servicios-hero p {
+            font-size: 1.3rem;
+        }
+
+        .servicios-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .servicios-container {
+            padding: 3rem 1.5rem;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .servicios-hero {
+            height: 350px;
+        }
+
+        .servicios-hero h1 {
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+        }
+
+        .servicios-hero p {
+            font-size: 1.1rem;
+        }
+
+        .hero-content-servicios {
+            padding: 2rem 1.5rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+        }
+
+        .servicio-card {
+            padding: 2rem;
+        }
+
+        .servicio-card h3 {
+            font-size: 1.5rem;
+        }
+
+        .servicios-cta h2 {
+            font-size: 2rem;
+        }
+    }
 </style>
 
-<!-- ICONOS SVG ACTUALIZADOS -->
-<svg style="display: none;">
-    <symbol id="laundry-icon" viewBox="0 0 24 24">
-        <path d="M5 2h14a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm2 2v2h10V4H7zm5 16a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0-2a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
-    </symbol>
+<!-- Hero Section -->
+<section class="servicios-hero">
+    @if (User.IsInRole("Administrador"))
+    {
+        <a href="@Url.Action("ConfigurarHeroBanners", "Admin")" class="btn-edit-hero" title="Cambiar imagen del hero banner">
+            <i class="fas fa-image"></i> Cambiar Imagen
+        </a>
+    }
+    <div class="hero-content-servicios">
+        <h1>NUESTROS SERVICIOS</h1>
+        <p>Comodidad y excelencia en cada detalle</p>
+    </div>
+</section>
 
-    <symbol id="dumbbells-icon" viewBox="0 0 24 24">
-        <path d="M6 5h2v14H6V5zm10 0h2v14h-2V5zm-8 4h4v6H8V9zm6 0h4v6h-4V9z" />
-    </symbol>
+<!-- Container Principal -->
+<div class="servicios-container">
+    
+    <h2 class="section-title">Servicios Incluidos</h2>
 
-    <symbol id="car-icon" viewBox="0 0 24 24">
-        <path d="M19 15h1v3a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-1H8v1a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-3h1l1.5-5h15L19 15zm-9-1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm8 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM4.5 8L3 13h18l-1.5-5h-15z" />
-        <path d="M15 3l-1 2h-2l1-2h-2l1-1 1 1h2z" />
-    </symbol>
+    <!-- Grid de Servicios -->
+    <div class="servicios-grid">
+        
+        <!-- Parqueo -->
+        <div class="servicio-card">
+            <div class="servicio-icon">
+                <i class="fas fa-car"></i>
+            </div>
+            <h3>Parqueo Seguro</h3>
+            <p>
+                Estacionamiento privado y vigilado las 24 horas para su tranquilidad. 
+                Espacios amplios y techados para proteger su vehículo durante toda su estadía.
+            </p>
+            <ul class="servicio-features">
+                <li>Vigilancia 24/7</li>
+                <li>Espacios techados</li>
+                <li>Acceso controlado</li>
+                <li>Gratuito para huéspedes</li>
+            </ul>
+        </div>
 
-    <symbol id="wifi-icon" viewBox="0 0 24 24">
-        <path d="M12 21a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm-4.95-4.95a7 7 0 0 1 9.9 0l1.41-1.41a9 9 0 0 0-12.72 0l1.41 1.41zm-2.83-2.83a11 11 0 0 1 15.56 0l1.41-1.41a13 13 0 0 0-18.38 0l1.41 1.41z" />
-    </symbol>
+        <!-- Seguridad -->
+        <div class="servicio-card">
+            <div class="servicio-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Seguridad 24/7</h3>
+            <p>
+                Su seguridad es nuestra prioridad. Contamos con personal de seguridad las 24 horas, 
+                cámaras de vigilancia y sistemas de control de acceso en todas nuestras instalaciones.
+            </p>
+            <ul class="servicio-features">
+                <li>Personal capacitado</li>
+                <li>Circuito cerrado de cámaras</li>
+                <li>Control de acceso</li>
+                <li>Iluminación nocturna</li>
+            </ul>
+        </div>
 
-    <symbol id="room-icon" viewBox="0 0 24 24">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z" />
-    </symbol>
+        <!-- WiFi -->
+        <div class="servicio-card">
+            <div class="servicio-icon">
+                <i class="fas fa-wifi"></i>
+            </div>
+            <h3>Internet WiFi</h3>
+            <p>
+                Conexión de alta velocidad gratuita en todas las áreas del hotel. 
+                Perfecta para trabajar, hacer videollamadas o disfrutar de su entretenimiento favorito.
+            </p>
+            <ul class="servicio-features">
+                <li>Internet simétrico de alta velocidad</li>
+                <li>Cobertura total</li>
+                <li>Conexión segura</li>
+                <li>Sin límite de datos</li>
+            </ul>
+        </div>
 
-    <symbol id="dining-icon" viewBox="0 0 24 24">
-        <path d="M18 3v2h-2v3h2v2h-2v3h2v2h-8v2h-2v2H8v-2H6v-2h2v-2h2V3h8zm-2 2h-4v8h4V5z" />
-    </symbol>
-</svg>
+        <!-- Gimnasio -->
+        <div class="servicio-card">
+            <div class="servicio-icon">
+                <i class="fas fa-dumbbell"></i>
+            </div>
+            <h3>Gimnasio</h3>
+            <p>
+                Manténgase activo durante su estadía en nuestro gimnasio equipado. 
+                Equipos modernos en un ambiente motivador para cuidar de su bienestar físico.
+            </p>
+            <ul class="servicio-features">
+                <li>Equipos cardiovasculares</li>
+                <li>Pesas y máquinas</li>
+                <li>Ambiente climatizado</li>
+                <li>Horario extendido</li>
+            </ul>
+        </div>
+
+        <!-- Baños Privados -->
+        <div class="servicio-card">
+            <div class="servicio-icon">
+                <i class="fas fa-shower"></i>
+            </div>
+            <h3>Baños Privados</h3>
+            <p>
+                Todas nuestras habitaciones cuentan con baño privado completo, 
+                con agua caliente las 24 horas y amenidades de calidad para su confort.
+            </p>
+            <ul class="servicio-features">
+                <li>Agua caliente 24 horas</li>
+                <li>Toallas de calidad</li>
+                <li>Productos de higiene</li>
+                <li>Duchas amplias</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- CTA Section -->
+    <div class="servicios-cta">
+        <h2>¿Necesita Más Información?</h2>
+        <p>
+            Nuestro equipo está disponible para responder todas sus preguntas y 
+            ayudarle a planificar la estadía perfecta en Prado Inn & Suites.
+        </p>
+        <a href="@Url.Action("Contact", "Home")" class="btn-contacto">
+            <i class="fas fa-envelope"></i> Contáctenos
+        </a>
+    </div>
+
+</div>

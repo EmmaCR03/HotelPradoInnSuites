@@ -1,4 +1,4 @@
-﻿@model HotelPrado.Abstracciones.Modelos.Habitaciones.HabitacionesDTO
+@model HotelPrado.Abstracciones.Modelos.Habitaciones.HabitacionesDTO
 
 <div class="card mt-5">
     <div class="card-header">
@@ -50,6 +50,26 @@
                     <div class="col-md-9 w-100">
                         @Html.TextBoxFor(model => model.PrecioPorNoche4P, new { @class = "form-control w-100" })
                         @Html.ValidationMessageFor(model => model.PrecioPorNoche4P, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="control-label col-md-3 text-wrap">Tarifa general (la que ven los clientes)</label>
+                    <div class="col-md-9 w-100">
+                        @Html.TextBoxFor(model => model.PrecioGeneral, new { @class = "form-control w-100", placeholder = "0 = usar precios por capacidad" })
+                        @Html.ValidationMessageFor(model => model.PrecioGeneral, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.PrecioGobierno, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.TextBoxFor(model => model.PrecioGobierno, new { @class = "form-control w-100" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.PrecioCorporativo, new { @class = "control-label col-md-3 text-wrap" })
+                    <div class="col-md-9 w-100">
+                        @Html.TextBoxFor(model => model.PrecioCorporativo, new { @class = "form-control w-100" })
                     </div>
                 </div>
 

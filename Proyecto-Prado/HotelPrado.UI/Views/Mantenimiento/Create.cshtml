@@ -94,12 +94,34 @@
 
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
+                                    <label class="form-label">Tipo</label>
+                                    <select id="tipoSeleccionado" name="tipoSeleccionado" class="form-select" onchange="toggleTipo()">
+                                        <option value="">Seleccione un tipo</option>
+                                        <option value="Departamento" @(ViewBag.TipoSeleccionado == "Departamento" ? "selected" : "")>Departamento</option>
+                                        <option value="Habitacion" @(ViewBag.TipoSeleccionado == "Habitacion" ? "selected" : "")>Habitación</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3" id="departamentoGroup" style="display: @(ViewBag.TipoSeleccionado == "Habitacion" ? "none" : "block");">
+                                <div class="form-group">
                                     <label class="form-label">Departamento</label>
                                     @Html.DropDownList("idDepartamento",
                                         (SelectList)ViewBag.Departamentos,
                                         "Seleccione un departamento",
-                                        new { @class = "form-select", required = "required" })
+                                        new { @class = "form-select", id = "idDepartamento" })
                                     @Html.ValidationMessageFor(model => model.idDepartamento, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3" id="habitacionGroup" style="display: @(ViewBag.TipoSeleccionado == "Habitacion" ? "block" : "none");">
+                                <div class="form-group">
+                                    <label class="form-label">Habitación</label>
+                                    @Html.DropDownList("idHabitacion",
+                                        (SelectList)ViewBag.Habitaciones,
+                                        "Seleccione una habitación",
+                                        new { @class = "form-select", id = "idHabitacion" })
+                                    @Html.ValidationMessageFor(model => model.idHabitacion, "", new { @class = "text-danger" })
                                 </div>
                             </div>
 
@@ -123,4 +145,54 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        function toggleTipo() {
+            var tipo = document.getElementById("tipoSeleccionado").value;
+            var departamentoGroup = document.getElementById("departamentoGroup");
+            var habitacionGroup = document.getElementById("habitacionGroup");
+            var idDepartamento = document.getElementById("idDepartamento");
+            var idHabitacion = document.getElementById("idHabitacion");
+
+            if (tipo === "Departamento") {
+                departamentoGroup.style.display = "block";
+                habitacionGroup.style.display = "none";
+                idHabitacion.value = "0"; // Reset habitación
+                idDepartamento.required = true;
+                idHabitacion.required = false;
+            } else if (tipo === "Habitacion") {
+                departamentoGroup.style.display = "none";
+                habitacionGroup.style.display = "block";
+                idDepartamento.value = "0"; // Reset departamento
+                idDepartamento.required = false;
+                idHabitacion.required = true;
+            } else {
+                departamentoGroup.style.display = "none";
+                habitacionGroup.style.display = "none";
+                idDepartamento.value = "0";
+                idHabitacion.value = "0";
+                idDepartamento.required = false;
+                idHabitacion.required = false;
+            }
+        }
+
+        // Inicializar al cargar la página
+        document.addEventListener("DOMContentLoaded", function () {
+            @if (ViewBag.IdDepartamento != null)
+            {
+                <text>
+                document.getElementById("tipoSeleccionado").value = "Departamento";
+                document.getElementById("idDepartamento").value = "@ViewBag.IdDepartamento";
+                toggleTipo();
+                </text>
+            }
+            else if (ViewBag.IdHabitacion != null)
+            {
+                <text>
+                document.getElementById("tipoSeleccionado").value = "Habitacion";
+                document.getElementById("idHabitacion").value = "@ViewBag.IdHabitacion";
+                toggleTipo();
+                </text>
+            }
+        });
+    </script>
 }

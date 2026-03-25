@@ -1,0 +1,420 @@
+@model IEnumerable<HotelPrado.Abstracciones.Modelos.Cliente.ClienteDTO>
+
+@{
+    ViewBag.Title = "Gestión de Clientes";
+}
+
+<style>
+    .clients-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: calc(100vh - 200px);
+        padding: 2rem 0;
+    }
+
+    .page-header {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .page-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .search-bar {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .search-input-group {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .search-input-group input {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .search-input-group input:focus {
+        outline: none;
+        border-color: #6D7BB8;
+    }
+
+    .btn-search {
+        padding: 0.75rem 2rem;
+        background: #6D7BB8;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .btn-search:hover {
+        background: #5a6ba5;
+    }
+
+    .btn-clear {
+        padding: 0.75rem 1.5rem;
+        background: #6c757d;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-clear:hover {
+        background: #5a6268;
+    }
+
+    .table-container {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        overflow-x: auto;
+    }
+
+    .clients-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+    }
+
+    .clients-table thead {
+        background: linear-gradient(135deg, #6D7BB8 0%, #5a6ba5 100%);
+        color: white;
+    }
+
+    .clients-table th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    .clients-table th a {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .clients-table th a:hover {
+        text-decoration: underline;
+    }
+
+    .clients-table tbody tr {
+        border-bottom: 1px solid #e9ecef;
+        transition: background 0.2s ease;
+    }
+
+    .clients-table tbody tr:hover {
+        background: #f8f9fa;
+    }
+
+    .clients-table td {
+        padding: 1rem;
+        color: #495057;
+    }
+
+    .sort-icon {
+        font-size: 0.75rem;
+        opacity: 0.7;
+    }
+
+    .total-info {
+        background: #e3f2fd;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        text-align: center;
+        font-weight: 600;
+        color: #1976d2;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+    }
+
+    .no-results i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+</style>
+
+<div class="clients-container">
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1><i class="fas fa-users"></i> Gestión de Clientes</h1>
+            <p class="text-muted">Administra y busca en tu base de datos de clientes</p>
+            <p class="mb-0 mt-2">
+                <a href="@Url.Action("Historial", "Clientes")" class="btn-clear" style="display: inline-block;"><i class="fas fa-history"></i> Historial de clientes (última estancia)</a>
+            </p>
+        </div>
+
+        <div class="search-bar">
+            <form method="get" action="@Url.Action("Index")" id="searchForm">
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <input type="text" 
+                               name="busqueda" 
+                               value="@ViewBag.Busqueda" 
+                               placeholder="Buscar por nombre, email, cédula o teléfono..." 
+                               class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <select name="filtroUsuario" class="form-control" onchange="document.getElementById('searchForm').submit();">
+                            <option value="">Todos los clientes</option>
+                            <option value="conUsuario" @(ViewBag.FiltroUsuario == "conUsuario" ? "selected" : "")>Con usuario web</option>
+                            <option value="sinUsuario" @(ViewBag.FiltroUsuario == "sinUsuario" ? "selected" : "")>Sin usuario web</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row g-3 mt-2">
+                    <div class="col-12">
+                        <div class="d-flex gap-2">
+                            <input type="hidden" name="ordenarPor" value="@ViewBag.OrdenarPor" />
+                            <input type="hidden" name="ordenAscendente" value="@ViewBag.OrdenAscendente.ToString()" />
+                            <input type="hidden" name="pagina" value="1" />
+                            <input type="hidden" name="tamanoPagina" value="@ViewBag.TamanoPagina" />
+                            <button type="submit" class="btn-search">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                            @if (!string.IsNullOrEmpty(ViewBag.Busqueda as string) || !string.IsNullOrEmpty(ViewBag.FiltroUsuario as string))
+                            {
+                                <a href="@Url.Action("Index", new { tamanoPagina = ViewBag.TamanoPagina })" class="btn-clear">
+                                    <i class="fas fa-times"></i> Limpiar
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="total-info">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <i class="fas fa-info-circle"></i> 
+                    Total de clientes encontrados: <strong>@ViewBag.TotalClientes</strong>
+                    @if (!string.IsNullOrEmpty(ViewBag.Busqueda as string))
+                    {
+                        <span class="text-muted">(filtrados)</span>
+                    }
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <label for="tamanoPaginaSelect" class="mb-0 small">Mostrar:</label>
+                    <select id="tamanoPaginaSelect" class="form-select form-select-sm" style="width: auto;" onchange="cambiarTamanoPagina(this.value)">
+                        <option value="25" @(ViewBag.TamanoPagina == 25 ? "selected" : "")>25</option>
+                        <option value="50" @(ViewBag.TamanoPagina == 50 ? "selected" : "")>50</option>
+                        <option value="100" @(ViewBag.TamanoPagina == 100 ? "selected" : "")>100</option>
+                        <option value="200" @(ViewBag.TamanoPagina == 200 ? "selected" : "")>200</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            @if (Model != null && Model.Any())
+            {
+                <table class="clients-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <a href="@Url.Action("Index", new { busqueda = ViewBag.Busqueda, filtroUsuario = ViewBag.FiltroUsuario, ordenarPor = "IdCliente", ordenAscendente = ViewBag.OrdenarPor == "IdCliente" && ViewBag.OrdenAscendente == false, pagina = ViewBag.PaginaActual, tamanoPagina = ViewBag.TamanoPagina })">
+                                    ID
+                                    @if (ViewBag.OrdenarPor == "IdCliente")
+                                    {
+                                        <span class="sort-icon">
+                                            @if (ViewBag.OrdenAscendente)
+                                            { <i class="fas fa-sort-up"></i> }
+                                            else
+                                            { <i class="fas fa-sort-down"></i> }
+                                        </span>
+                                    }
+                                </a>
+                            </th>
+                            <th>
+                                <a href="@Url.Action("Index", new { busqueda = ViewBag.Busqueda, filtroUsuario = ViewBag.FiltroUsuario, ordenarPor = "NombreCliente", ordenAscendente = ViewBag.OrdenarPor == "NombreCliente" && ViewBag.OrdenAscendente == false, pagina = ViewBag.PaginaActual, tamanoPagina = ViewBag.TamanoPagina })">
+                                    Nombre Completo
+                                    @if (ViewBag.OrdenarPor == "NombreCliente")
+                                    {
+                                        <span class="sort-icon">
+                                            @if (ViewBag.OrdenAscendente)
+                                            { <i class="fas fa-sort-up"></i> }
+                                            else
+                                            { <i class="fas fa-sort-down"></i> }
+                                        </span>
+                                    }
+                                </a>
+                            </th>
+                            <th>Email</th>
+                            <th>Cédula</th>
+                            <th>Teléfono</th>
+                            <th>Dirección</th>
+                            <th>Usuario Web</th>
+                            <th>Detalles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cliente in Model)
+                        {
+                            <tr>
+                                <td data-label="ID"><strong>@cliente.IdCliente</strong></td>
+                                <td data-label="Nombre Completo">@cliente.NombreCompleto</td>
+                                <td data-label="Email">@(cliente.EmailCliente ?? "-")</td>
+                                <td data-label="Cédula">@(cliente.CedulaCliente ?? "-")</td>
+                                <td data-label="Teléfono">@(cliente.TelefonoCliente ?? "-")</td>
+                                <td data-label="Dirección">@(cliente.DireccionCliente ?? "-")</td>
+                                <td data-label="Usuario Web">
+                                    @if (!string.IsNullOrEmpty(cliente.IdUsuario))
+                                    {
+                                        <span class="badge badge-success">
+                                            <i class="fas fa-check-circle"></i> Sí
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-secondary">
+                                            <i class="fas fa-times-circle"></i> No
+                                        </span>
+                                    }
+                                </td>
+                                <td data-label="Detalles">
+                                    <a href="@Url.Action("Detalles", "Clientes", new { id = cliente.IdCliente })"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-info-circle"></i> Detalles
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                @* Paginación: HTML generado en el controlador (sin @if aquí para evitar error del parser Razor) *@
+                @Html.Raw(ViewBag.PaginacionHtml)
+            }
+            else
+            {
+                <div class="empty-state">
+                    <div class="empty-state-icon"><i class="fas fa-users"></i></div>
+                    <h3 class="empty-state-title">@(string.IsNullOrEmpty(ViewBag.Busqueda as string) ? "No hay clientes aún" : "No se encontraron clientes")</h3>
+                    <p class="empty-state-text">@(string.IsNullOrEmpty(ViewBag.Busqueda as string) ? "Los clientes se registran al hacer una reserva o desde el registro web. No hay clientes en la base de datos." : "No hay clientes que coincidan con tu búsqueda. Prueba otros términos o limpia los filtros.")</p>
+                    @if (string.IsNullOrEmpty(ViewBag.Busqueda as string))
+                    {
+                        <a href="@Url.Action("Index", "ReservasA")" class="btn-empty-state"><i class="fas fa-calendar-check"></i> Ir a Reservas</a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Index")" class="btn-empty-state"><i class="fas fa-times"></i> Limpiar búsqueda</a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    function cambiarTamanoPagina(tamano) {
+        var url = new URL(window.location.href);
+        url.searchParams.set('tamanoPagina', tamano);
+        url.searchParams.set('pagina', '1'); // Resetear a primera página
+        window.location.href = url.toString();
+    }
+</script>
+
+<style>
+    .pagination-container {
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-top: 1.5rem;
+    }
+
+    .pagination {
+        display: flex;
+        gap: 0.25rem;
+    }
+
+    .page-item {
+        list-style: none;
+    }
+
+    .page-link {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        color: #6D7BB8;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        display: inline-block;
+    }
+
+    .page-link:hover {
+        background: #6D7BB8;
+        color: white;
+        border-color: #6D7BB8;
+    }
+
+    .page-item.active .page-link {
+        background: #6D7BB8;
+        color: white;
+        border-color: #6D7BB8;
+    }
+
+    .page-item.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background: #e9ecef;
+    }
+
+    .pagination-info {
+        font-size: 0.9rem;
+    }
+
+    .form-select-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    @* Evitar que Razor interprete las llaves del bloque @media como código *@
+    @@media (max-width: 768px) @Html.Raw("{")
+        .pagination-container {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .pagination-info,
+        .pagination {
+            width: 100%;
+            justify-content: center;
+        }
+    @Html.Raw("}")
+</style>
+

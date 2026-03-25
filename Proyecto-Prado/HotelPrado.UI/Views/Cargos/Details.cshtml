@@ -1,0 +1,246 @@
+@model HotelPrado.Abstracciones.Modelos.Cargos.CargosDTO
+
+@{
+    ViewBag.Title = "Detalles del Cargo";
+}
+
+<style>
+    .card {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,.08);
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid rgba(0,0,0,.05);
+        padding: 1rem 1.5rem;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #6c757d;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .detail-value {
+        font-size: 1em;
+        color: #212529;
+        margin-bottom: 1.5rem;
+    }
+
+    .badge {
+        font-weight: 500;
+        padding: 0.5em 1em;
+    }
+
+    .detail-section {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .currency-value {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #28a745;
+    }
+</style>
+
+<div class="container-fluid px-4">
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">Detalles del Cargo</h2>
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Volver
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="card-body p-4">
+                    <!-- Información Básica -->
+                    <div class="detail-section">
+                        <div class="section-title">Información Básica</div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="detail-label">ID Cargo</div>
+                                    <div class="detail-value">@Html.DisplayFor(model => model.IdCargo)</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="detail-label">Check-In</div>
+                                    <div class="detail-value">
+                                        @if (Model.IdCheckIn.HasValue)
+                                        {
+                                            <span class="badge bg-info">#@Model.IdCheckIn</span>
+                                        }
+                                        else
+                                        {
+                                            <text>N/A</text>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="detail-label">Cliente</div>
+                                    <div class="detail-value">@(Model.ClienteNombre ?? "N/A")</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="detail-label">Código Extra</div>
+                                    <div class="detail-value">@(Model.CodigoExtra?.ToString() ?? "N/A")</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="detail-label">Fecha y Hora</div>
+                                    <div class="detail-value">
+                                        @if (Model.FechaHora.HasValue)
+                                        {
+                                            @Model.FechaHora.Value.ToString("dd/MM/yyyy HH:mm")
+                                        }
+                                        else
+                                        {
+                                            <text>N/A</text>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="detail-label">Estado</div>
+                                    <div class="detail-value">
+                                        @if (Model.Cancelado == true)
+                                        {
+                                            <span class="badge rounded-pill bg-danger">Cancelado</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge rounded-pill bg-success">Activo</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <div class="detail-label">Descripción</div>
+                                    <div class="detail-value">@(Model.DescripcionExtra ?? "N/A")</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Montos -->
+                    <div class="detail-section">
+                        <div class="section-title">Montos</div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="detail-label">Monto del Cargo</div>
+                                    <div class="detail-value">₡@(Model.MontoCargo?.ToString("N2") ?? "0.00")</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="detail-label">Monto de Servicio</div>
+                                    <div class="detail-value">₡@(Model.MontoServicio?.ToString("N2") ?? "0.00")</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="detail-label">Impuesto de Venta</div>
+                                    <div class="detail-value">₡@(Model.ImpuestoVenta?.ToString("N2") ?? "0.00")</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="detail-label">Impuesto de Hotel</div>
+                                    <div class="detail-value">₡@(Model.ImpuestoHotel?.ToString("N2") ?? "0.00")</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="detail-label">Impuesto de Servicio</div>
+                                    <div class="detail-value">₡@(Model.ImpuestoServicio?.ToString("N2") ?? "0.00")</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="detail-label">Monto Total</div>
+                                    <div class="currency-value">₡@(Model.MontoTotal?.ToString("N2") ?? "0.00")</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información Adicional -->
+                    <div class="detail-section">
+                        <div class="section-title">Información Adicional</div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="detail-label">Número de Documento</div>
+                                    <div class="detail-value">@(Model.NumeroDocumento?.ToString() ?? "N/A")</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="detail-label">Número de Empleado</div>
+                                    <div class="detail-value">@(Model.NumeroEmpleado?.ToString() ?? "N/A")</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="detail-label">Opciones</div>
+                                    <div class="detail-value">
+                                        @if (Model.PagoImpuesto == true)
+                                        {
+                                            <span class="badge bg-warning me-1">Pago Impuesto</span>
+                                        }
+                                        @if (Model.NoContable == true)
+                                        {
+                                            <span class="badge bg-secondary me-1">No Contable</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(Model.Notas))
+                            {
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <div class="detail-label">Notas</div>
+                                        <div class="detail-value">@Model.Notas</div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex gap-2 justify-content-end">
+                        <a href="@Url.Action("Edit", new { id = Model.IdCargo })" class="btn btn-primary">
+                            <i class="fas fa-edit me-2"></i>Editar
+                        </a>
+                        <a href="@Url.Action("Index")" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>Volver
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

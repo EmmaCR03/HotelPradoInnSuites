@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Linq;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -25,13 +26,36 @@ namespace HotelPrado.UI
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
+                // Never = cookie se envía en HTTP y HTTPS (hosting tras proxy a veces recibe HTTP y la cookie Secure no se guardaba).
+                CookieSecure = CookieSecureOption.Never,
+                CookieHttpOnly = true,
+                CookieName = ".AspNet.ApplicationCookie",
+                CookieSameSite = Microsoft.Owin.SameSiteMode.Lax,
+                ExpireTimeSpan = TimeSpan.FromDays(30),
                 Provider = new CookieAuthenticationProvider
                 {
-                    // Permite a la aplicación validar la marca de seguridad cuando el usuario inicia sesión.
-                    // Es una característica de seguridad que se usa cuando se cambia una contraseña o se agrega un inicio de sesión externo a la cuenta.  
+                    // Validar identidad cada 24h (no cada 120 min) para que la sesión no se pierda por timeouts de BD
                     OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
-                        validateInterval: TimeSpan.FromMinutes(30),
-                        regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+                        validateInterval: TimeSpan.FromHours(24),
+                        regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager)),
+                    // Evitar redirecciones infinitas: no redirigir a Login si la petición es a una ruta pública
+                    OnApplyRedirect = context =>
+                    {
+                        var currentPath = context.Request.Path.Value?.ToLowerInvariant() ?? "";
+                        // Rutas que deben ser accesibles sin sesión (igual que [AllowAnonymous] en controladores)
+                        var rutasPublicas = new[] {
+                            "/account/login", "/account/register", "/entrar", "/registro",
+                            "/", "/home/index", "/home/about", "/home/contact", "/home/services", "/home/error", "/home/ping", "/home/diagnostico",
+                            "/habitacion/habitacionesinfo", "/habitacion/indexhabitacionesusuario",
+                            "/departamento/indexdepartamentosclientes",
+                            "/citas/indexcitas", "/citas/create"
+                        };
+                        if (rutasPublicas.Any(r => currentPath.Equals(r, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            return; // No redirigir a login en rutas públicas
+                        }
+                        context.Response.Redirect(context.RedirectUri);
+                    }
                 }
             });            
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);

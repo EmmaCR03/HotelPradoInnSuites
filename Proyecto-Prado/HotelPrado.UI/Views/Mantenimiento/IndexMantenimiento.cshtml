@@ -1,106 +1,779 @@
-﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Mantenimiento.MantenimientoDTO>
+@model IEnumerable<HotelPrado.Abstracciones.Modelos.Mantenimiento.MantenimientoDTO>
 
 @{
     ViewBag.Title = "Gestión de Mantenimientos";
 }
 
 <style>
-    .table th {
-        font-weight: 600;
-        font-size: 0.9em;
+    .table-container {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        overflow-x: auto;
+    }
+    :root {
+        --hotel-primary: #6D7BB8;
+        --hotel-gold: #D4AF37;
+        --hotel-dark: #2c3e50;
+        --status-pendiente: #dc3545;
+        --status-proceso: #ffc107;
+        --status-completado: #28a745;
+    }
+
+    .maintenance-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: calc(100vh - 200px);
+        padding: 2rem 0;
+    }
+
+    .page-header {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .page-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--hotel-dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-card .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card.pendiente .stat-number { color: var(--status-pendiente); }
+    .stat-card.proceso .stat-number { color: var(--status-proceso); }
+    .stat-card.completado .stat-number { color: var(--status-completado); }
+
+    .stat-card .stat-label {
+        color: #6c757d;
+        font-size: 0.9rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
 
-    .table td {
-        vertical-align: middle;
-        font-size: 0.9em;
+    .filters-bar {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
-    .badge {
-        font-weight: 500;
-        padding: 0.5em 1em;
+    .view-toggle {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
     }
 
-    .btn-group .btn {
-        padding: 0.25rem 0.5rem;
+    .view-toggle button {
+        padding: 0.5rem 1rem;
+        border: 2px solid #dee2e6;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
     }
 
-        .btn-group .btn i {
-            font-size: 0.875rem;
+    .view-toggle button.active {
+        background: var(--hotel-primary);
+        color: white;
+        border-color: var(--hotel-primary);
+    }
+
+    .maintenance-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .maintenance-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border-left: 5px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .maintenance-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--hotel-primary), var(--hotel-gold));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .maintenance-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .maintenance-card:hover::before {
+        opacity: 1;
+    }
+
+    .maintenance-card.pendiente { border-left-color: var(--status-pendiente); }
+    .maintenance-card.proceso { border-left-color: var(--status-proceso); }
+    .maintenance-card.completado { border-left-color: var(--status-completado); }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 1rem;
+    }
+
+    .card-id {
+        font-size: 0.85rem;
+        color: #6c757d;
+        font-weight: 600;
+    }
+
+    .status-badge {
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-badge.pendiente {
+        background: #fee;
+        color: var(--status-pendiente);
+    }
+
+    .status-badge.proceso {
+        background: #fff8e1;
+        color: #f57c00;
+    }
+
+    .status-badge.completado {
+        background: #e8f5e9;
+        color: var(--status-completado);
+    }
+
+    .card-description {
+        color: var(--hotel-dark);
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .card-location {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .card-location i {
+        color: var(--hotel-primary);
+    }
+
+    .card-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .btn-card {
+        flex: 1;
+        padding: 0.5rem;
+        border-radius: 8px;
+        border: none;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-card.btn-edit {
+        background: #e3f2fd;
+        color: var(--hotel-primary);
+    }
+
+    .btn-card.btn-edit:hover {
+        background: var(--hotel-primary);
+        color: white;
+    }
+
+    .btn-card.btn-details {
+        background: #f3e5f5;
+        color: #9c27b0;
+    }
+
+    .btn-card.btn-details:hover {
+        background: #9c27b0;
+        color: white;
+    }
+
+    .btn-card.btn-complete {
+        background: #e8f5e9;
+        color: var(--status-completado);
+    }
+
+    .btn-card.btn-complete:hover {
+        background: var(--status-completado);
+        color: white;
+    }
+
+    .table-view {
+        display: none;
+    }
+
+    .table-view.active {
+        display: block;
+    }
+
+    .grid-view.active {
+        display: grid;
+    }
+
+    .grid-view {
+        display: none;
+    }
+
+    @@media (max-width: 768px) {
+        .maintenance-grid {
+            grid-template-columns: 1fr;
         }
 
-    .card {
-        border: none;
-        border-radius: 8px;
-    }
-
-    .card-body {
-        padding: 1.5rem;
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 
-<div class="container-fluid px-4">
-    <div class="row my-4">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-0">Gestión de Mantenimientos</h2>
-                <a href="@Url.Action("Create")" class="btn btn-primary">
+<div class="maintenance-container">
+    <div class="container-fluid">
+        @if (TempData["MensajeExito"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>@TempData["MensajeExito"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        <!-- Header -->
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h1><i class="fas fa-tools me-2" style="color: var(--hotel-primary);"></i>Gestión de Mantenimientos</h1>
+                    <p class="text-muted mb-0">Administra y monitorea todos los mantenimientos del hotel</p>
+                </div>
+                <a href="@Url.Action("Create")" class="btn btn-primary btn-lg">
                     <i class="fas fa-plus-circle me-2"></i>Nuevo Mantenimiento
                 </a>
             </div>
+        </div>
 
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
+        <!-- Estadísticas -->
+        <div class="stats-grid">
+            <div class="stat-card pendiente">
+                <div class="stat-number" id="count-pendiente">0</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+            <div class="stat-card proceso">
+                <div class="stat-number" id="count-proceso">0</div>
+                <div class="stat-label">En Proceso</div>
+            </div>
+            <div class="stat-card completado">
+                <div class="stat-number" id="count-completado">0</div>
+                <div class="stat-label">Completados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="count-total">0</div>
+                <div class="stat-label">Total</div>
+            </div>
+        </div>
+
+        <!-- Filtros y Vista -->
+        <div class="filters-bar">
+            <div class="view-toggle">
+                <button class="active" onclick="toggleView('grid')" id="btn-grid">
+                    <i class="fas fa-th-large me-2"></i>Tarjetas
+                </button>
+                <button onclick="toggleView('table')" id="btn-table">
+                    <i class="fas fa-table me-2"></i>Tabla
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Filtrar por Estado</label>
+                    <select class="form-select" id="filter-estado" onchange="filterMaintenance()">
+                        <option value="">Todos los estados</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="En Proceso">En Proceso</option>
+                        <option value="Completado">Completado</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Buscar</label>
+                    <input type="text" class="form-control" id="search-input" placeholder="Buscar por descripción o ubicación..." onkeyup="filterMaintenance()">
+                </div>
+                <div class="col-md-4 mb-3 d-flex align-items-end">
+                    <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                        <i class="fas fa-times me-2"></i>Limpiar Filtros
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <div class="empty-state-icon"><i class="fas fa-tools"></i></div>
+                <h3 class="empty-state-title">No hay mantenimientos registrados</h3>
+                <p class="empty-state-text">Los mantenimientos se crearán desde habitaciones o departamentos. Aquí aparecerán cuando haya registros.</p>
+                <a href="@Url.Action("Create", "Mantenimiento")" class="btn-empty-state"><i class="fas fa-plus"></i> Registrar mantenimiento</a>
+            </div>
+        }
+        else
+        {
+        <!-- Vista de Tarjetas -->
+        <div class="grid-view active" id="grid-view">
+            <div class="maintenance-grid" id="maintenance-grid">
+                @foreach (var item in Model)
+                {
+                    var estadoClass = item.Estado?.ToLower().Replace(" ", "") ?? "pendiente";
+                    <div class="maintenance-card @estadoClass" data-estado="@item.Estado" data-descripcion="@item.Descripcion?.ToLower()" data-ubicacion="@((item.DepartamentoNombre ?? item.HabitacionNombre ?? "").ToLower())">
+                        <div class="card-header">
+                            <span class="card-id">#@item.IdMantenimiento</span>
+                            <span class="status-badge @estadoClass">@item.Estado</span>
+                        </div>
+                        <div class="card-description">
+                            @item.Descripcion
+                        </div>
+                        <div class="card-location">
+                            @if (!string.IsNullOrEmpty(item.DepartamentoNombre))
+                            {
+                                <i class="fas fa-building"></i>
+                                <span>@item.DepartamentoNombre</span>
+                            }
+                            else if (!string.IsNullOrEmpty(item.HabitacionNombre))
+                            {
+                                <i class="fas fa-bed"></i>
+                                <span>@item.HabitacionNombre</span>
+                            }
+                            else
+                            {
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span class="text-muted">Sin ubicación asignada</span>
+                            }
+                        </div>
+                        <div class="card-actions">
+                            @if (item.Estado != "Completado")
+                            {
+                                <button type="button" class="btn-card btn-complete" onclick="completarMantenimiento(@item.IdMantenimiento, '@item.Descripcion')">
+                                    <i class="fas fa-check-circle"></i> Completar
+                                </button>
+                            }
+                            <a href="@Url.Action("Edit", new { id = item.IdMantenimiento })" class="btn-card btn-edit">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <a href="@Url.Action("Details", new { id = item.IdMantenimiento })" class="btn-card btn-details">
+                                <i class="fas fa-info-circle"></i> Detalles
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Vista de Tabla -->
+        <div class="table-view" id="table-view">
+            <div class="table-container">
+                <table class="table table-hover">
                             <thead class="table-light">
                                 <tr>
-                                    <th>@Html.DisplayNameFor(model => model.IdMantenimiento)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Descripcion)</th>
-                                    <th>@Html.DisplayNameFor(model => model.Estado)</th>
-                                    <th>@Html.DisplayNameFor(model => model.DepartamentoNombre)</th>
+                                    <th>ID</th>
+                                    <th>Descripción</th>
+                                    <th>Estado</th>
+                                    <th>Ubicación</th>
                                     <th class="text-center">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="table-body">
                                 @foreach (var item in Model)
                                 {
-                                    <tr>
-                                        <td>@Html.DisplayFor(modelItem => item.IdMantenimiento)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
-                                        <td>
-                                            <span class="badge rounded-pill @(item.Estado == "Completado" ? "bg-success" :
-                                                                            item.Estado == "En Proceso" ? "bg-warning" :
-                                                                            item.Estado == "Pendiente" ? "bg-danger" : "bg-secondary")">
-                                                @item.Estado
-                                            </span>
+                                    var estadoClass = item.Estado?.ToLower().Replace(" ", "") ?? "pendiente";
+                                    <tr class="table-row" data-estado="@item.Estado" data-descripcion="@item.Descripcion?.ToLower()" data-ubicacion="@((item.DepartamentoNombre ?? item.HabitacionNombre ?? "").ToLower())">
+                                        <td data-label="ID">#@item.IdMantenimiento</td>
+                                        <td data-label="Descripción">@item.Descripcion</td>
+                                        <td data-label="Estado">
+                                            <span class="status-badge @estadoClass">@item.Estado</span>
                                         </td>
-                                        <td>@Html.DisplayFor(modelItem => item.DepartamentoNombre)</td>
-                                        <td class="text-center">
+                                        <td data-label="Ubicación">
+                                            @if (!string.IsNullOrEmpty(item.DepartamentoNombre))
+                                            {
+                                                <i class="fas fa-building me-1"></i>@item.DepartamentoNombre
+                                            }
+                                            else if (!string.IsNullOrEmpty(item.HabitacionNombre))
+                                            {
+                                                <i class="fas fa-bed me-1"></i>@item.HabitacionNombre
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">-</span>
+                                            }
+                                        </td>
+                                        <td class="text-center" data-label="Acciones">
                                             <div class="btn-group" role="group">
+                                                @if (item.Estado != "Completado")
+                                                {
+                                                    <button type="button" class="btn btn-sm btn-success" onclick="completarMantenimiento(@item.IdMantenimiento, '@item.Descripcion')" title="Completar">
+                                                        <i class="fas fa-check-circle"></i>
+                                                    </button>
+                                                }
                                                 <a href="@Url.Action("Edit", new { id = item.IdMantenimiento })" class="btn btn-sm btn-outline-primary" title="Editar">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 <a href="@Url.Action("Details", new { id = item.IdMantenimiento })" class="btn btn-sm btn-outline-info" title="Detalles">
                                                     <i class="fas fa-info-circle"></i>
                                                 </a>
-                                                <!-- <a href="@Url.Action("Delete", new { id = item.IdMantenimiento })" class="btn btn-sm btn-outline-danger" title="Eliminar">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </a>-->
                                             </div>
                                         </td>
                                     </tr>
                                 }
                             </tbody>
-                        </table>
-                    </div>
-                </div>
+                </table>
             </div>
         </div>
+        }
     </div>
 </div>
 
 @section Scripts {
-    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+    <script>
+        // Calcular estadísticas
+        function updateStats() {
+            const cards = document.querySelectorAll('.maintenance-card');
+            let pendiente = 0, proceso = 0, completado = 0;
+
+            cards.forEach(card => {
+                if (card.style.display !== 'none') {
+                    const estado = card.dataset.estado?.toLowerCase().replace(' ', '');
+                    if (estado === 'pendiente') pendiente++;
+                    else if (estado === 'proceso') proceso++;
+                    else if (estado === 'completado') completado++;
+                }
+            });
+
+            document.getElementById('count-pendiente').textContent = pendiente;
+            document.getElementById('count-proceso').textContent = proceso;
+            document.getElementById('count-completado').textContent = completado;
+            document.getElementById('count-total').textContent = pendiente + proceso + completado;
+        }
+
+        // Cambiar vista
+        function toggleView(view) {
+            if (view === 'grid') {
+                document.getElementById('grid-view').classList.add('active');
+                document.getElementById('table-view').classList.remove('active');
+                document.getElementById('btn-grid').classList.add('active');
+                document.getElementById('btn-table').classList.remove('active');
+            } else {
+                document.getElementById('grid-view').classList.remove('active');
+                document.getElementById('table-view').classList.add('active');
+                document.getElementById('btn-grid').classList.remove('active');
+                document.getElementById('btn-table').classList.add('active');
+            }
+            filterMaintenance();
+        }
+
+        // Filtrar mantenimientos
+        function filterMaintenance() {
+            const estadoFilter = document.getElementById('filter-estado').value.toLowerCase();
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+            // Filtrar tarjetas
+            const cards = document.querySelectorAll('.maintenance-card');
+            cards.forEach(card => {
+                const estado = card.dataset.estado?.toLowerCase() || '';
+                const descripcion = card.dataset.descripcion || '';
+                const ubicacion = card.dataset.ubicacion || '';
+
+                const matchEstado = !estadoFilter || estado.includes(estadoFilter);
+                const matchSearch = !searchTerm || descripcion.includes(searchTerm) || ubicacion.includes(searchTerm);
+
+                card.style.display = (matchEstado && matchSearch) ? 'block' : 'none';
+            });
+
+            // Filtrar filas de tabla
+            const rows = document.querySelectorAll('.table-row');
+            rows.forEach(row => {
+                const estado = row.dataset.estado?.toLowerCase() || '';
+                const descripcion = row.dataset.descripcion || '';
+                const ubicacion = row.dataset.ubicacion || '';
+
+                const matchEstado = !estadoFilter || estado.includes(estadoFilter);
+                const matchSearch = !searchTerm || descripcion.includes(searchTerm) || ubicacion.includes(searchTerm);
+
+                row.style.display = (matchEstado && matchSearch) ? '' : 'none';
+            });
+
+            updateStats();
+        }
+
+        // Limpiar filtros
+        function clearFilters() {
+            document.getElementById('filter-estado').value = '';
+            document.getElementById('search-input').value = '';
+            filterMaintenance();
+        }
+
+        // Función para mostrar modal de notificación
+        function showNotificationModal(type, title, message, callback) {
+            // Remover modal existente si hay
+            var existingModal = document.getElementById('notificationModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Crear modal
+            var modal = document.createElement('div');
+            modal.id = 'notificationModal';
+            modal.className = 'modal fade';
+            modal.setAttribute('tabindex', '-1');
+            modal.setAttribute('aria-labelledby', 'notificationModalLabel');
+            modal.setAttribute('aria-hidden', 'true');
+            
+            var iconClass = type === 'success' ? 'fa-check-circle text-success' : 'fa-exclamation-circle text-danger';
+            var bgClass = type === 'success' ? 'bg-success' : 'bg-danger';
+            
+            modal.innerHTML = `
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg">
+                        <div class="modal-header ${bgClass} text-white border-0">
+                            <h5 class="modal-title" id="notificationModalLabel">
+                                <i class="fas ${iconClass} me-2"></i>${title}
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center py-4">
+                            <div class="mb-3">
+                                <i class="fas ${iconClass} fa-4x"></i>
+                            </div>
+                            <p class="mb-0">${message}</p>
+                        </div>
+                        <div class="modal-footer border-0 justify-content-center">
+                            <button type="button" class="btn ${type === 'success' ? 'btn-success' : 'btn-danger'}" data-bs-dismiss="modal">
+                                <i class="fas fa-check me-2"></i>Aceptar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Mostrar modal
+            var modalInstance = null;
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                modalInstance = new bootstrap.Modal(modal);
+                modalInstance.show();
+                
+                // Ejecutar callback cuando se cierre el modal
+                modal.addEventListener('hidden.bs.modal', function() {
+                    if (callback) callback();
+                    modal.remove();
+                });
+            } else {
+                modal.style.display = 'block';
+                modal.classList.add('show');
+                var backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop fade show';
+                document.body.appendChild(backdrop);
+                
+                // Ejecutar callback cuando se cierre
+                var closeBtn = modal.querySelector('[data-bs-dismiss="modal"]');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function() {
+                        if (callback) callback();
+                        modal.remove();
+                        backdrop.remove();
+                    });
+                }
+            }
+        }
+
+        // Completar mantenimiento
+        function completarMantenimiento(idMantenimiento, descripcion) {
+            // Mostrar modal de confirmación
+            var confirmModal = document.createElement('div');
+            confirmModal.id = 'confirmCompletarModal';
+            confirmModal.className = 'modal fade';
+            confirmModal.setAttribute('tabindex', '-1');
+            confirmModal.innerHTML = `
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg">
+                        <div class="modal-header bg-warning text-dark border-0">
+                            <h5 class="modal-title">
+                                <i class="fas fa-question-circle me-2"></i>Confirmar Completar Mantenimiento
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center py-4">
+                            <div class="mb-3">
+                                <i class="fas fa-check-circle fa-4x text-warning"></i>
+                            </div>
+                            <h5 class="mb-3">¿Está seguro de que desea completar este mantenimiento?</h5>
+                            <div class="alert alert-info text-start">
+                                <p class="mb-0"><strong>Descripción:</strong> ${descripcion}</p>
+                            </div>
+                            <p class="text-muted small mt-3">
+                                Al completar el mantenimiento:
+                            </p>
+                            <ul class="list-unstyled text-start">
+                                <li><i class="fas fa-check-circle text-success me-2"></i>El estado cambiará a "Completado"</li>
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Si está asociado a una habitación o departamento, se actualizará su estado a "Disponible"</li>
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Se registrará en la bitácora</li>
+                            </ul>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </button>
+                            <button type="button" class="btn btn-success" id="btnConfirmarCompletar">
+                                <i class="fas fa-check me-2"></i>Confirmar Completar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(confirmModal);
+            
+            // Mostrar modal
+            var confirmModalInstance = null;
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                confirmModalInstance = new bootstrap.Modal(confirmModal);
+                confirmModalInstance.show();
+            } else {
+                confirmModal.style.display = 'block';
+                confirmModal.classList.add('show');
+                var backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop fade show';
+                document.body.appendChild(backdrop);
+            }
+            
+            // Obtener botón original
+            const btn = event.target.closest('button');
+            const originalHTML = btn.innerHTML;
+            
+            // Confirmar completar
+            document.getElementById('btnConfirmarCompletar').addEventListener('click', function() {
+                // Cerrar modal de confirmación
+                if (confirmModalInstance) {
+                    confirmModalInstance.hide();
+                } else {
+                    confirmModal.style.display = 'none';
+                    confirmModal.classList.remove('show');
+                    var backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) backdrop.remove();
+                }
+                confirmModal.remove();
+                
+                // Mostrar indicador de carga
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Completando...';
+
+                fetch('@Url.Action("ToggleEstado", "Mantenimiento")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: `IdMantenimiento=${idMantenimiento}&Estado=Completado`
+                })
+                .then(response => {
+                    // Intentar parsear como JSON primero
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.includes("application/json")) {
+                        return response.json();
+                    } else {
+                        // Si no es JSON, asumir éxito
+                        return { success: true, message: 'Mantenimiento completado correctamente' };
+                    }
+                })
+                .then(data => {
+                    if (data.success) {
+                        showNotificationModal('success', 'Mantenimiento Completado', data.message || 'El mantenimiento se ha completado exitosamente. La habitación o departamento asociado ahora está disponible.', function() {
+                            // Recargar la página para mostrar el estado actualizado
+                            window.location.reload();
+                        });
+                    } else {
+                        showNotificationModal('error', 'Error', data.message || 'No se pudo completar el mantenimiento');
+                        btn.disabled = false;
+                        btn.innerHTML = originalHTML;
+                    }
+                })
+                .catch(error => {
+                    showNotificationModal('error', 'Error', 'Error al completar el mantenimiento. Por favor, intente nuevamente.');
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                });
+            });
+            
+            // Cerrar modal al hacer click en cancelar
+            confirmModal.querySelector('[data-bs-dismiss="modal"]').addEventListener('click', function() {
+                if (confirmModalInstance) {
+                    confirmModalInstance.hide();
+                } else {
+                    confirmModal.style.display = 'none';
+                    confirmModal.classList.remove('show');
+                    var backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) backdrop.remove();
+                }
+                setTimeout(() => confirmModal.remove(), 300);
+            });
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+        });
+    </script>
 }

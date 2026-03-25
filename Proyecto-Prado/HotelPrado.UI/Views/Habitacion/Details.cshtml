@@ -1,95 +1,289 @@
 ﻿@model HotelPrado.Abstracciones.Modelos.Habitaciones.HabitacionesDTO
 
 @{
-    ViewBag.Title = "Detalles de la Habitación";
+    ViewBag.Title = "Detalles Administrativos - Habitación " + Model.NumeroHabitacion;
 }
 
-<div class="container mt-5">
-    <div class="row">
-        <!-- Carrusel de imágenes -->
-        <div class="col-md-6 d-flex align-items-center">
-            @{
-                var images = !string.IsNullOrEmpty(Model.UrlImagenes)
-                    ? Model.UrlImagenes.Split(',').Select(img => img.Trim()).Where(img => !string.IsNullOrEmpty(img)).ToList()
-                    : new List<string>(); // Si no hay imágenes, creamos una lista vacía
-            }
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-primary fw-bold mb-1">
+                <i class="fas fa-bed me-2"></i>Habitación @Model.NumeroHabitacion
+            </h2>
+            <p class="text-muted mb-0">Capacidad: @Model.CapacidadMin - @Model.CapacidadMax personas</p>
+        </div>
+        <div>
+            <a href="@Url.Action("IndexHabitaciones")" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
+        </div>
+    </div>
 
-            <div id="carousel-@Model.IdHabitacion" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
+    <div class="row g-4">
+        <!-- Galería de Imágenes -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-images me-2"></i>Galería de Imágenes</h5>
+                </div>
+                <div class="card-body p-0">
+                    @{
+                        var images = Model.ListaImagenes != null && Model.ListaImagenes.Any()
+                            ? Model.ListaImagenes
+                            : new List<string> { "/imagenes/default.jpg" };
+                    }
+
                     @if (images.Any())
                     {
-                        for (int i = 0; i < images.Count; i++)
+                        <div id="imagenCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @for (int i = 0; i < images.Count; i++)
+                                {
+                                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                                        <img src="@Url.Content(images[i])" 
+                                             class="d-block w-100" 
+                                             alt="Imagen @(i + 1)" 
+                                             style="height: 500px; object-fit: cover;"
+                                             onerror="this.src='@Url.Content("/imagenes/default.jpg")'">
+                                    </div>
+                                }
+                            </div>
+                            @if (images.Count > 1)
+                            {
+                                <button class="carousel-control-prev" type="button" data-bs-target="#imagenCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Anterior</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#imagenCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Siguiente</span>
+                                </button>
+                            }
+                        </div>
+
+                        if (images.Count > 1)
                         {
-                            <div class="carousel-item @(i == 0 ? "active" : "")">
-                                <img src="@Url.Content(images[i])" class="d-block w-100" alt="Imagen de la habitación @Model.NumeroHabitacion">
+                            <div class="p-3">
+                                <div class="d-flex gap-2 flex-wrap">
+                                    @for (int i = 0; i < images.Count; i++)
+                                    {
+                                        <img src="@Url.Content(images[i])" 
+                                             class="img-thumbnail" 
+                                             style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                                             onclick="$('#imagenCarousel').carousel(@i)"
+                                             alt="Miniatura @(i + 1)">
+                                    }
+                                </div>
                             </div>
                         }
                     }
                     else
                     {
-                        <div class="carousel-item active">
-                            <img src="@Url.Content("~/imagenes/default.jpg")" class="d-block w-100 rounded" alt="Imagen por defecto">
+                        <div class="text-center p-5 bg-light">
+                            <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No hay imágenes disponibles</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Información de la Habitación -->
+        <div class="col-lg-4">
+            <!-- Estado y Acciones Rápidas -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Estado</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="text-muted small">Estado Actual</label>
+                        <div>
+                            @if (Model.Estado == "Disponible")
+                            {
+                                <span class="badge bg-success fs-6">@Model.Estado</span>
+                            }
+                            else if (Model.Estado == "Ocupado")
+                            {
+                                <span class="badge bg-danger fs-6">@Model.Estado</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning fs-6">@Model.Estado</span>
+                            }
+                        </div>
+                    </div>
+
+                    @if (ViewBag.ReservaActiva != null)
+                    {
+                        var reserva = ViewBag.ReservaActiva as HotelPrado.Abstracciones.Modelos.Reservas.ReservasDTO;
+                        <div class="mb-3">
+                            <label class="text-muted small">Cliente Actual</label>
+                            <div>
+                                <strong><i class="fas fa-user me-2"></i>@(reserva?.NombreCliente ?? "N/A")</strong>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small">Estado de Reserva</label>
+                            <div>
+                                @if (ViewBag.EstadoReserva == "Confirmada")
+                                {
+                                    <span class="badge bg-info">@ViewBag.EstadoReserva</span>
+                                }
+                                else if (ViewBag.EstadoReserva == "En Proceso")
+                                {
+                                    <span class="badge bg-primary">@ViewBag.EstadoReserva</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">@ViewBag.EstadoReserva</span>
+                                }
+                            </div>
+                        </div>
+                        if (ViewBag.FechaCheckIn != null)
+                        {
+                            <div class="mb-3">
+                                <label class="text-muted small">Check-in</label>
+                                <div>
+                                    <i class="fas fa-calendar-check me-2"></i>@(((DateTime)ViewBag.FechaCheckIn).ToString("dd/MM/yyyy"))
+                                </div>
+                            </div>
+                        }
+                        if (ViewBag.FechaCheckOut != null)
+                        {
+                            <div class="mb-3">
+                                <label class="text-muted small">Check-out</label>
+                                <div>
+                                    <i class="fas fa-calendar-times me-2"></i>@(((DateTime)ViewBag.FechaCheckOut).ToString("dd/MM/yyyy"))
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="@Url.Action("Edit", "Habitacion", new { id = Model.IdHabitacion })" 
+                           class="btn btn-warning">
+                            <i class="fas fa-edit me-2"></i>Editar Habitación
+                        </a>
+                        <a href="@Url.Action("EditarImagenes", "Habitacion", new { id = Model.IdHabitacion })" 
+                           class="btn btn-info">
+                            <i class="fas fa-images me-2"></i>Gestionar Imágenes
+                        </a>
+                    </div>
+                    
+                    @if (ViewBag.IdReserva != null)
+                    {
+                        <div class="d-grid gap-2 mt-3">
+                            if (ViewBag.EstadoReserva == "Confirmada")
+                            {
+                                <button type="button" class="btn btn-success btn-checkin" 
+                                        data-reserva-id="@ViewBag.IdReserva"
+                                        data-habitacion-numero="@Model.NumeroHabitacion"
+                                        data-cliente="@ViewBag.ClienteActual">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Realizar Check-in
+                                </button>
+                            }
+                            if (ViewBag.EstadoReserva == "En Proceso" || ViewBag.EstadoReserva == "Confirmada")
+                            {
+                                <button type="button" class="btn btn-warning btn-checkout" 
+                                        data-reserva-id="@ViewBag.IdReserva"
+                                        data-habitacion-numero="@Model.NumeroHabitacion"
+                                        data-cliente="@ViewBag.ClienteActual">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Realizar Check-out
+                                </button>
+                            }
                         </div>
                     }
                 </div>
             </div>
 
-            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@Model.IdHabitacion" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carousel-@Model.IdHabitacion" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            </button>
-        </div>
-
-        <!-- Información de la Habitación -->
-        <div class="col-md-6">
-            <h2 class="fw-bold">Habitación @Model.NumeroHabitacion</h2>
-
-            <table class="table table-striped">
-                <tbody>
-                    <tr>
-                        <td><strong>Capacidad Mínima:</strong></td>
-                        <td>@Model.CapacidadMin</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Capacidad Máxima:</strong></td>
-                        <td>@Model.CapacidadMax</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Precio por Noche (1 persona):</strong></td>
-                        <td>@Model.PrecioPorNoche1P</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Precio por Noche (2 personas):</strong></td>
-                        <td>@Model.PrecioPorNoche2P</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Precio por Noche (3 personas):</strong></td>
-                        <td>@Model.PrecioPorNoche3P</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Precio por Noche (4 personas):</strong></td>
-                        <td>@Model.PrecioPorNoche4P</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Precio Final:</strong></td>
-                        <td>@Model.PrecioFinal</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <!-- Botones -->
-            <div class="row g-2 mt-4">
-                <div class="col-md-4">
-                    <a href="@Url.Action("Reservar", "Reservas", new { id = Model.IdHabitacion })" class="btn btn-success w-100">
-                        <i class="fas fa-bed"></i> Reservar
-                    </a>
+            <!-- Acciones de Mantenimiento y Limpieza -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-tools me-2"></i>Acciones Rápidas</h5>
                 </div>
-                <div class="col-md-4">
-                    <a href="@Url.Action("IndexHabitacionesUsuario", "Habitacion")" class="btn btn-dark w-100">
-                        <i class="fas fa-arrow-left"></i> Volver
-                    </a>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-warning" 
+                                onclick="window.location.href = '/Mantenimiento/Create?IdHabitacion=@Model.IdHabitacion'">
+                            <i class="fas fa-tools me-2"></i>Solicitar Mantenimiento
+                        </button>
+                        <button class="btn btn-outline-info"
+                                onclick="window.location.href = '/SolicitudLimpieza/Create?IdHabitacion=@Model.IdHabitacion'">
+                            <i class="fas fa-broom me-2"></i>Solicitar Limpieza
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información Detallada -->
+    <div class="row g-4 mt-2">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>Información Completa</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h6 class="text-primary border-bottom pb-2 mb-3">Información Básica</h6>
+                            <div class="mb-3">
+                                <label class="text-muted small">Número de Habitación</label>
+                                <div class="fs-5 fw-bold text-primary">@Model.NumeroHabitacion</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted small">Capacidad Mínima</label>
+                                <div class="fs-6">
+                                    <i class="fas fa-users me-2 text-primary"></i>@Model.CapacidadMin personas
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted small">Capacidad Máxima</label>
+                                <div class="fs-6">
+                                    <i class="fas fa-users me-2 text-primary"></i>@Model.CapacidadMax personas
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted small">Estado</label>
+                                <div>
+                                    @if (Model.Estado == "Disponible")
+                                    {
+                                        <span class="badge bg-success fs-6">@Model.Estado</span>
+                                    }
+                                    else if (Model.Estado == "Ocupado")
+                                    {
+                                        <span class="badge bg-danger fs-6">@Model.Estado</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning fs-6">@Model.Estado</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h6 class="text-primary border-bottom pb-2 mb-3">Precios por Noche</h6>
+                            <div class="mb-3">
+                                <label class="text-muted small">1 Persona</label>
+                                <div class="fs-5 fw-bold text-success">₡@Model.PrecioPorNoche1P.ToString("N0")</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted small">2 Personas</label>
+                                <div class="fs-5 fw-bold text-success">₡@Model.PrecioPorNoche2P.ToString("N0")</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted small">3 Personas</label>
+                                <div class="fs-5 fw-bold text-success">₡@Model.PrecioPorNoche3P.ToString("N0")</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted small">4 Personas</label>
+                                <div class="fs-5 fw-bold text-success">₡@Model.PrecioPorNoche4P.ToString("N0")</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -97,17 +291,419 @@
 </div>
 
 <style>
-    .carousel-inner img {
-        max-height: 300px;
-        width: auto;
-        transition: transform 0.5s ease-in-out;
+    .card {
+        border-radius: 10px;
     }
-
-    .carousel-control-prev-icon, .carousel-control-next-icon {
-        background-color: black;
+    
+    .card-header {
+        border-radius: 10px 10px 0 0 !important;
     }
-
-    .carousel-item-next, .carousel-item-prev, .carousel-item.active {
-        transition: transform 0.5s ease-in-out;
+    
+    .img-thumbnail:hover {
+        border-color: #0d6efd;
+        transform: scale(1.1);
+        transition: all 0.3s ease;
+    }
+    
+    .carousel-item img {
+        border-radius: 0;
     }
 </style>
+
+<!-- Token Anti-Forgery para AJAX -->
+@Html.AntiForgeryToken()
+
+<!-- Modales para Check-in y Check-out -->
+<!-- Modal Check-in -->
+<div class="modal fade" id="modalCheckIn" tabindex="-1" aria-labelledby="modalCheckInLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="modalCheckInLabel">
+                    <i class="fas fa-sign-in-alt me-2"></i>Confirmar Check-in
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-key fa-4x text-success"></i>
+                </div>
+                <h5 class="mb-3">¿Desea realizar el check-in de esta habitación?</h5>
+                <div class="alert alert-info text-start">
+                    <p class="mb-2"><strong><i class="fas fa-bed me-2"></i>Habitación:</strong> <span id="checkin-habitacion-numero"></span></p>
+                    <p class="mb-2"><strong><i class="fas fa-user me-2"></i>Cliente:</strong> <span id="checkin-cliente"></span></p>
+                    <p class="mb-0"><strong><i class="fas fa-calendar me-2"></i>Fecha:</strong> @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+                <p class="text-muted small mt-3">
+                    Al realizar el check-in:
+                </p>
+                <ul class="list-unstyled text-start">
+                    <li><i class="fas fa-check-circle text-success me-2"></i>La reserva cambiará a estado "En Proceso"</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i>La habitación se marcará como "Ocupada"</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i>Se registrará en la bitácora</li>
+                </ul>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-success" id="btnConfirmarCheckIn">
+                    <i class="fas fa-check me-2"></i>Confirmar Check-in
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Check-out -->
+<div class="modal fade" id="modalCheckOut" tabindex="-1" aria-labelledby="modalCheckOutLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="modalCheckOutLabel">
+                    <i class="fas fa-sign-out-alt me-2"></i>Confirmar Check-out
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-door-open fa-4x text-warning"></i>
+                </div>
+                <h5 class="mb-3">¿Desea realizar el check-out de esta habitación?</h5>
+                <div class="alert alert-warning text-start">
+                    <p class="mb-2"><strong><i class="fas fa-bed me-2"></i>Habitación:</strong> <span id="checkout-habitacion-numero"></span></p>
+                    <p class="mb-2"><strong><i class="fas fa-user me-2"></i>Cliente:</strong> <span id="checkout-cliente"></span></p>
+                    <p class="mb-0"><strong><i class="fas fa-calendar me-2"></i>Fecha:</strong> @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+                <p class="text-muted small mt-3">
+                    Al realizar el check-out:
+                </p>
+                <ul class="list-unstyled text-start">
+                    <li><i class="fas fa-check-circle text-success me-2"></i>La reserva cambiará a estado "Completada"</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i>La habitación se marcará como "Disponible"</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i>Se creará automáticamente una solicitud de limpieza</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i>Se registrará en la bitácora</li>
+                </ul>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-warning" id="btnConfirmarCheckOut">
+                    <i class="fas fa-check me-2"></i>Confirmar Check-out
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para manejar Check-in y Check-out -->
+<script>
+    (function() {
+        'use strict';
+        
+        var reservaIdSeleccionada = null;
+        var modalCheckIn = document.getElementById('modalCheckIn');
+        var modalCheckOut = document.getElementById('modalCheckOut');
+        var btnConfirmarCheckIn = document.getElementById('btnConfirmarCheckIn');
+        var btnConfirmarCheckOut = document.getElementById('btnConfirmarCheckOut');
+        
+        // Inicializar modales de Bootstrap si están disponibles
+        var modalCheckInInstance = null;
+        var modalCheckOutInstance = null;
+        
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            if (modalCheckIn) modalCheckInInstance = new bootstrap.Modal(modalCheckIn);
+            if (modalCheckOut) modalCheckOutInstance = new bootstrap.Modal(modalCheckOut);
+        }
+        
+        // Event listeners para botones de check-in
+        document.querySelectorAll('.btn-checkin').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                reservaIdSeleccionada = this.getAttribute('data-reserva-id');
+                var habitacionNumero = this.getAttribute('data-habitacion-numero');
+                var cliente = this.getAttribute('data-cliente');
+                
+                var checkinNumero = document.getElementById('checkin-habitacion-numero');
+                var checkinCliente = document.getElementById('checkin-cliente');
+                
+                if (checkinNumero) checkinNumero.textContent = habitacionNumero;
+                if (checkinCliente) checkinCliente.textContent = cliente;
+                
+                if (modalCheckInInstance) {
+                    modalCheckInInstance.show();
+                } else if (modalCheckIn) {
+                    modalCheckIn.style.display = 'block';
+                    modalCheckIn.classList.add('show');
+                    var backdrop = document.createElement('div');
+                    backdrop.className = 'modal-backdrop fade show';
+                    backdrop.id = 'modalBackdrop';
+                    document.body.appendChild(backdrop);
+                }
+            });
+        });
+        
+        // Event listeners para botones de check-out
+        document.querySelectorAll('.btn-checkout').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                reservaIdSeleccionada = this.getAttribute('data-reserva-id');
+                var habitacionNumero = this.getAttribute('data-habitacion-numero');
+                var cliente = this.getAttribute('data-cliente');
+                
+                var checkoutNumero = document.getElementById('checkout-habitacion-numero');
+                var checkoutCliente = document.getElementById('checkout-cliente');
+                
+                if (checkoutNumero) checkoutNumero.textContent = habitacionNumero;
+                if (checkoutCliente) checkoutCliente.textContent = cliente;
+                
+                if (modalCheckOutInstance) {
+                    modalCheckOutInstance.show();
+                } else if (modalCheckOut) {
+                    modalCheckOut.style.display = 'block';
+                    modalCheckOut.classList.add('show');
+                    var backdrop = document.createElement('div');
+                    backdrop.className = 'modal-backdrop fade show';
+                    backdrop.id = 'modalBackdrop';
+                    document.body.appendChild(backdrop);
+                }
+            });
+        });
+        
+        // Confirmar check-in
+        if (btnConfirmarCheckIn) {
+            btnConfirmarCheckIn.addEventListener('click', function() {
+                if (!reservaIdSeleccionada) {
+                    showNotificationModal('error', 'Error', 'No se seleccionó una reserva.');
+                    return;
+                }
+                
+                // Deshabilitar botón mientras se procesa
+                btnConfirmarCheckIn.disabled = true;
+                btnConfirmarCheckIn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+                
+                // Obtener token anti-forgery
+                var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+                
+                // Realizar petición AJAX
+                var formData = new FormData();
+                formData.append('IdReserva', parseInt(reservaIdSeleccionada));
+                formData.append('__RequestVerificationToken', token);
+                
+                fetch('@Url.Action("CheckIn", "Habitacion")', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (modalCheckInInstance) {
+                            modalCheckInInstance.hide();
+                        } else if (modalCheckIn) {
+                            modalCheckIn.style.display = 'none';
+                            modalCheckIn.classList.remove('show');
+                            var backdrop = document.getElementById('modalBackdrop');
+                            if (backdrop) backdrop.remove();
+                        }
+                        
+                        // Mostrar mensaje de éxito con modal bonito
+                        showNotificationModal('success', 'Check-in Exitoso', data.message, function() {
+                            // Usar window.location.href en lugar de reload para evitar problemas de contexto
+                            setTimeout(function() {
+                                window.location.href = window.location.href.split('#')[0];
+                            }, 800);
+                        });
+                    } else {
+                        showNotificationModal('error', 'Error en Check-in', data.message);
+                        btnConfirmarCheckIn.disabled = false;
+                        btnConfirmarCheckIn.innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Check-in';
+                    }
+                })
+                .catch(error => {
+                    showNotificationModal('error', 'Error en Check-in', 'Error al realizar el check-in. Por favor, intente nuevamente.');
+                    btnConfirmarCheckIn.disabled = false;
+                    btnConfirmarCheckIn.innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Check-in';
+                });
+            });
+        }
+        
+        // Confirmar check-out
+        if (btnConfirmarCheckOut) {
+            btnConfirmarCheckOut.addEventListener('click', function() {
+                if (!reservaIdSeleccionada) {
+                    showNotificationModal('error', 'Error', 'No se seleccionó una reserva.');
+                    return;
+                }
+                
+                // Deshabilitar botón mientras se procesa
+                btnConfirmarCheckOut.disabled = true;
+                btnConfirmarCheckOut.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+                
+                // Obtener token anti-forgery
+                var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+                
+                // Realizar petición AJAX
+                var formData = new FormData();
+                formData.append('IdReserva', parseInt(reservaIdSeleccionada));
+                formData.append('__RequestVerificationToken', token);
+                
+                fetch('@Url.Action("CheckOut", "Habitacion")', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (modalCheckOutInstance) {
+                            modalCheckOutInstance.hide();
+                        } else if (modalCheckOut) {
+                            modalCheckOut.style.display = 'none';
+                            modalCheckOut.classList.remove('show');
+                            var backdrop = document.getElementById('modalBackdrop');
+                            if (backdrop) backdrop.remove();
+                        }
+                        
+                        // Mostrar mensaje de éxito con modal bonito
+                        showNotificationModal('success', 'Check-out Exitoso', data.message, function() {
+                            // Usar window.location.href en lugar de reload para evitar problemas de contexto
+                            setTimeout(function() {
+                                window.location.href = window.location.href.split('#')[0];
+                            }, 800);
+                        });
+                    } else {
+                        showNotificationModal('error', 'Error en Check-out', data.message);
+                        btnConfirmarCheckOut.disabled = false;
+                        btnConfirmarCheckOut.innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Check-out';
+                    }
+                })
+                .catch(error => {
+                    showNotificationModal('error', 'Error en Check-out', 'Error al realizar el check-out. Por favor, intente nuevamente.');
+                    btnConfirmarCheckOut.disabled = false;
+                    btnConfirmarCheckOut.innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Check-out';
+                });
+            });
+        }
+        
+        // Cerrar modales al hacer click fuera
+        if (modalCheckIn) {
+            modalCheckIn.addEventListener('click', function(e) {
+                if (e.target === modalCheckIn) {
+                    if (modalCheckInInstance) {
+                        modalCheckInInstance.hide();
+                    } else {
+                        modalCheckIn.style.display = 'none';
+                        modalCheckIn.classList.remove('show');
+                        var backdrop = document.getElementById('modalBackdrop');
+                        if (backdrop) backdrop.remove();
+                    }
+                }
+            });
+        }
+        
+        if (modalCheckOut) {
+            modalCheckOut.addEventListener('click', function(e) {
+                if (e.target === modalCheckOut) {
+                    if (modalCheckOutInstance) {
+                        modalCheckOutInstance.hide();
+                    } else {
+                        modalCheckOut.style.display = 'none';
+                        modalCheckOut.classList.remove('show');
+                        var backdrop = document.getElementById('modalBackdrop');
+                        if (backdrop) backdrop.remove();
+                    }
+                }
+            });
+        }
+    })();
+    
+    // Función para mostrar modales de notificación bonitos
+    function showNotificationModal(type, title, message, callback) {
+        // Remover modal existente si hay
+        var existingModal = document.getElementById('notificationModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
+        // Crear modal
+        var modal = document.createElement('div');
+        modal.id = 'notificationModal';
+        modal.className = 'modal fade';
+        modal.setAttribute('tabindex', '-1');
+        modal.setAttribute('aria-labelledby', 'notificationModalLabel');
+        modal.setAttribute('aria-hidden', 'true');
+        
+        var iconClass = type === 'success' ? 'fa-check-circle text-success' : 'fa-exclamation-circle text-danger';
+        var bgClass = type === 'success' ? 'bg-success' : 'bg-danger';
+        
+        modal.innerHTML = `
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg">
+                    <div class="modal-header ${bgClass} text-white border-0">
+                        <h5 class="modal-title" id="notificationModalLabel">
+                            <i class="fas ${iconClass} me-2"></i>${title}
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center py-4">
+                        <div class="mb-3">
+                            <i class="fas ${iconClass} fa-4x"></i>
+                        </div>
+                        <p class="fs-5">${message}</p>
+                    </div>
+                    <div class="modal-footer border-0 justify-content-center">
+                        <button type="button" class="btn ${bgClass} text-white" data-bs-dismiss="modal" id="btnCerrarNotificacion">
+                            <i class="fas fa-check me-2"></i>Aceptar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        var modalInstance = null;
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
+        } else {
+            modal.style.display = 'block';
+            modal.classList.add('show');
+            var backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop fade show';
+            backdrop.id = 'notificationBackdrop';
+            document.body.appendChild(backdrop);
+        }
+        
+        // Manejar cierre del modal
+        var btnCerrar = document.getElementById('btnCerrarNotificacion');
+        if (btnCerrar) {
+            btnCerrar.addEventListener('click', function() {
+                if (modalInstance) {
+                    modalInstance.hide();
+                } else {
+                    modal.style.display = 'none';
+                    modal.classList.remove('show');
+                    var backdrop = document.getElementById('notificationBackdrop');
+                    if (backdrop) backdrop.remove();
+                }
+                if (callback) {
+                    setTimeout(callback, 300);
+                }
+            });
+        }
+        
+        // Cerrar automáticamente después de 2 segundos si es éxito
+        if (type === 'success' && callback) {
+            setTimeout(function() {
+                if (modalInstance) {
+                    modalInstance.hide();
+                } else {
+                    modal.style.display = 'none';
+                    modal.classList.remove('show');
+                    var backdrop = document.getElementById('notificationBackdrop');
+                    if (backdrop) backdrop.remove();
+                }
+                callback();
+            }, 2000);
+        }
+    }
+</script>

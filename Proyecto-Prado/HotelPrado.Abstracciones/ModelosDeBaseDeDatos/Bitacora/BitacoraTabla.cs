@@ -20,6 +20,7 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Bitacora
         public string StackTrace { get; set; }
         public string DatosAnteriores { get; set; }
         public string DatosPosteriores { get; set; }
+        public string Usuario { get; set; }
 
     }
 }

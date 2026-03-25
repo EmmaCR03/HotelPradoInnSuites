@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Hotel Prado Inn & Suites</title>
+    <!-- Favicon y logo (mismo que el resto del sitio) -->
+    <link rel="icon" type="image/png" href="@Url.Content("~/Img/images/main-Prado-removebg-preview.png")" />
+    <link rel="shortcut icon" type="image/png" href="@Url.Content("~/Img/images/main-Prado-removebg-preview.png")" />
+    <link rel="apple-touch-icon" href="@Url.Content("~/Img/images/main-Prado-removebg-preview.png")" />
+    <link href="~/Scripts/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body { padding-top: 2rem; background-color: #f8f9fa; font-family: Arial, sans-serif; }
+        .container { max-width: 600px; }
+        .card { border: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .card-header { background-color: #212529 !important; }
+        .btn-dark { background-color: #212529; border-color: #212529; }
+        .btn-dark:hover { background-color: #6D7BB8; border-color: #6D7BB8; }
+    </style>
+</head>
+<body>
+    @RenderBody()
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
+

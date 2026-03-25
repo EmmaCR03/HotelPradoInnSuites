@@ -1,4 +1,4 @@
-﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Habitaciones.HabDisponibles;
+using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Habitaciones.HabDisponibles;
 using HotelPrado.Abstracciones.Modelos.Habitaciones;
 using System;
 using System.Collections.Generic;
@@ -25,10 +25,13 @@ namespace HotelPrado.AccesoADatos.Habitacion.HabDisponibles
                       && laHabitacion.CapacidadMax >= capacidad // Capacidad suficiente
                       && !_contexto.ReservasTabla.Any(reserva =>
                            reserva.IdHabitacion == laHabitacion.IdHabitacion &&
+                           (reserva.EstadoReserva == "Confirmada" || reserva.EstadoReserva == "Solicitada") &&
+                           reserva.FechaInicio.HasValue &&
+                           reserva.FechaFinal.HasValue &&
                            (
-                               (check_in >= reserva.FechaInicio && check_in < reserva.FechaFinal) ||
-                               (check_out > reserva.FechaInicio && check_out <= reserva.FechaFinal) ||
-                               (check_in <= reserva.FechaInicio && check_out >= reserva.FechaFinal)
+                               (check_in >= reserva.FechaInicio.Value && check_in < reserva.FechaFinal.Value) ||
+                               (check_out > reserva.FechaInicio.Value && check_out <= reserva.FechaFinal.Value) ||
+                               (check_in <= reserva.FechaInicio.Value && check_out >= reserva.FechaFinal.Value)
                            )
                        )
                 select new HabitacionesDTO
@@ -39,17 +42,26 @@ namespace HotelPrado.AccesoADatos.Habitacion.HabDisponibles
                     PrecioPorNoche2P = laHabitacion.PrecioPorNoche2P,
                     PrecioPorNoche3P = laHabitacion.PrecioPorNoche3P,
                     PrecioPorNoche4P = laHabitacion.PrecioPorNoche4P,
-                    PrecioFinal = capacidad == 1 ? laHabitacion.PrecioPorNoche1P :
-                                 capacidad == 2 ? laHabitacion.PrecioPorNoche2P :
-                                 capacidad == 3 ? laHabitacion.PrecioPorNoche3P :
-                                 laHabitacion.PrecioPorNoche4P,
-                    TotalNoches = totalNoches,
-                    TotalPrecio = (capacidad == 1 ? laHabitacion.PrecioPorNoche1P :
+                    PrecioGeneral = laHabitacion.PrecioGeneral,
+                    PrecioGobierno = laHabitacion.PrecioGobierno,
+                    PrecioCorporativo = laHabitacion.PrecioCorporativo,
+                    // Tarifa general es la que ven los clientes; si no está definida usamos precio por capacidad
+                    PrecioFinal = laHabitacion.PrecioGeneral > 0 ? laHabitacion.PrecioGeneral :
+                                 (capacidad == 1 ? laHabitacion.PrecioPorNoche1P :
                                   capacidad == 2 ? laHabitacion.PrecioPorNoche2P :
                                   capacidad == 3 ? laHabitacion.PrecioPorNoche3P :
-                                  laHabitacion.PrecioPorNoche4P) * totalNoches,
+                                  laHabitacion.PrecioPorNoche4P),
+                    TotalNoches = totalNoches,
+                    TotalPrecio = (laHabitacion.PrecioGeneral > 0 ? laHabitacion.PrecioGeneral :
+                                  (capacidad == 1 ? laHabitacion.PrecioPorNoche1P :
+                                   capacidad == 2 ? laHabitacion.PrecioPorNoche2P :
+                                   capacidad == 3 ? laHabitacion.PrecioPorNoche3P :
+                                   laHabitacion.PrecioPorNoche4P)) * totalNoches,
                     Estado = laHabitacion.Estado,
                     Capacidad = capacidad,
+                    UrlImagenes = laHabitacion.UrlImagenes,
+                    CapacidadMin = laHabitacion.CapacidadMin,
+                    CapacidadMax = laHabitacion.CapacidadMax,
                 };
 
             return habitacionesDisponibles.ToList();

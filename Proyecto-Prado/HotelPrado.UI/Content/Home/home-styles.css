@@ -1,0 +1,1343 @@
+/* ============================================
+   ESTILOS PARA PÁGINA HOME
+   Diseño profesional y moderno
+   ============================================ */
+
+/* Variables de diseño - Usar las del tema global */
+
+/* Contenedor principal - Tipografía mejorada */
+.home-container {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text-dark);
+    line-height: 1.7;
+    overflow-x: hidden;
+    margin-top: -160px; /* Compensar el margin-top del body-content */
+    padding-top: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.hero-banner {
+    overflow-x: hidden;
+}
+
+/* ============================================
+   OPCIÓN RECOMENDADA: Navbar transparente sobre hero
+   Muy moderna y profesional
+   ============================================ */
+.hero-banner {
+    position: relative;
+    background: url('../../Img/images/img_3.jpg') center/cover no-repeat;
+    min-height: 90vh;
+    display: flex;
+    align-items: flex-start; /* Alinear arriba en lugar de centro */
+    margin: 0 20px 20px 20px; /* Márgenes laterales y abajo para que se vean las esquinas */
+    margin-top: 0;
+    padding-top: 120px; /* Mucho menos padding para subir todo más */
+    background-attachment: scroll; /* Cambiado de fixed a scroll para evitar problemas de movimiento */
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.2); /* Sombra interna y externa */
+    border-radius: 60px !important; /* Esquinas redondeadas en todas las esquinas */
+    overflow: hidden; /* Asegurar que el contenido respete el border-radius */
+}
+
+/* En tablet/móvil: hero más alto para que el fondo cubra todo el formulario (anula reglas globales del Layout) */
+@media (max-width: 991px) {
+    .hero-banner {
+        margin: 0 10px 20px 10px;
+        padding-top: 90px;
+        padding-bottom: 4rem;
+        align-items: flex-start;
+        justify-content: flex-start;
+        min-height: 110vh !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-banner {
+        margin: 0 5px 15px 5px;
+        padding-top: 80px;
+        border-radius: 30px !important;
+    }
+}
+
+/* Navbar transparente cuando está sobre el hero - aplicado via JavaScript */
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(43, 43, 43, 0.7) 0%, rgba(43, 43, 43, 0.5) 50%, rgba(43, 43, 43, 0.6) 100%);
+    z-index: 1;
+    box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.4); /* Sombra interna más pronunciada */
+    border-radius: 60px !important; /* Esquinas redondeadas en todas las esquinas para que coincida con el hero-banner */
+}
+
+.hero-container {
+    position: relative;
+    z-index: 2;
+    padding: 1.5rem 2rem 3rem 2rem; /* Más padding arriba para bajar el contenido */
+    width: 100%;
+}
+
+.hero-container .row {
+    margin: 0;
+}
+
+.hero-container .col-lg-6 {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* En móvil, centrar la columna */
+@media (max-width: 991px) {
+    .hero-container .col-lg-6 {
+        justify-content: center !important;
+        text-align: center !important;
+    }
+    
+    .hero-container .row {
+        justify-content: center !important;
+    }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+    padding: 0;
+    margin-top: -2rem; /* Bajar un poco el contenido */
+    text-align: left; /* Desktop: izquierda */
+    width: 100%;
+}
+
+/* Título del hero - Tipografía mejorada */
+.hero-title {
+    font-family: 'Playfair Display', 'Georgia', serif; /* Fuente elegante serif */
+    font-size: 1.4rem !important; /* Tamaño fijo más pequeño para que quepa en una línea */
+    font-weight: 700;
+    margin-bottom: 1rem; /* Menos margen inferior */
+    margin-top: 0; /* Sin margen superior */
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    text-align: left; /* Desktop: izquierda */
+    width: 100%;
+    white-space: nowrap !important; /* Fuerza que quede en una sola línea */
+    overflow: hidden; /* Oculta el texto que se desborde */
+    text-overflow: ellipsis; /* Muestra ... si el texto es muy largo */
+}
+
+@media (min-width: 768px) {
+    .hero-title {
+        font-size: 1.6rem !important; /* Un poco más grande en pantallas medianas */
+    }
+}
+
+@media (min-width: 1200px) {
+    .hero-title {
+        font-size: 1.8rem !important; /* Un poco más grande en pantallas grandes */
+    }
+}
+
+/* Centrar hero title y contenido en móvil */
+@media (max-width: 991px) {
+    .hero-container {
+        padding: 1.5rem 1rem 2rem 1rem;
+    }
+    
+    /* Primera columna (hero content) - centrada */
+    .hero-container .col-lg-6:first-child {
+        justify-content: center !important;
+        text-align: center !important;
+        margin-bottom: 2rem;
+    }
+    
+    /* Segunda columna (formulario) - centrada en móvil */
+    .hero-container .col-lg-6:last-child {
+        justify-content: center !important;
+        display: flex;
+        margin-bottom: 0;
+    }
+    
+    .hero-content {
+        text-align: center !important;
+        margin-top: 0 !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .hero-title {
+        text-align: center !important;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .hero-subtitle {
+        text-align: center !important;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .hero-content .btn {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-container {
+        padding: 1rem 0.75rem 1.5rem 0.75rem;
+    }
+    
+    /* Primera columna (hero content) - centrada */
+    .hero-container .col-lg-6:first-child {
+        justify-content: center !important;
+        text-align: center !important;
+        margin-bottom: 2rem;
+    }
+    
+    /* Segunda columna (formulario) - centrada en móvil */
+    .hero-container .col-lg-6:last-child {
+        justify-content: center !important;
+        display: flex;
+        margin-bottom: 0;
+    }
+    
+    .hero-content {
+        text-align: center !important;
+        padding: 0;
+        width: 100%;
+    }
+    
+    .hero-title {
+        text-align: center !important;
+        font-size: clamp(1.75rem, 5vw, 2.5rem) !important;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .hero-subtitle {
+        text-align: center !important;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .hero-content .btn {
+        width: auto;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    /* Formulario centrado en móvil pequeño */
+    .booking-form-container {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        max-width: 100%;
+    }
+    
+    /* Asegurar que la columna del formulario se centre */
+    .hero-container .row .col-lg-6:last-child {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+}
+
+.hero-subtitle {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-size: 1rem !important; /* Tamaño fijo más pequeño para que quepa en una línea */
+    font-weight: 400;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    letter-spacing: 0.01em;
+    color: #FFFFFF !important;
+    line-height: 1.3;
+    text-shadow: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+    -webkit-font-smoothing: antialiased;
+    white-space: nowrap !important; /* Fuerza que quede en una sola línea */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@media (min-width: 768px) {
+    .hero-subtitle {
+        font-size: 1.1rem !important; /* Un poco más grande en pantallas medianas */
+    }
+}
+
+@media (min-width: 1200px) {
+    .hero-subtitle {
+        font-size: 1.15rem !important; /* Un poco más grande en pantallas grandes */
+    }
+}
+
+/* ============================================
+   FORMULARIO DE RESERVA
+   ============================================ */
+.booking-form-container {
+    background: var(--color-white, #FFFFFF);
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05); /* Sombra elegante y sutil */
+    margin-left: 2rem;
+    margin-right: 0;
+    margin-top: -2rem; /* Bajar un poco el formulario */
+    position: relative;
+    z-index: 2;
+    border: none;
+    backdrop-filter: blur(10px);
+    transform: translateY(0);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: visible;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+/* Efecto de borde sutil elegante */
+.booking-form-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--color-secondary, #6D7BB8) 20%, 
+        var(--color-secondary, #6D7BB8) 80%, 
+        transparent 100%);
+    opacity: 0.6;
+}
+
+.booking-form-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: var(--color-text-dark, #2B2B2B);
+    margin-bottom: 2rem;
+    text-align: center;
+    letter-spacing: -0.01em;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+/* Línea decorativa elegante bajo el título */
+.form-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-secondary, #6D7BB8), transparent);
+    border-radius: 2px;
+}
+
+/* Hint para elegir fechas: solo visible en móvil */
+.form-date-hint {
+    font-size: 0.8rem;
+    color: var(--color-text-light, #6b6b6b);
+    margin-bottom: 1rem;
+    text-align: center;
+    display: none;
+}
+@media (max-width: 768px) {
+    .form-date-hint {
+        display: block;
+    }
+}
+
+
+.booking-form .form-control-date {
+    min-height: 48px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .booking-form .form-control-date {
+        min-height: 52px;
+        font-size: 1rem;
+    }
+}
+
+.booking-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.booking-form label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-dark, #2B2B2B);
+    margin-bottom: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: 'Inter', sans-serif;
+}
+
+/* En móvil/iPhone: etiquetas de fechas siempre visibles y legibles */
+.booking-form-label-date {
+    display: block !important;
+    visibility: visible !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 0.5rem !important;
+}
+@media (max-width: 768px) {
+    .booking-form-label-date {
+        font-size: 1rem !important;
+        font-weight: 700 !important;
+        color: var(--color-text-dark, #2B2B2B) !important;
+    }
+}
+
+.booking-form .form-control {
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    border: 1.5px solid var(--color-neutral, #BEBEBE);
+    border-radius: 12px;
+    font-size: 0.9375rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: var(--color-white, #FFFFFF);
+    font-family: 'Inter', sans-serif;
+    color: var(--color-text-dark, #2B2B2B);
+}
+
+.booking-form .form-control:focus {
+    outline: none;
+    border-color: var(--color-secondary, #6D7BB8);
+    box-shadow: 0 0 0 4px rgba(109, 123, 184, 0.08), 0 2px 8px rgba(109, 123, 184, 0.1);
+    transform: translateY(-1px);
+}
+
+.booking-form .form-control::placeholder {
+    color: var(--color-text-light, #6b6b6b);
+    opacity: 0.6;
+    font-weight: 400;
+}
+
+/* Botón del formulario - Más elegante */
+.booking-form .btn-primary,
+.booking-form .btn-block {
+    width: 100%;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--color-text-dark, #2B2B2B) 0%, var(--color-text-medium, #4a4a4a) 100%);
+    border: none;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.booking-form .btn-primary:hover,
+.booking-form .btn-block:hover {
+    background: linear-gradient(135deg, var(--color-secondary, #6D7BB8) 0%, var(--color-secondary-dark, #5a6ba3) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(109, 123, 184, 0.3);
+}
+
+.booking-form .btn-primary:active,
+.booking-form .btn-block:active {
+    transform: translateY(0);
+}
+
+/* ============================================
+   BOTONES CONSISTENTES
+   ============================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    line-height: 1.5;
+}
+
+.btn-primary {
+    background: var(--color-primary, #171A4A);
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: var(--color-secondary, #6D7BB8); /* Azul suave en hover */
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    color: white;
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+}
+
+.btn-block {
+    width: 100%;
+    display: block;
+}
+
+/* ============================================
+   SEPARADORES ELEGANTES ENTRE SECCIONES
+   ============================================ */
+.section-divider {
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(109, 123, 184, 0.6) 5%, 
+        rgba(109, 123, 184, 0.8) 15%,
+        #6D7BB8 25%,
+        #6D7BB8 50%,
+        #6D7BB8 75%,
+        rgba(109, 123, 184, 0.8) 85%,
+        rgba(109, 123, 184, 0.6) 95%, 
+        transparent 100%);
+    margin: 5rem 0;
+    position: relative;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.section-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 6px;
+    background: #6D7BB8;
+    border-radius: 3px;
+    box-shadow: 0 0 40px rgba(109, 123, 184, 0.8), 0 0 80px rgba(109, 123, 184, 0.5);
+    z-index: 1;
+}
+
+.section-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background: #6D7BB8;
+    border-radius: 50%;
+    box-shadow: 0 0 30px rgba(109, 123, 184, 1), 0 0 60px rgba(109, 123, 184, 0.7), 0 0 100px rgba(109, 123, 184, 0.4);
+    z-index: 2;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   SECCIÓN DE BIENVENIDA (DESPUÉS DEL HERO)
+   ============================================ */
+.welcome-section {
+    padding: 4rem 0;
+    background-color: var(--color-white, #FFFFFF);
+}
+
+.welcome-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.welcome-text {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1rem, 1.8vw, 1.125rem);
+    color: var(--color-text-dark, #2B2B2B);
+    line-height: 1.85;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    margin-bottom: 1.75rem;
+    text-align: left;
+}
+
+.welcome-text:last-of-type {
+    margin-bottom: 2.5rem;
+}
+
+.welcome-closing {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.125rem, 2.2vw, 1.375rem);
+    color: var(--color-text-dark, #2B2B2B);
+    font-weight: 600;
+    font-style: italic;
+    line-height: 1.7;
+    text-align: center;
+    margin: 0;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(109, 123, 184, 0.15);
+}
+
+.padding-side {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+/* ============================================
+   SECCIONES
+   ============================================ */
+.section-header {
+    text-align: center;
+    padding: 4rem 2rem 2rem;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    margin-bottom: 1rem;
+    color: var(--color-text-dark, #2B2B2B);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+}
+
+.section-description {
+    font-family: 'Inter', sans-serif;
+    color: var(--color-text-light, #6b6b6b);
+    font-size: 1.125rem;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.75;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+}
+
+/* ============================================
+   GALERÍA
+   ============================================ */
+.gallery-section {
+    padding: 4rem 0;
+    background-color: var(--color-bg-light, #F6F7F9);
+}
+
+.gallery-container {
+    padding: 0 2rem;
+    max-width: 900px; /* Más pequeño */
+    margin: 0 auto;
+}
+
+.gallery-swiper {
+    height: 400px; /* Más pequeño */
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    position: relative;
+    max-width: 1000px; /* Limitar ancho máximo */
+    margin: 0 auto;
+    touch-action: manipulation; /* Quita retardo 300ms en móvil y mejora respuesta táctil */
+    -webkit-overflow-scrolling: touch;
+}
+
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swiper-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.swiper-slide-active .swiper-img {
+    transform: scale(1.02);
+}
+
+.swiper-slide:hover .swiper-img {
+    transform: scale(1.05);
+}
+
+/* Controles del carrusel - Diseño completamente nuevo y elegante */
+.swiper-button-next,
+.swiper-button-prev {
+    width: 56px;
+    height: 56px;
+    background: var(--color-white, #FFFFFF);
+    border-radius: 50%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+    color: var(--color-text-dark, #2B2B2B);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    display: none; /* Ocultar las flechas predeterminadas */
+}
+
+.swiper-button-next i,
+.swiper-button-prev i {
+    font-size: 1.125rem;
+    color: var(--color-text-dark, #2B2B2B);
+    transition: all 0.3s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    transform: translateY(-50%) scale(1.08);
+    background: var(--color-secondary, #6D7BB8);
+    box-shadow: 0 8px 30px rgba(109, 123, 184, 0.35), 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 1;
+}
+
+.swiper-button-next:hover i,
+.swiper-button-prev:hover i {
+    color: var(--color-white, #FFFFFF);
+    transform: scale(1.1);
+}
+
+.swiper-button-next:active,
+.swiper-button-prev:active {
+    transform: translateY(-50%) scale(1.02);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.swiper-button-next {
+    right: 24px;
+}
+
+.swiper-button-prev {
+    left: 24px;
+}
+
+/* Efecto de aparición suave */
+.gallery-swiper:not(:hover) .swiper-button-next,
+.gallery-swiper:not(:hover) .swiper-button-prev {
+    opacity: 0.6;
+    transform: translateY(-50%) scale(0.95);
+}
+
+.gallery-swiper:hover .swiper-button-next,
+.gallery-swiper:hover .swiper-button-prev {
+    opacity: 0.9;
+    transform: translateY(-50%) scale(1);
+}
+
+.swiper-pagination {
+    position: relative;
+    margin-top: 1.5rem;
+    bottom: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    background: var(--color-neutral, #BEBEBE);
+    opacity: 1;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 0 !important;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.swiper-pagination-bullet:hover {
+    background: var(--color-secondary, #6D7BB8);
+    transform: scale(1.4);
+    box-shadow: 0 0 0 2px rgba(109, 123, 184, 0.2);
+}
+
+.swiper-pagination-bullet-active {
+    background: var(--color-secondary, #6D7BB8);
+    transform: scale(1.5);
+    box-shadow: 0 0 0 3px rgba(109, 123, 184, 0.25), 0 2px 8px rgba(109, 123, 184, 0.3);
+    width: 24px;
+    border-radius: 12px;
+}
+
+/* ============================================
+   BLOG SECTION
+   ============================================ */
+.blog-section {
+    padding: 4rem 0;
+    background-color: var(--color-white, #FFFFFF);
+}
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 0 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.blog-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    background: var(--color-white, #FFFFFF);
+    border: 1px solid var(--color-neutral, #BEBEBE);
+}
+
+.blog-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: transparent;
+}
+
+.blog-img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.blog-card:hover .blog-img {
+    transform: scale(1.05);
+}
+
+.blog-content {
+    padding: 1.5rem;
+}
+
+.blog-category {
+    display: inline-block;
+    background: var(--color-secondary, #6D7BB8); /* Azul suave para categorías */
+    color: white;
+    padding: 0.375rem 0.875rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.blog-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.375rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-text-dark, #2B2B2B);
+    line-height: 1.4;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.blog-meta {
+    color: var(--color-text-light, #6b6b6b);
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.blog-meta i {
+    color: #cbd5e1;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1200px) {
+    .gallery-swiper {
+        height: 450px;
+    }
+}
+
+@media (max-width: 992px) {
+    .hero-banner {
+        min-height: auto;
+        padding: 3rem 0;
+        padding-top: 120px; /* Menos espacio en móvil */
+    }
+
+    .hero-container {
+        padding: 2rem 1.5rem;
+    }
+
+    .hero-content {
+        text-align: center;
+        padding: 1.5rem 0;
+        margin-bottom: 2rem;
+    }
+
+    .booking-form-container {
+        margin-left: 0 !important; /* Eliminar margin-left en móvil */
+        margin-right: 0 !important; /* Eliminar margin-right en móvil */
+        margin-top: 1rem !important; /* Ajustar margin-top */
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Asegurar que la columna del formulario se centre perfectamente */
+    .hero-container .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    .hero-container .row .col-lg-6:last-child {
+        display: flex;
+        justify-content: center !important;
+        align-items: center !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .blog-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-banner {
+        padding-top: 75px;
+        min-height: 125vh !important;
+        height: auto !important;
+        max-height: none !important;
+        padding-bottom: 4rem !important;
+        overflow: visible !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        display: block !important;
+    }
+
+    .hero-container {
+        padding-bottom: 2rem !important;
+        padding-top: 0.5rem !important;
+        width: 100%;
+        overflow: visible !important;
+    }
+
+    .booking-form-container {
+        margin-bottom: 1.5rem !important;
+        padding: 1.5rem 1.25rem !important;
+    }
+
+    .form-title {
+        font-size: 1.4rem !important;
+        margin-bottom: 0.75rem !important;
+        padding-bottom: 0.5rem !important;
+        padding-top: 0 !important;
+    }
+
+    .form-date-hint {
+        margin-bottom: 0.75rem !important;
+        font-size: 0.75rem !important;
+    }
+
+    .booking-form .form-group {
+        margin-bottom: 1rem !important;
+    }
+
+    .booking-form .form-control,
+    .booking-form .form-control-date {
+        padding: 0.65rem 0.875rem !important;
+        min-height: 46px !important;
+    }
+
+    .booking-form .btn-primary,
+    .booking-form .btn-block {
+        padding: 0.75rem 1.5rem !important;
+        font-size: 0.9rem !important;
+        margin-top: 0.25rem !important;
+    }
+
+    .welcome-section {
+        padding: 3rem 0;
+    }
+
+    .welcome-content {
+        padding: 0 1.5rem;
+    }
+
+    .section-header {
+        padding: 3rem 1.5rem 1.5rem;
+    }
+
+    .gallery-swiper {
+        height: 350px;
+    }
+
+    .swiper-button-next,
+    .swiper-button-prev {
+        width: 36px;
+        height: 36px;
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+        font-size: 0.875rem;
+    }
+
+    .blog-grid {
+        grid-template-columns: 1fr;
+        padding: 0 1rem;
+    }
+
+    .gallery-container {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-banner {
+        padding-top: 70px;
+        min-height: 130vh !important;
+        height: auto !important;
+        max-height: none !important;
+        padding-bottom: 3.5rem !important;
+        overflow: visible !important;
+    }
+
+    .hero-container {
+        padding: 1rem 0.75rem !important;
+        padding-bottom: 1.5rem !important;
+        overflow: visible !important;
+    }
+
+    .booking-form-container {
+        padding: 1.1rem 1rem !important;
+    }
+
+    .form-title {
+        font-size: 1.2rem !important;
+        margin-bottom: 0.6rem !important;
+        padding-bottom: 0.4rem !important;
+    }
+
+    .form-date-hint {
+        margin-bottom: 0.5rem !important;
+        font-size: 0.7rem !important;
+    }
+
+    .booking-form .form-group {
+        margin-bottom: 0.75rem !important;
+    }
+
+    .booking-form-container {
+        padding: 1.1rem 1rem !important;
+    }
+
+    .booking-form .form-control,
+    .booking-form .form-control-date {
+        padding: 0.55rem 0.75rem !important;
+        min-height: 44px !important;
+        font-size: 0.9rem !important;
+    }
+
+    .booking-form .btn-primary,
+    .booking-form .btn-block {
+        padding: 0.65rem 1.25rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    .welcome-section {
+        padding: 2.5rem 0;
+    }
+
+    .welcome-content {
+        padding: 0 1rem;
+    }
+
+    .welcome-text {
+        margin-bottom: 1.5rem;
+    }
+
+    .welcome-text:last-of-type {
+        margin-bottom: 2rem;
+    }
+
+    .welcome-closing {
+        padding-top: 1.5rem;
+        font-size: 1.125rem;
+    }
+
+    .padding-side {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .hero-container {
+        padding: 1.5rem 0.75rem !important; /* Padding simétrico */
+    }
+    
+    .hero-container .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    .booking-form-container {
+        padding: 1.5rem;
+        margin-left: 0 !important; /* Eliminar completamente margin-left */
+        margin-right: 0 !important; /* Eliminar completamente margin-right */
+        margin-top: 1rem !important;
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Asegurar que la columna del formulario se centre perfectamente */
+    .hero-container .row .col-lg-6:last-child {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        max-width: 100%;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .gallery-swiper {
+        height: 280px;
+    }
+
+    .section-header h2 {
+        font-size: 1.75rem;
+    }
+}
+
+/* ============================================
+   ALTERNATIVAS (comentadas - descomenta la que prefieras)
+   ============================================ */
+
+/* 
+   OPCIÓN 2: Espacio pequeño elegante (40px)
+   Descomenta esto y comenta la sección HERO BANNER de arriba
+   
+.hero-banner {
+    position: relative;
+    background: url('../../Img/images/img_3.jpg') center/cover no-repeat;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    margin-top: 40px; 
+    padding-top: 0;
+}
+*/
+
+/* 
+   OPCIÓN 3: Hero con separación clara (60px)
+   Descomenta esto y comenta la sección HERO BANNER de arriba
+   
+.hero-banner {
+    position: relative;
+    background: url('../../Img/images/img_3.jpg') center/cover no-repeat;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    margin-top: 60px; 
+    padding-top: 0;
+}
+*/
+
+/* ============================================
+   MENÚ DE OPCIONES ELEGANTE (Home) - CARDS MODERNAS
+   ============================================ */
+
+.home-menu-section {
+    background: linear-gradient(180deg, var(--color-bg-light, #F6F7F9) 0%, var(--color-white, #FFFFFF) 100%);
+    padding: 5rem 0;
+    margin: 4rem 0;
+}
+
+/* Card del menú */
+.home-menu-card {
+    display: block;
+    background: var(--color-white, #FFFFFF);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.home-menu-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-secondary, #6D7BB8) 0%, var(--color-primary, #171A4A) 100%);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.home-menu-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    border-color: var(--color-secondary, #6D7BB8);
+    text-decoration: none;
+}
+
+.home-menu-card:hover::before {
+    transform: scaleX(1);
+}
+
+/* Icono de la card */
+.home-menu-card-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--color-secondary, #6D7BB8) 0%, var(--color-primary, #171A4A) 100%);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 15px rgba(109, 123, 184, 0.3);
+}
+
+.home-menu-card:hover .home-menu-card-icon {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 25px rgba(109, 123, 184, 0.4);
+}
+
+.home-menu-card-icon i {
+    font-size: 2rem;
+    color: var(--color-white, #FFFFFF);
+}
+
+/* Título de la card */
+.home-menu-card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-dark, #2B2B2B);
+    margin-bottom: 1rem;
+    font-family: 'Playfair Display', serif;
+    transition: color 0.3s ease;
+}
+
+.home-menu-card:hover .home-menu-card-title {
+    color: var(--color-primary, #171A4A);
+}
+
+/* Descripción de la card */
+.home-menu-card-description {
+    font-size: 0.95rem;
+    color: var(--color-text-medium, #4a4a4a);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.home-menu-card:hover .home-menu-card-description {
+    color: var(--color-text-dark, #2B2B2B);
+}
+
+/* Link de la card */
+.home-menu-card-link {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-secondary, #6D7BB8);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.home-menu-card:hover .home-menu-card-link {
+    color: var(--color-primary, #171A4A);
+    transform: translateX(5px);
+}
+
+.home-menu-card-link i {
+    transition: transform 0.3s ease;
+}
+
+.home-menu-card:hover .home-menu-card-link i {
+    transform: translateX(5px);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .home-menu-card {
+        padding: 2rem 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .home-menu-card-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .home-menu-card-icon i {
+        font-size: 1.75rem;
+    }
+    
+    .home-menu-card-title {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .home-menu-section {
+        padding: 3rem 0;
+        margin: 2rem 0;
+    }
+    
+    .home-menu-card {
+        padding: 1.75rem 1.25rem;
+    }
+}

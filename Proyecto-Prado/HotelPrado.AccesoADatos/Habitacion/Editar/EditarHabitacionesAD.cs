@@ -1,4 +1,4 @@
-﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Habitaciones.Editar;
+using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Habitaciones.Editar;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Habitaciones;
 using System;
 using System.Collections.Generic;
@@ -28,6 +28,9 @@ namespace HotelPrado.AccesoADatos.Habitacion.Editar
             laHabitacionEnBaseDeDatos.PrecioPorNoche2P = laHabitacionActualizar.PrecioPorNoche2P;
             laHabitacionEnBaseDeDatos.PrecioPorNoche3P = laHabitacionActualizar.PrecioPorNoche3P;
             laHabitacionEnBaseDeDatos.PrecioPorNoche4P = laHabitacionActualizar.PrecioPorNoche4P;
+            laHabitacionEnBaseDeDatos.PrecioGeneral = laHabitacionActualizar.PrecioGeneral;
+            laHabitacionEnBaseDeDatos.PrecioGobierno = laHabitacionActualizar.PrecioGobierno;
+            laHabitacionEnBaseDeDatos.PrecioCorporativo = laHabitacionActualizar.PrecioCorporativo;
             laHabitacionEnBaseDeDatos.CapacidadMax = laHabitacionActualizar.CapacidadMax;
             laHabitacionEnBaseDeDatos.CapacidadMin = laHabitacionActualizar.CapacidadMin;
             laHabitacionEnBaseDeDatos.Estado = laHabitacionActualizar.Estado;

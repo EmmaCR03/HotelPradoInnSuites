@@ -1,0 +1,329 @@
+@model List<HotelPrado.Abstracciones.Modelos.Configuracion.ConfiguracionHeroBannerDTO>
+@{
+    ViewBag.Title = "Configurar galería de inicio";
+    var slideNum = 0;
+}
+
+<style>
+    .admin-panel {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: calc(100vh - 200px);
+        padding: 2rem 0;
+    }
+    .panel-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem 0;
+    }
+    .panel-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: #2c3e50;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .banners-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+    .banner-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+    }
+    .banner-preview {
+        flex: 0 0 300px;
+        height: 200px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #f0f0f0;
+    }
+    .banner-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .banner-form { flex: 1; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="file"] {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+    .form-group input:focus {
+        outline: none;
+        border-color: #6D7BB8;
+    }
+    .btn-save {
+        background: linear-gradient(135deg, #6D7BB8, #5a6aa8);
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(109, 123, 184, 0.4);
+    }
+    .btn-back {
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 2rem;
+    }
+    .btn-back:hover { color: white; text-decoration: none; }
+    .alert { padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+    .alert-success { background: #d4edda; color: #155724; }
+    .alert-error { background: #f8d7da; color: #721c24; }
+    .btn-quitar {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .btn-quitar:hover { background: #c82333; color: white; }
+    .btn-agregar {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 1rem;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s;
+    }
+    .btn-agregar:hover { background: #218838; color: white; }
+    .form-agregar-slide { margin-top: 1.5rem; }
+</style>
+
+<div class="admin-panel">
+    <div class="panel-header">
+        <h1><i class="fas fa-images me-3" style="color: #6D7BB8;"></i>Configurar galería de inicio</h1>
+        <p>Edita las imágenes del carrusel de la sección «Nuestra Galería» en la página de inicio. Puedes agregar o quitar imágenes (máximo 20).</p>
+    </div>
+
+    <div class="banners-container">
+        @Html.AntiForgeryToken()
+        <a href="@Url.Action("Configuraciones", "Admin")" class="btn-back">
+            <i class="fas fa-arrow-left me-2"></i>Volver a Configuraciones
+        </a>
+
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-triangle me-2"></i>@ViewBag.ErrorMessage
+            </div>
+        }
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-triangle me-2"></i>@TempData["ErrorMessage"]
+            </div>
+        }
+
+        @foreach (var banner in Model)
+        {
+            slideNum++;
+            var etiqueta = "Slide " + slideNum;
+            <div class="banner-card" data-id="@banner.IdConfiguracion">
+                <div class="banner-preview">
+                    <img src="@Url.Content(banner.UrlImagen)" alt="@etiqueta" onerror="this.src='@Url.Content("~/Img/images/default.jpg")'">
+                </div>
+                <div class="banner-form">
+                    <div class="page-name" style="font-size:1.25rem;font-weight:700;color:#2c3e50;margin-bottom:0.5rem;">
+                        <i class="fas fa-image me-2"></i>@etiqueta
+                    </div>
+                    <div class="form-group">
+                        <label>Subir imagen:</label>
+                        <input type="file" class="file-input" data-id="@banner.IdConfiguracion" accept="image/*,.heic,image/heic" onchange="previewImage(this, @banner.IdConfiguracion)">
+                        <small class="text-muted d-block mt-2">O ingresa una URL:</small>
+                        <input type="text" class="url-input mt-2" value="@banner.UrlImagen" data-id="@banner.IdConfiguracion" placeholder="/Img/images/ejemplo.jpg">
+                    </div>
+                    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                        <button type="button" class="btn-save" onclick="guardarGaleria(@banner.IdConfiguracion)">
+                            <i class="fas fa-save me-2"></i>Guardar
+                        </button>
+                        @using (Html.BeginForm("QuitarSlideGaleriaCarousel", "Admin", FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('¿Quitar esta imagen del carrusel?');" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@banner.IdConfiguracion" />
+                            <button type="submit" class="btn-quitar">
+                                <i class="fas fa-trash-alt me-2"></i>Quitar
+                            </button>
+                        }
+                    </div>
+                    <p style="margin-top:0.5rem;font-size:0.875rem;color:#6c757d;">
+                        <i class="fas fa-clock me-1"></i>@(banner.FechaActualizacion.ToString("dd/MM/yyyy HH:mm"))
+                    </p>
+                </div>
+            </div>
+        }
+
+        @if (ViewBag.PuedeAgregar == true)
+        {
+            using (Html.BeginForm("AgregarSlideGaleriaCarousel", "Admin", FormMethod.Post, new { @class = "form-agregar-slide" }))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-agregar">
+                    <i class="fas fa-plus me-2"></i>Agregar imagen al carrusel
+                </button>
+            }
+        }
+    </div>
+</div>
+
+<script>
+    function previewImage(input, id) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var preview = document.querySelector('.banner-card[data-id="' + id + '"] .banner-preview img');
+                if (preview) preview.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function guardarGaleria(id) {
+        var fileInput = document.querySelector('input[type="file"][data-id="' + id + '"]');
+        var urlInput = document.querySelector('input[type="text"][data-id="' + id + '"]');
+        var file = fileInput.files[0];
+        var urlImagen = urlInput.value.trim();
+        var token = document.querySelector('input[name="__RequestVerificationToken"]');
+        var tokenVal = token ? token.value : '';
+
+        if (file) {
+            var formData = new FormData();
+            formData.append('id', id);
+            formData.append('imagen', file);
+            formData.append('__RequestVerificationToken', tokenVal);
+
+            var btn = event.target;
+            var originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Subiendo...';
+            btn.disabled = true;
+
+            fetch('@Url.Action("SubirImagenGaleriaCarousel", "Admin")', {
+                method: 'POST',
+                body: formData,
+                credentials: 'same-origin'
+            })
+            .then(function(r) {
+                var ct = r.headers.get('Content-Type') || '';
+                if (!r.ok || ct.indexOf('application/json') === -1)
+                    return r.text().then(function() { throw new Error('Error de sesión o servidor. Recarga e intenta de nuevo.'); });
+                return r.json();
+            })
+            .then(function(data) {
+                if (data.success) {
+                    var preview = document.querySelector('.banner-card[data-id="' + id + '"] .banner-preview img');
+                    if (preview) preview.src = (data.urlImagen || '') + '?t=' + new Date().getTime();
+                    urlInput.value = data.urlImagen || '';
+                    fileInput.value = '';
+                    mostrarMensaje('success', data.message + ' Los cambios se verán en la página de inicio.');
+                } else {
+                    mostrarMensaje('error', data.message || 'Error al subir.');
+                }
+            })
+            .catch(function(err) {
+                mostrarMensaje('error', err.message || 'Error. Recarga e intenta de nuevo.');
+            })
+            .finally(function() {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        } else if (urlImagen) {
+            var btn = event.target;
+            var originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Guardando...';
+            btn.disabled = true;
+
+            fetch('@Url.Action("ActualizarGaleriaCarousel", "Admin")', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'id=' + id + '&urlImagen=' + encodeURIComponent(urlImagen) + '&__RequestVerificationToken=' + encodeURIComponent(tokenVal),
+                credentials: 'same-origin'
+            })
+            .then(function(r) {
+                var ct = r.headers.get('Content-Type') || '';
+                if (!r.ok || ct.indexOf('application/json') === -1)
+                    return r.text().then(function() { throw new Error('Error de sesión. Recarga e intenta de nuevo.'); });
+                return r.json();
+            })
+            .then(function(data) {
+                if (data.success) {
+                    var preview = document.querySelector('.banner-card[data-id="' + id + '"] .banner-preview img');
+                    if (preview) preview.src = urlImagen + '?t=' + new Date().getTime();
+                    mostrarMensaje('success', data.message + ' Los cambios se verán en la página de inicio.');
+                } else {
+                    mostrarMensaje('error', data.message || 'Error al guardar.');
+                }
+            })
+            .catch(function(err) {
+                mostrarMensaje('error', err.message || 'Error al guardar.');
+            })
+            .finally(function() {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        } else {
+            alert('Sube una imagen o escribe una URL.');
+        }
+    }
+
+    function mostrarMensaje(tipo, mensaje) {
+        var alert = document.createElement('div');
+        alert.className = 'alert alert-' + (tipo === 'success' ? 'success' : 'error');
+        alert.innerHTML = '<i class="fas fa-' + (tipo === 'success' ? 'check' : 'exclamation') + '-circle me-2"></i>' + mensaje;
+        var container = document.querySelector('.banners-container');
+        var first = container.querySelector('a.btn-back');
+        if (first && first.nextSibling) container.insertBefore(alert, first.nextSibling);
+        else container.insertBefore(alert, container.firstChild);
+        setTimeout(function() { alert.remove(); }, 5000);
+    }
+
+    document.querySelectorAll('.url-input').forEach(function(input) {
+        input.addEventListener('blur', function() {
+            var id = this.getAttribute('data-id');
+            var preview = document.querySelector('.banner-card[data-id="' + id + '"] .banner-preview img');
+            if (preview && this.value.trim()) preview.src = this.value;
+        });
+    });
+</script>

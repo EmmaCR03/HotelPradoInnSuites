@@ -1,0 +1,679 @@
+/* ============================================
+   ESTILOS PARA HABITACIONES INFO
+   Diseño elegante y moderno - Consistente con Home
+   ============================================ */
+
+/* Variables de diseño - Consistente con home */
+:root {
+    --primary-color: #2B2B2B;
+    --secondary-color: #6D7BB8;
+    --accent-color: #3a7bd5;
+    --text-dark: #2B2B2B;
+    --text-medium: #4a4a4a;
+    --text-light: #6c757d;
+    --bg-light: #F6F7F9;
+    --bg-white: #FFFFFF;
+    --border-color: #e0e0e0;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Contenedor principal - Espaciado adecuado */
+.habitaciones-info-container {
+    padding: 4rem 2rem;
+    background-color: var(--bg-light);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    margin-top: 2rem; /* Espacio adecuado después del hero */
+    padding-top: 2rem;
+}
+
+/* Hero section mejorado - Limpio y profesional */
+.hero-section-habitaciones {
+    position: relative;
+    background: url('/Img/images/imgHYD/img1H.jpg') center/cover no-repeat;
+    min-height: 85vh;
+    display: flex;
+    align-items: center; /* Centrar verticalmente */
+    justify-content: center;
+    margin: 0 20px 60px 20px; /* Más espacio abajo */
+    margin-top: 0;
+    padding: 120px 0 80px 0; /* Padding vertical adecuado */
+    background-attachment: fixed;
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 60px;
+    overflow: hidden;
+}
+
+.hero-overlay-habitaciones {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(43, 43, 43, 0.75) 0%, rgba(43, 43, 43, 0.65) 100%);
+    z-index: 1;
+    border-radius: 60px;
+}
+
+.hero-content-habitaciones {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: white;
+    text-align: center;
+    padding: 3rem 2rem; /* Padding interno adecuado */
+}
+
+.hero-title-habitaciones {
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 700;
+    margin-bottom: 2rem; /* Más espacio entre título y subtítulo */
+    margin-top: 0;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: white;
+    text-shadow: 3px 3px 15px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 0, 0, 0.4);
+}
+
+.hero-subtitle-habitaciones {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-weight: 300;
+    margin-top: 0;
+    margin-bottom: 0;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    line-height: 1.8; /* Mejor espaciado de líneas */
+    padding: 0 1rem;
+}
+
+/* Carrusel mejorado - Más redondeado */
+#habitacionesCarousel {
+    margin-bottom: 4rem;
+    border-radius: 40px; /* Más redondeado */
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    background: var(--bg-white);
+    padding: 8px; /* Espacio para el borde redondeado */
+}
+
+.carousel-inner {
+    border-radius: 32px; /* Redondeado interno */
+    overflow: hidden;
+    position: relative;
+    min-height: 600px; /* Altura fija para evitar saltos */
+}
+
+.carousel-item {
+    opacity: 0;
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: block;
+    visibility: hidden;
+}
+
+.carousel-item.active {
+    opacity: 1;
+    position: relative;
+    z-index: 2;
+    visibility: visible;
+}
+
+.carousel-item:not(.active) {
+    z-index: 1;
+}
+
+.carousel-item img {
+    height: 600px;
+    object-fit: cover;
+    transition: transform 0.8s ease-in-out;
+    border-radius: 32px; /* Redondeado en las imágenes */
+    width: 100%;
+    display: block;
+}
+
+.carousel-item:hover img {
+    transform: scale(1.02);
+}
+
+.carousel-caption {
+    transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.carousel-item.active .carousel-caption {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.carousel-caption {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    padding: 2rem;
+    border-radius: 0 0 32px 32px; /* Más redondeado en la parte inferior */
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.carousel-caption h5 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.carousel-caption p {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    opacity: 0.9;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.carousel-control-prev {
+    left: 20px;
+}
+
+.carousel-control-next {
+    right: 20px;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: translateY(-50%) scale(1.15);
+    opacity: 1;
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    width: 24px;
+    height: 24px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.carousel-indicators {
+    bottom: 20px;
+    margin-bottom: 0;
+}
+
+.carousel-indicators li {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+    margin: 0 6px;
+}
+
+.carousel-indicators li.active {
+    background-color: white;
+    width: 30px;
+    border-radius: 6px;
+    border: 2px solid white;
+}
+
+/* Cards mejoradas */
+.card {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: var(--bg-white);
+    height: 100%;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.amenities-card .card-header,
+.capacity-card .card-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    font-weight: 600;
+    border-bottom: none;
+    padding: 2rem 1.5rem;
+    text-align: center;
+}
+
+.card-body {
+    padding: 2rem 1.5rem;
+}
+
+/* Lista de amenities mejorada */
+.amenities-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.amenities-list li {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    color: var(--text-dark);
+}
+
+.amenities-list li:last-child {
+    border-bottom: none;
+}
+
+.amenities-list li:hover {
+    padding-left: 10px;
+    color: var(--secondary-color);
+}
+
+.amenities-list i {
+    color: var(--secondary-color);
+    margin-right: 1rem;
+    width: 28px;
+    text-align: center;
+    font-size: 1.25rem;
+    transition: transform 0.3s ease;
+}
+
+.amenities-list li:hover i {
+    transform: scale(1.2);
+}
+
+/* Iconos de capacidad */
+.capacity-icons {
+    margin: 2rem 0;
+}
+
+.capacity-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.capacity-icon-wrapper i {
+    font-size: 2rem;
+    color: white;
+}
+
+.capacity-icon-wrapper:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: var(--shadow-md);
+}
+
+.capacity-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+    font-size: 1rem;
+}
+
+.capacity-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-medium);
+    margin-top: 1.5rem;
+}
+
+/* Feature icon */
+.feature-icon {
+    font-size: 3rem;
+    color: white;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* Formulario de disponibilidad mejorado */
+.availability-form {
+    background: var(--bg-white);
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
+    padding: 3rem;
+    margin-top: 4rem;
+    margin-bottom: 3rem;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.availability-form:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.availability-form h3 {
+    color: var(--text-dark);
+    font-weight: 700;
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+}
+
+.availability-form h3 i {
+    margin-right: 12px;
+    color: var(--secondary-color);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group-text {
+    background: linear-gradient(135deg, var(--bg-light) 0%, #e8e9eb 100%);
+    color: var(--text-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 12px 0 0 12px;
+    padding: 0.875rem 1.25rem;
+    font-size: 1rem;
+}
+
+.form-control {
+    border: 1px solid var(--border-color);
+    border-radius: 0 12px 12px 0;
+    padding: 0.875rem 1.25rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: var(--bg-white);
+}
+
+.form-control:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 4px rgba(109, 123, 184, 0.15);
+    outline: none;
+    transform: translateY(-2px);
+}
+
+/* Botón mejorado */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border: none;
+    padding: 1rem 2.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+    color: white;
+}
+
+.btn-primary i {
+    margin-right: 10px;
+}
+
+/* Título de sección */
+.section-title {
+    position: relative;
+    margin-bottom: 3.5rem;
+    text-align: center;
+    color: var(--text-dark);
+    font-weight: 700;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    padding-bottom: 1.5rem;
+    font-family: 'Playfair Display', 'Georgia', serif;
+}
+
+.section-title:after {
+    content: "";
+    display: block;
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+    margin: 20px auto 0;
+    border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-section-habitaciones {
+        padding-top: 100px; /* Igual que home */
+        min-height: 50vh;
+        margin: 0 10px 30px 10px;
+        border-radius: 30px;
+    }
+    
+    .hero-content-habitaciones {
+        text-align: center;
+    }
+    
+    .hero-title-habitaciones {
+        font-size: 2rem;
+    }
+    
+    .carousel-item img {
+        height: 350px;
+    }
+    
+    .availability-form {
+        padding: 2rem 1.5rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .capacity-icon-wrapper {
+        width: 60px;
+        height: 60px;
+    }
+
+    .capacity-icon-wrapper i {
+        font-size: 1.5rem;
+    }
+
+    .habitaciones-info-container {
+        padding: 2rem 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section-habitaciones {
+        padding-top: 80px; /* Igual que home */
+        min-height: 50vh;
+    }
+
+    .hero-content-habitaciones {
+        padding: 1.5rem 1rem; /* Igual que home */
+    }
+
+    .carousel-item img {
+        height: 250px;
+    }
+
+    .amenities-list li {
+        font-size: 0.9rem;
+        padding: 0.75rem 0;
+    }
+
+    .section-title {
+        font-size: 1.75rem;
+    }
+}
+
+/* ============================================
+   SECCIÓN NOSOTROS EN HABITACIONES
+   ============================================ */
+.section-divider-habitaciones {
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(109, 123, 184, 0.6) 5%, 
+        rgba(109, 123, 184, 0.8) 15%,
+        #6D7BB8 25%,
+        #6D7BB8 50%,
+        #6D7BB8 75%,
+        rgba(109, 123, 184, 0.8) 85%,
+        rgba(109, 123, 184, 0.6) 95%, 
+        transparent 100%);
+    margin: 5rem 0;
+    position: relative;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.section-divider-habitaciones::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 6px;
+    background: #6D7BB8;
+    border-radius: 3px;
+    box-shadow: 0 0 40px rgba(109, 123, 184, 0.8), 0 0 80px rgba(109, 123, 184, 0.5);
+    z-index: 1;
+}
+
+.section-divider-habitaciones::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background: #6D7BB8;
+    border-radius: 50%;
+    box-shadow: 0 0 30px rgba(109, 123, 184, 1), 0 0 60px rgba(109, 123, 184, 0.7), 0 0 100px rgba(109, 123, 184, 0.4);
+    z-index: 2;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.welcome-section-habitaciones {
+    padding: 4rem 0;
+    background-color: var(--bg-white, #FFFFFF);
+}
+
+.section-header-habitaciones {
+    text-align: center;
+    padding: 4rem 2rem 2rem;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.section-header-habitaciones h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    margin-bottom: 1rem;
+    color: var(--text-dark, #2B2B2B);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+}
+
+.welcome-content-habitaciones {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.welcome-text-habitaciones {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1rem, 1.8vw, 1.125rem);
+    color: var(--text-dark, #2B2B2B);
+    line-height: 1.85;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    margin-bottom: 1.75rem;
+    text-align: left;
+}
+
+.welcome-text-habitaciones:last-of-type {
+    margin-bottom: 2.5rem;
+}
+
+.welcome-closing-habitaciones {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.125rem, 2.2vw, 1.375rem);
+    color: var(--text-dark, #2B2B2B);
+    font-weight: 600;
+    font-style: italic;
+    line-height: 1.7;
+    text-align: center;
+    margin: 0;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(109, 123, 184, 0.15);
+}
+
+@media (max-width: 768px) {
+    .welcome-section-habitaciones {
+        padding: 3rem 0;
+    }
+
+    .welcome-content-habitaciones {
+        padding: 0 1.5rem;
+    }
+
+    .section-header-habitaciones {
+        padding: 3rem 1.5rem 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .welcome-section-habitaciones {
+        padding: 2.5rem 0;
+    }
+
+    .welcome-content-habitaciones {
+        padding: 0 1rem;
+    }
+
+    .welcome-text-habitaciones {
+        margin-bottom: 1.5rem;
+    }
+
+    .welcome-text-habitaciones:last-of-type {
+        margin-bottom: 2rem;
+    }
+
+    .welcome-closing-habitaciones {
+        padding-top: 1.5rem;
+        font-size: 1.125rem;
+    }
+}

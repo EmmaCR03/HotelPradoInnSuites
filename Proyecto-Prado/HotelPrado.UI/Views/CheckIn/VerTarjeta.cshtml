@@ -1,0 +1,384 @@
+@model HotelPrado.UI.Models.CheckInDetalleViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var checkIn = Model;
+    var logoPath = Url.Content("~/Img/images/main-Prado-removebg-preview.png");
+}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f0f0f0;
+        padding: 2rem 0;
+    }
+
+    .tarjeta-container {
+        max-width: 21.59cm; /* Ancho de media hoja carta */
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .tarjeta {
+        background: #fff;
+        border: 3px solid #2c3e50;
+        border-radius: 8px;
+        padding: 1.2cm;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        min-height: 13.97cm; /* Altura de media hoja carta */
+        position: relative;
+    }
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 3px solid #2c3e50;
+        padding-bottom: 0.5cm;
+        margin-bottom: 0.6cm;
+    }
+
+    .logo-container {
+        flex-shrink: 0;
+    }
+
+    .logo-container img {
+        max-height: 80px;
+        max-width: 150px;
+        object-fit: contain;
+    }
+
+    .header-text {
+        flex: 1;
+        text-align: center;
+        margin: 0 1cm;
+    }
+
+    .header-text h1 {
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: #2c3e50;
+        margin-bottom: 0.1cm;
+        letter-spacing: 1px;
+    }
+
+    .header-text h2 {
+        font-size: 12px;
+        font-weight: normal;
+        color: #555;
+        text-transform: uppercase;
+    }
+
+    .folio {
+        position: absolute;
+        top: 1.2cm;
+        right: 1.2cm;
+        font-weight: bold;
+        font-size: 11px;
+        color: #2c3e50;
+        background: #f8f9fa;
+        padding: 0.2cm 0.4cm;
+        border-radius: 4px;
+        border: 1px solid #dee2e6;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.35cm;
+        margin-bottom: 0.4cm;
+    }
+
+    .form-group {
+        margin-bottom: 0.25cm;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-group-inline {
+        display: flex;
+        align-items: baseline;
+        gap: 0.3cm;
+    }
+
+    .form-label {
+        font-weight: 600;
+        font-size: 9px;
+        color: #495057;
+        min-width: 3.5cm;
+        flex-shrink: 0;
+        text-transform: uppercase;
+    }
+
+    .form-value {
+        flex: 1;
+        border-bottom: 2px solid #2c3e50;
+        padding: 0.15cm 0.2cm;
+        font-size: 10px;
+        color: #212529;
+        min-height: 0.5cm;
+        display: inline-block;
+    }
+
+    .terms {
+        margin-top: 0.5cm;
+        padding-top: 0.4cm;
+        border-top: 2px solid #dee2e6;
+        font-size: 7.5px;
+        line-height: 1.4;
+    }
+
+    .terms-title {
+        font-weight: bold;
+        margin-bottom: 0.2cm;
+        font-size: 8px;
+        color: #2c3e50;
+        text-transform: uppercase;
+    }
+
+    .terms-text {
+        margin-bottom: 0.15cm;
+        text-align: justify;
+        color: #495057;
+    }
+
+    .signature-section {
+        margin-top: 0.5cm;
+        padding-top: 0.4cm;
+        border-top: 2px solid #dee2e6;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8cm;
+    }
+
+    .signature-box {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .signature-label {
+        font-weight: 600;
+        font-size: 8px;
+        color: #495057;
+        margin-bottom: 0.3cm;
+        text-transform: uppercase;
+    }
+
+    .signature-line {
+        border-bottom: 2px solid #2c3e50;
+        min-height: 1.2cm;
+        margin-bottom: 0.2cm;
+        position: relative;
+    }
+
+    .signature-name-label {
+        font-size: 7px;
+        color: #6c757d;
+        margin-top: 0.1cm;
+        font-style: italic;
+    }
+
+    .actions-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 1rem;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        z-index: 1000;
+        border-top: 2px solid #007bff;
+    }
+
+    @@media print {
+        body {
+            background: #fff;
+            padding: 0;
+        }
+
+        .tarjeta-container {
+            padding: 0;
+        }
+
+        .tarjeta {
+            border-radius: 0;
+            box-shadow: none;
+            border: 2px solid #000;
+            page-break-after: always;
+        }
+
+        .actions-bar {
+            display: none !important;
+        }
+
+        @@page {
+            size: 21.59cm 13.97cm; /* Media hoja carta vertical */
+            margin: 0.5cm;
+        }
+    }
+
+    @@media screen {
+        .tarjeta {
+            max-width: 21.59cm;
+        }
+    }
+</style>
+
+<div class="tarjeta-container">
+    <div class="tarjeta">
+        <div class="folio">
+            # FOLIO: @(Model?.CodigoFolio?.ToString("D8") ?? Model?.IdCheckIn?.ToString("D8") ?? "")
+        </div>
+
+        <div class="header">
+            <div class="logo-container">
+                <img src="@logoPath" alt="Prado Inn & Suites Logo" />
+            </div>
+            <div class="header-text">
+                <h1>TARJETA DE REGISTRO HOSPEDAJE</h1>
+                <h2>REGISTRATION CARD</h2>
+            </div>
+            <div class="logo-container" style="width: 150px;"></div> <!-- Espaciador para centrar -->
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <div class="form-group-inline">
+                    <span class="form-label">HABITACION / ROOM:</span>
+                    <span class="form-value">@(Model?.NumeroHabitacion ?? "")</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group-inline">
+                    <span class="form-label"># HUESPEDES / NBR. OF GUESTS:</span>
+                    <span class="form-value">@((Model?.NumeroAdultos ?? 0) + (Model?.NumeroNinos ?? 0))</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group-inline">
+                    <span class="form-label">FECHA DE LLEGADA / ARRIVAL DATE:</span>
+                    <span class="form-value">@(Model?.FechaCheckIn?.ToString("dd-MM-yyyy") ?? "")</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group-inline">
+                    <span class="form-label">FECHA DE SALIDA / DEP. DATE:</span>
+                    <span class="form-value">@(Model?.FechaCheckOut?.ToString("dd-MM-yyyy") ?? "")</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group-inline">
+                    <span class="form-label">DEPOSITO / DEPOSIT:</span>
+                    <span class="form-value">@((Model?.Deposito ?? 0).ToString("N2"))</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group-inline">
+                    <span class="form-label">IDENTIFICACION:</span>
+                    <span class="form-value">@(Model?.CedulaCliente ?? "")</span>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <div class="form-group-inline">
+                    <span class="form-label">NOMBRE/NAME:</span>
+                    <span class="form-value">@(Model?.NombreCliente ?? "")</span>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <div class="form-group-inline">
+                    <span class="form-label">DIRECCION/ADRESS:</span>
+                    <span class="form-value">@(Model?.DireccionCliente ?? "")</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group-inline">
+                    <span class="form-label">TELEFONOS/TELEFONE:</span>
+                    <span class="form-value">@(Model?.TelefonoCliente ?? "")</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group-inline">
+                    <span class="form-label">Email:</span>
+                    <span class="form-value">@(Model?.EmailCliente ?? "")</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group-inline">
+                    <span class="form-label">COMPAÑIA/COMPANY:</span>
+                    <span class="form-value">@(Model?.NombreEmpresa ?? "")</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group-inline">
+                    <span class="form-label">Motivo del Viaje:</span>
+                    <span class="form-value">TRABAJO</span>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <div class="form-group-inline">
+                    <span class="form-label">OBSERVACIONES:</span>
+                    <span class="form-value">@(Model?.Observaciones ?? "")</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="terms">
+            <div class="terms-title">TÉRMINOS Y CONDICIONES / TERMS AND CONDITIONS:</div>
+            <div class="terms-text">
+                <strong>PRADO INN AND SUITES ES UNA INSTALACION PRIVADA, LA GERENCIA SE RESERVA EL DERECHO DE RECHAZAR EL SERVICIO A CUALQUIER PERSONA QUE CONSIDERE NECESARIO, NO SE HARA RESPONSABLE DE ACCIDENTES, LESIONES, PERDIDAS DE DINERO Y/O OBJETOS DE NINGUNA INDOLE. EL HOTEL HA DISPUESTO DE CAJAS DE SEGURIDAD EN SU HABITACION. POR ESTE MEDIO CONFIRMO QUE HE LEIDO Y COMPRENDIDO TODAS Y CADA UNA DE LAS REGLAS DEL HOTEL, AL IGUAL MIS FAMILIARES, INVITADOS Y/O CUALQUIER PERSONA QUE TENGA ACCESO AL HOTEL. ESTOY DE ACUERDO EN DESOCUPAR LA HABITACION EN LA FECHA ARRIBA INDICADA A LAS DOCE MEDIO DIA.</strong>
+            </div>
+            <div class="terms-text">
+                <strong>PRADO INN AND SUITES IS PRIVATELY OWNED AND MANAGEMENT RESERVE THE RIGHT TO REFUSE SERVICE TO ANYONE, AND WILL BE NOT RESPONSIBLE FOR ACCIDENTS OR INJURY OR LOSS OF MONEY OR VALUABLES OF ANY KIND. SAFETY DEPOSIT BOXES ARE PROVIDED IN YOUR ROOM. BY THIS MEANS I CONFIRM THAT I HAVE READ AND UNDERSTOOD EACH AND EVERY SINGLE ONE OF THE RULES OF THE HOTEL, AS WELL MY RELATIVES, VISITORS AND/OR ANY INDIVIDUAL THAT HAS ACCESS TO THE HOTEL PERMISES. I AGREE TO CHECK-OUT BY NOON ON THE DEPARTURE DAY SHOW ABOVE.</strong>
+            </div>
+        </div>
+
+        <div class="signature-section">
+            <div class="signature-box">
+                <div class="signature-label">FIRMA DEL HUÉSPED / GUEST SIGNATURE</div>
+                <div class="signature-line"></div>
+                <div class="signature-name-label">NOMBRE / NAME</div>
+            </div>
+            <div class="signature-box">
+                <div class="signature-label">FIRMA DEL RECEPCIONISTA / RECEPTIONIST SIGNATURE</div>
+                <div class="signature-line"></div>
+                <div class="signature-name-label">NOMBRE / NAME</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="actions-bar">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-md-12 text-center">
+                <a href="@Url.Action("Index", "CheckIn")" class="btn btn-secondary me-2">
+                    <i class="fas fa-arrow-left me-2"></i>Volver a Check-Ins
+                </a>
+                <a href="@Url.Action("ImprimirTarjeta", "CheckIn", new { id = Model?.IdCheckIn ?? 0 })" target="_blank" class="btn btn-primary">
+                    <i class="fas fa-print me-2"></i>Imprimir
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,314 @@
+@model HotelPrado.Abstracciones.Modelos.Cargos.CargosDTO
+
+@{
+    ViewBag.Title = "Editar Cargo";
+}
+
+<style>
+    .card {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,.08);
+    }
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: .5rem;
+        font-size: 0.9em;
+    }
+
+    .form-control, .form-select {
+        border-radius: 6px;
+        border: 1px solid #dee2e6;
+        padding: .5rem .75rem;
+        font-size: 0.9em;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+
+    .text-danger {
+        font-size: 0.8rem;
+        margin-top: .25rem;
+    }
+
+    .form-section {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .currency-input {
+        position: relative;
+    }
+
+    .currency-symbol {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        font-weight: 600;
+    }
+
+    .currency-input input {
+        padding-left: 30px;
+    }
+
+    .total-display {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #28a745;
+        text-align: right;
+        padding: 0.5rem;
+        background-color: #f0f8f0;
+        border-radius: 6px;
+    }
+</style>
+
+<div class="container-fluid px-4">
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">Editar Cargo</h2>
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Volver
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="card-body p-4">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+                        @Html.HiddenFor(model => model.IdCargo)
+
+                        <!-- Información Básica -->
+                        <div class="form-section">
+                            <div class="section-title">Información Básica</div>
+                            <div class="row g-3">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.IdCheckIn, new { @class = "form-label" })
+                                        @Html.DropDownListFor(model => model.IdCheckIn, (SelectList)ViewBag.IdCheckIn, "Seleccione un Check-In (Opcional)", new { @class = "form-select" })
+                                        @Html.ValidationMessageFor(model => model.IdCheckIn, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.CodigoExtra, new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.CodigoExtra, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
+                                        @Html.ValidationMessageFor(model => model.CodigoExtra, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.DescripcionExtra, new { @class = "form-label" })
+                                        @Html.TextAreaFor(model => model.DescripcionExtra, new { @class = "form-control", rows = "3", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.DescripcionExtra, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.FechaHora, new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.FechaHora, new { htmlAttributes = new { @class = "form-control", type = "datetime-local", @id = "FechaHora" } })
+                                        @Html.ValidationMessageFor(model => model.FechaHora, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Montos -->
+                        <div class="form-section">
+                            <div class="section-title">Montos y Cálculos</div>
+                            <div class="row g-3">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-label">Monto del Cargo</label>
+                                        <div class="currency-input">
+                                            <span class="currency-symbol">₡</span>
+                                            @Html.EditorFor(model => model.MontoCargo, new { htmlAttributes = new { @class = "form-control", type = "number", step = "0.01", min = "0", @id = "MontoCargo", oninput = "calcularTotal()", value = Model.MontoCargo } })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.MontoCargo, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-label">Monto de Servicio</label>
+                                        <div class="currency-input">
+                                            <span class="currency-symbol">₡</span>
+                                            @Html.EditorFor(model => model.MontoServicio, new { htmlAttributes = new { @class = "form-control", type = "number", step = "0.01", min = "0", @id = "MontoServicio", oninput = "calcularTotal()", value = Model.MontoServicio } })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.MontoServicio, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-label">Impuesto de Venta</label>
+                                        <div class="currency-input">
+                                            <span class="currency-symbol">₡</span>
+                                            @Html.EditorFor(model => model.ImpuestoVenta, new { htmlAttributes = new { @class = "form-control", type = "number", step = "0.01", min = "0", @id = "ImpuestoVenta", oninput = "calcularTotal()", value = Model.ImpuestoVenta } })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.ImpuestoVenta, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-label">Impuesto de Hotel</label>
+                                        <div class="currency-input">
+                                            <span class="currency-symbol">₡</span>
+                                            @Html.EditorFor(model => model.ImpuestoHotel, new { htmlAttributes = new { @class = "form-control", type = "number", step = "0.01", min = "0", @id = "ImpuestoHotel", oninput = "calcularTotal()", value = Model.ImpuestoHotel } })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.ImpuestoHotel, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-label">Impuesto de Servicio</label>
+                                        <div class="currency-input">
+                                            <span class="currency-symbol">₡</span>
+                                            @Html.EditorFor(model => model.ImpuestoServicio, new { htmlAttributes = new { @class = "form-control", type = "number", step = "0.01", min = "0", @id = "ImpuestoServicio", oninput = "calcularTotal()", value = Model.ImpuestoServicio } })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.ImpuestoServicio, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <div class="form-group">
+                                        <label class="form-label">Monto Total (Calculado automáticamente)</label>
+                                        <div class="total-display" id="MontoTotalDisplay">₡@(Model.MontoTotal?.ToString("N2") ?? "0.00")</div>
+                                        @Html.HiddenFor(model => model.MontoTotal, new { @id = "MontoTotal" })
+                                        @Html.ValidationMessageFor(model => model.MontoTotal, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información Adicional -->
+                        <div class="form-section">
+                            <div class="section-title">Información Adicional</div>
+                            <div class="row g-3">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NumeroDocumento, new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.NumeroDocumento, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
+                                        @Html.ValidationMessageFor(model => model.NumeroDocumento, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NumeroEmpleado, new { @class = "form-label" })
+                                        @Html.EditorFor(model => model.NumeroEmpleado, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
+                                        @Html.ValidationMessageFor(model => model.NumeroEmpleado, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Notas, new { @class = "form-label" })
+                                        @Html.TextAreaFor(model => model.Notas, new { @class = "form-control", rows = "3" })
+                                        @Html.ValidationMessageFor(model => model.Notas, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Opciones -->
+                        <div class="form-section">
+                            <div class="section-title">Opciones</div>
+                            <div class="row g-3">
+                                <div class="col-md-3 mb-3">
+                                    <div class="form-check form-switch">
+                                        <input type="hidden" name="Cancelado" value="false" />
+                                        @Html.CheckBox("Cancelado", Model.Cancelado == true, new { @class = "form-check-input", @id = "Cancelado" })
+                                        <label class="form-check-label" for="Cancelado">Cancelado</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 mb-3">
+                                    <div class="form-check form-switch">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 mb-3">
+                                    <div class="form-check form-switch">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 mb-3">
+                                    <div class="form-check form-switch">
+                                        <input type="hidden" name="PagoImpuesto" value="false" />
+                                        @Html.CheckBox("PagoImpuesto", Model.PagoImpuesto == true, new { @class = "form-check-input", @id = "PagoImpuesto" })
+                                        <label class="form-check-label" for="PagoImpuesto">Pago Impuesto</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-2"></i>Guardar Cambios
+                                </button>
+                                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                                    <i class="fas fa-times me-2"></i>Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        // Convertir fecha/hora al formato datetime-local
+        document.addEventListener("DOMContentLoaded", function () {
+            var fechaHoraInput = document.getElementById("FechaHora");
+            if (fechaHoraInput && fechaHoraInput.value) {
+                var fecha = new Date(fechaHoraInput.value);
+                fecha.setMinutes(fecha.getMinutes() - fecha.getTimezoneOffset());
+                fechaHoraInput.value = fecha.toISOString().slice(0, 16);
+            }
+            calcularTotal();
+        });
+
+        function calcularTotal() {
+            var montoCargo = parseFloat(document.getElementById("MontoCargo").value) || 0;
+            var montoServicio = parseFloat(document.getElementById("MontoServicio").value) || 0;
+            var impuestoVenta = parseFloat(document.getElementById("ImpuestoVenta").value) || 0;
+            var impuestoHotel = parseFloat(document.getElementById("ImpuestoHotel").value) || 0;
+            var impuestoServicio = parseFloat(document.getElementById("ImpuestoServicio").value) || 0;
+
+            var total = montoCargo + montoServicio + impuestoVenta + impuestoHotel + impuestoServicio;
+
+            document.getElementById("MontoTotalDisplay").textContent = "₡" + total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            document.getElementById("MontoTotal").value = total.toFixed(2);
+        }
+    </script>
+}
+

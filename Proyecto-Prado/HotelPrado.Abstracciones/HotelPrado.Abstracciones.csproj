@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -99,6 +99,8 @@
     <Compile Include="Interfaces\AccesoADatos\Mantenimiento\Listar\IListarMantenimientoAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Mantenimiento\ObtenerPorId\IObtenerMantenimientoPorIdAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Mantenimiento\Registrar\IRegistrarMantenimientoAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\SolicitudLimpieza\Listar\IListarSolicitudLimpiezaAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\SolicitudLimpieza\Registrar\IRegistrarSolicitudLimpiezaAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Reservas\Editar\IEditarReservaAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\Reservas\IReservasDA.cs" />
     <Compile Include="Interfaces\AccesoADatos\Reservas\Listar\IListarReservaAD.cs" />
@@ -106,6 +108,22 @@
     <Compile Include="Interfaces\AccesoADatos\Reservas\Registrar\IRegistrarReservaAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\TipoDeDepartamento\Listar\IListarTipoDeDepartamentosAD.cs" />
     <Compile Include="Interfaces\AccesoADatos\TipoDeHabitacion\Listar\IListarTipoDeHabitacionAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Cargos\Listar\IListarCargosAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Cargos\Registrar\IRegistrarCargosAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Cargos\Editar\IEditarCargosAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Cargos\ObtenerPorId\IObtenerCargosPorIdAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Cargos\Eliminar\IEliminarCargosAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Temporadas\Listar\IListarTemporadasAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Temporadas\Registrar\IRegistrarTemporadasAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Temporadas\Editar\IEditarTemporadasAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Temporadas\ObtenerPorId\IObtenerTemporadasPorIdAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Temporadas\Eliminar\IEliminarTemporadasAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Facturas\Listar\IListarFacturasAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Facturas\Registrar\IRegistrarFacturasAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Facturas\Editar\IEditarFacturasAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Facturas\ObtenerPorId\IObtenerFacturasPorIdAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Facturas\Eliminar\IEliminarFacturasAD.cs" />
+    <Compile Include="Interfaces\AccesoADatos\Cliente\Listar\IListarClientesAD.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Bitacora\Listar\IListarBitacoraEventosLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Bitacora\Registrar\IRegistrarBitacoraEventosLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Citas\Convertir\IConvertirCitasDTOACitasTabla.cs" />
@@ -137,6 +155,8 @@
     <Compile Include="Interfaces\LogicaDeNegocio\Mantenimiento\Listar\IListarMantenimientoLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Mantenimiento\ObtenerPorId\IObtenerMantenimientoPorIdLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Mantenimiento\Registrar\IRegistrarMantenimientoLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\SolicitudLimpieza\Listar\IListarSolicitudLimpiezaLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\SolicitudLimpieza\Registrar\IRegistrarSolicitudLimpiezaLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Reservas\Convertir\IConvertirReservasDTOAReservasTabla.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Reservas\Editar\IEditarReservaLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\Reservas\IReservasLN.cs" />
@@ -145,32 +165,60 @@
     <Compile Include="Interfaces\LogicaDeNegocio\Reservas\Registrar\IRegistrarReservaLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\TipoDeDepartamentos\IListarTipoDeDepartamenoLN.cs" />
     <Compile Include="Interfaces\LogicaDeNegocio\TipoHabitacion\Listar\IListarTipoHabitacionLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Cargos\Listar\IListarCargosLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Cargos\Registrar\IRegistrarCargosLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Cargos\Editar\IEditarCargosLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Cargos\ObtenerPorId\IObtenerCargosPorIdLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Cargos\Eliminar\IEliminarCargosLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Temporadas\Listar\IListarTemporadasLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Temporadas\Registrar\IRegistrarTemporadasLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Temporadas\Editar\IEditarTemporadasLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Temporadas\ObtenerPorId\IObtenerTemporadasPorIdLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Temporadas\Eliminar\IEliminarTemporadasLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Facturas\Listar\IListarFacturasLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Facturas\Registrar\IRegistrarFacturasLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Facturas\Editar\IEditarFacturasLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Facturas\ObtenerPorId\IObtenerFacturasPorIdLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Facturas\Eliminar\IEliminarFacturasLN.cs" />
+    <Compile Include="Interfaces\LogicaDeNegocio\Cliente\Listar\IListarClientesLN.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Bitacora\BitacoraTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Citas\CitasTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\ClientesContactos\ClientesContactosTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Cliente\ClienteTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Colaborador\ColaboradorTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\Configuracion\ConfiguracionHeroBannerTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\Configuracion\ConfiguracionPreciosDepartamentosTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Departamento\DepartamentoTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Habitaciones\HabitacionesTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\ImagenesDepartamento\ImagenesDepartamentoTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\ImagenesHabitacion\ImagenesHabitacionTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Mantenimiento\MantenimientoTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\Reservas\ReservasTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\SolicitudLimpieza\SolicitudLimpiezaTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\TipoDepartamento\TipoDepartamentoTabla.cs" />
     <Compile Include="ModelosDeBaseDeDatos\TipoHabitacion\TipoHabitacionTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\Cargos\CargosTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\Temporadas\TemporadasTabla.cs" />
+    <Compile Include="ModelosDeBaseDeDatos\Facturas\FacturasTabla.cs" />
     <Compile Include="Modelos\Bitacora\BitacoraEventosDTO.cs" />
     <Compile Include="Modelos\Citas\CitasDTO.cs" />
     <Compile Include="Modelos\ClientesContactos\ClientesContactosDTO.cs" />
     <Compile Include="Modelos\Cliente\ClienteDTO.cs" />
     <Compile Include="Modelos\Colaborador\ColaboradorDTO.cs" />
+    <Compile Include="Modelos\Configuracion\ConfiguracionHeroBannerDTO.cs" />
+    <Compile Include="Modelos\Configuracion\ConfiguracionPreciosDepartamentosDTO.cs" />
     <Compile Include="Modelos\Departamento\DepartamentoDTO.cs" />
     <Compile Include="Modelos\Habitaciones\HabitacionesDTO.cs" />
     <Compile Include="Modelos\ImagenesDepartamento\ImagenesDepartamentoDTO.cs" />
     <Compile Include="Modelos\ImagenesHabitacion\ImagenesHabitacionDTO.cs" />
     <Compile Include="Modelos\Mantenimiento\MantenimientoDTO.cs" />
     <Compile Include="Modelos\Reservas\ReservasDTO.cs" />
+    <Compile Include="Modelos\SolicitudLimpieza\SolicitudLimpiezaDTO.cs" />
     <Compile Include="Modelos\TipoDeDepartamento\TipoDepartamentoDTO.cs" />
     <Compile Include="Modelos\TipoDeHabitacion\TipoHabitacionDTO.cs" />
+    <Compile Include="Modelos\Cargos\CargosDTO.cs" />
+    <Compile Include="Modelos\Temporadas\TemporadasDTO.cs" />
+    <Compile Include="Modelos\Facturas\FacturasDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

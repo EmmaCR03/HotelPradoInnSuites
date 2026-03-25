@@ -1,4 +1,4 @@
-﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Departamentos.Registrar;
+using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Departamentos.Registrar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Bitacora.Registrar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Departamentos.Registrar;
 using HotelPrado.Abstracciones.Modelos.Bitacora;
@@ -90,7 +90,7 @@ namespace HotelPrado.LN.Departamentos.Registrar
                 IdDepartamento = elDepartamento.IdDepartamento,
                 IdCliente = elDepartamento.IdCliente,
                 Nombre = elDepartamento.Nombre,
-                NumeroDepartamento = elDepartamento.NumeroDepartamento,
+                NumeroDepartamento = elDepartamento.NumeroDepartamento ?? 0,
                 Descripcion = elDepartamento.Descripcion,
                 IdTipoDepartamento = elDepartamento.IdTipoDepartamento,
                 Precio = elDepartamento.Precio,

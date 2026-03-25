@@ -1,94 +1,233 @@
-﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Colaborador.ColaboradorDTO>
+@model IEnumerable<HotelPrado.Abstracciones.Modelos.Colaborador.ColaboradorDTO>
 
 @{
     ViewBag.Title = "IndexColaborador";
+    var colaboradoresList = Model.ToList();
+    var totalColaboradores = colaboradoresList.Count;
 }
 
 <div class="container mt-4">
-    <h2 class="text-center text-primary fw-bold mb-4">Lista de Colaboradores</h2>
+    @if (TempData["MensajeExito"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["MensajeExito"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold mb-0">Lista de Colaboradores</h2>
+        <span class="badge bg-secondary">Total: @totalColaboradores</span>
+    </div>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <input type="text" id="search" class="form-control w-50 shadow-sm" placeholder="Buscar colaborador...">
+        <input type="text" id="search" class="form-control shadow-sm" style="max-width: 350px;" placeholder="Buscar por nombre, puesto o estado...">
         @Html.ActionLink("Nuevo Colaborador", "Create", null, new { @class = "btn btn-success shadow-sm" })
     </div>
 
-    <div class="row">
-        @foreach (var item in Model)
+    @if (!colaboradoresList.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon"><i class="fas fa-users"></i></div>
+            <h3 class="empty-state-title">No hay colaboradores aún</h3>
+            <p class="empty-state-text">Registra al personal del hotel para gestionar permisos y contacto.</p>
+            <a href="@Url.Action("Create", "Colaborador")" class="btn-empty-state"><i class="fas fa-plus"></i> Crear el primero</a>
+        </div>
+    }
+    else
+    {
+    <!-- Cards optimizadas -->
+    <div class="row" id="colaboradoresContainer">
+        @foreach (var item in colaboradoresList)
         {
-            <div class="col-md-4 mb-4 colaborador-item">
-                <div class="card border-0 shadow-sm hover-effect">
-                    <div class="card-body text-center" data-bs-toggle="collapse" data-bs-target="#colaborador-@item.IdColaborador">
-                        <h5 class="fw-bold text-dark">@item.NombreColaborador @item.PrimerApellidoColaborador</h5>
-                        <p class="text-muted"><strong>Puesto:</strong> @item.PuestoColaborador</p>
-                        <p class="text-muted"><strong>Estado:</strong> @item.EstadoLaboral</p>
-                    </div>
-
-                    <div id="colaborador-@item.IdColaborador" class="collapse">
-                        <div class="card-footer bg-light p-3 d-flex justify-content-between">
-                            <a href="@Url.Action("Edit", "Colaborador", new { IdColaborador = item.IdColaborador })" class="btn btn-warning btn-sm shadow-sm flex-fill mx-1">
-                                <i class="fas fa-edit"></i> Editar
-                            </a>
-                            <button class="btn btn-secondary btn-sm shadow-sm flex-fill mx-1" data-bs-toggle="collapse" data-bs-target="#colaborador-@item.IdColaborador">
-                                Cerrar
-                            </button>
+            <div class="col-md-4 col-lg-3 mb-4 colaborador-item" 
+                 data-nombre="@($"{item.NombreColaborador} {item.PrimerApellidoColaborador} {item.SegundoApellidoColaborador}".ToLower())" 
+                 data-puesto="@item.PuestoColaborador.ToLower()" 
+                 data-estado="@item.EstadoLaboral.ToLower()">
+                <div class="card border-0 shadow-sm h-100 colaborador-card">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <div class="colaborador-avatar mb-2">
+                                <i class="fas fa-user-circle fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="fw-bold text-dark mb-1">@item.NombreColaborador @item.PrimerApellidoColaborador</h5>
+                            @if (!string.IsNullOrEmpty(item.SegundoApellidoColaborador))
+                            {
+                                <p class="text-muted small mb-2">@item.SegundoApellidoColaborador</p>
+                            }
                         </div>
+                        
+                        <div class="colaborador-info">
+                            <div class="mb-2">
+                                <small class="text-muted d-block">Cédula:</small>
+                                <strong>@item.CedulaColaborador</strong>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <small class="text-muted d-block">Puesto:</small>
+                                <span class="badge bg-info">@item.PuestoColaborador</span>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <small class="text-muted d-block">Estado:</small>
+                                @if (item.EstadoLaboral == "Activo")
+                                {
+                                    <span class="badge bg-success">@item.EstadoLaboral</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">@item.EstadoLaboral</span>
+                                }
+                            </div>
+                            
+                            @if (item.IngresoColaborador > 0)
+                            {
+                                <div class="mb-2">
+                                    <small class="text-muted d-block">Año Ingreso:</small>
+                                    <strong>@item.IngresoColaborador</strong>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer bg-light border-0 pt-0">
+                        <a href="@Url.Action("Edit", "Colaborador", new { IdColaborador = item.IdColaborador })" 
+                           class="btn btn-warning btn-sm w-100 shadow-sm">
+                            <i class="fas fa-edit me-2"></i>Editar
+                        </a>
                     </div>
                 </div>
             </div>
         }
     </div>
+    }
+    
+    <div id="noResults" class="alert alert-warning text-center mt-4" style="display: none;">
+        <i class="fas fa-search me-2"></i>No se encontraron colaboradores que coincidan con la búsqueda.
+    </div>
 </div>
 
-<!-- Scripts -->
+<!-- Scripts optimizados -->
 <script>
-    document.getElementById("search").addEventListener("input", function () {
-        let filter = this.value.toLowerCase();
-        let items = document.querySelectorAll(".colaborador-item");
-
-        items.forEach(function (item) {
-            let nombre = item.querySelector("h5").innerText.toLowerCase();
-            if (nombre.includes(filter)) {
-                item.style.display = "block";
-                item.classList.add("fade-in");
-            } else {
-                item.style.display = "none";
+    (function() {
+        'use strict';
+        
+        // Cache de elementos
+        const searchInput = document.getElementById('search');
+        const container = document.getElementById('colaboradoresContainer');
+        const items = container ? container.querySelectorAll('.colaborador-item') : [];
+        const noResults = document.getElementById('noResults');
+        
+        // Debounce function para optimizar búsqueda
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+        
+        // Función de búsqueda optimizada
+        function filtrarCards() {
+            const filter = searchInput.value.toLowerCase().trim();
+            let visibleCount = 0;
+            
+            items.forEach(function(item) {
+                const nombre = item.getAttribute('data-nombre') || '';
+                const puesto = item.getAttribute('data-puesto') || '';
+                const estado = item.getAttribute('data-estado') || '';
+                
+                const match = nombre.includes(filter) || 
+                             puesto.includes(filter) || 
+                             estado.includes(filter);
+                
+                if (match) {
+                    item.style.display = '';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Mostrar/ocultar mensaje de no resultados
+            if (noResults) {
+                if (visibleCount === 0 && filter !== '') {
+                    noResults.style.display = 'block';
+                } else {
+                    noResults.style.display = 'none';
+                }
             }
-        });
-    });
-
-    // Efecto Hover
-    document.querySelectorAll('.hover-effect').forEach(function (element) {
-        element.addEventListener('mouseover', function () {
-            element.style.transform = 'translateY(-5px)';
-            element.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.2)';
-        });
-        element.addEventListener('mouseout', function () {
-            element.style.transform = 'translateY(0)';
-            element.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-        });
-    });
+        }
+        
+        // Event listener con debounce (espera 300ms después de que el usuario deje de escribir)
+        if (searchInput) {
+            searchInput.addEventListener('input', debounce(filtrarCards, 300));
+        }
+    })();
 </script>
 
-<!-- Estilos -->
+<!-- Estilos optimizados -->
 <style>
-    .hover-effect {
-        transition: all 0.3s ease;
+    .colaborador-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         cursor: pointer;
     }
-
-    .fade-in {
-        animation: fadeIn 0.5s ease-in-out;
+    
+    .colaborador-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important;
     }
-
-    #search {
-        max-width: 350px;
+    
+    .colaborador-avatar {
+        opacity: 0.8;
     }
-
-    .card-footer .btn {
-        width: 100%;
-        text-align: center;
+    
+    .colaborador-info {
+        border-top: 1px solid #e9ecef;
+        padding-top: 1rem;
+        margin-top: 1rem;
     }
-
-   
+    
+    .colaborador-info > div {
+        padding: 0.25rem 0;
+    }
+    
+    .colaborador-info small {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .colaborador-item {
+        animation: fadeIn 0.3s ease-in;
+    }
+    
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    #search:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
+    
+    .card-footer {
+        background-color: #f8f9fa !important;
+    }
+    
+    .badge {
+        font-size: 0.85rem;
+        padding: 0.35em 0.65em;
     }
 </style>

@@ -1,0 +1,227 @@
+@model IEnumerable<HotelPrado.UI.Models.HistorialClienteViewModel>
+@{
+    ViewBag.Title = "Historial de Clientes";
+    var busqueda = ViewBag.Busqueda as string ?? "";
+}
+<style>
+    .historial-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: calc(100vh - 200px);
+        padding: 2rem 0;
+    }
+    .page-header {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .page-header h1 { font-family: 'Playfair Display', serif; font-weight: 700; color: #2c3e50; margin-bottom: 0.5rem; }
+    .search-bar {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .search-input-group { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    .search-input-group input {
+        flex: 1;
+        min-width: 200px;
+        padding: 0.75rem 1rem;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+    .search-input-group input:focus { outline: none; border-color: #6D7BB8; }
+    .btn-search {
+        padding: 0.75rem 2rem;
+        background: #6D7BB8;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .btn-search:hover { background: #5a6ba5; color: white; }
+    .btn-clear {
+        padding: 0.75rem 1.5rem;
+        background: #6c757d;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .btn-clear:hover { color: white; background: #5a6268; }
+    .table-container {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        overflow-x: auto;
+    }
+    .historial-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    .historial-table thead { background: linear-gradient(135deg, #6D7BB8 0%, #5a6ba5 100%); color: white; }
+    .historial-table th { padding: 1rem; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; }
+    .historial-table tbody tr { border-bottom: 1px solid #e9ecef; }
+    .historial-table tbody tr:hover { background: #f8f9fa; }
+    .historial-table td { padding: 1rem; color: #495057; }
+    .historial-table tbody tr.sin-reservas-row { background: #f8f9fa; }
+    .sin-reservas { color: #6c757d; font-style: italic; }
+    .historial-summary { margin-bottom: 1rem; font-weight: 600; color: #2c3e50; }
+    .no-results { text-align: center; padding: 3rem; color: #6c757d; }
+    .no-results i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+    .link-gestion { color: #6D7BB8; text-decoration: none; }
+    .link-gestion:hover { text-decoration: underline; }
+</style>
+
+<div class="historial-container">
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1><i class="fas fa-history"></i> Historial de Clientes</h1>
+            <p class="text-muted">Busque un cliente por nombre, cédula o teléfono para ver todo su historial de estancias (check-ins).</p>
+            <p class="mb-0">
+                <a href="@Url.Action("Index", "Clientes")" class="link-gestion"><i class="fas fa-users"></i> Ir a Gestión de Clientes</a>
+            </p>
+        </div>
+
+        <div class="search-bar">
+            <form method="get" action="@Url.Action("Historial")">
+                <div class="search-input-group">
+                    <input type="text"
+                           name="busqueda"
+                           value="@busqueda"
+                           placeholder="Nombre, número de cédula o número de teléfono..."
+                           class="form-control" />
+                    <button type="submit" class="btn-search">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                    @if (!string.IsNullOrWhiteSpace(busqueda))
+                    {
+                        <a href="@Url.Action("Historial")" class="btn-clear"><i class="fas fa-times"></i> Limpiar</a>
+                    }
+                </div>
+            </form>
+        </div>
+
+        <div class="table-container">
+            @if (Model != null && Model.Any())
+            {
+                var totalEstancias = Model.Count(x => x.TieneReservas);
+                <p class="historial-summary"><i class="fas fa-list"></i> Total: @totalEstancias estancia(s) encontrada(s)</p>
+                <table class="historial-table">
+                    <thead>
+                        <tr>
+                            <th>Estancia</th>
+                            <th>Nombre</th>
+                            <th>Cédula</th>
+                            <th>Teléfono</th>
+                            <th>Entrada (fecha y hora)</th>
+                            <th>Salida (fecha y hora)</th>
+                            <th>Habitación</th>
+                            <th>Personas</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr class="@(item.TieneReservas ? "" : "sin-reservas-row")">
+                                <td>
+                                    @if (item.TieneReservas)
+                                    {
+                                        <span>@(item.NumeroEstancia)ª</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="sin-reservas">—</span>
+                                    }
+                                </td>
+                                <td>@item.NombreCompleto</td>
+                                <td>@item.CedulaCliente</td>
+                                <td>@item.TelefonoCliente</td>
+                                <td>
+                                    @if (item.TieneReservas && item.FechaEntrada.HasValue)
+                                    {
+                                        @item.FechaEntrada.Value.ToString("dd/MM/yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <span class="sin-reservas">Sin reservas</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.TieneReservas && item.FechaSalida.HasValue)
+                                    {
+                                        @item.FechaSalida.Value.ToString("dd/MM/yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <span class="sin-reservas">—</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.TieneReservas)
+                                    {
+                                        @item.NumeroHabitacion
+                                    }
+                                    else
+                                    {
+                                        <span class="sin-reservas">—</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.TieneReservas)
+                                    {
+                                        @item.CantidadPersonas
+                                    }
+                                    else
+                                    {
+                                        <span class="sin-reservas">—</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.TieneReservas)
+                                    {
+                                        @item.MontoTotal.ToString("N2")
+                                    }
+                                    else
+                                    {
+                                        <span class="sin-reservas">—</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.TieneReservas && !string.IsNullOrEmpty(item.EstadoReserva))
+                                    {
+                                        @item.EstadoReserva
+                                    }
+                                    else
+                                    {
+                                        <span class="sin-reservas">—</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    @if (string.IsNullOrWhiteSpace(busqueda))
+                    {
+                        <p class="mb-0">Ingrese nombre, cédula o teléfono y pulse <strong>Buscar</strong> para consultar el historial.</p>
+                    }
+                    else
+                    {
+                        <p class="mb-0">No se encontraron clientes con &quot;@busqueda&quot;.</p>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-﻿
+
 using HotelPrado.UI.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -33,7 +33,7 @@ namespace HotelPrado.UI.Controllers
         {
             get
             {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                return _userManager ?? this.HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
             private set
             {
@@ -44,7 +44,7 @@ namespace HotelPrado.UI.Controllers
         {
             get
             {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+                return _signInManager ?? this.HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
             private set
             {
@@ -122,7 +122,18 @@ namespace HotelPrado.UI.Controllers
                     if (result.Succeeded)
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                        var addRoleResult = userManager.AddToRole(user.Id, model.Rol);
+                        
+                        // Determinar qué rol asignar: si no se especifica o está vacío, asignar "Cliente"
+                        string rolAAsignar = string.IsNullOrWhiteSpace(model.Rol) ? "Cliente" : model.Rol;
+                        
+                        // Verificar que el rol existe, si no, crearlo (especialmente para "Cliente")
+                        var roleManagerCreate = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+                        if (!roleManagerCreate.RoleExists(rolAAsignar))
+                        {
+                            roleManagerCreate.Create(new IdentityRole(rolAAsignar));
+                        }
+                        
+                        var addRoleResult = userManager.AddToRole(user.Id, rolAAsignar);
                         if (addRoleResult.Succeeded)
                         {
                             return RedirectToAction("Index");
@@ -233,17 +244,56 @@ namespace HotelPrado.UI.Controllers
                     }
                 }
 
+                var currentRoles = UserManager.GetRoles(user.Id);
+                
                 if (!string.IsNullOrEmpty(Rol))
                 {
-                    var currentRoles = UserManager.GetRoles(user.Id);
                     if (!currentRoles.Contains(Rol))
                     {
+                        // Remover todos los roles actuales
                         foreach (var role in currentRoles)
                         {
                             UserManager.RemoveFromRole(user.Id, role);
                         }
 
+                        // Verificar que el rol existe, si no, crearlo
+                        var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+                        if (!roleManager.RoleExists(Rol))
+                        {
+                            roleManager.Create(new IdentityRole(Rol));
+                        }
+
                         var addRoleResult = UserManager.AddToRole(user.Id, Rol);
+                        if (!addRoleResult.Succeeded)
+                        {
+                            foreach (var error in addRoleResult.Errors)
+                            {
+                                ModelState.AddModelError("", error);
+                            }
+                            CargarRoles();
+                            return View(model);
+                        }
+                    }
+                }
+                else
+                {
+                    // Si no se especifica un rol, asignar "Cliente" automáticamente
+                    if (currentRoles.Count == 0 || !currentRoles.Contains("Cliente"))
+                    {
+                        // Remover todos los roles actuales si hay alguno
+                        foreach (var role in currentRoles)
+                        {
+                            UserManager.RemoveFromRole(user.Id, role);
+                        }
+
+                        // Verificar que el rol "Cliente" existe, si no, crearlo
+                        var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+                        if (!roleManager.RoleExists("Cliente"))
+                        {
+                            roleManager.Create(new IdentityRole("Cliente"));
+                        }
+
+                        var addRoleResult = UserManager.AddToRole(user.Id, "Cliente");
                         if (!addRoleResult.Succeeded)
                         {
                             foreach (var error in addRoleResult.Errors)

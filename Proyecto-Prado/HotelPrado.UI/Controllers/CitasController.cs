@@ -1,4 +1,4 @@
-﻿using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Bitacora.Registrar;
+using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Bitacora.Registrar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Citas.Editar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Citas.Listar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Citas.ObtenerEnlaces;
@@ -41,7 +41,7 @@ namespace HotelPrado.UI.Controllers
             _registrarBitacoraEventosLN = new RegistrarBitacoraEventosLN();
             _obtenerEnlaces = new ObtenerEnlacesLN();
         }
-        [Authorize(Roles = "Administrador, Colaborador")]
+        [AllowAnonymous]
         public ActionResult IndexCitas(int id)
         {
             ViewBag.Title = "La Cita";
@@ -70,6 +70,7 @@ namespace HotelPrado.UI.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult> Create(CitasDTO citas)
         {
             try

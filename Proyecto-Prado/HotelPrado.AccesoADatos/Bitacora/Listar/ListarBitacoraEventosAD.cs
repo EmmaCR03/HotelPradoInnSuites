@@ -32,7 +32,8 @@ namespace HotelPrado.AccesoADatos.Bitacora.Listar
                                                               DescripcionDeEvento = laBitacora.DescripcionDeEvento,
                                                               StackTrace = laBitacora.StackTrace,
                                                               DatosAnteriores = laBitacora.DatosAnteriores,
-                                                              DatosPosteriores = laBitacora.DatosPosteriores
+                                                              DatosPosteriores = laBitacora.DatosPosteriores,
+                                                              Usuario = laBitacora.Usuario ?? "Sistema"
                                                           }).ToList();
 
             return laListaDeBitacora;

@@ -1,0 +1,25 @@
+<!-- 
+    CONFIGURACIÓN DE EMAIL PARA Web.config
+    Agregar estas líneas dentro de <appSettings>
+    
+    Ejemplo para Gmail:
+    <add key="SmtpServer" value="smtp.gmail.com" />
+    <add key="SmtpPort" value="587" />
+    <add key="SmtpUsername" value="tu-email@gmail.com" />
+    <add key="SmtpPassword" value="tu-contraseña-de-aplicacion" />
+    <add key="SmtpEnableSsl" value="true" />
+    <add key="EmailFrom" value="info@pradoinn.com" />
+    <add key="EmailFromName" value="Hotel Prado Inn & Suites" />
+    
+    Ejemplo para Outlook/Hotmail:
+    <add key="SmtpServer" value="smtp-mail.outlook.com" />
+    <add key="SmtpPort" value="587" />
+    <add key="SmtpUsername" value="tu-email@outlook.com" />
+    <add key="SmtpPassword" value="tu-contraseña" />
+    <add key="SmtpEnableSsl" value="true" />
+    
+    NOTA: Para Gmail, necesitas usar una "Contraseña de aplicación" 
+    en lugar de tu contraseña normal. Generarla en:
+    https://myaccount.google.com/apppasswords
+-->
+

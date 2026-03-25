@@ -1,0 +1,462 @@
+@model HotelPrado.UI.Models.ClienteDetallesViewModel
+
+@{
+    ViewBag.Title = "Detalle de Cliente";
+}
+
+<style>
+    .cliente-detalle-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .cliente-detalle-wrapper .page-header {
+        background: white;
+        border-radius: 16px;
+        padding: 1.75rem 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .cliente-detalle-wrapper .page-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .cliente-detalle-wrapper .page-header p {
+        margin-bottom: 0;
+    }
+
+    .cliente-detalle-card {
+        height: 100%;
+        border-radius: 16px;
+        border: none;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .cliente-detalle-card .card-header {
+        border-radius: 16px 16px 0 0 !important;
+    }
+
+    .cliente-detalle-card .card-body p {
+        font-size: 0.95rem;
+    }
+
+    .cliente-detalle-card .card-body strong {
+        color: #2c3e50;
+    }
+
+    .historial-table thead {
+        background: linear-gradient(135deg, #6D7BB8 0%, #5a6ba5 100%);
+        color: #fff;
+    }
+
+    .historial-table thead th {
+        border: none;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .historial-table tbody td {
+        vertical-align: middle;
+        font-size: 0.9rem;
+    }
+
+    .badge-estado {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.6rem;
+        border-radius: 999px;
+    }
+
+    .badge-estado-confirmada {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .badge-estado-en-proceso {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .badge-estado-cancelada {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    @@media (max-width: 768px) {
+        .cliente-detalle-wrapper .page-header {
+            padding: 1.25rem 1.5rem;
+        }
+    }
+</style>
+
+<div class="clients-container">
+    <div class="container-fluid cliente-detalle-wrapper">
+        <div class="page-header">
+            <h1><i class="fas fa-user"></i> Detalle de Cliente</h1>
+            <p class="text-muted mb-2">Información completa del cliente, su empresa asociada y su historial de visitas.</p>
+            <p class="mb-0 mt-2">
+                <a href="@Url.Action("Index", "Clientes")" class="btn-clear">
+                    <i class="fas fa-arrow-left"></i> Volver a la lista de clientes
+                </a>
+            </p>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm cliente-detalle-card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-id-card me-2"></i>Datos del cliente</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-1"><strong>Nombre completo:</strong> @Model.Cliente.NombreCompleto</p>
+                        <p class="mb-1"><strong>Cédula:</strong> @(Model.Cliente.CedulaCliente ?? "-")</p>
+                        <p class="mb-1"><strong>Teléfono:</strong> @(Model.Cliente.TelefonoCliente ?? "-")</p>
+                        <p class="mb-1"><strong>Correo:</strong> @(Model.Cliente.EmailCliente ?? "-")</p>
+                        <p class="mb-1"><strong>Dirección:</strong> @(Model.Cliente.DireccionCliente ?? "-")</p>
+                        <p class="mb-1"><strong>Usuario web:</strong>
+                            @if (!string.IsNullOrEmpty(Model.Cliente.IdUsuario))
+                            {
+                                <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Con usuario</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary"><i class="fas fa-times-circle me-1"></i>Sin usuario</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-sm cliente-detalle-card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-building me-2"></i>Empresa asociada</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(Model.NombreEmpresa))
+                        {
+                            <p class="mb-1"><strong>Nombre:</strong> @Model.NombreEmpresa</p>
+                            <p class="mb-1"><strong>Teléfono:</strong> @(Model.TelefonoEmpresa ?? "-")</p>
+                            <p class="mb-1"><strong>Correo:</strong>
+                                @if (!string.IsNullOrEmpty(Model.CorreoEmpresa))
+                                {
+                                    <a href="mailto:@Model.CorreoEmpresa">@Model.CorreoEmpresa</a>
+                                }
+                                else
+                                {
+                                    @("-")
+                                }
+                            </p>
+                            <p class="mb-1"><strong>Dirección:</strong> @(Model.DireccionEmpresa ?? "-")</p>
+                        }
+                        else
+                        {
+                            <p class="mb-0 text-muted">Este cliente no tiene una empresa asociada registrada.</p>
+                        }
+
+                        @if (Model.EmpresaSugeridaId.HasValue && string.IsNullOrEmpty(Model.NombreEmpresa))
+                        {
+                            <hr />
+                            <p class="mb-2">
+                                <strong>Empresa sugerida (último check-in):</strong>
+                                @Model.EmpresaSugeridaNombre
+                            </p>
+                        }
+
+                        <hr />
+                        @using (Html.BeginForm("AsignarEmpresa", "Clientes", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("idCliente", Model.Cliente.IdCliente)
+                            @Html.Hidden("idEmpresa", Model.Cliente.IdEmpresa.HasValue ? Model.Cliente.IdEmpresa.ToString() : (Model.EmpresaSugeridaId.HasValue ? Model.EmpresaSugeridaId.ToString() : ""))
+                            <div class="mb-2">
+                                <label class="form-label">Asignar / cambiar empresa manualmente</label>
+                                <div class="input-group">
+                                    <input type="text"
+                                           id="EmpresaNombreDisplay"
+                                           class="form-control"
+                                           value="@( !string.IsNullOrEmpty(Model.NombreEmpresa) ? Model.NombreEmpresa : (Model.EmpresaSugeridaNombre ?? ""))"
+                                           placeholder="Seleccione una empresa..."
+                                           readonly />
+                                    <button type="button"
+                                            class="btn btn-outline-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalSeleccionEmpresa">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                    <button type="button"
+                                            class="btn btn-outline-secondary"
+                                            onclick="limpiarEmpresaSeleccionada()"
+                                            title="Quitar empresa">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <small class="form-text text-muted">
+                                    Use el buscador para seleccionar una empresa. Si limpia el campo y guarda, se quitará la empresa asociada.
+                                </small>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-save me-1"></i> Guardar empresa del cliente
+                            </button>
+                        }
+
+                        @if (TempData["MensajeEmpresa"] != null)
+                        {
+                            <div class="alert alert-success mt-3">
+                                @TempData["MensajeEmpresa"]
+                            </div>
+                        }
+                        @if (TempData["ErrorEmpresa"] != null)
+                        {
+                            <div class="alert alert-danger mt-3">
+                                @TempData["ErrorEmpresa"]
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-12">
+                <div class="card shadow-sm cliente-detalle-card">
+                    <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-history me-2"></i>Historial de visitas</h5>
+                        <div class="small">
+                            <span class="me-3">
+                                <strong>Total de estancias:</strong> @(Model.Historial != null ? Model.Historial.Count : 0)
+                            </span>
+                            <span>
+                                <strong>Última visita:</strong>
+                                @{
+                                    if (Model.UltimaVisita.HasValue)
+                                    {
+                                        var f = Model.UltimaVisita.Value;
+                                        string textoUltima;
+                                        if (f.TimeOfDay == TimeSpan.Zero)
+                                        {
+                                            textoUltima = f.ToString("dd/MM/yyyy");
+                                        }
+                                        else
+                                        {
+                                            textoUltima = f.ToString("dd/MM/yyyy HH:mm");
+                                        }
+                                        @textoUltima;
+                                    }
+                                    else
+                                    {
+                                        @:—
+                                    }
+                                }
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Historial != null && Model.Historial.Count > 0)
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover historial-table">
+                                    <thead>
+                                        <tr>
+                                            <th># Estancia</th>
+                                            <th>Reserva</th>
+                                            <th>Fecha entrada</th>
+                                            <th>Fecha salida</th>
+                                            <th>Habitación</th>
+                                            <th>Personas</th>
+                                            <th>Monto total</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.Historial.OrderBy(h => h.NumeroEstancia))
+                                        {
+                                            <tr>
+                                                <td>@item.NumeroEstancia</td>
+                                                <td>@item.IdReserva</td>
+                                                <td>
+                                                    @{
+                                                        if (item.FechaEntrada.HasValue)
+                                                        {
+                                                            var fe = item.FechaEntrada.Value;
+                                                            string textoEntrada = fe.TimeOfDay == TimeSpan.Zero
+                                                                ? fe.ToString("dd/MM/yyyy")
+                                                                : fe.ToString("dd/MM/yyyy HH:mm");
+                                                            @textoEntrada;
+                                                        }
+                                                        else
+                                                        {
+                                                            @:—
+                                                        }
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @{
+                                                        if (item.FechaSalida.HasValue)
+                                                        {
+                                                            var fs = item.FechaSalida.Value;
+                                                            string textoSalida = fs.TimeOfDay == TimeSpan.Zero
+                                                                ? fs.ToString("dd/MM/yyyy")
+                                                                : fs.ToString("dd/MM/yyyy HH:mm");
+                                                            @textoSalida;
+                                                        }
+                                                        else
+                                                        {
+                                                            @:—
+                                                        }
+                                                    }
+                                                </td>
+                                                <td>@item.NumeroHabitacion</td>
+                                                <td>@item.CantidadPersonas</td>
+                                                <td>₡ @item.MontoTotal.ToString("N2")</td>
+                                                <td>
+                                                    @{
+                                                        var estado = (item.EstadoReserva ?? "").Trim().ToLower();
+                                                        var claseEstado = "badge-estado";
+                                                        if (estado.Contains("confirm"))
+                                                        {
+                                                            claseEstado += " badge-estado-confirmada";
+                                                        }
+                                                        else if (estado.Contains("proceso") || estado.Contains("check-in"))
+                                                        {
+                                                            claseEstado += " badge-estado-en-proceso";
+                                                        }
+                                                        else if (estado.Contains("cancel"))
+                                                        {
+                                                            claseEstado += " badge-estado-cancelada";
+                                                        }
+                                                    }
+                                                    <span class="@claseEstado">@item.EstadoReserva</span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="mb-0 text-muted">Este cliente aún no registra visitas (reservas) asociadas a su usuario web.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para seleccionar empresa -->
+<div class="modal fade" id="modalSeleccionEmpresa" tabindex="-1" aria-labelledby="modalSeleccionEmpresaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalSeleccionEmpresaLabel">
+                    <i class="fas fa-building me-2"></i>Seleccionar empresa
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <input type="text"
+                           id="busquedaEmpresaCliente"
+                           class="form-control"
+                           placeholder="Buscar por nombre, correo o teléfono..." />
+                </div>
+                <div id="listaEmpresasCliente" style="max-height: 400px; overflow-y: auto;">
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-spinner fa-spin fa-2x mb-2"></i>
+                        <p>Cargando empresas...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function cargarEmpresasCliente(busqueda) {
+            var contenedor = document.getElementById('listaEmpresasCliente');
+            if (!contenedor) return;
+            contenedor.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-spinner fa-spin fa-2x mb-2"></i><p>Cargando empresas...</p></div>';
+
+            $.ajax({
+                url: '@Url.Action("BuscarEmpresas", "CheckIn")',
+                type: 'GET',
+                data: { busqueda: busqueda || '' },
+                success: function (empresas) {
+                    if (!empresas || empresas.length === 0) {
+                        contenedor.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-inbox fa-2x mb-2"></i><p>No se encontraron empresas</p></div>';
+                        return;
+                    }
+
+                    var html = '<div class="list-group">';
+                    empresas.forEach(function (empresa) {
+                        var nombre = empresa.NombreEmpresa || '';
+                        var telefono = empresa.Telefono || '';
+                        var email = empresa.Email || '';
+                        var direccion = empresa.Direccion || '';
+
+                        html += '<a href="#" class="list-group-item list-group-item-action" ' +
+                                'onclick="seleccionarEmpresaCliente(' + empresa.IdEmpresa + ', \'' + nombre.replace(/'/g, "\\'") + '\'); return false;">';
+                        html += '<h6 class="mb-1">' + nombre + '</h6>';
+                        if (telefono) html += '<p class="mb-1 small"><i class="fas fa-phone me-1"></i>' + telefono + '</p>';
+                        if (email) html += '<p class="mb-1 small"><i class="fas fa-envelope me-1"></i>' + email + '</p>';
+                        if (direccion) html += '<small><i class="fas fa-map-marker-alt me-1"></i>' + direccion + '</small>';
+                        html += '</a>';
+                    });
+                    html += '</div>';
+                    contenedor.innerHTML = html;
+                },
+                error: function () {
+                    contenedor.innerHTML = '<div class="alert alert-danger">Error al cargar empresas</div>';
+                }
+            });
+        }
+
+        function seleccionarEmpresaCliente(idEmpresa, nombreEmpresa) {
+            var hiddenId = document.querySelector('input[name="idEmpresa"]');
+            var display = document.getElementById('EmpresaNombreDisplay');
+            if (hiddenId) hiddenId.value = idEmpresa;
+            if (display) display.value = nombreEmpresa;
+
+            var modalEl = document.getElementById('modalSeleccionEmpresa');
+            if (modalEl) {
+                var modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+            }
+        }
+
+        function limpiarEmpresaSeleccionada() {
+            var hiddenId = document.querySelector('input[name="idEmpresa"]');
+            var display = document.getElementById('EmpresaNombreDisplay');
+            if (hiddenId) hiddenId.value = '';
+            if (display) display.value = '';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var modalEl = document.getElementById('modalSeleccionEmpresa');
+            if (modalEl) {
+                modalEl.addEventListener('show.bs.modal', function () {
+                    cargarEmpresasCliente('');
+                });
+            }
+
+            var txtBusqueda = document.getElementById('busquedaEmpresaCliente');
+            if (txtBusqueda) {
+                var timeout = null;
+                txtBusqueda.addEventListener('input', function () {
+                    clearTimeout(timeout);
+                    var valor = this.value.trim();
+                    timeout = setTimeout(function () {
+                        cargarEmpresasCliente(valor);
+                    }, 300);
+                });
+            }
+        });
+    </script>
+}

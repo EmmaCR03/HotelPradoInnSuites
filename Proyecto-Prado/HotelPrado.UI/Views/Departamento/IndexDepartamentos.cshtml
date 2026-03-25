@@ -1,150 +1,322 @@
-﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO>
+@model IEnumerable<HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO>
 
-<p>
-    @Html.ActionLink("Crear Departamento", "Create", new { id = ViewBag.IdTipoDeDepartamento }, new { @class = "btn btn-success" })
-</p>
+@{
+    ViewBag.Title = "Gestión de Departamentos";
+}
 
-<!-- Barra de Búsqueda -->
-<input type="text" id="search" class="form-control mb-3" placeholder="Buscar por nombre de departamento...">
-
-<div class="row">
-    @foreach (var item in Model)
+<div class="container-fluid py-4">
+    @if (TempData["MensajeExito"] != null)
     {
-        <div class="col-md-4 mb-4 departamento-item">
-            <div class="border p-3 rounded shadow-sm hover-effect" data-bs-toggle="collapse" data-bs-target="#departamento-@item.IdDepartamento" aria-expanded="false" aria-controls="departamento-@item.IdDepartamento">
-                <h5>@item.Nombre</h5>
-                <p><strong>Cliente:</strong> @item.NombreCliente</p>
-                <p><strong>Precio:</strong> @item.Precio</p>
-            </div>
-
-            <div id="departamento-@item.IdDepartamento" class="collapse">
-                <div class="border p-3 mt-2 rounded shadow-sm">
-                    <p><strong>Descripción:</strong> @item.Descripcion</p>
-                    <p><strong>Habitaciones:</strong> @item.NumeroHabitaciones</p>
-                    <p><strong>Estado:</strong> @item.Estado</p>
-                    <p><strong>Amueblado:</strong> @item.Amueblado</p>
-
-                    <div class="mb-3">
-                        @if (item.ListaImagenes.Any())
-                        {
-                            foreach (var imagenUrl in item.ListaImagenes)
-                            {
-                                <img src="@Url.Content(imagenUrl)" alt="Imagen Departamento" class="lazy" data-src="@Url.Content(imagenUrl)" style="width: 100px; height: 100px; margin-right: 5px;" />
-                            }
-                        }
-                        else
-                        {
-                            <img src="@Url.Content("/imagenes/default.jpg")" alt="Imagen por defecto" class="lazy" data-src="@Url.Content("/imagenes/default.jpg")" style="width: 100px; height: 100px;" />
-                        }
-                    </div>
-
-                    <div class="d-flex justify-content-between m-2">
-                        @Html.ActionLink("Ver Citas Disponibles", "IndexCitas", "Citas", new { id = item.IdDepartamento }, new { @class = "btn btn-outline-primary btn-sm me-2" })
-                        @Html.ActionLink("Detalles", "Details", new { id = item.IdDepartamento }, new { @class = "btn btn-outline-info btn-sm me-2" })
-                    </div>
-
-                    <div class="d-flex justify-content-between mt-2">
-                        @Html.ActionLink("Editar", "Edit", new { IdDepartamento = item.IdDepartamento }, new { @class = "btn btn-outline-warning btn-sm me-2" })
-                        @Html.ActionLink("Editar Imágenes", "EditarImagenes", "Departamento", new { id = item.IdDepartamento }, new { @class = "btn btn-outline-info btn-sm me-2" })
-                    </div>
-                    <div class="d-flex justify-content-end mt-3">
-                        <button class="btn btn-outline-warning btn-sm me-2"
-                                onclick="window.location.href = '/Mantenimiento/Create?IdDepartamento=@item.IdDepartamento'">
-                            Solicitar Mantenimiento
-                        </button>
-
-                    </div>
-
-                    <!-- Botón de Cerrar Información -->
-                    <button type="button" class="btn btn-outline-danger btn-sm mt-2" data-bs-toggle="collapse" data-bs-target="#departamento-@item.IdDepartamento" aria-expanded="false" aria-controls="departamento-@item.IdDepartamento">
-                        Cerrar
-                    </button>
-                </div>
-            </div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["MensajeExito"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold mb-0">
+            <i class="fas fa-building me-2"></i>Departamentos
+        </h2>
+        <div>
+            @Html.ActionLink("Crear Departamento", "Create", new { id = ViewBag.IdTipoDeDepartamento }, new { @class = "btn btn-success shadow-sm" })
+        </div>
+    </div>
+
+    <!-- Barra de Búsqueda -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="input-group">
+                <span class="input-group-text bg-white"><i class="fas fa-search"></i></span>
+                <input type="text" id="search" class="form-control shadow-sm" placeholder="Buscar por número, nombre o estado...">
+            </div>
+        </div>
+        <div class="col-md-6 text-end">
+            <span class="badge bg-secondary fs-6">Total: @Model.Count()</span>
+        </div>
+    </div>
+
+    <!-- Cards de Departamentos -->
+    <div class="row" id="departamentosContainer">
+        @foreach (var item in Model)
+        {
+            var primeraImagen = item.ListaImagenes != null && item.ListaImagenes.Any() 
+                ? item.ListaImagenes.First() 
+                : "/imagenes/default.jpg";
+            
+            var primeraImagenUrl = (primeraImagen ?? "").Contains("|") ? primeraImagen.Split('|')[0].Trim() : primeraImagen;
+            <div class="col-lg-4 col-md-6 mb-4 departamento-item" 
+                 data-nombre="@item.Nombre.ToLower()" 
+                 data-estado="@item.Estado.ToLower()">
+                <div class="card border-0 shadow-sm h-100 departamento-card">
+                    <!-- Imagen Principal -->
+                    <div class="departamento-imagen-container">
+                        <img src="@Url.Content(primeraImagenUrl)" 
+                             alt="@item.Nombre" 
+                             class="card-img-top departamento-imagen"
+                             onerror="this.src='@Url.Content("/imagenes/default.jpg")'">
+                        <div class="departamento-badge-estado">
+                            @if (item.Estado == "Disponible")
+                            {
+                                <span class="badge bg-success">@item.Estado</span>
+                            }
+                            else if (item.Estado == "Ocupado")
+                            {
+                                <span class="badge bg-danger">@item.Estado</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning">@item.Estado</span>
+                            }
+                        </div>
+                        @if (item.ListaImagenes != null && item.ListaImagenes.Count > 1)
+                        {
+                            <div class="departamento-badge-imagenes">
+                                <span class="badge bg-dark"><i class="fas fa-images me-1"></i>@item.ListaImagenes.Count</span>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Contenido del Card -->
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h5 class="card-title mb-1 fw-bold">
+                                    <span class="text-primary">@item.Nombre</span>
+                                </h5>
+                                <p class="text-muted small mb-0">@(item.NumeroHabitaciones) hab. - Sin amueblar</p>
+                            </div>
+                        </div>
+
+                        <div class="departamento-info mb-3">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <small class="text-muted d-block">Precio</small>
+                                    <strong class="text-success">₡@item.Precio.ToString("N0")</strong>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted d-block">Habitaciones</small>
+                                    <strong><i class="fas fa-bed me-1"></i>@item.NumeroHabitaciones</strong>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted d-block">Amueblado</small>
+                                    <span class="badge @(item.Amueblado ? "bg-info" : "bg-secondary")">
+                                        @(item.Amueblado ? "Sí" : "No")
+                                    </span>
+                                </div>
+                                @if (!string.IsNullOrEmpty(item.NombreCliente))
+                                {
+                                    <div class="col-12">
+                                        <small class="text-muted d-block">Cliente</small>
+                                        <strong><i class="fas fa-user me-1"></i>@item.NombreCliente</strong>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Descripción corta -->
+                        @if (!string.IsNullOrEmpty(item.Descripcion))
+                        {
+                            <p class="card-text small text-muted mb-3" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                @item.Descripcion
+                            </p>
+                        }
+                    </div>
+
+                    <!-- Footer con Acciones -->
+                    <div class="card-footer bg-light border-0">
+                        <div class="d-grid gap-2">
+                            <a href="@Url.Action("DetallesAdmin", "Departamento", new { id = item.IdDepartamento })" 
+                               class="btn btn-primary btn-sm">
+                                <i class="fas fa-info-circle me-2"></i>Ver Detalles Completos
+                            </a>
+                            <a href="@Url.Action("AsignarCliente", "Departamento", new { id = item.IdDepartamento })" 
+                               class="btn btn-success btn-sm">
+                                <i class="fas fa-user-plus me-2"></i>Asignar Cliente
+                            </a>
+                            <div class="btn-group" role="group">
+                                <a href="@Url.Action("Edit", "Departamento", new { id = item.IdDepartamento })" 
+                                   class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="@Url.Action("EditarImagenes", "Departamento", new { id = item.IdDepartamento })" 
+                                   class="btn btn-info btn-sm">
+                                    <i class="fas fa-images"></i>
+                                </a>
+                                <a href="@Url.Action("IndexCitas", "Citas", new { id = item.IdDepartamento })" 
+                                   class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-calendar"></i>
+                                </a>
+                                <a href="@Url.Action("Delete", "Departamento", new { id = item.IdDepartamento })" 
+                                   class="btn btn-danger btn-sm" title="Eliminar departamento">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                            <div class="btn-group mt-2" role="group">
+                                <button class="btn btn-outline-warning btn-sm" 
+                                        onclick="window.location.href = '/Mantenimiento/Create?IdDepartamento=@item.IdDepartamento'">
+                                    <i class="fas fa-tools me-1"></i>Mantenimiento
+                                </button>
+                                <button class="btn btn-outline-info btn-sm"
+                                        onclick="window.location.href = '/SolicitudLimpieza/Create?IdDepartamento=@item.IdDepartamento'">
+                                    <i class="fas fa-broom me-1"></i>Limpieza
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon"><i class="fas fa-building"></i></div>
+            <h3 class="empty-state-title">No hay departamentos aún</h3>
+            <p class="empty-state-text">Registra el primer departamento para ofrecerlo en el catálogo y gestionar reservas.</p>
+            <a href="@Url.Action("Create", "Departamento")" class="btn-empty-state"><i class="fas fa-plus"></i> Crear el primero</a>
+        </div>
+    }
+
+    <div id="noResults" class="alert alert-warning text-center mt-4" style="display: none;">
+        <i class="fas fa-search me-2"></i>No se encontraron departamentos que coincidan con la búsqueda.
+    </div>
 </div>
 
-<!-- Scripts para interactividad -->
+<!-- Scripts optimizados -->
 <script>
-    function solicitarMantenimiento(idDepartamento) {
-        window.location.href = `/Mantenimiento/Create?IdDepartamento=${idDepartamento}`;
-    }
-
-    // Filtro de búsqueda
-    document.getElementById("search").addEventListener("input", function () {
-        let filter = this.value.toLowerCase();
-        let items = document.querySelectorAll(".departamento-item");
-
-        items.forEach(function (item) {
-            let nombre = item.querySelector("h5").innerText.toLowerCase();
-            if (nombre.includes(filter)) {
-                item.style.display = "block";
-            } else {
-                item.style.display = "none";
-            }
-        });
-    });
-
-    // Lazy Loading de Imágenes
-    document.addEventListener("DOMContentLoaded", function () {
-        let lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
-
-        if ("IntersectionObserver" in window) {
-            let lazyImageObserver = new IntersectionObserver(function (entries, observer) {
-                entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        let lazyImage = entry.target;
-                        lazyImage.src = lazyImage.dataset.src;
-                        lazyImage.classList.remove("lazy");
-                        lazyImageObserver.unobserve(lazyImage);
-                    }
-                });
-            });
-
-            lazyImages.forEach(function (lazyImage) {
-                lazyImageObserver.observe(lazyImage);
-            });
+    (function() {
+        'use strict';
+        
+        // Cache de elementos
+        const searchInput = document.getElementById('search');
+        const container = document.getElementById('departamentosContainer');
+        const items = container ? container.querySelectorAll('.departamento-item') : [];
+        const noResults = document.getElementById('noResults');
+        
+        // Debounce function para optimizar búsqueda
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
         }
-    });
-
-    // Efecto Hover
-    document.querySelectorAll('.hover-effect').forEach(function (element) {
-        element.addEventListener('mouseover', function () {
-            element.style.transform = 'scale(1.05)';
-            element.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-        });
-        element.addEventListener('mouseout', function () {
-            element.style.transform = 'scale(1)';
-            element.style.boxShadow = 'none';
-        });
-    });
+        
+        // Función de búsqueda optimizada
+        function filtrarDepartamentos() {
+            const filter = searchInput.value.toLowerCase().trim();
+            let visibleCount = 0;
+            
+            items.forEach(function(item) {
+                const nombre = item.getAttribute('data-nombre') || '';
+                const estado = item.getAttribute('data-estado') || '';
+                
+                const match = nombre.includes(filter) || estado.includes(filter);
+                
+                if (match) {
+                    item.style.display = '';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Mostrar/ocultar mensaje de no resultados
+            if (noResults) {
+                if (visibleCount === 0 && filter !== '') {
+                    noResults.style.display = 'block';
+                } else {
+                    noResults.style.display = 'none';
+                }
+            }
+        }
+        
+        // Event listener con debounce
+        if (searchInput) {
+            searchInput.addEventListener('input', debounce(filtrarDepartamentos, 300));
+        }
+    })();
 </script>
 
-<!-- Estilos para hover y botones -->
+<!-- Estilos optimizados -->
 <style>
-    .hover-effect {
-        transition: all 0.3s ease;
+    .departamento-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
     }
-
-        .hover-effect:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-    /* Estilo para el filtro de búsqueda */
-    #search {
-        max-width: 300px;
-        margin-bottom: 20px;
+    
+    .departamento-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.15) !important;
     }
-
-    /* Estilo de los botones */
-    .btn-outline-primary, .btn-outline-info, .btn-outline-warning, .btn-outline-danger {
+    
+    .departamento-imagen-container {
+        position: relative;
+        height: 250px;
+        overflow: hidden;
+        background: #f8f9fa;
+    }
+    
+    .departamento-imagen {
         width: 100%;
-        text-align: center;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
     }
-
-    .me-2 {
-        margin-right: 0.5rem;
+    
+    .departamento-card:hover .departamento-imagen {
+        transform: scale(1.1);
+    }
+    
+    .departamento-badge-estado {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
+    }
+    
+    .departamento-badge-imagenes {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        z-index: 10;
+    }
+    
+    .departamento-info {
+        border-top: 1px solid #e9ecef;
+        padding-top: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .departamento-item {
+        animation: fadeIn 0.4s ease-in;
+    }
+    
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .card-footer .btn-group .btn {
+        flex: 1;
+    }
+    
+    .card-title .text-primary {
+        font-size: 1.25rem;
+    }
+    
+    #search:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
     }
 </style>

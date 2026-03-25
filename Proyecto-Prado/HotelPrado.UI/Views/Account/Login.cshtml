@@ -1,27 +1,162 @@
-﻿@using HotelPrado.UI.Models
+@using HotelPrado.UI.Models
 @model LoginViewModel
 @{
     ViewBag.Title = "Iniciar sesión";
+    Layout = "~/Views/Shared/_LayoutSimple.cshtml";
 }
 
-<main aria-labelledby="title" class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow rounded-4">
-                <div class="card-header bg-dark text-white text-center rounded-top-4">
-                    <h2 id="title" class="mb-0">@ViewBag.Title</h2>
+<style>
+    body {
+        background-image: url('@Url.Content(ViewBag.ImagenFondo as string ?? "/Img/images/login/WhatsApp Image 2025-12-11 at 3.27.01 PM.jpeg")');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+        position: relative;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(5px);
+        z-index: -1;
+    }
+
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 15px;
+    }
+
+    .login-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        overflow: hidden;
+        max-width: 500px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .row {
+        margin: 0;
+    }
+
+    .w-100 {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .login-header {
+        background: linear-gradient(135deg, #3a3a3a, #2a2a2a);
+        color: white;
+        padding: 2.5rem;
+        text-align: center;
+        border-bottom: 3px solid #007bff;
+    }
+
+    .login-header h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .login-body {
+        padding: 2.5rem;
+    }
+
+    .login-body h5 {
+        color: #3a3a3a;
+        font-weight: 600;
+        margin-bottom: 2rem;
+    }
+
+    .form-label {
+        color: #3a3a3a;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .btn-login {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        border: none;
+        padding: 0.75rem 3rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .btn-login:hover {
+        background: linear-gradient(135deg, #0056b3, #004085);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+    }
+
+    .link-register {
+        color: #007bff;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .link-register:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+
+    .form-check-label {
+        color: #3a3a3a;
+        font-weight: 500;
+    }
+</style>
+
+<div class="login-container">
+    <div class="row justify-content-center w-100">
+        <div class="col-12">
+            <div class="login-card">
+                <div class="login-header">
+                    <h2>@ViewBag.Title</h2>
                 </div>
-                <div class="card-body">
+                <div class="login-body">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        @Html.ValidationSummary(false, "", new { @class = "alert alert-danger", role = "alert" })
+                    }
                     <section id="loginForm">
                         @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
                         {
                             @Html.AntiForgeryToken()
                             <h5 class="text-center mb-4">Utilice una cuenta local para iniciar sesión</h5>
 
-                            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
-
                             <div class="mb-3 row">
-                                @Html.LabelFor(m => m.Email, new { @class = "col-md-3 col-form-label text-end" })
+                                <div class="col-md-3">
+                                    @Html.LabelFor(m => m.Email, new { @class = "col-form-label text-end" })
+                                </div>
                                 <div class="col-md-9">
                                     @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Correo electrónico" })
                                     @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
@@ -29,7 +164,9 @@
                             </div>
 
                             <div class="mb-3 row">
-                                @Html.LabelFor(m => m.Password, new { @class = "col-md-3 col-form-label text-end" })
+                                <div class="col-md-3">
+                                    @Html.LabelFor(m => m.Password, new { @class = "col-form-label text-end" })
+                                </div>
                                 <div class="col-md-9">
                                     @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Contraseña" })
                                     @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
@@ -46,12 +183,12 @@
                             </div>
 
                             <div class="text-center mb-3">
-                                <input type="submit" value="Iniciar sesión" class="btn btn-dark px-4 py-2 rounded-pill" />
+                                <input type="submit" value="Iniciar sesión" class="btn btn-login" />
                             </div>
 
                             <div class="text-center">
                                 <p class="mb-1">
-                                    @Html.ActionLink("¿No tiene cuenta? Regístrese aquí", "Register", null, new { @class = "link-secondary" })
+                                    @Html.ActionLink("¿No tiene cuenta? Regístrese aquí", "Register", null, new { @class = "link-register" })
                                 </p>
                                 @* Para habilitar recuperación de contraseña, descomente esta sección
                                     <p>
@@ -64,10 +201,12 @@
                 </div>
             </div>
         </div>
-
     </div>
-</main>
+</div>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 }

@@ -1,0 +1,595 @@
+@model IEnumerable<HotelPrado.Abstracciones.Modelos.Cargos.CargosDTO>
+
+@{
+    ViewBag.Title = "Gestión de Cargos";
+}
+
+<style>
+    .table-container {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        overflow-x: auto;
+    }
+    :root {
+        --hotel-primary: #6D7BB8;
+        --hotel-gold: #D4AF37;
+        --hotel-dark: #2c3e50;
+        --status-activo: #28a745;
+        --status-cancelado: #dc3545;
+    }
+
+    .charges-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: calc(100vh - 200px);
+        padding: 2rem 0;
+    }
+
+    .page-header {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .page-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--hotel-dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-card .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card.activo .stat-number { color: var(--status-activo); }
+    .stat-card.cancelado .stat-number { color: var(--status-cancelado); }
+    .stat-card.total .stat-number { color: var(--hotel-primary); }
+
+    .stat-card .stat-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .filters-bar {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .view-toggle {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .view-toggle button {
+        padding: 0.5rem 1rem;
+        border: 2px solid #dee2e6;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .view-toggle button.active {
+        background: var(--hotel-primary);
+        color: white;
+        border-color: var(--hotel-primary);
+    }
+
+    .charges-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .charge-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border-left: 5px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .charge-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--hotel-primary), var(--hotel-gold));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .charge-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .charge-card:hover::before {
+        opacity: 1;
+    }
+
+    .charge-card.activo { border-left-color: var(--status-activo); }
+    .charge-card.cancelado { border-left-color: var(--status-cancelado); }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 1rem;
+    }
+
+    .card-id {
+        font-size: 0.85rem;
+        color: #6c757d;
+        font-weight: 600;
+    }
+
+    .status-badge {
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-badge.activo {
+        background: #e8f5e9;
+        color: var(--status-activo);
+    }
+
+    .status-badge.activo {
+        background: #fff8e1;
+        color: #f57c00;
+    }
+
+    .status-badge.cancelado {
+        background: #fee;
+        color: var(--status-cancelado);
+    }
+
+    .card-description {
+        color: var(--hotel-dark);
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .card-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .card-info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .card-info-item i {
+        color: var(--hotel-primary);
+        width: 20px;
+    }
+
+    .card-amount {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--hotel-primary);
+        margin-bottom: 1rem;
+        text-align: center;
+        padding: 0.75rem;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 8px;
+    }
+
+    .card-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .btn-card {
+        flex: 1;
+        padding: 0.5rem;
+        border-radius: 8px;
+        border: none;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-card.btn-edit {
+        background: #e3f2fd;
+        color: var(--hotel-primary);
+    }
+
+    .btn-card.btn-edit:hover {
+        background: var(--hotel-primary);
+        color: white;
+    }
+
+    .btn-card.btn-details {
+        background: #f3e5f5;
+        color: #9c27b0;
+    }
+
+    .btn-card.btn-details:hover {
+        background: #9c27b0;
+        color: white;
+    }
+
+    .btn-card.btn-delete {
+        background: #ffebee;
+        color: #c62828;
+    }
+
+    .btn-card.btn-delete:hover {
+        background: #c62828;
+        color: white;
+    }
+
+    .table-view {
+        display: none;
+    }
+
+    .table-view.active {
+        display: block;
+    }
+
+    .grid-view.active {
+        display: grid;
+    }
+
+    .grid-view {
+        display: none;
+    }
+
+    @@media (max-width: 768px) {
+        .charges-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="charges-container">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h1><i class="fas fa-receipt me-2" style="color: var(--hotel-primary);"></i>Gestión de Cargos</h1>
+                    <p class="text-muted mb-0">Administra y monitorea todos los cargos del hotel</p>
+                </div>
+                <a href="@Url.Action("Create")" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus-circle me-2"></i>Nuevo Cargo
+                </a>
+            </div>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="stats-grid">
+            <div class="stat-card activo">
+                <div class="stat-number" id="count-activo">0</div>
+                <div class="stat-label">Activos</div>
+            </div>
+            <div class="stat-card cancelado">
+                <div class="stat-number" id="count-cancelado">0</div>
+                <div class="stat-label">Cancelados</div>
+            </div>
+            <div class="stat-card total">
+                <div class="stat-number" id="count-total">0</div>
+                <div class="stat-label">Total</div>
+            </div>
+        </div>
+
+        <!-- Filtros y Vista -->
+        <div class="filters-bar">
+            <div class="view-toggle">
+                <button class="active" onclick="toggleView('grid')" id="btn-grid">
+                    <i class="fas fa-th-large me-2"></i>Tarjetas
+                </button>
+                <button onclick="toggleView('table')" id="btn-table">
+                    <i class="fas fa-table me-2"></i>Tabla
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Filtrar por Estado</label>
+                    <select class="form-select" id="filter-estado" onchange="filterCharges()">
+                        <option value="">Todos los estados</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Cancelado">Cancelado</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Buscar</label>
+                    <input type="text" class="form-control" id="search-input" placeholder="Buscar por descripción, cliente o ID..." onkeyup="filterCharges()">
+                </div>
+                <div class="col-md-4 mb-3 d-flex align-items-end">
+                    <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                        <i class="fas fa-times me-2"></i>Limpiar Filtros
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <div class="empty-state-icon"><i class="fas fa-receipt"></i></div>
+                <h3 class="empty-state-title">No hay cargos aún</h3>
+                <p class="empty-state-text">Los cargos adicionales se registran desde check-in o manualmente. Aquí aparecerán cuando existan.</p>
+                <a href="@Url.Action("Create", "Cargos")" class="btn-empty-state"><i class="fas fa-plus"></i> Crear el primero</a>
+            </div>
+        }
+        else
+        {
+        <!-- Vista de Tarjetas -->
+        <div class="grid-view active" id="grid-view">
+            <div class="charges-grid" id="charges-grid">
+                @foreach (var item in Model)
+                {
+                    var estadoClass = item.Cancelado == true ? "cancelado" : "activo";
+                    var estadoTexto = item.Cancelado == true ? "Cancelado" : "Activo";
+                    <div class="charge-card @estadoClass" data-estado="@estadoTexto" data-descripcion="@(item.DescripcionExtra?.ToLower() ?? "")" data-cliente="@(item.ClienteNombre?.ToLower() ?? "")" data-id="@item.IdCargo">
+                        <div class="card-header">
+                            <span class="card-id">#@item.IdCargo</span>
+                            <span class="status-badge @estadoClass">@estadoTexto</span>
+                        </div>
+                        <div class="card-description">
+                            <strong>@(item.DescripcionExtra ?? "Sin descripción")</strong>
+                        </div>
+                        <div class="card-info">
+                            @if (item.IdCheckIn.HasValue)
+                            {
+                                <div class="card-info-item">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <span>Check-In: #@item.IdCheckIn</span>
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(item.ClienteNombre))
+                            {
+                                <div class="card-info-item">
+                                    <i class="fas fa-user"></i>
+                                    <span>@item.ClienteNombre</span>
+                                </div>
+                            }
+                            @if (item.FechaHora.HasValue)
+                            {
+                                <div class="card-info-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>@item.FechaHora.Value.ToString("dd/MM/yyyy HH:mm")</span>
+                                </div>
+                            }
+                        </div>
+                        <div class="card-amount">
+                            ₡@(item.MontoTotal?.ToString("N2") ?? "0.00")
+                        </div>
+                        <div class="card-actions">
+                            <a href="@Url.Action("Edit", new { id = item.IdCargo })" class="btn-card btn-edit">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <a href="@Url.Action("Details", new { id = item.IdCargo })" class="btn-card btn-details">
+                                <i class="fas fa-info-circle"></i> Detalles
+                            </a>
+                            <a href="@Url.Action("Delete", new { id = item.IdCargo })" class="btn-card btn-delete">
+                                <i class="fas fa-trash-alt"></i> Eliminar
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Vista de Tabla -->
+        <div class="table-view" id="table-view">
+            <div class="table-container">
+                <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Descripción</th>
+                                    <th>Check-In</th>
+                                    <th>Cliente</th>
+                                    <th>Monto Total</th>
+                                    <th>Fecha/Hora</th>
+                                    <th>Estado</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                @foreach (var item in Model)
+                                {
+                                    var estadoClass = item.Cancelado == true ? "cancelado" : "activo";
+                                    var estadoTexto = item.Cancelado == true ? "Cancelado" : "Activo";
+                                    <tr class="table-row" data-estado="@estadoTexto" data-descripcion="@(item.DescripcionExtra?.ToLower() ?? "")" data-cliente="@(item.ClienteNombre?.ToLower() ?? "")" data-id="@item.IdCargo">
+                                        <td data-label="ID">#@item.IdCargo</td>
+                                        <td data-label="Descripción">@(item.DescripcionExtra ?? "Sin descripción")</td>
+                                        <td data-label="Check-In">
+                                            @if (item.IdCheckIn.HasValue)
+                                            {
+                                                <span class="badge bg-info">#@item.IdCheckIn</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">N/A</span>
+                                            }
+                                        </td>
+                                        <td data-label="Cliente">@(item.ClienteNombre ?? "N/A")</td>
+                                        <td class="text-currency" data-label="Monto Total">₡@(item.MontoTotal?.ToString("N2") ?? "0.00")</td>
+                                        <td data-label="Fecha/Hora">
+                                            @if (item.FechaHora.HasValue)
+                                            {
+                                                @item.FechaHora.Value.ToString("dd/MM/yyyy HH:mm")
+                                            }
+                                            else
+                                            {
+                                                <text>N/A</text>
+                                            }
+                                        </td>
+                                        <td data-label="Estado">
+                                            <span class="status-badge @estadoClass">@estadoTexto</span>
+                                        </td>
+                                        <td class="text-center" data-label="Acciones">
+                                            <div class="btn-group" role="group">
+                                                <a href="@Url.Action("Edit", new { id = item.IdCargo })" class="btn btn-sm btn-outline-primary" title="Editar">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="@Url.Action("Details", new { id = item.IdCargo })" class="btn btn-sm btn-outline-info" title="Detalles">
+                                                    <i class="fas fa-info-circle"></i>
+                                                </a>
+                                                <a href="@Url.Action("Delete", new { id = item.IdCargo })" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                </table>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Calcular estadísticas
+        function updateStats() {
+            const cards = document.querySelectorAll('.charge-card');
+            let activo = 0, cancelado = 0;
+
+            cards.forEach(card => {
+                if (card.style.display !== 'none') {
+                    const estado = card.dataset.estado?.toLowerCase();
+                    if (estado === 'activo') activo++;
+                    else if (estado === 'cancelado') cancelado++;
+                }
+            });
+
+            document.getElementById('count-activo').textContent = activo;
+            document.getElementById('count-cancelado').textContent = cancelado;
+            document.getElementById('count-total').textContent = activo + cancelado;
+        }
+
+        // Cambiar vista
+        function toggleView(view) {
+            if (view === 'grid') {
+                document.getElementById('grid-view').classList.add('active');
+                document.getElementById('table-view').classList.remove('active');
+                document.getElementById('btn-grid').classList.add('active');
+                document.getElementById('btn-table').classList.remove('active');
+            } else {
+                document.getElementById('grid-view').classList.remove('active');
+                document.getElementById('table-view').classList.add('active');
+                document.getElementById('btn-grid').classList.remove('active');
+                document.getElementById('btn-table').classList.add('active');
+            }
+            filterCharges();
+        }
+
+        // Filtrar cargos
+        function filterCharges() {
+            const estadoFilter = document.getElementById('filter-estado').value.toLowerCase();
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+            // Filtrar tarjetas
+            const cards = document.querySelectorAll('.charge-card');
+            cards.forEach(card => {
+                const estado = card.dataset.estado?.toLowerCase() || '';
+                const descripcion = card.dataset.descripcion || '';
+                const cliente = card.dataset.cliente || '';
+                const id = card.dataset.id || '';
+
+                const matchEstado = !estadoFilter || estado.includes(estadoFilter);
+                const matchSearch = !searchTerm || descripcion.includes(searchTerm) || cliente.includes(searchTerm) || id.includes(searchTerm);
+
+                card.style.display = (matchEstado && matchSearch) ? 'block' : 'none';
+            });
+
+            // Filtrar filas de tabla
+            const rows = document.querySelectorAll('.table-row');
+            rows.forEach(row => {
+                const estado = row.dataset.estado?.toLowerCase() || '';
+                const descripcion = row.dataset.descripcion || '';
+                const cliente = row.dataset.cliente || '';
+                const id = row.dataset.id || '';
+
+                const matchEstado = !estadoFilter || estado.includes(estadoFilter);
+                const matchSearch = !searchTerm || descripcion.includes(searchTerm) || cliente.includes(searchTerm) || id.includes(searchTerm);
+
+                row.style.display = (matchEstado && matchSearch) ? '' : 'none';
+            });
+
+            updateStats();
+        }
+
+        // Limpiar filtros
+        function clearFilters() {
+            document.getElementById('filter-estado').value = '';
+            document.getElementById('search-input').value = '';
+            filterCharges();
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+        });
+    </script>
+}

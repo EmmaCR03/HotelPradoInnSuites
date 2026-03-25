@@ -1,0 +1,109 @@
+@model HotelPrado.Abstracciones.Modelos.Cargos.CargosDTO
+
+@{
+    ViewBag.Title = "Eliminar Cargo";
+}
+
+<style>
+    .card {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,.08);
+    }
+
+    .alert-warning {
+        background-color: #fff3cd;
+        border-color: #ffc107;
+        color: #856404;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #6c757d;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .detail-value {
+        font-size: 1em;
+        color: #212529;
+        margin-bottom: 1.5rem;
+    }
+</style>
+
+<div class="container-fluid px-4">
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">Eliminar Cargo</h2>
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Volver
+                </a>
+            </div>
+
+            <div class="alert alert-warning" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>¿Está seguro que desea eliminar este cargo?</strong> Esta acción no se puede deshacer.
+            </div>
+
+            <div class="card">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="detail-label">ID Cargo</div>
+                                <div class="detail-value">@Html.DisplayFor(model => model.IdCargo)</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="detail-label">Descripción</div>
+                                <div class="detail-value">@(Model.DescripcionExtra ?? "N/A")</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="detail-label">Monto Total</div>
+                                <div class="detail-value">
+                                    <strong class="text-danger">₡@(Model.MontoTotal?.ToString("N2") ?? "0.00")</strong>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="detail-label">Fecha y Hora</div>
+                                <div class="detail-value">
+                                    @if (Model.FechaHora.HasValue)
+                                    {
+                                        @Model.FechaHora.Value.ToString("dd/MM/yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <text>N/A</text>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.IdCargo)
+
+                        <div class="mt-4 d-flex gap-2 justify-content-end">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash-alt me-2"></i>Eliminar
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

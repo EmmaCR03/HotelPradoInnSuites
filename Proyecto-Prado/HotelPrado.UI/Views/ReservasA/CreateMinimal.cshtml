@@ -1,0 +1,82 @@
+@model HotelPrado.Abstracciones.Modelos.Reservas.ReservasDTO
+@{
+    ViewBag.Title = "Nueva reserva (formulario simple)";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .create-reserva-wrap { max-width: 600px; margin: 0 auto 2rem; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    .create-reserva-wrap h2 { margin-top: 0; }
+    .create-reserva-wrap .form-group { margin-bottom: 1rem; }
+    .create-reserva-wrap .help-block { font-size: 0.85em; color: #6c757d; }
+</style>
+
+<div class="create-reserva-wrap">
+    <h2>Nueva reserva (formulario simple)</h2>
+    <p class="text-muted">Use este formulario si el completo no carga en el servidor. Campos obligatorios.</p>
+
+    @if (ViewBag.ErrorMessageCreate != null)
+    {
+        <div class="alert alert-warning small">@ViewBag.ErrorMessageCreate</div>
+    }
+
+    @using (Html.BeginForm("Create", "ReservasA", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(m => m.IdCliente)
+
+        <div class="form-group">
+            <label class="control-label">Nombre del cliente</label>
+            @Html.TextBoxFor(m => m.NombreCliente, new { @class = "form-control", placeholder = "Nombre completo" })
+            @Html.ValidationMessageFor(m => m.NombreCliente, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Cantidad de personas</label>
+            @Html.TextBoxFor(m => m.cantidadPersonas, new { @class = "form-control", type = "number", min = "1", value = Model?.cantidadPersonas ?? 1 })
+            @Html.ValidationMessageFor(m => m.cantidadPersonas, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Fecha entrada</label>
+            @Html.TextBoxFor(m => m.FechaInicio, new { @class = "form-control", type = "date" })
+            @Html.ValidationMessageFor(m => m.FechaInicio, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Fecha salida</label>
+            @Html.TextBoxFor(m => m.FechaFinal, new { @class = "form-control", type = "date" })
+            @Html.ValidationMessageFor(m => m.FechaFinal, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">ID de habitación</label>
+            @Html.TextBoxFor(m => m.IdHabitacion, new { @class = "form-control", type = "number", min = "1", placeholder = "Ej: 1" })
+            <span class="help-block">Número de ID de la habitación en el sistema.</span>
+            @Html.ValidationMessageFor(m => m.IdHabitacion, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Estado</label>
+            @Html.DropDownListFor(m => m.EstadoReserva,
+                new List<SelectListItem> {
+                    new SelectListItem { Text = "Pendiente", Value = "Pendiente", Selected = true },
+                    new SelectListItem { Text = "Realizado", Value = "Realizado" }
+                },
+                new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Monto total</label>
+            @Html.TextBoxFor(m => m.MontoTotal, new { @class = "form-control", type = "number", step = "0.01", min = "0", placeholder = "0.00" })
+            @Html.ValidationMessageFor(m => m.MontoTotal, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Crear reserva</button>
+        </div>
+    }
+
+    @Html.ActionLink("Volver al listado", "IndexReservasA", null, new { @class = "btn btn-secondary btn-sm" })
+</div>

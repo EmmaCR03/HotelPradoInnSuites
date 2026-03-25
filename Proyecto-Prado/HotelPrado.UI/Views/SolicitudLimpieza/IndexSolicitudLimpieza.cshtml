@@ -1,0 +1,907 @@
+@model IEnumerable<HotelPrado.Abstracciones.Modelos.SolicitudLimpieza.SolicitudLimpiezaDTO>
+
+@{
+    ViewBag.Title = "Solicitudes de Limpieza";
+}
+
+<style>
+    :root {
+        --hotel-primary: #6D7BB8;
+        --hotel-gold: #D4AF37;
+        --hotel-dark: #2c3e50;
+        --status-pendiente: #dc3545;
+        --status-proceso: #ffc107;
+        --status-completado: #28a745;
+        --urgent: #e91e63;
+    }
+
+    .cleaning-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: calc(100vh - 200px);
+        padding: 2rem 0;
+    }
+
+    .page-header {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .page-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--hotel-dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .priority-banner {
+        background: linear-gradient(135deg, var(--urgent), #f06292);
+        color: white;
+        padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3);
+    }
+
+    .priority-banner h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-card .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card.pendiente .stat-number { color: var(--status-pendiente); }
+    .stat-card.proceso .stat-number { color: var(--status-proceso); }
+    .stat-card.completado .stat-number { color: var(--status-completado); }
+
+    .stat-card .stat-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .filters-bar {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .cleaning-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .cleaning-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border-left: 5px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cleaning-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--hotel-primary), var(--hotel-gold));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .cleaning-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .cleaning-card:hover::before {
+        opacity: 1;
+    }
+
+    .cleaning-card.pendiente { 
+        border-left-color: var(--status-pendiente);
+        background: linear-gradient(to right, #fff5f5 0%, white 5%);
+    }
+    .cleaning-card.proceso { 
+        border-left-color: var(--status-proceso);
+        background: linear-gradient(to right, #fffef5 0%, white 5%);
+    }
+    .cleaning-card.completado { 
+        border-left-color: var(--status-completado);
+        background: linear-gradient(to right, #f5fff5 0%, white 5%);
+    }
+
+    .cleaning-card.urgent {
+        border-left-width: 8px;
+        animation: pulse-border 2s infinite;
+    }
+
+    @@keyframes pulse-border {
+        0%, 100% { border-left-color: var(--urgent); }
+        50% { border-left-color: #ff4081; }
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 1rem;
+    }
+
+    .card-id {
+        font-size: 0.85rem;
+        color: #6c757d;
+        font-weight: 600;
+    }
+
+    .status-badge {
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-badge.pendiente {
+        background: #fee;
+        color: var(--status-pendiente);
+    }
+
+    .status-badge.proceso {
+        background: #fff8e1;
+        color: #f57c00;
+    }
+
+    .status-badge.completado {
+        background: #e8f5e9;
+        color: var(--status-completado);
+    }
+
+    .urgent-badge {
+        background: var(--urgent);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        margin-left: 0.5rem;
+    }
+
+    .card-description {
+        color: var(--hotel-dark);
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .card-location {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+        padding: 0.75rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .card-location i {
+        color: var(--hotel-primary);
+        font-size: 1.1rem;
+    }
+
+    .card-time {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6c757d;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+    }
+
+    .card-time i {
+        color: var(--hotel-gold);
+    }
+
+    .card-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .btn-card {
+        flex: 1;
+        padding: 0.6rem;
+        border-radius: 8px;
+        border: none;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-weight: 600;
+    }
+
+    .btn-card.btn-start {
+        background: linear-gradient(135deg, var(--hotel-primary), #8a9dd4);
+        color: white;
+    }
+
+    .btn-card.btn-start:hover {
+        background: linear-gradient(135deg, #5a6ba8, var(--hotel-primary));
+        transform: scale(1.05);
+    }
+
+    .btn-card.btn-complete {
+        background: linear-gradient(135deg, var(--status-completado), #66bb6a);
+        color: white;
+    }
+
+    .btn-card.btn-complete:hover {
+        background: linear-gradient(135deg, #1b5e20, var(--status-completado));
+        transform: scale(1.05);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: #dee2e6;
+        margin-bottom: 1rem;
+    }
+
+    @@media (max-width: 768px) {
+        .cleaning-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="cleaning-container">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h1><i class="fas fa-broom me-2" style="color: var(--hotel-primary);"></i>Solicitudes de Limpieza</h1>
+                    <p class="text-muted mb-0">Gestiona y completa las solicitudes de limpieza del hotel</p>
+                </div>
+                <a href="@Url.Action("Create")" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus-circle me-2"></i>Nueva Solicitud
+                </a>
+            </div>
+        </div>
+
+        <!-- Banner de Urgencia -->
+        @{
+            var pendientesUrgentes = Model?.Where(m => m.Estado == "Pendiente").Count() ?? 0;
+        }
+        @if (pendientesUrgentes > 0)
+        {
+            <div class="priority-banner">
+                <h3>
+                    <i class="fas fa-exclamation-triangle"></i>
+                    @pendientesUrgentes solicitud(es) pendiente(s) requieren atención
+                </h3>
+            </div>
+        }
+
+        <!-- Estadísticas -->
+        <div class="stats-grid">
+            <div class="stat-card pendiente">
+                <div class="stat-number" id="count-pendiente">0</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+            <div class="stat-card proceso">
+                <div class="stat-number" id="count-proceso">0</div>
+                <div class="stat-label">En Proceso</div>
+            </div>
+            <div class="stat-card completado">
+                <div class="stat-number" id="count-completado">0</div>
+                <div class="stat-label">Completadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="count-total">0</div>
+                <div class="stat-label">Total</div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters-bar">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label"><i class="fas fa-filter me-2"></i>Filtrar por Estado</label>
+                    <select class="form-select" id="filter-estado" onchange="filterCleaning()">
+                        <option value="">Todos los estados</option>
+                        <option value="Pendiente">Pendiente (Prioridad)</option>
+                        <option value="En Proceso">En Proceso</option>
+                        <option value="Completado">Completadas</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label"><i class="fas fa-search me-2"></i>Buscar</label>
+                    <input type="text" class="form-control" id="search-input" placeholder="Buscar por ubicación o descripción..." onkeyup="filterCleaning()">
+                </div>
+                <div class="col-md-4 mb-3 d-flex align-items-end">
+                    <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                        <i class="fas fa-times me-2"></i>Limpiar Filtros
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid de Solicitudes -->
+        @if (Model != null && Model.Any())
+        {
+            <div class="cleaning-grid" id="cleaning-grid">
+                @foreach (var item in Model.OrderByDescending(x => x.Estado == "Pendiente").ThenBy(x => x.FechaSolicitud))
+                {
+                    var estadoClass = item.Estado?.ToLower().Replace(" ", "") ?? "pendiente";
+                    var isUrgent = item.Estado == "Pendiente";
+                    var tiempoTranscurrido = item.FechaSolicitud.HasValue ? (DateTime.Now - item.FechaSolicitud.Value).TotalHours : 0;
+                    var esUrgente = tiempoTranscurrido > 2; // Más de 2 horas = urgente
+                    
+                    <div class="cleaning-card @estadoClass @(isUrgent && esUrgente ? "urgent" : "")" 
+                         data-estado="@item.Estado" 
+                         data-descripcion="@item.Descripcion?.ToLower()" 
+                         data-ubicacion="@((item.DepartamentoNombre ?? item.HabitacionNombre ?? "").ToLower())">
+                        <div class="card-header">
+                            <span class="card-id">#@item.IdSolicitudLimpieza</span>
+                            <div>
+                                <span class="status-badge @estadoClass">@item.Estado</span>
+                                @if (isUrgent && esUrgente)
+                                {
+                                    <span class="urgent-badge">URGENTE</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-description">
+                            <strong>@item.Descripcion</strong>
+                        </div>
+                        <div class="card-location">
+                            @if (!string.IsNullOrEmpty(item.DepartamentoNombre))
+                            {
+                                <i class="fas fa-building"></i>
+                                <span><strong>Departamento:</strong> @item.DepartamentoNombre</span>
+                            }
+                            else if (!string.IsNullOrEmpty(item.HabitacionNombre))
+                            {
+                                <i class="fas fa-bed"></i>
+                                <span><strong>Habitación:</strong> @item.HabitacionNombre</span>
+                            }
+                            else
+                            {
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span class="text-muted">Sin ubicación asignada</span>
+                            }
+                        </div>
+                        @if (item.FechaSolicitud.HasValue)
+                        {
+                            <div class="card-time">
+                                <i class="fas fa-clock"></i>
+                                <span>Solicitado: @item.FechaSolicitud.Value.ToString("dd/MM/yyyy HH:mm")</span>
+                                @if (tiempoTranscurrido > 0)
+                                {
+                                    <span class="ms-2 text-muted">
+                                        (@Math.Round(tiempoTranscurrido, 1)h atrás)
+                                    </span>
+                                }
+                            </div>
+                        }
+                        <div class="card-actions">
+                            @if (item.Estado == "Pendiente")
+                            {
+                                <button onclick="cambiarEstado(@item.IdSolicitudLimpieza, 'En Proceso', this)" class="btn-card btn-start" data-id="@item.IdSolicitudLimpieza">
+                                    <i class="fas fa-play"></i> Iniciar
+                                </button>
+                                <a href="@Url.Action("Edit", new { id = item.IdSolicitudLimpieza })" class="btn-card" style="background: #e9ecef; color: var(--hotel-dark); flex: 0.5;">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            }
+                            else if (item.Estado == "En Proceso")
+                            {
+                                <button onclick="cambiarEstado(@item.IdSolicitudLimpieza, 'Completado', this)" class="btn-card btn-complete" data-id="@item.IdSolicitudLimpieza">
+                                    <i class="fas fa-check"></i> Completar
+                                </button>
+                                <button onclick="cambiarEstado(@item.IdSolicitudLimpieza, 'Pendiente', this)" class="btn-card" style="background: #fff3cd; color: #856404; flex: 0.5;" title="Volver a Pendiente">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <a href="@Url.Action("Edit", new { id = item.IdSolicitudLimpieza })" class="btn-card" style="background: #e9ecef; color: var(--hotel-dark); flex: 0.5;">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="btn-card" style="background: #e8f5e9; color: var(--status-completado); cursor: default; flex: 1;">
+                                    <i class="fas fa-check-circle"></i> Completada
+                                </span>
+                                <button onclick="cambiarEstado(@item.IdSolicitudLimpieza, 'Pendiente', this)" class="btn-card" style="background: #fff3cd; color: #856404; flex: 0.5;" title="Reabrir">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                                <a href="@Url.Action("Edit", new { id = item.IdSolicitudLimpieza })" class="btn-card" style="background: #e9ecef; color: var(--hotel-dark); flex: 0.5;">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-state-icon"><i class="fas fa-broom"></i></div>
+                <h3 class="empty-state-title">No hay solicitudes de limpieza</h3>
+                <p class="empty-state-text">Crea una solicitud cuando una habitación o departamento requiera limpieza.</p>
+                <a href="@Url.Action("Create", "SolicitudLimpieza")" class="btn-empty-state"><i class="fas fa-plus"></i> Crear la primera</a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Calcular estadísticas
+        function updateStats() {
+            const cards = document.querySelectorAll('.cleaning-card');
+            let pendiente = 0, proceso = 0, completado = 0;
+
+            cards.forEach(card => {
+                if (card.style.display !== 'none') {
+                    const estado = card.dataset.estado?.toLowerCase().replace(' ', '');
+                    if (estado === 'pendiente') pendiente++;
+                    else if (estado === 'proceso') proceso++;
+                    else if (estado === 'completado') completado++;
+                }
+            });
+
+            document.getElementById('count-pendiente').textContent = pendiente;
+            document.getElementById('count-proceso').textContent = proceso;
+            document.getElementById('count-completado').textContent = completado;
+            document.getElementById('count-total').textContent = pendiente + proceso + completado;
+        }
+
+        // Filtrar solicitudes
+        function filterCleaning() {
+            const estadoFilter = document.getElementById('filter-estado').value.toLowerCase();
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+            const cards = document.querySelectorAll('.cleaning-card');
+            cards.forEach(card => {
+                const estado = card.dataset.estado?.toLowerCase() || '';
+                const descripcion = card.dataset.descripcion || '';
+                const ubicacion = card.dataset.ubicacion || '';
+
+                const matchEstado = !estadoFilter || estado.includes(estadoFilter);
+                const matchSearch = !searchTerm || descripcion.includes(searchTerm) || ubicacion.includes(searchTerm);
+
+                card.style.display = (matchEstado && matchSearch) ? 'block' : 'none';
+            });
+
+            updateStats();
+        }
+
+        // Limpiar filtros
+        function clearFilters() {
+            document.getElementById('filter-estado').value = '';
+            document.getElementById('search-input').value = '';
+            filterCleaning();
+        }
+
+        // Cambiar estado directamente sin recargar página
+        function cambiarEstado(id, nuevoEstado, boton) {
+            // Mostrar modal bonito en lugar de confirm
+            mostrarModalConfirmacion(id, nuevoEstado, boton);
+        }
+
+        // Función para mostrar modal de confirmación bonito
+        function mostrarModalConfirmacion(id, nuevoEstado, boton) {
+            // Remover modal existente si hay
+            const existingModal = document.getElementById('modalConfirmacionEstado');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            // Determinar información según el estado
+            let titulo = '';
+            let icono = '';
+            let color = '';
+            let mensaje = '';
+            let descripcion = '';
+
+            if (nuevoEstado === 'En Proceso') {
+                titulo = 'Iniciar Limpieza';
+                icono = 'fa-play-circle';
+                color = 'bg-primary';
+                mensaje = '¿Desea iniciar la limpieza de esta solicitud?';
+                descripcion = 'Al iniciar la limpieza, la solicitud cambiará a estado "En Proceso" y se registrará la hora de inicio.';
+            } else if (nuevoEstado === 'Completado') {
+                titulo = 'Completar Limpieza';
+                icono = 'fa-check-circle';
+                color = 'bg-success';
+                mensaje = '¿Desea marcar esta limpieza como completada?';
+                descripcion = 'Al completar la limpieza, la solicitud se marcará como finalizada y la habitación estará disponible.';
+            } else {
+                titulo = 'Cambiar Estado';
+                icono = 'fa-exchange-alt';
+                color = 'bg-warning';
+                mensaje = `¿Desea cambiar el estado a "${nuevoEstado}"?`;
+                descripcion = 'Se actualizará el estado de la solicitud de limpieza.';
+            }
+
+            // Crear modal
+            const modal = document.createElement('div');
+            modal.id = 'modalConfirmacionEstado';
+            modal.className = 'modal fade';
+            modal.setAttribute('tabindex', '-1');
+            modal.setAttribute('aria-labelledby', 'modalConfirmacionEstadoLabel');
+            modal.setAttribute('aria-hidden', 'true');
+
+            modal.innerHTML = `
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+                        <div class="modal-header ${color} text-white border-0">
+                            <h5 class="modal-title" id="modalConfirmacionEstadoLabel">
+                                <i class="fas ${icono} me-2"></i>${titulo}
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center py-4" style="padding: 2rem;">
+                            <div class="mb-4">
+                                <i class="fas ${icono} fa-4x" style="color: var(--hotel-primary);"></i>
+                            </div>
+                            <h5 class="mb-3">${mensaje}</h5>
+                            <div class="alert alert-info text-start" style="background: #f0f4ff; border: 1px solid #c3cfe2; border-radius: 8px;">
+                                <p class="mb-2"><strong><i class="fas fa-info-circle me-2"></i>Información:</strong></p>
+                                <p class="mb-0">${descripcion}</p>
+                            </div>
+                            <p class="text-muted small mt-3">
+                                <i class="fas fa-clock me-1"></i>Fecha: ${new Date().toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                            </p>
+                        </div>
+                        <div class="modal-footer border-0 justify-content-center" style="padding: 1.5rem;">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 8px; padding: 0.6rem 1.5rem;">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </button>
+                            <button type="button" class="btn ${color === 'bg-primary' ? 'btn-primary' : color === 'bg-success' ? 'btn-success' : 'btn-warning'} text-white" id="btnConfirmarCambioEstado" style="border-radius: 8px; padding: 0.6rem 1.5rem;">
+                                <i class="fas fa-check me-2"></i>Confirmar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Mostrar modal
+            let modalInstance = null;
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                modalInstance = new bootstrap.Modal(modal);
+                modalInstance.show();
+            } else {
+                modal.style.display = 'block';
+                modal.classList.add('show');
+                const backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop fade show';
+                backdrop.id = 'modalConfirmacionBackdrop';
+                document.body.appendChild(backdrop);
+            }
+
+            // Manejar confirmación
+            const btnConfirmar = document.getElementById('btnConfirmarCambioEstado');
+            if (btnConfirmar) {
+                btnConfirmar.addEventListener('click', function() {
+                    // Cerrar modal
+                    if (modalInstance) {
+                        modalInstance.hide();
+                    } else {
+                        modal.style.display = 'none';
+                        modal.classList.remove('show');
+                        const backdrop = document.getElementById('modalConfirmacionBackdrop');
+                        if (backdrop) backdrop.remove();
+                    }
+
+                    // Proceder con el cambio de estado
+                    procesarCambioEstado(id, nuevoEstado, boton);
+                });
+            }
+
+            // Cerrar modal al hacer click fuera
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    if (modalInstance) {
+                        modalInstance.hide();
+                    } else {
+                        modal.style.display = 'none';
+                        modal.classList.remove('show');
+                        const backdrop = document.getElementById('modalConfirmacionBackdrop');
+                        if (backdrop) backdrop.remove();
+                    }
+                }
+            });
+        }
+
+        // Función para procesar el cambio de estado
+        function procesarCambioEstado(id, nuevoEstado, boton) {
+            // Deshabilitar botón mientras se procesa
+            boton.disabled = true;
+            const textoOriginal = boton.innerHTML;
+            boton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualizando...';
+
+            $.ajax({
+                url: '@Url.Action("CambiarEstado", "SolicitudLimpieza")',
+                type: 'POST',
+                data: {
+                    id: id,
+                    nuevoEstado: nuevoEstado
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Actualizar la tarjeta visualmente
+                        const card = boton.closest('.cleaning-card');
+                        card.dataset.estado = nuevoEstado;
+                        
+                        // Actualizar badge de estado
+                        const badge = card.querySelector('.status-badge');
+                        badge.textContent = nuevoEstado;
+                        badge.className = 'status-badge ' + nuevoEstado.toLowerCase().replace(' ', '');
+                        
+                        // Actualizar clase de la tarjeta
+                        card.className = 'cleaning-card ' + nuevoEstado.toLowerCase().replace(' ', '');
+                        
+                        // Actualizar acciones según nuevo estado
+                        actualizarAcciones(card, id, nuevoEstado);
+                        
+                        // Actualizar estadísticas
+                        updateStats();
+                        
+                        // Mostrar mensaje de éxito con modal bonito
+                        mostrarModalExito('Estado actualizado correctamente', nuevoEstado);
+                    } else {
+                        mostrarMensaje(response.message || 'Error al actualizar el estado', 'error');
+                        boton.disabled = false;
+                        boton.innerHTML = textoOriginal;
+                    }
+                },
+                error: function() {
+                    mostrarMensaje('Error al comunicarse con el servidor', 'error');
+                    boton.disabled = false;
+                    boton.innerHTML = textoOriginal;
+                }
+            });
+        }
+
+        // Función para mostrar modal de éxito bonito
+        function mostrarModalExito(mensaje, nuevoEstado) {
+            // Remover modal existente si hay
+            const existingModal = document.getElementById('modalExitoEstado');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            let titulo = nuevoEstado === 'En Proceso' ? 'Limpieza Iniciada' : nuevoEstado === 'Completado' ? 'Limpieza Completada' : 'Estado Actualizado';
+            let icono = nuevoEstado === 'En Proceso' ? 'fa-play-circle' : nuevoEstado === 'Completado' ? 'fa-check-circle' : 'fa-check';
+            let color = nuevoEstado === 'En Proceso' ? 'bg-primary' : nuevoEstado === 'Completado' ? 'bg-success' : 'bg-info';
+
+            // Crear modal
+            const modal = document.createElement('div');
+            modal.id = 'modalExitoEstado';
+            modal.className = 'modal fade';
+            modal.setAttribute('tabindex', '-1');
+            modal.setAttribute('aria-labelledby', 'modalExitoEstadoLabel');
+            modal.setAttribute('aria-hidden', 'true');
+
+            modal.innerHTML = `
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+                        <div class="modal-header ${color} text-white border-0">
+                            <h5 class="modal-title" id="modalExitoEstadoLabel">
+                                <i class="fas ${icono} me-2"></i>${titulo}
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center py-4" style="padding: 2rem;">
+                            <div class="mb-4">
+                                <i class="fas ${icono} fa-4x" style="color: var(--hotel-primary);"></i>
+                            </div>
+                            <h5 class="mb-3">${mensaje}</h5>
+                            <p class="text-muted small mt-3">
+                                <i class="fas fa-clock me-1"></i>${new Date().toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                            </p>
+                        </div>
+                        <div class="modal-footer border-0 justify-content-center" style="padding: 1.5rem;">
+                            <button type="button" class="btn ${color === 'bg-primary' ? 'btn-primary' : color === 'bg-success' ? 'btn-success' : 'btn-info'} text-white" data-bs-dismiss="modal" style="border-radius: 8px; padding: 0.6rem 1.5rem;">
+                                <i class="fas fa-check me-2"></i>Aceptar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Mostrar modal
+            let modalInstance = null;
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                modalInstance = new bootstrap.Modal(modal);
+                modalInstance.show();
+            } else {
+                modal.style.display = 'block';
+                modal.classList.add('show');
+                const backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop fade show';
+                backdrop.id = 'modalExitoBackdrop';
+                document.body.appendChild(backdrop);
+            }
+
+            // Cerrar automáticamente después de 2 segundos
+            setTimeout(function() {
+                if (modalInstance) {
+                    modalInstance.hide();
+                } else {
+                    modal.style.display = 'none';
+                    modal.classList.remove('show');
+                    const backdrop = document.getElementById('modalExitoBackdrop');
+                    if (backdrop) backdrop.remove();
+                }
+            }, 2000);
+        }
+
+        // Actualizar botones de acción según el estado
+        function actualizarAcciones(card, id, estado) {
+            const accionesDiv = card.querySelector('.card-actions');
+            let nuevoHTML = '';
+
+            if (estado === 'Pendiente') {
+                nuevoHTML = `
+                    <button onclick="cambiarEstado(${id}, 'En Proceso', this)" class="btn-card btn-start" data-id="${id}">
+                        <i class="fas fa-play"></i> Iniciar
+                    </button>
+                    <a href="@Url.Action("Edit", "SolicitudLimpieza")/${id}" class="btn-card" style="background: #e9ecef; color: var(--hotel-dark); flex: 0.5;">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                `;
+            } else if (estado === 'En Proceso') {
+                nuevoHTML = `
+                    <button onclick="cambiarEstado(${id}, 'Completado', this)" class="btn-card btn-complete" data-id="${id}">
+                        <i class="fas fa-check"></i> Completar
+                    </button>
+                    <button onclick="cambiarEstado(${id}, 'Pendiente', this)" class="btn-card" style="background: #fff3cd; color: #856404; flex: 0.5;" title="Volver a Pendiente">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                    <a href="@Url.Action("Edit", "SolicitudLimpieza")/${id}" class="btn-card" style="background: #e9ecef; color: var(--hotel-dark); flex: 0.5;">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                `;
+            } else {
+                nuevoHTML = `
+                    <span class="btn-card" style="background: #e8f5e9; color: var(--status-completado); cursor: default; flex: 1;">
+                        <i class="fas fa-check-circle"></i> Completada
+                    </span>
+                    <button onclick="cambiarEstado(${id}, 'Pendiente', this)" class="btn-card" style="background: #fff3cd; color: #856404; flex: 0.5;" title="Reabrir">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <a href="@Url.Action("Edit", "SolicitudLimpieza")/${id}" class="btn-card" style="background: #e9ecef; color: var(--hotel-dark); flex: 0.5;">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                `;
+            }
+
+            accionesDiv.innerHTML = nuevoHTML;
+        }
+
+        // Mostrar mensaje de notificación
+        function mostrarMensaje(mensaje, tipo) {
+            const color = tipo === 'success' ? '#28a745' : '#dc3545';
+            const icono = tipo === 'success' ? 'check-circle' : 'exclamation-circle';
+            
+            const notificacion = document.createElement('div');
+            notificacion.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: white;
+                color: ${color};
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                border-left: 4px solid ${color};
+                animation: slideIn 0.3s ease;
+            `;
+            notificacion.innerHTML = `<i class="fas fa-${icono}"></i> ${mensaje}`;
+            
+            document.body.appendChild(notificacion);
+            
+            setTimeout(() => {
+                notificacion.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notificacion.remove(), 300);
+            }, 3000);
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+            
+            // Agregar estilos de animación
+            const style = document.createElement('style');
+            style.textContent = `
+                @@keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @@keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Auto-refresh cada 30 segundos para ver actualizaciones en tiempo real
+            setInterval(function() {
+                // Solo actualizar si no hay filtros activos
+                if (!document.getElementById('filter-estado').value && !document.getElementById('search-input').value) {
+                    location.reload();
+                }
+            }, 30000);
+        });
+    </script>
+}

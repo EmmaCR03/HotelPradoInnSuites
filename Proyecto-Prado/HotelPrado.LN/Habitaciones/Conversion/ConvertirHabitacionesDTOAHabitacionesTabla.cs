@@ -1,4 +1,4 @@
-﻿using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.Conversion;
+using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.Conversion;
 using HotelPrado.Abstracciones.Modelos.Habitaciones;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Habitaciones;
 using System;
@@ -21,6 +21,9 @@ namespace HotelPrado.LN.Habitaciones.Conversion
                 PrecioPorNoche2P = laHabitacion.PrecioPorNoche2P,
                 PrecioPorNoche3P = laHabitacion.PrecioPorNoche3P,
                 PrecioPorNoche4P = laHabitacion.PrecioPorNoche4P,
+                PrecioGeneral = laHabitacion.PrecioGeneral,
+                PrecioGobierno = laHabitacion.PrecioGobierno,
+                PrecioCorporativo = laHabitacion.PrecioCorporativo,
                 CapacidadMax = laHabitacion.CapacidadMax,
                 CapacidadMin = laHabitacion.CapacidadMin,
                 Estado = laHabitacion.Estado

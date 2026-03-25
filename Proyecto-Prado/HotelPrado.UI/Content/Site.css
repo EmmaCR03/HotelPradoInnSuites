@@ -1,8 +1,9 @@
-﻿/* Set padding to keep content from hitting the edges */
+/* Set padding to keep content from hitting the edges */
 .body-content {
-    margin-top: 15px;
     padding-left: 15px;
     padding-right: 15px;
+    overflow: visible !important;
+    /* position: relative !important; */ /* COMENTADO - Puede causar problemas con navbar fixed */
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -17,4 +18,124 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+/* ===== Tablas responsivas: scroll horizontal como en Clientes ===== */
+/* Igual que .table-container en Clientes: scroll horizontal en todas las vistas */
+.table-responsive,
+.table-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.table-responsive table,
+.table-container table {
+    min-width: 680px !important;
+    max-width: none !important;
+    width: auto !important;
+}
+
+/* Que ningún padre corte el scroll (tabla dentro de .card) */
+.card .card-body .table-responsive,
+.card .table-responsive,
+.card .card-body .table-container,
+.card .table-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+/* Evitar que .card o .card-body corten el scroll */
+.card:has(.table-responsive),
+.card-body:has(.table-responsive),
+.card:has(.table-container),
+.card-body:has(.table-container) {
+    overflow-x: visible !important;
+    min-width: 0;
+}
+
+@media (max-width: 768px) {
+    .table-responsive::before,
+    .table-container::before {
+        content: "← Desliza para ver más columnas →";
+        display: block;
+        font-size: 0.75rem;
+        color: #6c757d;
+        padding: 0.4rem 0.5rem;
+        background: #f8f9fa;
+        text-align: center;
+    }
+}
+
+/* ===== Estado vacío (listas sin datos) ===== */
+.empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 2px dashed #dee2e6;
+    margin: 1rem 0;
+}
+.empty-state .empty-state-icon {
+    font-size: 3.5rem;
+    color: #6D7BB8;
+    margin-bottom: 1rem;
+    opacity: 0.85;
+}
+.empty-state .empty-state-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+.empty-state .empty-state-text {
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.empty-state .btn-empty-state {
+    padding: 0.6rem 1.5rem;
+    background: #6D7BB8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.3s ease;
+}
+.empty-state .btn-empty-state:hover {
+    background: #5a6ba5;
+    color: white;
+}
+
+/* Botones con estado de carga (evitar doble envío) */
+.btn-loading,
+button:disabled.btn-loading,
+input[type="submit"]:disabled.btn-loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    top: 50%;
+    left: 50%;
+    margin: -0.5rem 0 0 -0.5rem;
+    border: 2px solid rgba(255,255,255,0.8);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }

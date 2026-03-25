@@ -1,0 +1,1929 @@
+@model HotelPrado.UI.Models.EstadoHabitacionesViewModel
+
+@{
+    ViewBag.Title = "Estado de Habitaciones";
+}
+
+<div class="estado-habitaciones-container">
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="estado-title">
+                            <i class="fas fa-tachometer-alt me-2"></i>Estado en Tiempo Real
+                        </h1>
+                        <p class="text-muted mb-0">Monitoreo en vivo del estado de habitaciones y departamentos</p>
+                    </div>
+                    <div>
+                        <a href="@Url.Action("CalendarioHabitaciones", "Habitacion")" class="btn btn-primary">
+                            <i class="fas fa-calendar-alt me-2"></i>Ver Calendario
+                        </a>
+                        <a href="@Url.Action("Create", "SolicitudLimpieza")" class="btn btn-info ms-2">
+                            <i class="fas fa-broom me-2"></i>Solicitar Limpieza
+                        </a>
+                        <button id="btn-refrescar" class="btn btn-outline-primary ms-2">
+                            <i class="fas fa-sync-alt me-2"></i>Actualizar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas Habitaciones -->
+        <div class="row mb-4">
+            <div class="col-12 mb-3">
+                <h4 class="mb-3"><i class="fas fa-bed me-2"></i>Habitaciones</h4>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="stat-card stat-disponible">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">@Model.Estadisticas.HabitacionesDisponibles</h3>
+                        <p class="stat-label">Disponibles</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="stat-card stat-ocupada">
+                    <div class="stat-icon">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">@Model.Estadisticas.HabitacionesOcupadas</h3>
+                        <p class="stat-label">Ocupadas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="stat-card stat-mantenimiento">
+                    <div class="stat-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">@Model.Estadisticas.HabitacionesMantenimiento</h3>
+                        <p class="stat-label">Mantenimiento</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="stat-card stat-limpieza">
+                    <div class="stat-icon">
+                        <i class="fas fa-broom"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">@Model.Estadisticas.HabitacionesLimpieza</h3>
+                        <p class="stat-label">Limpieza</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas Departamentos -->
+        <div class="row mb-4">
+            <div class="col-12 mb-3">
+                <h4 class="mb-3"><i class="fas fa-building me-2"></i>Departamentos</h4>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-3">
+                <div class="stat-card stat-disponible">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">@Model.Estadisticas.DepartamentosDisponibles</h3>
+                        <p class="stat-label">Disponibles</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-3">
+                <div class="stat-card stat-ocupada">
+                    <div class="stat-icon">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">@Model.Estadisticas.DepartamentosOcupados</h3>
+                        <p class="stat-label">Ocupados</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-3">
+                <div class="stat-card stat-mantenimiento">
+                    <div class="stat-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number">@Model.Estadisticas.DepartamentosMantenimiento</h3>
+                        <p class="stat-label">Mantenimiento</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="info-card">
+                    <h5><i class="fas fa-calendar-check me-2"></i>Reservas Hoy</h5>
+                    <p class="info-number">@Model.Estadisticas.ReservasHoy</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-card">
+                    <h5><i class="fas fa-sign-out-alt me-2"></i>Check-outs Hoy</h5>
+                    <p class="info-number">@Model.Estadisticas.CheckOutsHoy</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plano del Hotel (diseño unificado: habitaciones = cama, departamentos = edificio; colores = estado) -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="mapa-container">
+                    <div class="mapa-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+                        <h3 class="mapa-title mb-0"><i class="fas fa-map me-2"></i>Plano del Hotel (hoy)</h3>
+                        <div class="d-flex align-items-center gap-2">
+                            <button type="button" class="btn btn-primary btn-sm" id="btn-ver-resumen-ocupacion" title="Ver ocupación y reservas de los próximos días, semanas o meses">
+                                <i class="fas fa-calendar-week me-2"></i>Ver ocupación y reservas (próximos días/semanas/meses)
+                            </button>
+                        </div>
+                        <div class="mapa-filtros" role="group" aria-label="Filtrar por estado">
+                            <button class="btn-filtro active" data-filtro="todas" type="button">Todas</button>
+                            <button class="btn-filtro" data-filtro="disponible" type="button">Disponibles</button>
+                            <button class="btn-filtro" data-filtro="ocupada" type="button">Ocupadas</button>
+                            <button class="btn-filtro" data-filtro="mantenimiento" type="button">Mantenimiento</button>
+                            <button class="btn-filtro" data-filtro="limpieza" type="button">Limpieza</button>
+                        </div>
+                    </div>
+
+                    <!-- Grid unificado: todas las unidades (habitación = icono cama, departamento = icono edificio) -->
+                    <div class="mapa-habitaciones">
+                        <div class="mapa-seccion">
+                            <div class="mapa-grid mapa-grid-unificado">
+                                @if (Model.Habitaciones != null)
+                                {
+                                    foreach (var habitacion in Model.Habitaciones)
+                                    {
+                                        <div class="mapa-habitacion-item" data-estado="@habitacion.Estado.ToLower()" data-id="@habitacion.IdHabitacion" data-tipo="habitacion">
+                                            <div class="mapa-habitacion-box" style="background-color: @habitacion.ColorEstado; border-color: @habitacion.ColorEstado;">
+                                                <div class="mapa-tipo-icono" title="Habitación"><i class="fas fa-bed"></i></div>
+                                                <div class="mapa-numero-encima">@habitacion.NumeroHabitacion</div>
+                                                <div class="mapa-habitacion-numero"><span>@habitacion.NumeroHabitacion</span></div>
+                                                <div class="mapa-habitacion-estado">@(habitacion.EstadoLeyenda ?? habitacion.Estado)</div>
+                                                <div class="mapa-habitacion-acciones">
+                                                    <button type="button" class="btn btn-sm btn-outline-dark btn-eventos-unidad" title="Próximos eventos (reservas, check-in, check-out)" data-idhabitacion="@habitacion.IdHabitacion" data-iddepartamento="" data-numero="@habitacion.NumeroHabitacion" data-tipo="Hab."><i class="fas fa-info-circle"></i></button>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary btn-convertir-unidad" title="Convertir a departamento" data-tipoactual="habitacion" data-id="@habitacion.IdHabitacion" data-numero="@habitacion.NumeroHabitacion"><i class="fas fa-building"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                @if (Model.Departamentos != null)
+                                {
+                                    foreach (var departamento in Model.Departamentos)
+                                    {
+                                        <div class="mapa-habitacion-item" data-estado="@departamento.Estado.ToLower()" data-id="@departamento.IdDepartamento" data-tipo="departamento">
+                                            <div class="mapa-habitacion-box mapa-departamento" style="background-color: @departamento.ColorEstado; border-color: @departamento.ColorEstado;">
+                                                <div class="mapa-tipo-icono" title="Departamento"><i class="fas fa-building"></i></div>
+                                                <div class="mapa-numero-encima">@(string.IsNullOrEmpty(departamento.NumeroDepartamento) || departamento.NumeroDepartamento == "Sin número" ? "—" : departamento.NumeroDepartamento)</div>
+                                                <div class="mapa-habitacion-numero"><span>@departamento.NumeroDepartamento</span></div>
+                                                <div class="mapa-habitacion-estado">@(departamento.EstadoLeyenda ?? departamento.Estado)</div>
+                                                <div class="mapa-habitacion-acciones">
+                                                    <button type="button" class="btn btn-sm btn-outline-dark btn-eventos-unidad" title="Próximos eventos" data-idhabitacion="" data-iddepartamento="@departamento.IdDepartamento" data-numero="@departamento.NumeroDepartamento" data-tipo="Dep."><i class="fas fa-info-circle"></i></button>
+                                                    <button type="button" class="btn btn-sm btn-outline-primary btn-convertir-unidad" title="Convertir a habitación" data-tipoactual="departamento" data-id="@departamento.IdDepartamento" data-numero="@departamento.NumeroDepartamento"><i class="fas fa-bed me-1"></i>Convertir</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Leyenda de colores (diseño mejorado) -->
+                    <div class="mapa-leyenda mapa-leyenda-mejorada mt-4">
+                        <div class="leyenda-titulo"><i class="fas fa-palette me-2"></i>Leyenda de colores</div>
+                        <div class="leyenda-grid">
+                            <div class="leyenda-fila"><span class="leyenda-cuadro leyenda-verde"></span><span class="leyenda-texto">Disponible / Libre</span></div>
+                            <div class="leyenda-fila"><span class="leyenda-cuadro leyenda-rojo-oscuro"></span><span class="leyenda-texto">Check-out hoy</span></div>
+                            <div class="leyenda-fila"><span class="leyenda-cuadro leyenda-granate"></span><span class="leyenda-texto">Ocupada +1 día o más</span></div>
+                            <div class="leyenda-fila"><span class="leyenda-cuadro leyenda-rojo"></span><span class="leyenda-texto">Ocupada / Check-out pronto / No disponible</span></div>
+                            <div class="leyenda-fila"><span class="leyenda-cuadro leyenda-morado"></span><span class="leyenda-texto">Reservada</span></div>
+                            <div class="leyenda-fila"><span class="leyenda-cuadro leyenda-naranja"></span><span class="leyenda-texto">Check-in pronto</span></div>
+                            <div class="leyenda-fila"><span class="leyenda-cuadro leyenda-azul"></span><span class="leyenda-texto">Limpieza</span></div>
+                            <div class="leyenda-fila leyenda-tipos"><i class="fas fa-bed me-2"></i> Hab. &nbsp; <i class="fas fa-building me-2"></i> Dep.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Próximos eventos (por unidad) -->
+        <div class="modal fade" id="modalProximosEventos" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fas fa-calendar-alt me-2"></i>Próximos eventos - <span id="modal-eventos-unidad"></span></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body" id="modal-eventos-body">
+                        <p class="text-muted">Cargando...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Resumen ocupación y reservas (próximos días/semanas/meses) -->
+        <div class="modal fade" id="modalResumenOcupacion" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="fas fa-calendar-week me-2"></i>Ocupación y reservas</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-muted small mb-3">Vea qué está ocupado o con reserva en los próximos días, semanas o meses. Puede hacer <strong>check-out anticipado</strong> si un cliente se va antes o hay un problema.</p>
+                        <div class="btn-group mb-3" role="group">
+                            <button type="button" class="btn btn-outline-primary btn-resumen-dias active" data-dias="7">Próximos 7 días</button>
+                            <button type="button" class="btn btn-outline-primary btn-resumen-dias" data-dias="30">Próximos 30 días</button>
+                            <button type="button" class="btn btn-outline-primary btn-resumen-dias" data-dias="90">Próximos 3 meses</button>
+                        </div>
+                        <div id="resumen-ocupacion-loading" class="text-center py-4 text-muted" style="display:none;"><i class="fas fa-spinner fa-spin me-2"></i>Cargando...</div>
+                        <div id="resumen-ocupacion-tabla" style="display:none;">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Unidad</th>
+                                            <th>Tipo</th>
+                                            <th>Estado actual</th>
+                                            <th>Cliente / Próximos eventos</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resumen-ocupacion-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Convertir unidad (habitación ↔ departamento) -->
+        <div class="modal fade" id="modalConvertirUnidad" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-secondary text-white">
+                        <h5 class="modal-title"><i class="fas fa-exchange-alt me-2"></i>Convertir unidad</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modal-convertir-mensaje" class="mb-3">Para cambiar el tipo de unidad (habitación ↔ departamento) use la gestión de inventario.</p>
+                        <p class="mb-0 small text-muted">Puede editar la habitación o el departamento desde el listado correspondiente y, en una futura versión, se permitirá cambiar el tipo desde aquí.</p>
+                        <div class="mt-3 d-flex flex-wrap gap-2">
+                            <a href="@Url.Action("IndexHabitaciones", "Habitacion")" class="btn btn-outline-primary btn-sm"><i class="fas fa-bed me-1"></i>Gestión de habitaciones</a>
+                            <a href="@Url.Action("IndexDepartamentos", "Departamento")" class="btn btn-outline-primary btn-sm"><i class="fas fa-building me-1"></i>Gestión de departamentos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vista Detallada de Habitaciones -->
+        @if (Model.Habitaciones != null && Model.Habitaciones.Any())
+        {
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h3 class="mb-3"><i class="fas fa-bed me-2"></i>Detalles de Habitaciones</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="habitaciones-detalle-grid">
+                        @foreach (var habitacion in Model.Habitaciones)
+                        {
+                            <div class="habitacion-card" 
+                                 data-estado="@habitacion.Estado" 
+                                 data-id="@habitacion.IdHabitacion"
+                                 data-fecha-checkin="@(habitacion.FechaCheckIn?.ToString("yyyy-MM-ddTHH:mm:ss") ?? "")"
+                                 data-fecha-checkout="@(habitacion.FechaCheckOut?.ToString("yyyy-MM-ddTHH:mm:ss") ?? "")"
+                                 data-fecha-inicio-limpieza="@(habitacion.FechaInicioLimpieza?.ToString("yyyy-MM-ddTHH:mm:ss") ?? "")">
+                                <div class="habitacion-header" style="background-color: @habitacion.ColorEstado;">
+                                    <div class="habitacion-numero">
+                                        <i class="@habitacion.IconoEstado me-2"></i>
+                                        Habitación @habitacion.NumeroHabitacion
+                                    </div>
+                                    <div class="habitacion-estado-badge">
+                                        @habitacion.Estado
+                                    </div>
+                                </div>
+                                <div class="habitacion-body">
+                                    @if (habitacion.Estado == "Ocupada")
+                                    {
+                                        <div class="habitacion-info-item">
+                                            <i class="fas fa-user me-2"></i>
+                                            <strong>Cliente:</strong> @habitacion.ClienteActual
+                                        </div>
+                                        <div class="habitacion-info-item">
+                                            <i class="fas fa-users me-2"></i>
+                                            <strong>Personas:</strong> @habitacion.CantidadPersonas / @habitacion.CapacidadMax
+                                        </div>
+                                        <div class="habitacion-info-item">
+                                            <i class="fas fa-calendar-check me-2"></i>
+                                            <strong>Check-in:</strong> @(habitacion.FechaCheckIn?.ToString("dd/MM/yyyy") ?? "N/A")
+                                        </div>
+                                        <div class="habitacion-info-item">
+                                            <i class="fas fa-calendar-times me-2"></i>
+                                            <strong>Check-out:</strong> @(habitacion.FechaCheckOut?.ToString("dd/MM/yyyy") ?? "N/A")
+                                        </div>
+                                        if (habitacion.DiasRestantes >= 0)
+                                        {
+                                            <div class="habitacion-info-item dias-restantes">
+                                                <i class="fas fa-calendar-alt me-2"></i>
+                                                <strong>Días restantes:</strong> @habitacion.DiasRestantes
+                                            </div>
+                                        }
+                                        if (!string.IsNullOrEmpty(habitacion.TiempoOcupada))
+                                        {
+                                            <div class="habitacion-info-item" style="background: #fff3cd; padding: 0.75rem; border-radius: 8px; margin-top: 0.5rem;">
+                                                <i class="fas fa-hourglass-half me-2" style="color: #856404;"></i>
+                                                <strong style="color: #856404;">Tiempo ocupada:</strong> 
+                                                <span style="color: #856404;">@habitacion.TiempoOcupada</span>
+                                            </div>
+                                        }
+                                        if (!string.IsNullOrEmpty(habitacion.TiempoRestanteOcupacion))
+                                        {
+                                            <div class="habitacion-info-item" style="background: #d1ecf1; padding: 0.75rem; border-radius: 8px; margin-top: 0.5rem;">
+                                                <i class="fas fa-clock me-2" style="color: #0c5460;"></i>
+                                                <strong style="color: #0c5460;">Disponible en:</strong> 
+                                                <span style="color: #0c5460;">@habitacion.TiempoRestanteOcupacion</span>
+                                            </div>
+                                        }
+                                        
+                                        <!-- Botones de Check-in/Check-out -->
+                                        <div class="habitacion-actions mt-3">
+                                            @if (habitacion.IdReserva > 0)
+                                            {
+                                                <!-- Verificar si ya se hizo check-in (reserva en proceso) -->
+                                                if (habitacion.EstadoReserva == "Confirmada")
+                                                {
+                                                    <button type="button" class="btn btn-success btn-sm w-100 mb-2 btn-checkin" 
+                                                            data-reserva-id="@habitacion.IdReserva"
+                                                            data-habitacion-numero="@habitacion.NumeroHabitacion"
+                                                            data-cliente="@habitacion.ClienteActual">
+                                                        <i class="fas fa-sign-in-alt me-2"></i>Realizar Check-in
+                                                    </button>
+                                                }
+                                                
+                                                <!-- Verificar si está en proceso para permitir check-out (incl. anticipado) -->
+                                                if (habitacion.EstadoReserva == "En Proceso" || habitacion.EstadoReserva == "Confirmada")
+                                                {
+                                                    <button type="button" class="btn btn-warning btn-sm w-100 btn-checkout" 
+                                                            data-reserva-id="@habitacion.IdReserva"
+                                                            data-habitacion-numero="@habitacion.NumeroHabitacion"
+                                                            data-cliente="@habitacion.ClienteActual">
+                                                        <i class="fas fa-sign-out-alt me-2"></i>Realizar Check-out (incl. anticipado)
+                                                    </button>
+                                                    <p class="small text-muted mt-1 mb-0">Si el cliente se va antes o hay un problema, puede hacer check-out anticipado aquí.</p>
+                                                }
+                                            }
+                                        </div>
+                                    }
+                                    else if (habitacion.Estado == "Mantenimiento")
+                                    {
+                                        <div class="habitacion-info-item">
+                                            <i class="fas fa-tools me-2"></i>
+                                            <strong>Estado:</strong> En Mantenimiento
+                                        </div>
+                                        <div class="habitacion-info-item">
+                                            <i class="fas fa-users me-2"></i>
+                                            <strong>Capacidad:</strong> @habitacion.CapacidadMax personas
+                                        </div>
+                                        <div class="habitacion-actions mt-3">
+                                            <button type="button" class="btn btn-success btn-sm w-100 btn-cambiar-estado" 
+                                                    data-habitacion-id="@habitacion.IdHabitacion"
+                                                    data-estado-nuevo="Disponible">
+                                                <i class="fas fa-check-circle me-2"></i>Marcar como Disponible
+                                            </button>
+                                        </div>
+                                    }
+                                    else if (habitacion.Estado == "Limpieza")
+                                    {
+                                        <div class="habitacion-info-item">
+                                            <i class="fas fa-broom me-2"></i>
+                                            <strong>Estado:</strong> En Limpieza
+                                        </div>
+                                        if (!string.IsNullOrEmpty(habitacion.DescripcionLimpieza))
+                                        {
+                                            <div class="habitacion-info-item">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                <strong>Descripción:</strong> @habitacion.DescripcionLimpieza
+                                            </div>
+                                        }
+                                        if (!string.IsNullOrEmpty(habitacion.TiempoEnLimpieza))
+                                        {
+                                            <div class="habitacion-info-item" style="background: #d1ecf1; padding: 0.75rem; border-radius: 8px; margin-top: 0.5rem;">
+                                                <i class="fas fa-hourglass-half me-2" style="color: #0c5460;"></i>
+                                                <strong style="color: #0c5460;">Tiempo en limpieza:</strong> 
+                                                <span style="color: #0c5460;">@habitacion.TiempoEnLimpieza</span>
+                                            </div>
+                                        }
+                                        if (habitacion.FechaInicioLimpieza.HasValue)
+                                        {
+                                            <div class="habitacion-info-item">
+                                                <i class="fas fa-calendar-check me-2"></i>
+                                                <strong>Inicio:</strong> @habitacion.FechaInicioLimpieza.Value.ToString("dd/MM/yyyy HH:mm")
+                                            </div>
+                                        }
+                                        <div class="habitacion-info-item">
+                                            <i class="fas fa-users me-2"></i>
+                                            <strong>Capacidad:</strong> @habitacion.CapacidadMax personas
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="habitacion-info-item">
+                                            <i class="fas fa-users me-2"></i>
+                                            <strong>Capacidad:</strong> @habitacion.CapacidadMax personas
+                                        </div>
+                                        <div class="habitacion-info-item disponible-message">
+                                            <i class="fas fa-check-circle me-2"></i>
+                                            Habitación disponible para reservar
+                                        </div>
+                                        <div class="habitacion-actions mt-3">
+                                            <button type="button" class="btn btn-warning btn-sm w-100 mb-2 btn-cambiar-estado" 
+                                                    data-habitacion-id="@habitacion.IdHabitacion"
+                                                    data-estado-nuevo="Mantenimiento">
+                                                <i class="fas fa-tools me-2"></i>Marcar en Mantenimiento
+                                            </button>
+                                            <a href="@Url.Action("Create", "SolicitudLimpieza", new { IdHabitacion = habitacion.IdHabitacion })" 
+                                               class="btn btn-info btn-sm w-100">
+                                                <i class="fas fa-broom me-2"></i>Solicitar Limpieza
+                                            </a>
+                                        </div>
+                                    }
+                                    <div class="habitacion-actions mt-2">
+                                        <a href="@Url.Action("Create", "SolicitudLimpieza", new { IdHabitacion = habitacion.IdHabitacion })" 
+                                           class="btn btn-sm btn-info w-100 mb-2">
+                                            <i class="fas fa-broom me-2"></i>Solicitar Limpieza
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-primary w-100 btn-convertir-unidad btn-convertir-detalle" title="Convertir a departamento" data-tipoactual="habitacion" data-id="@habitacion.IdHabitacion" data-numero="@habitacion.NumeroHabitacion">
+                                            <i class="fas fa-building me-2"></i>Convertir a departamento
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Vista Detallada de Departamentos -->
+        @if (Model.Departamentos != null && Model.Departamentos.Any())
+        {
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h3 class="mb-3"><i class="fas fa-building me-2"></i>Detalles de Departamentos</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="habitaciones-detalle-grid">
+                        @foreach (var departamento in Model.Departamentos)
+                        {
+                            <div class="habitacion-card" data-estado="@departamento.Estado" data-id="@departamento.IdDepartamento" data-tipo="departamento">
+                                <div class="habitacion-header" style="background-color: @departamento.ColorEstado;">
+                                    <div class="habitacion-numero">
+                                        <i class="@departamento.IconoEstado me-2"></i>
+                                        Departamento @departamento.NumeroDepartamento
+                                    </div>
+                                    <div class="habitacion-estado-badge">
+                                        @departamento.Estado
+                                    </div>
+                                </div>
+                                <div class="habitacion-body">
+                                    <div class="habitacion-info-item">
+                                        <i class="fas fa-building me-2"></i>
+                                        <strong>Nombre:</strong> @departamento.Nombre
+                                    </div>
+                                    @if (departamento.Estado == "Ocupado")
+                                    {
+                                        <div class="habitacion-info-item">
+                                            <i class="fas fa-user me-2"></i>
+                                            <strong>Cliente:</strong> @departamento.ClienteActual
+                                        </div>
+                                    }
+                                    else if (departamento.Estado == "Mantenimiento")
+                                    {
+                                        <div class="habitacion-info-item">
+                                            <i class="fas fa-tools me-2"></i>
+                                            <strong>Mantenimiento:</strong> @(!string.IsNullOrEmpty(departamento.DescripcionMantenimiento) ? departamento.DescripcionMantenimiento : "En mantenimiento")
+                                        </div>
+                                    }
+                                    else if (departamento.Estado == "Limpieza")
+                                    {
+                                        <div class="habitacion-info-item">
+                                            <i class="fas fa-broom me-2"></i>
+                                            <strong>Limpieza:</strong> @(!string.IsNullOrEmpty(departamento.DescripcionMantenimiento) ? departamento.DescripcionMantenimiento : "En limpieza")
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="habitacion-info-item disponible-message">
+                                            <i class="fas fa-check-circle me-2"></i>
+                                            Departamento disponible para reservar
+                                        </div>
+                                    }
+                                    <div class="habitacion-actions mt-2">
+                                        <a href="@Url.Action("Create", "SolicitudLimpieza", new { IdDepartamento = departamento.IdDepartamento })" 
+                                           class="btn btn-sm btn-info w-100 mb-2">
+                                            <i class="fas fa-broom me-2"></i>Solicitar Limpieza
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-warning w-100 mb-2 btn-cambiar-estado" 
+                                                data-habitacion-id="@departamento.IdDepartamento"
+                                                data-tipo="departamento"
+                                                data-estado-nuevo="Mantenimiento">
+                                            <i class="fas fa-tools me-2"></i>Solicitar Mantenimiento
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary w-100 btn-convertir-unidad btn-convertir-detalle" title="Convertir a habitación" data-tipoactual="departamento" data-id="@departamento.IdDepartamento" data-numero="@departamento.NumeroDepartamento">
+                                            <i class="fas fa-bed me-2"></i>Convertir a habitación
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- CSS específico -->
+<link href="~/Content/Habitacion/estado-habitaciones.css" rel="stylesheet" />
+
+<script>
+    // Botón "Ver ocupación y reservas (próximos días/semanas/meses)"
+    (function() {
+        var btnVerResumen = document.getElementById('btn-ver-resumen-ocupacion');
+        var modalResumen = document.getElementById('modalResumenOcupacion');
+        var loadingEl = document.getElementById('resumen-ocupacion-loading');
+        var tablaEl = document.getElementById('resumen-ocupacion-tabla');
+        var bodyEl = document.getElementById('resumen-ocupacion-body');
+        var cacheResumen = {};
+        function cargarResumen(dias) {
+            if (cacheResumen[dias]) {
+                renderResumen(cacheResumen[dias], bodyEl);
+                return;
+            }
+            if (loadingEl) loadingEl.style.display = 'block';
+            if (tablaEl) tablaEl.style.display = 'none';
+            fetch('@Url.Action("GetResumenOcupacionProximosDias", "Habitacion")' + '?dias=' + dias)
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (loadingEl) loadingEl.style.display = 'none';
+                    if (data.ok && data.unidades) {
+                        cacheResumen[dias] = data.unidades;
+                        renderResumen(data.unidades, bodyEl);
+                        if (tablaEl) tablaEl.style.display = 'block';
+                    } else {
+                        if (bodyEl) bodyEl.innerHTML = '<tr><td colspan="5" class="text-muted">No se pudo cargar el resumen.</td></tr>';
+                        if (tablaEl) tablaEl.style.display = 'block';
+                    }
+                })
+                .catch(function() {
+                    if (loadingEl) loadingEl.style.display = 'none';
+                    if (bodyEl) bodyEl.innerHTML = '<tr><td colspan="5" class="text-danger">Error al cargar.</td></tr>';
+                    if (tablaEl) tablaEl.style.display = 'block';
+                });
+        }
+        function renderResumen(unidades, tbody) {
+            if (!tbody) return;
+            var html = '';
+            unidades.forEach(function(u) {
+                var tipoLabel = u.tipo === 'habitacion' ? 'Hab.' : 'Dep.';
+                var eventosStr = '';
+                if (u.eventos && u.eventos.length) {
+                    eventosStr = u.eventos.slice(0, 6).map(function(e) { return e.fecha + ' ' + e.tipo + (e.descripcion ? ' (' + e.descripcion + ')' : ''); }).join('; ');
+                    if (u.eventos.length > 6) eventosStr += '...';
+                } else {
+                    eventosStr = u.clienteActual || '—';
+                }
+                var accion = '';
+                if (u.tipo === 'habitacion' && u.estadoActual === 'Ocupada' && u.idReserva > 0) {
+                    accion = '<button type="button" class="btn btn-sm btn-warning btn-checkout-antecipado" data-reserva-id="' + u.idReserva + '" data-numero="' + u.numero + '" data-cliente="' + (u.clienteActual || '') + '"><i class="fas fa-sign-out-alt me-1"></i>Check-out anticipado</button>';
+                } else {
+                    accion = '<span class="text-muted">—</span>';
+                }
+                html += '<tr><td>' + u.numero + '</td><td>' + tipoLabel + '</td><td>' + (u.estadoLeyenda || u.estadoActual) + '</td><td class="small">' + eventosStr + '</td><td>' + accion + '</td></tr>';
+            });
+            tbody.innerHTML = html || '<tr><td colspan="5" class="text-muted">Sin datos.</td></tr>';
+            // Enlazar botones check-out anticipado
+            tbody.querySelectorAll('.btn-checkout-antecipado').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var reservaId = this.getAttribute('data-reserva-id');
+                    var numero = this.getAttribute('data-numero');
+                    var cliente = this.getAttribute('data-cliente');
+                    if (document.getElementById('checkout-habitacion-numero')) document.getElementById('checkout-habitacion-numero').textContent = numero;
+                    if (document.getElementById('checkout-cliente')) document.getElementById('checkout-cliente').textContent = cliente;
+                    if (document.getElementById('checkout-fecha-hora')) {
+                        var ahora = new Date();
+                        document.getElementById('checkout-fecha-hora').textContent = ahora.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    }
+                    window.reservaIdSeleccionadaCheckout = reservaId;
+                    var modalCheckOut = document.getElementById('modalCheckOut');
+                    if (modalResumen && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        var inst = bootstrap.Modal.getInstance(modalResumen);
+                        if (inst) inst.hide();
+                    }
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal && modalCheckOut) {
+                        var modalCheckOutInstance = new bootstrap.Modal(modalCheckOut);
+                        modalCheckOutInstance.show();
+                    }
+                    var confirmBtn = document.getElementById('btnConfirmarCheckOut');
+                    var modalCheckOutEl = document.getElementById('modalCheckOut');
+                    if (confirmBtn) {
+                        confirmBtn.addEventListener('click', function confirmarCheckoutDesdeResumen(ev) {
+                            if (!window.reservaIdSeleccionadaCheckout) return;
+                            ev.stopImmediatePropagation();
+                            var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+                            var formData = new FormData();
+                            formData.append('IdReserva', parseInt(window.reservaIdSeleccionadaCheckout));
+                            formData.append('__RequestVerificationToken', token);
+                            confirmBtn.disabled = true;
+                            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+                            fetch('@Url.Action("CheckOut", "Habitacion")', { method: 'POST', credentials: 'same-origin', body: formData })
+                                .then(function(r) { return r.json(); })
+                                .then(function(data) {
+                                    if (data.success) {
+                                        if (typeof bootstrap !== 'undefined' && modalCheckOutEl) { var m = bootstrap.Modal.getInstance(modalCheckOutEl); if (m) m.hide(); }
+                                        alert('Check-out realizado correctamente.');
+                                        window.location.reload();
+                                    } else {
+                                        alert('Error: ' + (data.message || 'No se pudo realizar el check-out.'));
+                                        confirmBtn.disabled = false;
+                                        confirmBtn.innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Check-out';
+                                    }
+                                })
+                                .catch(function() {
+                                    confirmBtn.disabled = false;
+                                    confirmBtn.innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Check-out';
+                                });
+                        }, { once: true });
+                    }
+                });
+            });
+        }
+        if (btnVerResumen) {
+            btnVerResumen.addEventListener('click', function() {
+                var modalInstance = modalResumen && typeof bootstrap !== 'undefined' && bootstrap.Modal ? new bootstrap.Modal(modalResumen) : null;
+                if (modalInstance) modalInstance.show();
+                var activo = document.querySelector('.btn-resumen-dias.active');
+                cargarResumen(activo ? parseInt(activo.getAttribute('data-dias')) : 7);
+            });
+        }
+        document.querySelectorAll('.btn-resumen-dias').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.btn-resumen-dias').forEach(function(b) { b.classList.remove('active'); });
+                this.classList.add('active');
+                cargarResumen(parseInt(this.getAttribute('data-dias')));
+            });
+        });
+    })();
+
+    // Botón Convertir (habitación ↔ departamento): mostrar modal con enlaces a gestión
+    function initConvertirBotones() {
+        var modalEl = document.getElementById('modalConvertirUnidad');
+        var msgEl = document.getElementById('modal-convertir-mensaje');
+        document.querySelectorAll('.btn-convertir-unidad, .btn-convertir-detalle').forEach(function(btn) {
+            if (btn._convertirInit) return;
+            btn._convertirInit = true;
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var tipoActual = this.getAttribute('data-tipoactual');
+                var numero = this.getAttribute('data-numero');
+                var destino = tipoActual === 'habitacion' ? 'departamento' : 'habitación';
+                if (msgEl) msgEl.textContent = 'Para convertir la unidad ' + numero + ' en ' + destino + ', utilice la gestión de inventario (habitaciones o departamentos) o contacte al administrador. En una futura versión se podrá cambiar el tipo desde aquí.';
+                if (modalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    var m = new bootstrap.Modal(modalEl);
+                    m.show();
+                } else if (modalEl) {
+                    modalEl.style.display = 'block';
+                    modalEl.classList.add('show');
+                }
+            });
+        });
+    }
+    initConvertirBotones();
+
+    // Modal Próximos eventos por unidad
+    (function() {
+        document.querySelectorAll('.btn-eventos-unidad').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var idHab = this.getAttribute('data-idhabitacion') || '';
+                var idDep = this.getAttribute('data-iddepartamento') || '';
+                var numero = this.getAttribute('data-numero') || '';
+                var tipo = this.getAttribute('data-tipo') || '';
+                var titulo = tipo + ' ' + numero;
+                document.getElementById('modal-eventos-unidad').textContent = titulo;
+                document.getElementById('modal-eventos-body').innerHTML = '<p class="text-muted">Cargando...</p>';
+                var modal = new bootstrap.Modal(document.getElementById('modalProximosEventos'));
+                modal.show();
+                var url = '@Url.Action("GetProximosEventosUnidad", "Habitacion")' + '?idHabitacion=' + idHab + '&idDepartamento=' + idDep + '&dias=14';
+                fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+                    var html = '';
+                    if (data.ok && data.eventos && data.eventos.length) {
+                        html = '<ul class="list-group list-group-flush">';
+                        data.eventos.forEach(function(e) {
+                            html += '<li class="list-group-item d-flex justify-content-between"><span>' + e.fecha + ' - ' + e.tipo + '</span><span class="text-muted">' + (e.descripcion || '') + '</span></li>';
+                        });
+                        html += '</ul>';
+                    } else {
+                        html = '<p class="text-muted mb-0">No hay eventos (reservas, check-in, check-out) en los próximos 14 días.</p>';
+                    }
+                    document.getElementById('modal-eventos-body').innerHTML = html;
+                }).catch(function() {
+                    document.getElementById('modal-eventos-body').innerHTML = '<p class="text-danger">Error al cargar eventos.</p>';
+                });
+            });
+        });
+    })();
+
+    // Función para actualizar tiempos en tiempo real sin recargar la página
+    function actualizarTiempos() {
+        // Actualizar tiempo ocupada
+        document.querySelectorAll('.habitacion-card[data-estado="Ocupada"]').forEach(function(card) {
+            var fechaCheckIn = card.getAttribute('data-fecha-checkin');
+            if (fechaCheckIn) {
+                var fechaInicio = new Date(fechaCheckIn);
+                var ahora = new Date();
+                var tiempoTranscurrido = ahora - fechaInicio;
+                var tiempoFormateado = formatearTiempo(tiempoTranscurrido);
+                
+                var tiempoElement = card.querySelector('.tiempo-ocupada-actualizado');
+                if (!tiempoElement) {
+                    var infoItem = card.querySelector('.habitacion-info-item[style*="background: #fff3cd"]');
+                    if (infoItem) {
+                        tiempoElement = infoItem.querySelector('span');
+                        if (tiempoElement) {
+                            tiempoElement.textContent = tiempoFormateado;
+                        }
+                    }
+                }
+            }
+        });
+
+        // Actualizar tiempo en limpieza
+        document.querySelectorAll('.habitacion-card[data-estado="Limpieza"]').forEach(function(card) {
+            var fechaInicioLimpieza = card.getAttribute('data-fecha-inicio-limpieza');
+            if (fechaInicioLimpieza) {
+                var fechaInicio = new Date(fechaInicioLimpieza);
+                var ahora = new Date();
+                var tiempoTranscurrido = ahora - fechaInicio;
+                var tiempoFormateado = formatearTiempo(tiempoTranscurrido);
+                
+                var tiempoElement = card.querySelector('.tiempo-limpieza-actualizado');
+                if (!tiempoElement) {
+                    var infoItem = card.querySelector('.habitacion-info-item[style*="background: #d1ecf1"]');
+                    if (infoItem) {
+                        tiempoElement = infoItem.querySelector('span');
+                        if (tiempoElement) {
+                            tiempoElement.textContent = tiempoFormateado;
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Función auxiliar para formatear tiempo
+    function formatearTiempo(milisegundos) {
+        var segundos = Math.floor(milisegundos / 1000);
+        var minutos = Math.floor(segundos / 60);
+        var horas = Math.floor(minutos / 60);
+        var dias = Math.floor(horas / 24);
+
+        if (dias > 0) {
+            horas = horas % 24;
+            if (horas > 0) {
+                return dias + ' día' + (dias > 1 ? 's' : '') + ', ' + horas + ' hora' + (horas > 1 ? 's' : '');
+            }
+            return dias + ' día' + (dias > 1 ? 's' : '');
+        } else if (horas > 0) {
+            minutos = minutos % 60;
+            if (minutos > 0) {
+                return horas + ' hora' + (horas > 1 ? 's' : '') + ', ' + minutos + ' minuto' + (minutos > 1 ? 's' : '');
+            }
+            return horas + ' hora' + (horas > 1 ? 's' : '');
+        } else if (minutos > 0) {
+            return minutos + ' minuto' + (minutos > 1 ? 's' : '');
+        } else {
+            return 'Menos de 1 minuto';
+        }
+    }
+
+    // Auto-refresh cada 15 segundos (más frecuente para tiempo real)
+    // DESACTIVADO: Recarga automática de página
+    // var autoRefreshInterval = setInterval(function () {
+    //     // Usar window.location.href para evitar problemas de contexto
+    //     setTimeout(function() {
+    //         window.location.href = window.location.href.split('#')[0];
+    //     }, 100);
+    // }, 15000);
+
+    
+    // Función para actualizar el estado completo sin recargar la página
+    function actualizarEstadoCompleto() {
+        // Mostrar indicador de carga sutil
+        var btnRefrescar = document.getElementById('btn-refrescar');
+        var iconoOriginal = btnRefrescar ? btnRefrescar.innerHTML : '';
+        if (btnRefrescar) {
+            btnRefrescar.disabled = true;
+            btnRefrescar.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Actualizando...';
+        }
+        
+        // Hacer fetch a la misma página para obtener el HTML actualizado
+        fetch(window.location.href, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            cache: 'no-cache'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener datos');
+            }
+            return response.text();
+        })
+        .then(html => {
+            // Crear un elemento temporal para parsear el HTML
+            var tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            
+            // Actualizar el contenedor principal
+            var nuevoContenido = tempDiv.querySelector('.estado-habitaciones-container');
+            var contenedorActual = document.querySelector('.estado-habitaciones-container');
+            
+            if (nuevoContenido && contenedorActual) {
+                // Guardar posición de scroll
+                var scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+                
+                // Actualizar contenido
+                contenedorActual.innerHTML = nuevoContenido.innerHTML;
+                
+                // Restaurar posición de scroll
+                window.scrollTo(0, scrollPosition);
+                
+                // Re-inicializar eventos después de actualizar
+                setTimeout(function() {
+                    inicializarEventos();
+                    actualizarTiempos();
+                    
+                    // Restaurar botón
+                    if (btnRefrescar) {
+                        btnRefrescar.disabled = false;
+                        btnRefrescar.innerHTML = iconoOriginal;
+                    }
+                }, 100);
+            } else {
+                // Si no se puede actualizar parcialmente, recargar
+                window.location.reload();
+            }
+        })
+        .catch(error => {
+            // Si falla, recargar la página completa
+            if (btnRefrescar) {
+                btnRefrescar.disabled = false;
+                btnRefrescar.innerHTML = iconoOriginal;
+            }
+            // No recargar automáticamente para evitar loops
+        });
+    }
+    
+    // Función para inicializar eventos después de actualizar el contenido
+    function inicializarEventos() {
+        initConvertirBotones();
+        // Re-inicializar eventos de check-in y check-out
+        var reservaIdSeleccionada = null;
+        var modalCheckIn = document.getElementById('modalCheckIn');
+        var modalCheckOut = document.getElementById('modalCheckOut');
+        var btnConfirmarCheckIn = document.getElementById('btnConfirmarCheckIn');
+        var btnConfirmarCheckOut = document.getElementById('btnConfirmarCheckOut');
+        
+        // Event listeners para botones de check-in
+        document.querySelectorAll('.btn-checkin').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                reservaIdSeleccionada = this.getAttribute('data-reserva-id');
+                var habitacionNumero = this.getAttribute('data-habitacion-numero');
+                var cliente = this.getAttribute('data-cliente');
+                
+                if (document.getElementById('checkin-habitacion-numero')) {
+                    document.getElementById('checkin-habitacion-numero').textContent = habitacionNumero;
+                }
+                if (document.getElementById('checkin-cliente')) {
+                    document.getElementById('checkin-cliente').textContent = cliente;
+                }
+                // Actualizar fecha y hora dinámicamente
+                if (document.getElementById('checkin-fecha-hora')) {
+                    var ahora = new Date();
+                    var fechaHora = ahora.toLocaleDateString('es-ES', { 
+                        day: '2-digit', 
+                        month: '2-digit', 
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    document.getElementById('checkin-fecha-hora').textContent = fechaHora;
+                }
+                
+                if (modalCheckInInstance) {
+                    modalCheckInInstance.show();
+                } else if (modalCheckIn) {
+                    modalCheckIn.style.display = 'block';
+                    modalCheckIn.classList.add('show');
+                }
+            });
+        });
+        
+        // Event listeners para botones de check-out
+        document.querySelectorAll('.btn-checkout').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                reservaIdSeleccionada = this.getAttribute('data-reserva-id');
+                var habitacionNumero = this.getAttribute('data-habitacion-numero');
+                var cliente = this.getAttribute('data-cliente');
+                
+                if (document.getElementById('checkout-habitacion-numero')) {
+                    document.getElementById('checkout-habitacion-numero').textContent = habitacionNumero;
+                }
+                if (document.getElementById('checkout-cliente')) {
+                    document.getElementById('checkout-cliente').textContent = cliente;
+                }
+                // Actualizar fecha y hora dinámicamente
+                if (document.getElementById('checkout-fecha-hora')) {
+                    var ahora = new Date();
+                    var fechaHora = ahora.toLocaleDateString('es-ES', { 
+                        day: '2-digit', 
+                        month: '2-digit', 
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    document.getElementById('checkout-fecha-hora').textContent = fechaHora;
+                }
+                
+                if (modalCheckOutInstance) {
+                    modalCheckOutInstance.show();
+                } else if (modalCheckOut) {
+                    modalCheckOut.style.display = 'block';
+                    modalCheckOut.classList.add('show');
+                }
+            });
+        });
+        
+        // Re-configurar confirmación de check-in
+        if (btnConfirmarCheckIn) {
+            var nuevoBtnCheckIn = btnConfirmarCheckIn.cloneNode(true);
+            btnConfirmarCheckIn.parentNode.replaceChild(nuevoBtnCheckIn, btnConfirmarCheckIn);
+            
+            nuevoBtnCheckIn.addEventListener('click', function() {
+                if (!reservaIdSeleccionada) {
+                    showNotificationModal('error', 'Error', 'No se seleccionó una reserva.');
+                    return;
+                }
+                
+                nuevoBtnCheckIn.disabled = true;
+                nuevoBtnCheckIn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+                
+                var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+                var formData = new FormData();
+                formData.append('IdReserva', parseInt(reservaIdSeleccionada));
+                formData.append('__RequestVerificationToken', token);
+                
+                fetch('@Url.Action("CheckIn", "Habitacion")', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (modalCheckInInstance) {
+                            modalCheckInInstance.hide();
+                        }
+                        showNotificationModal('success', 'Check-in Exitoso', data.message, function() {
+                            // Recargar la página para mostrar el estado actualizado
+                            window.location.reload();
+                        });
+                    } else {
+                        showNotificationModal('error', 'Error en Check-in', data.message);
+                        nuevoBtnCheckIn.disabled = false;
+                        nuevoBtnCheckIn.innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Check-in';
+                    }
+                })
+                .catch(error => {
+                    showNotificationModal('error', 'Error en Check-in', 'Error al realizar el check-in.');
+                    nuevoBtnCheckIn.disabled = false;
+                    nuevoBtnCheckIn.innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Check-in';
+                });
+            });
+        }
+        
+        // Re-configurar confirmación de check-out
+        if (btnConfirmarCheckOut) {
+            var nuevoBtnCheckOut = btnConfirmarCheckOut.cloneNode(true);
+            btnConfirmarCheckOut.parentNode.replaceChild(nuevoBtnCheckOut, btnConfirmarCheckOut);
+            
+            nuevoBtnCheckOut.addEventListener('click', function() {
+                if (!reservaIdSeleccionada) {
+                    showNotificationModal('error', 'Error', 'No se seleccionó una reserva.');
+                    return;
+                }
+                
+                nuevoBtnCheckOut.disabled = true;
+                nuevoBtnCheckOut.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+                
+                var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+                var formData = new FormData();
+                formData.append('IdReserva', parseInt(reservaIdSeleccionada));
+                formData.append('__RequestVerificationToken', token);
+                
+                fetch('@Url.Action("CheckOut", "Habitacion")', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (modalCheckOutInstance) {
+                            modalCheckOutInstance.hide();
+                        }
+                        showNotificationModal('success', 'Check-out Exitoso', data.message, function() {
+                            // Recargar la página para mostrar el estado actualizado
+                            window.location.reload();
+                        });
+                    } else {
+                        showNotificationModal('error', 'Error en Check-out', data.message);
+                        nuevoBtnCheckOut.disabled = false;
+                        nuevoBtnCheckOut.innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Check-out';
+                    }
+                })
+                .catch(error => {
+                    showNotificationModal('error', 'Error en Check-out', 'Error al realizar el check-out.');
+                    nuevoBtnCheckOut.disabled = false;
+                    nuevoBtnCheckOut.innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Check-out';
+                });
+            });
+        }
+    }
+    
+    // Botón de refrescar manual
+    var btnRefrescar = document.getElementById('btn-refrescar');
+    if (btnRefrescar) {
+        btnRefrescar.addEventListener('click', function () {
+            actualizarEstadoCompleto();
+        });
+    }
+    
+        // Event listeners para botones de cambio de estado (mantenimiento, disponible, etc.)
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.btn-cambiar-estado')) {
+                var btn = e.target.closest('.btn-cambiar-estado');
+                var habitacionId = btn.getAttribute('data-habitacion-id');
+                var estadoNuevo = btn.getAttribute('data-estado-nuevo');
+                
+                if (!habitacionId || !estadoNuevo) {
+                    showNotificationModal('error', 'Error', 'Datos incompletos para cambiar el estado.');
+                    return;
+                }
+                
+                // Mostrar modal de confirmación según el estado
+                if (estadoNuevo === 'Mantenimiento') {
+                    // Obtener número de habitación
+                    var habitacionCard = btn.closest('.habitacion-card');
+                    var numeroHabitacion = habitacionCard ? habitacionCard.querySelector('.habitacion-numero')?.textContent || habitacionId : habitacionId;
+                    
+                    // Configurar modal de mantenimiento
+                    if (document.getElementById('mantenimiento-habitacion-numero')) {
+                        document.getElementById('mantenimiento-habitacion-numero').textContent = numeroHabitacion;
+                    }
+                    if (document.getElementById('mantenimiento-fecha-hora')) {
+                        var ahora = new Date();
+                        var fechaHora = ahora.toLocaleDateString('es-ES', { 
+                            day: '2-digit', 
+                            month: '2-digit', 
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                        document.getElementById('mantenimiento-fecha-hora').textContent = fechaHora;
+                    }
+                    
+                    // Mostrar modal
+                    var modalMantenimiento = document.getElementById('modalMantenimiento');
+                    var modalMantenimientoInstance = null;
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        modalMantenimientoInstance = new bootstrap.Modal(modalMantenimiento);
+                        modalMantenimientoInstance.show();
+                    } else if (modalMantenimiento) {
+                        modalMantenimiento.style.display = 'block';
+                        modalMantenimiento.classList.add('show');
+                        var backdrop = document.createElement('div');
+                        backdrop.className = 'modal-backdrop fade show';
+                        backdrop.id = 'modalBackdropMantenimiento';
+                        document.body.appendChild(backdrop);
+                    }
+                    
+                    // Guardar datos para cuando se confirme
+                    modalMantenimiento.dataset.habitacionId = habitacionId;
+                    modalMantenimiento.dataset.estadoNuevo = estadoNuevo;
+                    modalMantenimiento.dataset.btnId = btn.id || 'btn-' + Date.now();
+                    
+                    // Guardar referencia al botón
+                    if (!window.btnCambiarEstado) {
+                        window.btnCambiarEstado = {};
+                    }
+                    window.btnCambiarEstado[habitacionId] = btn;
+                } else if (estadoNuevo === 'Disponible') {
+                    // Obtener número de habitación
+                    var habitacionCard = btn.closest('.habitacion-card');
+                    var numeroHabitacion = habitacionCard ? habitacionCard.querySelector('.habitacion-numero')?.textContent || habitacionId : habitacionId;
+                    
+                    // Configurar modal de disponible
+                    if (document.getElementById('disponible-habitacion-numero')) {
+                        document.getElementById('disponible-habitacion-numero').textContent = numeroHabitacion;
+                    }
+                    if (document.getElementById('disponible-fecha-hora')) {
+                        var ahora = new Date();
+                        var fechaHora = ahora.toLocaleDateString('es-ES', { 
+                            day: '2-digit', 
+                            month: '2-digit', 
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                        document.getElementById('disponible-fecha-hora').textContent = fechaHora;
+                    }
+                    
+                    // Mostrar modal
+                    var modalDisponible = document.getElementById('modalDisponible');
+                    var modalDisponibleInstance = null;
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        modalDisponibleInstance = new bootstrap.Modal(modalDisponible);
+                        modalDisponibleInstance.show();
+                    } else if (modalDisponible) {
+                        modalDisponible.style.display = 'block';
+                        modalDisponible.classList.add('show');
+                        var backdrop = document.createElement('div');
+                        backdrop.className = 'modal-backdrop fade show';
+                        backdrop.id = 'modalBackdropDisponible';
+                        document.body.appendChild(backdrop);
+                    }
+                    
+                    // Guardar datos para cuando se confirme
+                    modalDisponible.dataset.habitacionId = habitacionId;
+                    modalDisponible.dataset.estadoNuevo = estadoNuevo;
+                    
+                    // Guardar referencia al botón
+                    if (!window.btnCambiarEstado) {
+                        window.btnCambiarEstado = {};
+                    }
+                    window.btnCambiarEstado[habitacionId] = btn;
+                } else {
+                    // Para otros estados, usar confirmación simple
+                    var confirmar = confirm(`¿Desea cambiar el estado de la habitación a "${estadoNuevo}"?`);
+                    if (!confirmar) return;
+                    
+                    cambiarEstadoHabitacion(habitacionId, estadoNuevo, btn, null);
+                }
+            }
+        });
+        
+        // Función para cambiar estado de habitación o departamento
+        function cambiarEstadoHabitacion(habitacionId, estadoNuevo, btn, descripcionMantenimiento, tipo) {
+            // Deshabilitar botón
+            if (btn) {
+                btn.disabled = true;
+                var textoOriginal = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+            }
+            
+            // Obtener token anti-forgery
+            var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+            
+            // Obtener tipo desde el botón si no se proporciona
+            if (!tipo) {
+                tipo = btn ? (btn.getAttribute('data-tipo') || 'habitacion') : 'habitacion';
+            }
+            
+            // Realizar petición AJAX
+            var formData = new FormData();
+            formData.append('IdHabitacion', parseInt(habitacionId));
+            formData.append('Estado', estadoNuevo);
+            formData.append('Tipo', tipo);
+            if (descripcionMantenimiento) {
+                formData.append('DescripcionMantenimiento', descripcionMantenimiento);
+            }
+            formData.append('__RequestVerificationToken', token);
+            
+            fetch('@Url.Action("ToggleEstado", "Habitacion")', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            })
+            .then(response => {
+                // Intentar parsear como JSON primero
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    return response.json();
+                } else {
+                    // Si no es JSON, asumir éxito y recargar
+                    return { success: true, message: 'Estado actualizado correctamente' };
+                }
+            })
+            .then(data => {
+                if (data.success) {
+                    showNotificationModal('success', 'Estado Actualizado', data.message || `Estado cambiado a ${estadoNuevo}`, function() {
+                        // Recargar página para mostrar cambios
+                        window.location.reload();
+                    });
+                } else {
+                    showNotificationModal('error', 'Error', data.message || 'Error al cambiar el estado');
+                    if (btn) {
+                        btn.disabled = false;
+                        var textoOriginal = btn.getAttribute('data-texto-original');
+                        if (textoOriginal) {
+                            btn.innerHTML = textoOriginal;
+                        }
+                    }
+                }
+            })
+            .catch(error => {
+                showNotificationModal('error', 'Error', 'Error al cambiar el estado. Por favor, intente nuevamente.');
+                if (btn) {
+                    btn.disabled = false;
+                    var textoOriginal = btn.getAttribute('data-texto-original');
+                    if (textoOriginal) {
+                        btn.innerHTML = textoOriginal;
+                    }
+                }
+            });
+        }
+        
+        // Función global para confirmar disponible (llamada desde onclick)
+        window.confirmarDisponible = function() {
+            var modalDisponible = document.getElementById('modalDisponible');
+            if (!modalDisponible) {
+                alert('Error: No se encontró el modal de disponible.');
+                return false;
+            }
+            
+            var habitacionId = modalDisponible.dataset.habitacionId;
+            var estadoNuevo = modalDisponible.dataset.estadoNuevo;
+            
+            if (!habitacionId || !estadoNuevo) {
+                alert('Error: No se encontraron los datos de la habitación.');
+                return false;
+            }
+            
+            // Obtener botón original
+            var btn = window.btnCambiarEstado && window.btnCambiarEstado[habitacionId] 
+                ? window.btnCambiarEstado[habitacionId] 
+                : document.querySelector('[data-habitacion-id="' + habitacionId + '"]');
+            
+            // Cerrar modal
+            var modalDisponibleInstance = null;
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                modalDisponibleInstance = bootstrap.Modal.getInstance(modalDisponible);
+                if (modalDisponibleInstance) {
+                    modalDisponibleInstance.hide();
+                }
+            } else if (modalDisponible) {
+                modalDisponible.style.display = 'none';
+                modalDisponible.classList.remove('show');
+                var backdrop = document.getElementById('modalBackdropDisponible');
+                if (backdrop) backdrop.remove();
+            }
+            
+            // Cambiar estado
+            cambiarEstadoHabitacion(habitacionId, estadoNuevo, btn, null);
+            
+            return false; // Prevenir comportamiento por defecto
+        };
+        
+        // Función global para confirmar mantenimiento (llamada desde onclick)
+        window.confirmarMantenimiento = function() {
+            var modalMantenimiento = document.getElementById('modalMantenimiento');
+            if (!modalMantenimiento) {
+                alert('Error: No se encontró el modal de mantenimiento.');
+                return false;
+            }
+            
+            var habitacionId = modalMantenimiento.dataset.habitacionId;
+            var estadoNuevo = modalMantenimiento.dataset.estadoNuevo;
+            
+            if (!habitacionId || !estadoNuevo) {
+                alert('Error: No se encontraron los datos de la habitación.');
+                return false;
+            }
+            
+            var descripcionTextarea = document.getElementById('mantenimiento-descripcion');
+            var descripcionMantenimiento = descripcionTextarea ? descripcionTextarea.value.trim() : '';
+            
+            if (!descripcionMantenimiento) {
+                alert('Por favor, ingrese una descripción del mantenimiento requerido.');
+                if (descripcionTextarea) {
+                    descripcionTextarea.focus();
+                }
+                return false;
+            }
+            
+            // Obtener botón original
+            var btn = window.btnCambiarEstado && window.btnCambiarEstado[habitacionId] 
+                ? window.btnCambiarEstado[habitacionId] 
+                : document.querySelector('[data-habitacion-id="' + habitacionId + '"]');
+            
+            // Cerrar modal
+            var modalMantenimientoInstance = null;
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                modalMantenimientoInstance = bootstrap.Modal.getInstance(modalMantenimiento);
+                if (modalMantenimientoInstance) {
+                    modalMantenimientoInstance.hide();
+                }
+            } else if (modalMantenimiento) {
+                modalMantenimiento.style.display = 'none';
+                modalMantenimiento.classList.remove('show');
+                var backdrop = document.getElementById('modalBackdropMantenimiento');
+                if (backdrop) backdrop.remove();
+            }
+            
+            // Cambiar estado con descripción
+            cambiarEstadoHabitacion(habitacionId, estadoNuevo, btn, descripcionMantenimiento);
+            
+            // Limpiar textarea para próxima vez
+            if (descripcionTextarea) {
+                descripcionTextarea.value = '';
+            }
+            
+            return false; // Prevenir comportamiento por defecto
+        };
+        
+        // DESACTIVADO: Actualización automática cada 30 segundos
+        // setInterval(function() {
+        //     actualizarEstadoCompleto();
+        // }, 30000);
+
+    // Limpiar intervalo al salir de la página
+    window.addEventListener('beforeunload', function () {
+        clearInterval(autoRefreshInterval);
+    });
+
+    // Filtros del mapa
+    document.addEventListener('DOMContentLoaded', function () {
+        var filtros = document.querySelectorAll('.btn-filtro');
+        var mapaContainer = document.querySelector('.mapa-habitaciones');
+        
+        filtros.forEach(function(filtro) {
+            filtro.addEventListener('click', function() {
+                // Remover active de todos
+                filtros.forEach(function(f) {
+                    f.classList.remove('active');
+                });
+                
+                // Agregar active al clickeado
+                this.classList.add('active');
+                
+                var filtroTipo = this.getAttribute('data-filtro');
+                
+                // Mostrar solo el tipo seleccionado: ocultar el resto
+                if (mapaContainer) {
+                    mapaContainer.classList.remove('hide-disponible', 'hide-ocupada', 'hide-mantenimiento', 'hide-limpieza');
+                    if (filtroTipo === 'disponible') {
+                        mapaContainer.classList.add('hide-ocupada', 'hide-mantenimiento', 'hide-limpieza');
+                    } else if (filtroTipo === 'ocupada') {
+                        mapaContainer.classList.add('hide-disponible', 'hide-mantenimiento', 'hide-limpieza');
+                    } else if (filtroTipo === 'mantenimiento') {
+                        mapaContainer.classList.add('hide-disponible', 'hide-ocupada', 'hide-limpieza');
+                    } else if (filtroTipo === 'limpieza') {
+                        mapaContainer.classList.add('hide-disponible', 'hide-ocupada', 'hide-mantenimiento');
+                    }
+                }
+            });
+        });
+
+        // Click en habitación del mapa para mostrar detalles
+        var habitacionesMapa = document.querySelectorAll('.mapa-habitacion-item');
+        var habitacionesDetalle = document.querySelectorAll('.habitacion-card');
+        
+        habitacionesMapa.forEach(function(item) {
+            item.addEventListener('click', function() {
+                var id = this.getAttribute('data-id');
+                var cardDetalle = document.querySelector('.habitacion-card[data-id="' + id + '"]');
+                
+                if (cardDetalle) {
+                    // Scroll suave a la tarjeta de detalle
+                    cardDetalle.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Efecto de resaltado
+                    cardDetalle.style.transform = 'scale(1.05)';
+                    cardDetalle.style.boxShadow = '0 12px 32px rgba(109, 123, 184, 0.4)';
+                    cardDetalle.style.transition = 'all 0.3s ease';
+                    
+                    setTimeout(function() {
+                        cardDetalle.style.transform = '';
+                        cardDetalle.style.boxShadow = '';
+                    }, 2000);
+                }
+            });
+        });
+    });
+</script>
+
+<!-- Token Anti-Forgery para AJAX -->
+@Html.AntiForgeryToken()
+
+<!-- Modales para Check-in y Check-out -->
+<!-- Modal Check-in -->
+<div class="modal fade" id="modalCheckIn" tabindex="-1" aria-labelledby="modalCheckInLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="modalCheckInLabel">
+                    <i class="fas fa-sign-in-alt me-2"></i>Confirmar Check-in
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-key fa-4x text-success"></i>
+                </div>
+                <h5 class="mb-3">¿Desea realizar el check-in de esta habitación?</h5>
+                <div class="alert alert-info text-start">
+                    <p class="mb-2"><strong><i class="fas fa-bed me-2"></i>Habitación:</strong> <span id="checkin-habitacion-numero"></span></p>
+                    <p class="mb-2"><strong><i class="fas fa-user me-2"></i>Cliente:</strong> <span id="checkin-cliente"></span></p>
+                    <p class="mb-0"><strong><i class="fas fa-calendar me-2"></i>Fecha y Hora:</strong> <span id="checkin-fecha-hora"></span></p>
+                </div>
+                <p class="text-muted small mt-3">
+                    Al realizar el check-in:
+                </p>
+                <ul class="list-unstyled text-start">
+                    <li><i class="fas fa-check-circle text-success me-2"></i>La reserva cambiará a estado "En Proceso"</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i>La habitación se marcará como "Ocupada"</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i>Se registrará en la bitácora</li>
+                </ul>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-success" id="btnConfirmarCheckIn">
+                    <i class="fas fa-check me-2"></i>Confirmar Check-in
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Check-out -->
+<div class="modal fade" id="modalCheckOut" tabindex="-1" aria-labelledby="modalCheckOutLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="modalCheckOutLabel">
+                    <i class="fas fa-sign-out-alt me-2"></i>Confirmar Check-out
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-door-open fa-4x text-warning"></i>
+                </div>
+                <h5 class="mb-3">¿Desea realizar el check-out de esta habitación?</h5>
+                <div class="alert alert-warning text-start">
+                    <p class="mb-2"><strong><i class="fas fa-bed me-2"></i>Habitación:</strong> <span id="checkout-habitacion-numero"></span></p>
+                    <p class="mb-2"><strong><i class="fas fa-user me-2"></i>Cliente:</strong> <span id="checkout-cliente"></span></p>
+                    <p class="mb-0"><strong><i class="fas fa-calendar me-2"></i>Fecha y Hora:</strong> <span id="checkout-fecha-hora"></span></p>
+                </div>
+                <p class="text-muted small mt-3">
+                    Al realizar el check-out:
+                </p>
+                <ul class="list-unstyled text-start">
+                    <li><i class="fas fa-check-circle text-success me-2"></i>La reserva cambiará a estado "Completada"</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i>La habitación se marcará como "Disponible"</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i>Se creará automáticamente una solicitud de limpieza</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i>Se registrará en la bitácora</li>
+                </ul>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-warning" id="btnConfirmarCheckOut">
+                    <i class="fas fa-check me-2"></i>Confirmar Check-out
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Mantenimiento -->
+<div class="modal fade" id="modalMantenimiento" tabindex="-1" aria-labelledby="modalMantenimientoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="modalMantenimientoLabel">
+                    <i class="fas fa-tools me-2"></i>Confirmar Mantenimiento
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-wrench fa-4x text-warning"></i>
+                </div>
+                <h5 class="mb-3">¿Desea marcar esta habitación en mantenimiento?</h5>
+                <div class="alert alert-warning text-start">
+                    <p class="mb-2"><strong><i class="fas fa-bed me-2"></i>Habitación:</strong> <span id="mantenimiento-habitacion-numero"></span></p>
+                    <p class="mb-3"><strong><i class="fas fa-calendar me-2"></i>Fecha:</strong> <span id="mantenimiento-fecha-hora"></span></p>
+                </div>
+                <div class="mb-3 text-start">
+                    <label for="mantenimiento-descripcion" class="form-label">
+                        <strong><i class="fas fa-clipboard-list me-2"></i>Descripción del Mantenimiento:</strong>
+                    </label>
+                    <textarea class="form-control" id="mantenimiento-descripcion" rows="4" 
+                              placeholder="Describa qué tipo de mantenimiento se necesita realizar (ej: Reparación de aire acondicionado, Cambio de cortinas, Pintura, etc.)"></textarea>
+                    <small class="form-text text-muted">Esta descripción ayudará a identificar el tipo de mantenimiento requerido.</small>
+                </div>
+                <p class="text-muted small mt-3">
+                    Al marcar en mantenimiento:
+                </p>
+                <ul class="list-unstyled text-start">
+                    <li><i class="fas fa-check-circle text-warning me-2"></i>La habitación no estará disponible para reservas</li>
+                    <li><i class="fas fa-check-circle text-warning me-2"></i>Se registrará en la bitácora</li>
+                    <li><i class="fas fa-check-circle text-warning me-2"></i>Se creará un registro de mantenimiento</li>
+                    <li><i class="fas fa-check-circle text-warning me-2"></i>Podrá cambiar el estado a "Disponible" cuando termine el mantenimiento</li>
+                </ul>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-warning" id="btnConfirmarMantenimiento" onclick="confirmarMantenimiento()">
+                    <i class="fas fa-check me-2"></i>Confirmar Mantenimiento
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Disponible -->
+<div class="modal fade" id="modalDisponible" tabindex="-1" aria-labelledby="modalDisponibleLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="modalDisponibleLabel">
+                    <i class="fas fa-check-circle me-2"></i>Confirmar Disponibilidad
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-check-circle fa-4x text-success"></i>
+                </div>
+                <h5 class="mb-3">¿Desea marcar esta habitación como disponible?</h5>
+                <div class="alert alert-success text-start">
+                    <p class="mb-2"><strong><i class="fas fa-bed me-2"></i>Habitación:</strong> <span id="disponible-habitacion-numero"></span></p>
+                    <p class="mb-0"><strong><i class="fas fa-calendar me-2"></i>Fecha:</strong> <span id="disponible-fecha-hora"></span></p>
+                </div>
+                <p class="text-muted small mt-3">
+                    Al marcar como disponible:
+                </p>
+                <ul class="list-unstyled text-start">
+                    <li><i class="fas fa-check-circle text-success me-2"></i>La habitación estará disponible para nuevas reservas</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i>Se registrará en la bitácora</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i>Si había mantenimiento activo, se completará automáticamente</li>
+                </ul>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-success" id="btnConfirmarDisponible" onclick="confirmarDisponible()">
+                    <i class="fas fa-check me-2"></i>Confirmar Disponibilidad
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para manejar Check-in y Check-out -->
+<script>
+    (function() {
+        'use strict';
+        
+        var reservaIdSeleccionada = null;
+        var modalCheckIn = document.getElementById('modalCheckIn');
+        var modalCheckOut = document.getElementById('modalCheckOut');
+        var btnConfirmarCheckIn = document.getElementById('btnConfirmarCheckIn');
+        var btnConfirmarCheckOut = document.getElementById('btnConfirmarCheckOut');
+        
+        // Inicializar modales de Bootstrap si están disponibles
+        var modalCheckInInstance = null;
+        var modalCheckOutInstance = null;
+        
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            modalCheckInInstance = new bootstrap.Modal(modalCheckIn);
+            modalCheckOutInstance = new bootstrap.Modal(modalCheckOut);
+        }
+        
+        // Event listeners para botones de check-in
+        document.querySelectorAll('.btn-checkin').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                reservaIdSeleccionada = this.getAttribute('data-reserva-id');
+                var habitacionNumero = this.getAttribute('data-habitacion-numero');
+                var cliente = this.getAttribute('data-cliente');
+                
+                document.getElementById('checkin-habitacion-numero').textContent = habitacionNumero;
+                document.getElementById('checkin-cliente').textContent = cliente;
+                
+                if (modalCheckInInstance) {
+                    modalCheckInInstance.show();
+                } else if (modalCheckIn) {
+                    modalCheckIn.style.display = 'block';
+                    modalCheckIn.classList.add('show');
+                    var backdrop = document.createElement('div');
+                    backdrop.className = 'modal-backdrop fade show';
+                    backdrop.id = 'modalBackdrop';
+                    document.body.appendChild(backdrop);
+                }
+            });
+        });
+        
+        // Event listeners para botones de check-out
+        document.querySelectorAll('.btn-checkout').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                reservaIdSeleccionada = this.getAttribute('data-reserva-id');
+                var habitacionNumero = this.getAttribute('data-habitacion-numero');
+                var cliente = this.getAttribute('data-cliente');
+                
+                document.getElementById('checkout-habitacion-numero').textContent = habitacionNumero;
+                document.getElementById('checkout-cliente').textContent = cliente;
+                
+                if (modalCheckOutInstance) {
+                    modalCheckOutInstance.show();
+                } else if (modalCheckOut) {
+                    modalCheckOut.style.display = 'block';
+                    modalCheckOut.classList.add('show');
+                    var backdrop = document.createElement('div');
+                    backdrop.className = 'modal-backdrop fade show';
+                    backdrop.id = 'modalBackdrop';
+                    document.body.appendChild(backdrop);
+                }
+            });
+        });
+        
+        // Confirmar check-in
+        if (btnConfirmarCheckIn) {
+            btnConfirmarCheckIn.addEventListener('click', function() {
+                if (!reservaIdSeleccionada) {
+                    showNotificationModal('error', 'Error', 'No se seleccionó una reserva.');
+                    return;
+                }
+                
+                // Deshabilitar botón mientras se procesa
+                btnConfirmarCheckIn.disabled = true;
+                btnConfirmarCheckIn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+                
+                // Obtener token anti-forgery
+                var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+                
+                // Realizar petición AJAX
+                var formData = new FormData();
+                formData.append('IdReserva', parseInt(reservaIdSeleccionada));
+                formData.append('__RequestVerificationToken', token);
+                
+                fetch('@Url.Action("CheckIn", "Habitacion")', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (modalCheckInInstance) {
+                            modalCheckInInstance.hide();
+                        } else if (modalCheckIn) {
+                            modalCheckIn.style.display = 'none';
+                            modalCheckIn.classList.remove('show');
+                            var backdrop = document.getElementById('modalBackdrop');
+                            if (backdrop) backdrop.remove();
+                        }
+                        
+                        // Mostrar mensaje de éxito con modal bonito
+                        showNotificationModal('success', 'Check-in Exitoso', data.message, function() {
+                            // Recargar la página para mostrar el estado actualizado
+                            window.location.reload();
+                        });
+                    } else {
+                        showNotificationModal('error', 'Error en Check-in', data.message);
+                        btnConfirmarCheckIn.disabled = false;
+                        btnConfirmarCheckIn.innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Check-in';
+                    }
+                })
+                .catch(error => {
+                    showNotificationModal('error', 'Error en Check-in', 'Error al realizar el check-in. Por favor, intente nuevamente.');
+                    btnConfirmarCheckIn.disabled = false;
+                    btnConfirmarCheckIn.innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Check-in';
+                });
+            });
+        }
+        
+        // Confirmar check-out
+        if (btnConfirmarCheckOut) {
+            btnConfirmarCheckOut.addEventListener('click', function() {
+                if (!reservaIdSeleccionada) {
+                    showNotificationModal('error', 'Error', 'No se seleccionó una reserva.');
+                    return;
+                }
+                
+                // Deshabilitar botón mientras se procesa
+                btnConfirmarCheckOut.disabled = true;
+                btnConfirmarCheckOut.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+                
+                // Obtener token anti-forgery
+                var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+                
+                // Realizar petición AJAX
+                var formData = new FormData();
+                formData.append('IdReserva', parseInt(reservaIdSeleccionada));
+                formData.append('__RequestVerificationToken', token);
+                
+                fetch('@Url.Action("CheckOut", "Habitacion")', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (modalCheckOutInstance) {
+                            modalCheckOutInstance.hide();
+                        } else if (modalCheckOut) {
+                            modalCheckOut.style.display = 'none';
+                            modalCheckOut.classList.remove('show');
+                            var backdrop = document.getElementById('modalBackdrop');
+                            if (backdrop) backdrop.remove();
+                        }
+                        
+                        // Mostrar mensaje de éxito con modal bonito
+                        showNotificationModal('success', 'Check-out Exitoso', data.message, function() {
+                            // Recargar la página para mostrar el estado actualizado
+                            window.location.reload();
+                        });
+                    } else {
+                        showNotificationModal('error', 'Error en Check-out', data.message);
+                        btnConfirmarCheckOut.disabled = false;
+                        btnConfirmarCheckOut.innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Check-out';
+                    }
+                })
+                .catch(error => {
+                    showNotificationModal('error', 'Error en Check-out', 'Error al realizar el check-out. Por favor, intente nuevamente.');
+                    btnConfirmarCheckOut.disabled = false;
+                    btnConfirmarCheckOut.innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Check-out';
+                });
+            });
+        }
+        
+        // Cerrar modales al hacer click fuera
+        if (modalCheckIn) {
+            modalCheckIn.addEventListener('click', function(e) {
+                if (e.target === modalCheckIn) {
+                    if (modalCheckInInstance) {
+                        modalCheckInInstance.hide();
+                    } else {
+                        modalCheckIn.style.display = 'none';
+                        modalCheckIn.classList.remove('show');
+                        var backdrop = document.getElementById('modalBackdrop');
+                        if (backdrop) backdrop.remove();
+                    }
+                }
+            });
+        }
+        
+        if (modalCheckOut) {
+            modalCheckOut.addEventListener('click', function(e) {
+                if (e.target === modalCheckOut) {
+                    if (modalCheckOutInstance) {
+                        modalCheckOutInstance.hide();
+                    } else {
+                        modalCheckOut.style.display = 'none';
+                        modalCheckOut.classList.remove('show');
+                        var backdrop = document.getElementById('modalBackdrop');
+                        if (backdrop) backdrop.remove();
+                    }
+                }
+            });
+        }
+    })();
+    
+    // Función para mostrar modales de notificación bonitos
+    function showNotificationModal(type, title, message, callback) {
+        // Remover modal existente si hay
+        var existingModal = document.getElementById('notificationModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
+        // Crear modal
+        var modal = document.createElement('div');
+        modal.id = 'notificationModal';
+        modal.className = 'modal fade';
+        modal.setAttribute('tabindex', '-1');
+        modal.setAttribute('aria-labelledby', 'notificationModalLabel');
+        modal.setAttribute('aria-hidden', 'true');
+        
+        var iconClass = type === 'success' ? 'fa-check-circle text-success' : 'fa-exclamation-circle text-danger';
+        var bgClass = type === 'success' ? 'bg-success' : 'bg-danger';
+        
+        modal.innerHTML = `
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg">
+                    <div class="modal-header ${bgClass} text-white border-0">
+                        <h5 class="modal-title" id="notificationModalLabel">
+                            <i class="fas ${iconClass} me-2"></i>${title}
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center py-4">
+                        <div class="mb-3">
+                            <i class="fas ${iconClass} fa-4x"></i>
+                        </div>
+                        <p class="fs-5">${message}</p>
+                    </div>
+                    <div class="modal-footer border-0 justify-content-center">
+                        <button type="button" class="btn ${bgClass} text-white" data-bs-dismiss="modal" id="btnCerrarNotificacion">
+                            <i class="fas fa-check me-2"></i>Aceptar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        var modalInstance = null;
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
+        } else {
+            modal.style.display = 'block';
+            modal.classList.add('show');
+            var backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop fade show';
+            backdrop.id = 'notificationBackdrop';
+            document.body.appendChild(backdrop);
+        }
+        
+        // Manejar cierre del modal
+        var btnCerrar = document.getElementById('btnCerrarNotificacion');
+        if (btnCerrar) {
+            btnCerrar.addEventListener('click', function() {
+                if (modalInstance) {
+                    modalInstance.hide();
+                } else {
+                    modal.style.display = 'none';
+                    modal.classList.remove('show');
+                    var backdrop = document.getElementById('notificationBackdrop');
+                    if (backdrop) backdrop.remove();
+                }
+                if (callback) {
+                    setTimeout(callback, 300);
+                }
+            });
+        }
+        
+        // Cerrar automáticamente después de 2 segundos si es éxito
+        if (type === 'success' && callback) {
+            setTimeout(function() {
+                if (modalInstance) {
+                    modalInstance.hide();
+                } else {
+                    modal.style.display = 'none';
+                    modal.classList.remove('show');
+                    var backdrop = document.getElementById('notificationBackdrop');
+                    if (backdrop) backdrop.remove();
+                }
+                callback();
+            }, 2000);
+        }
+    }
+</script>
+

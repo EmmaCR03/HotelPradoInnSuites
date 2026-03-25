@@ -1,0 +1,322 @@
+@model HotelPrado.Abstracciones.Modelos.Cargos.CargosDTO
+
+@{
+    ViewBag.Title = "Registro de Cargos Manuales";
+}
+
+<style>
+    .card {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,.08);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: .5rem;
+        font-size: 0.9rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 6px;
+        border: 1px solid #dee2e6;
+        padding: .5rem .75rem;
+        font-size: 0.9rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
+
+    .btn-primary {
+        padding: .5rem 1.5rem;
+        font-weight: 500;
+    }
+
+    .text-danger {
+        font-size: 0.8rem;
+        margin-top: .25rem;
+    }
+</style>
+
+<div class="container-fluid px-4">
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">Registro de Cargos Manuales</h2>
+                <div class="text-muted">@DateTime.Now.ToString("dd-MM-yyyy")</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Datos del Cargo</h4>
+                </div>
+                <div class="card-body p-4">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                        <div class="row g-3">
+                            <!-- Folios Section -->
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Folios</label>
+                                <div class="d-flex gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoFolio" id="tipoFolioOFP" value="OFP" checked>
+                                        <label class="form-check-label" for="tipoFolioOFP">OFP</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoFolio" id="tipoFolioFM1" value="FM1">
+                                        <label class="form-check-label" for="tipoFolioFM1">FM1</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoFolio" id="tipoFolioFM2" value="FM2">
+                                        <label class="form-check-label" for="tipoFolioFM2">FM2</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoFolio" id="tipoFolioFM3" value="FM3">
+                                        <label class="form-check-label" for="tipoFolioFM3">FM3</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="tipoFolio" id="tipoFolioFM4" value="FM4">
+                                        <label class="form-check-label" for="tipoFolioFM4">FM4</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- #Folio/Registro -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">#Folio/Registro</label>
+                                    @Html.DropDownListFor(model => model.IdCheckIn, (SelectList)ViewBag.IdCheckIn, "Seleccione un Folio", new { @class = "form-select", @id = "IdCheckIn" })
+                                    @Html.ValidationMessageFor(model => model.IdCheckIn, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <!-- Nombre de cliente -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Nombre de cliente</label>
+                                    @Html.DropDownList("NombreCliente", (SelectList)ViewBag.Clientes, "Seleccione un cliente", new { @class = "form-select", @id = "NombreCliente" })
+                                </div>
+                            </div>
+
+                            <!-- Habitación -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Habitación</label>
+                                    @Html.DropDownList("Habitacion", (SelectList)ViewBag.Habitaciones, "Seleccione una habitación", new { @class = "form-select", @id = "Habitacion" })
+                                </div>
+                            </div>
+
+                            <!-- Compra -->
+                            <div class="col-md-3 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Compra</label>
+                                    <div class="input-group">
+                                        @Html.EditorFor(model => model.MontoCargo, new { htmlAttributes = new { @class = "form-control", type = "number", step = "0.01", min = "0", @id = "Compra", @Value = "486.00" } })
+                                        <button type="button" class="btn btn-outline-secondary" id="btnObtenerTipoCambio" title="Obtener tipo de cambio del API">
+                                            <i class="fas fa-sync-alt"></i>
+                                        </button>
+                                    </div>
+                                    <small class="text-muted">Se calculará automáticamente con el tipo de cambio</small>
+                                </div>
+                            </div>
+
+                            <!-- Venta -->
+                            <div class="col-md-3 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Venta</label>
+                                    @Html.EditorFor(model => model.MontoTotal, new { htmlAttributes = new { @class = "form-control", type = "number", step = "0.01", min = "0", @id = "Venta", @Value = "500.00" } })
+                                    <small class="text-muted">Precio de venta al cliente</small>
+                                </div>
+                            </div>
+
+                            <!-- Tipo de Cambio (oculto pero necesario) -->
+                            <div class="col-md-6 mb-3" id="tipoCambioGroup" style="display: none;">
+                                <div class="form-group">
+                                    <label class="form-label">Tipo de Cambio (₡ por $)</label>
+                                    @Html.EditorFor(model => model.TipoCambio, new { htmlAttributes = new { @class = "form-control", type = "number", step = "0.01", min = "0", @id = "TipoCambio", @readonly = "readonly" } })
+                                    <small class="text-muted" id="tipoCambioFecha"></small>
+                                </div>
+                            </div>
+
+                            <!-- Descripción del Cargo -->
+                            <div class="col-md-12 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Descripción del Cargo</label>
+                                    @Html.DropDownListFor(model => model.DescripcionExtra, (SelectList)ViewBag.TiposCargo, "Seleccione el tipo de cargo", new { @class = "form-select", @id = "DescripcionExtra", required = "required" })
+                                    @Html.ValidationMessageFor(model => model.DescripcionExtra, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <!-- En Dólares -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="EnDolares" name="EnDolares" value="true">
+                                    <label class="form-check-label" for="EnDolares">En Dólares</label>
+                                </div>
+                            </div>
+
+                            <!-- #Documento -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">#Documento</label>
+                                    @Html.EditorFor(model => model.NumeroDocumento, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0", @id = "NumeroDocumento", @Value = "0" } })
+                                </div>
+                            </div>
+
+                            <!-- Monto en $ -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Monto en $</label>
+                                    @Html.EditorFor(model => model.MontoCargo, new { htmlAttributes = new { @class = "form-control", type = "number", step = "0.0001", min = "0", @id = "MontoDolares", @Value = "0.0000" } })
+                                </div>
+                            </div>
+
+                            <!-- Cargar Room Service -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="CargarRoomService" name="CargarRoomService" value="true">
+                                    <label class="form-check-label" for="CargarRoomService">Cargar Room Service</label>
+                                </div>
+                            </div>
+
+                            <!-- Observaciones -->
+                            <div class="col-12 mb-3">
+                                <div class="form-group">
+                                    <label class="form-label">Observaciones</label>
+                                    @Html.TextAreaFor(model => model.Notas, new { @class = "form-control", rows = "3", placeholder = "Observaciones adicionales (opcional)" })
+                                </div>
+                            </div>
+
+                            <!-- Campos ocultos necesarios -->
+                            @Html.HiddenFor(model => model.FechaHora, new { @Value = DateTime.Now })
+                            @Html.HiddenFor(model => model.Cancelado, new { @Value = false })
+                            @Html.HiddenFor(model => model.EnFacturaExtras, new { @Value = false })
+                            @Html.HiddenFor(model => model.CuentaError, new { @Value = false })
+                            @Html.HiddenFor(model => model.PagoImpuesto, new { @Value = false })
+                            @Html.HiddenFor(model => model.Facturar, new { @Value = false })
+                            @Html.HiddenFor(model => model.NoContable, new { @Value = false })
+                            @Html.HiddenFor(model => model.MontoServicio, new { @Value = 0 })
+                            @Html.HiddenFor(model => model.ImpuestoVenta, new { @Value = 0 })
+                            @Html.HiddenFor(model => model.ImpuestoHotel, new { @Value = 0 })
+                            @Html.HiddenFor(model => model.ImpuestoServicio, new { @Value = 0 })
+
+                            <div class="col-12 mt-4">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="@Url.Action("Index")" class="btn btn-secondary">
+                                        <i class="fas fa-times me-2"></i>Cancelar
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Guardar Cargo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        // Auto-completar habitación cuando se selecciona un folio
+        document.getElementById("IdCheckIn").addEventListener("change", function() {
+            var selectedText = this.options[this.selectedIndex].text;
+            // Extraer número de habitación del texto (formato: "24465-001 - Nombre - Hab: 101")
+            var match = selectedText.match(/Hab:\s*(\d+)/);
+            if (match) {
+                var habitacionSelect = document.getElementById("Habitacion");
+                for (var i = 0; i < habitacionSelect.options.length; i++) {
+                    if (habitacionSelect.options[i].text === match[1]) {
+                        habitacionSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+        });
+
+        // Manejar cambio de "En Dólares"
+        document.getElementById("EnDolares").addEventListener("change", function() {
+            var montoDolares = document.getElementById("MontoDolares");
+            var tipoCambioGroup = document.getElementById("tipoCambioGroup");
+            if (this.checked) {
+                montoDolares.style.display = "block";
+                tipoCambioGroup.style.display = "block";
+                obtenerTipoCambio();
+            } else {
+                montoDolares.style.display = "none";
+                tipoCambioGroup.style.display = "none";
+            }
+        });
+
+        // Obtener tipo de cambio del API
+        function obtenerTipoCambio() {
+            var btn = document.getElementById("btnObtenerTipoCambio");
+            var originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            $.ajax({
+                url: '@Url.Action("ObtenerTipoCambio", "TipoCambio")',
+                type: 'GET',
+                success: function(data) {
+                    if (data.success && data.tipoCambio > 0) {
+                        document.getElementById("TipoCambio").value = data.tipoCambio.toFixed(2);
+                        document.getElementById("tipoCambioFecha").textContent = "Tipo de cambio actualizado: " + new Date().toLocaleString('es-CR');
+                        
+                        // Si hay monto en dólares, calcular compra y venta
+                        var montoDolares = parseFloat(document.getElementById("MontoDolares").value) || 0;
+                        if (montoDolares > 0) {
+                            var compra = montoDolares * data.tipoCambio;
+                            var venta = compra * 1.03; // 3% de margen (ajustable)
+                            document.getElementById("Compra").value = compra.toFixed(2);
+                            document.getElementById("Venta").value = venta.toFixed(2);
+                        }
+                    } else {
+                        alert("No se pudo obtener el tipo de cambio. Por favor, ingréselo manualmente.");
+                    }
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                },
+                error: function() {
+                    alert("Error al obtener el tipo de cambio. Por favor, ingréselo manualmente.");
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                }
+            });
+        }
+
+        // Botón para obtener tipo de cambio manualmente
+        document.getElementById("btnObtenerTipoCambio").addEventListener("click", function() {
+            obtenerTipoCambio();
+        });
+
+        // Calcular compra y venta cuando cambie el monto en dólares
+        document.getElementById("MontoDolares").addEventListener("input", function() {
+            var montoDolares = parseFloat(this.value) || 0;
+            var tipoCambio = parseFloat(document.getElementById("TipoCambio").value) || 0;
+            
+            if (montoDolares > 0 && tipoCambio > 0) {
+                var compra = montoDolares * tipoCambio;
+                var venta = compra * 1.03; // 3% de margen (ajustable)
+                document.getElementById("Compra").value = compra.toFixed(2);
+                document.getElementById("Venta").value = venta.toFixed(2);
+            }
+        });
+    </script>
+}

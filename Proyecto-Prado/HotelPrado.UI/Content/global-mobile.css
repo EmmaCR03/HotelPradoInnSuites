@@ -1,0 +1,251 @@
+/* ============================================
+   OPTIMIZACIONES GLOBALES PARA MÓVIL
+   ============================================ */
+
+/* Optimizaciones para dispositivos táctiles */
+@media (max-width: 768px) {
+    /* Aumentar tamaño de botones para touch (mínimo 44x44px recomendado por Apple) */
+    .btn {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .btn-sm {
+        min-height: 38px;
+        min-width: 38px;
+        padding: 0.5rem 1rem;
+    }
+    
+    /* Mejorar espaciado en formularios */
+    .form-control, 
+    .form-select,
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="date"],
+    input[type="datetime-local"],
+    textarea,
+    select {
+        min-height: 44px;
+        font-size: 16px; /* Evita zoom automático en iOS */
+        padding: 0.75rem;
+    }
+    
+    /* Tablas con scroll horizontal suave */
+    .table-responsive {
+        -webkit-overflow-scrolling: touch;
+        overflow-x: auto;
+        display: block;
+        width: 100%;
+    }
+    
+    .table {
+        font-size: 0.9rem;
+        min-width: 600px; /* Ancho mínimo para mantener legibilidad */
+    }
+    
+    /* Modales más grandes en móvil */
+    .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+    }
+    
+    .modal-content {
+        border-radius: 12px;
+    }
+    
+    /* Mejorar legibilidad */
+    body {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+    
+    /* Espaciado aumentado */
+    .container-fluid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    /* Cards más compactas */
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    /* Mejorar navegación */
+    .navbar-nav .nav-link {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+    }
+    
+    /* Inputs de búsqueda más grandes */
+    .form-control-search,
+    input[type="search"] {
+        min-height: 44px;
+        font-size: 16px;
+    }
+    
+    /* Mejorar dropdowns */
+    .dropdown-menu {
+        max-height: 70vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Mejorar badges y labels */
+    .badge {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.75rem;
+    }
+    
+    /* Espaciado entre elementos */
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+    
+    .mt-3 {
+        margin-top: 1rem !important;
+    }
+    
+    /* Mejorar botones de acción */
+    .btn-group .btn {
+        min-width: auto;
+    }
+    
+    /* Optimizar imágenes */
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    /* Mejorar modales de confirmación */
+    .modal-footer .btn {
+        flex: 1;
+        margin: 0.25rem;
+    }
+}
+
+/* Optimizaciones para tablets */
+@media (min-width: 769px) and (max-width: 992px) {
+    .container-fluid {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+    
+    .btn {
+        min-height: 40px;
+        padding: 0.6rem 1.25rem;
+    }
+}
+
+/* Optimizaciones para pantallas muy pequeñas */
+@media (max-width: 576px) {
+    /* Texto más pequeño pero legible */
+    h1 { font-size: 1.75rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.1rem; }
+    
+    /* Botones full-width en móviles pequeños */
+    .btn-group-vertical .btn,
+    .btn-mobile-full {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Ocultar columnas menos importantes en tablas */
+    .table-responsive .table th:nth-child(n+4),
+    .table-responsive .table td:nth-child(n+4) {
+        display: none;
+    }
+    
+    /* Modales casi full-screen */
+    .modal-dialog {
+        margin: 0.25rem;
+        max-width: calc(100% - 0.5rem);
+    }
+    
+    /* Cards sin padding lateral excesivo */
+    .card-body {
+        padding: 0.75rem;
+    }
+}
+
+/* Mejoras de accesibilidad táctil */
+@media (hover: none) and (pointer: coarse) {
+    /* Dispositivos táctiles */
+    a, button, .btn, [role="button"] {
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Mejor feedback visual en touch */
+    .btn:active {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+    
+    /* Mejorar áreas clickeables */
+    .clickable {
+        padding: 0.75rem;
+        margin: -0.75rem;
+    }
+}
+
+/* Prevenir zoom en inputs (iOS) */
+@media screen and (max-width: 768px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="tel"],
+    input[type="url"],
+    input[type="search"],
+    textarea,
+    select {
+        font-size: 16px !important;
+    }
+}
+
+/* Mejorar scroll en móviles */
+@media (max-width: 768px) {
+    * {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    body {
+        overflow-x: hidden;
+    }
+}
+
+/* Optimizar animaciones en móviles */
+@media (max-width: 768px) {
+    /* Reducir animaciones para mejor performance */
+    * {
+        animation-duration: 0.2s !important;
+        transition-duration: 0.2s !important;
+    }
+    
+    /* Deshabilitar animaciones complejas si el usuario prefiere menos movimiento */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation: none !important;
+            transition: none !important;
+        }
+    }
+}
+

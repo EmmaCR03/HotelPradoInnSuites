@@ -1,4 +1,4 @@
-﻿using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Departamentos.Conversion;
+using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Departamentos.Conversion;
 using HotelPrado.Abstracciones.Modelos.Departamento;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Departamento;
 using System;
@@ -16,12 +16,14 @@ namespace HotelPrado.LN.Departamentos.Conversion
             return new DepartamentoTabla
             {
                 IdDepartamento = elDepartamento.IdDepartamento,
-                IdCliente = (int)elDepartamento.IdCliente,
+                IdCliente = elDepartamento.IdCliente,
                 Nombre = elDepartamento.Nombre,
                 Descripcion = elDepartamento.Descripcion,
                 IdTipoDepartamento = elDepartamento.IdTipoDepartamento,
                 Precio = elDepartamento.Precio,
-                Estado = elDepartamento.Estado
+                Estado = elDepartamento.Estado,
+                UrlImagenes = elDepartamento.UrlImagenes,
+                NumeroDepartamento = elDepartamento.NumeroDepartamento ?? 0
             };
         }
     }

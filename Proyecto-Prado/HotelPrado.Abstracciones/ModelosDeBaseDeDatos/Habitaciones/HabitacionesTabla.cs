@@ -1,4 +1,4 @@
-﻿
+
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.TipoHabitacion;
 using System;
 using System.Collections.Generic;
@@ -21,6 +21,10 @@ namespace HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Habitaciones
         public decimal PrecioPorNoche2P { get; set; }
         public decimal PrecioPorNoche3P { get; set; }
         public decimal PrecioPorNoche4P { get; set; }
+        /// <summary>Tarifa general (clientes). Si > 0 se usa en vistas públicas.</summary>
+        public decimal PrecioGeneral { get; set; }
+        public decimal PrecioGobierno { get; set; }
+        public decimal PrecioCorporativo { get; set; }
 
         public string UrlImagenes { get; set; }
         public string Estado { get; set; }

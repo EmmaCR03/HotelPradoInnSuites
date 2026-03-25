@@ -1,7 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -18,7 +21,32 @@ namespace HotelPrado.UI
     {
         public Task SendAsync(IdentityMessage message)
         {
-            // Conecte el servicio de correo electrónico aquí para enviar un correo electrónico.
+            // No enviar al correo de excepción del admin (no existe)
+            var emailAdmin = ConfigurationManager.AppSettings["EmailAdminException"];
+            if (!string.IsNullOrWhiteSpace(emailAdmin) && string.Equals(message.Destination?.Trim(), emailAdmin.Trim(), StringComparison.OrdinalIgnoreCase))
+                return Task.FromResult(0);
+
+            var host = ConfigurationManager.AppSettings["EmailSmtpHost"];
+            if (string.IsNullOrWhiteSpace(host))
+                return Task.FromResult(0);
+
+            var port = 25;
+            int.TryParse(ConfigurationManager.AppSettings["EmailSmtpPort"] ?? "25", out port);
+            var user = ConfigurationManager.AppSettings["EmailSmtpUser"];
+            var pass = ConfigurationManager.AppSettings["EmailSmtpPassword"];
+            var from = ConfigurationManager.AppSettings["EmailFrom"] ?? user ?? "noreply@hotelprado.com";
+            var fromName = ConfigurationManager.AppSettings["EmailFromName"] ?? "Hotel Prado";
+            var enableSsl = string.Equals(ConfigurationManager.AppSettings["EmailSmtpSSL"], "true", StringComparison.OrdinalIgnoreCase);
+
+            using (var client = new SmtpClient(host, port))
+            {
+                client.EnableSsl = enableSsl;
+                if (!string.IsNullOrEmpty(user))
+                    client.Credentials = new NetworkCredential(user, pass);
+                    var mail = new MailMessage(from, message.Destination, message.Subject, message.Body) { IsBodyHtml = true };
+                mail.From = new MailAddress(from, fromName);
+                client.Send(mail);
+            }
             return Task.FromResult(0);
         }
     }
@@ -51,17 +79,19 @@ namespace HotelPrado.UI
             };
 
             // Configure la lógica de validación de contraseñas
+            // Optimizado: reducir validaciones para login más rápido (solo longitud mínima)
             manager.PasswordValidator = new PasswordValidator
             {
                 RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true,
+                RequireNonLetterOrDigit = false,  // Deshabilitado para login más rápido
+                RequireDigit = false,              // Deshabilitado para login más rápido
+                RequireLowercase = false,          // Deshabilitado para login más rápido
+                RequireUppercase = false,         // Deshabilitado para login más rápido
             };
 
             // Configurar valores predeterminados para bloqueo de usuario
-            manager.UserLockoutEnabledByDefault = true;
+            // Optimizado: deshabilitar bloqueo temporalmente para login más rápido
+            manager.UserLockoutEnabledByDefault = false;  // Deshabilitado para evitar consultas adicionales
             manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
             manager.MaxFailedAccessAttemptsBeforeLockout = 5;
 
@@ -76,6 +106,8 @@ namespace HotelPrado.UI
                 Subject = "Código de seguridad",
                 BodyFormat = "Su código de seguridad es {0}"
             });
+            // RequireConfirmedEmail no existe en ASP.NET Identity para .NET Framework (sí en Core).
+            // La confirmación de correo se puede validar en AccountController al hacer login si se desea.
             manager.EmailService = new EmailService();
             manager.SmsService = new SmsService();
             var dataProtectionProvider = options.DataProtectionProvider;

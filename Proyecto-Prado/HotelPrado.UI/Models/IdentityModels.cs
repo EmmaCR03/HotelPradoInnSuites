@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -13,14 +13,17 @@ namespace HotelPrado.UI.Models
 
         [Required(ErrorMessage = "El nombre completo es obligatorio.")]
         [StringLength(100, ErrorMessage = "El nombre completo no puede tener más de 100 caracteres.")]
+        [Display(Name = "Nombre completo")]
         public string NombreCompleto { get; set; }
 
         [Required(ErrorMessage = "El número de cédula es obligatorio.")]
         [StringLength(20, ErrorMessage = "El número de cédula no puede tener más de 20 caracteres.")]
+        [Display(Name = "Cédula")]
         public string cedula { get; set; }
 
-        [Required(ErrorMessage = "El telefono es obligatorio.")]
-        [StringLength(20, ErrorMessage = "El telefono debe ser valido")]
+        [Required(ErrorMessage = "El teléfono es obligatorio.")]
+        [StringLength(20, ErrorMessage = "El teléfono debe ser válido.")]
+        [Display(Name = "Teléfono")]
         public string Telefono { get; set; }
 
 
@@ -38,6 +41,14 @@ namespace HotelPrado.UI.Models
         public ApplicationDbContext()
             : base("Contexto", throwIfV1Schema: false)
         {
+            // Configurar timeout y deshabilitar inicialización automática
+            this.Database.CommandTimeout = 30;
+            Database.SetInitializer<ApplicationDbContext>(null);
+            
+            // Optimizaciones de rendimiento
+            this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;
+            this.Configuration.AutoDetectChangesEnabled = false;
         }
 
         public static ApplicationDbContext Create()

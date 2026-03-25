@@ -1,0 +1,361 @@
+@model HotelPrado.Abstracciones.Modelos.Reservas.ReservasDTO
+@{
+    ViewBag.Title = "Nueva reserva (admin)";
+}
+
+ <style>
+    .create-reserva-wrap {
+        max-width: 700px;
+        margin: 0 auto 2rem;
+        background: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .create-reserva-wrap h2 { margin-top: 0; }
+    .create-reserva-wrap .form-group { margin-bottom: 1.25rem; }
+    .create-reserva-wrap .help-block { font-size: 0.9em; color: #6c757d; margin-top: 0.35rem; }
+    .create-reserva-wrap .btn-submit { min-width: 140px; }
+    .create-reserva-wrap .back-link { margin-top: 1rem; display: inline-block; }
+</style>
+
+<div class="create-reserva-wrap">
+    <h2>Nueva reserva</h2>
+    <p class="text-muted">Crear reserva para un cliente</p>
+
+    @if (ViewBag.ErrorMessageCreate != null)
+    {
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle me-2"></i>@ViewBag.ErrorMessageCreate
+            <br /><small class="mt-2 d-block">Puede intentar crear la reserva escribiendo el nombre del cliente manualmente abajo.</small>
+        </div>
+    }
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <!-- Selección de cliente con modal y búsqueda -->
+        <div class="form-group">
+            <label class="control-label">Cliente</label>
+            <div class="d-flex flex-wrap gap-2">
+                @Html.HiddenFor(model => model.IdCliente, new { id = "IdCliente" })
+                <input type="text" id="ClienteNombreDisplay" class="form-control" style="flex:1 1 auto; min-width: 220px;" placeholder="Seleccione un cliente o escriba abajo" readonly />
+                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalSeleccionCliente">
+                    Buscar cliente
+                </button>
+            </div>
+            <span class="help-block">Use el buscador para elegir un cliente. Si no aparece, puede escribir el nombre manualmente más abajo.</span>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Nombre del cliente</label>
+            <div>
+                @Html.EditorFor(model => model.NombreCliente, new { htmlAttributes = new { @class = "form-control", placeholder = "Escriba el nombre si no lo eligió arriba" } })
+                @Html.ValidationMessageFor(model => model.NombreCliente, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.cantidadPersonas, htmlAttributes: new { @class = "control-label" })
+            <div>
+                @Html.EditorFor(model => model.cantidadPersonas, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.cantidadPersonas, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FechaInicio, htmlAttributes: new { @class = "control-label" })
+            <div>
+                @Html.TextBoxFor(model => model.FechaInicio, new { @class = "form-control", type = "date" })
+                @Html.ValidationMessageFor(model => model.FechaInicio, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FechaFinal, htmlAttributes: new { @class = "control-label" })
+            <div>
+                @Html.TextBoxFor(model => model.FechaFinal, new { @class = "form-control", type = "date" })
+                @Html.ValidationMessageFor(model => model.FechaFinal, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <!-- Selección de habitación con modal -->
+        <div class="form-group">
+            <label class="control-label">Número de habitación</label>
+            <div class="d-flex flex-wrap align-items-center" style="gap:0.5rem;">
+                @Html.HiddenFor(model => model.IdHabitacion, new { id = "IdHabitacion" })
+                <input type="text" id="HabitacionDisplay" class="form-control" style="flex:0 0 180px;" placeholder="Sin seleccionar" readonly />
+                <button type="button" class="btn btn-outline-secondary" id="btnBuscarHabitacion">
+                    Buscar habitación disponible
+                </button>
+            </div>
+            @Html.ValidationMessageFor(model => model.IdHabitacion, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EstadoReserva, new { @class = "control-label" })
+            <div>
+                @Html.DropDownListFor(model => model.EstadoReserva,
+                    new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "Seleccione un estado", Value = "", Selected = true, Disabled = true },
+                        new SelectListItem { Text = "Pendiente", Value = "Pendiente" },
+                        new SelectListItem { Text = "Realizado", Value = "Realizado" }
+                    },
+                    new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.EstadoReserva, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Tipo de tarifa</label>
+            <div>
+                <select name="TipoTarifa" id="TipoTarifa" class="form-control">
+                    <option value="General" selected>General (clientes)</option>
+                    <option value="Gobierno">Corporativa Gobierno</option>
+                    <option value="Corporativo">Corporativa Empresas</option>
+                </select>
+                <span class="help-block">El monto total se calculará con la tarifa elegida para la habitación seleccionada.</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MontoTotal, htmlAttributes: new { @class = "control-label" })
+            <div>
+                @Html.EditorFor(model => model.MontoTotal, new { htmlAttributes = new { @class = "form-control", @id = "MontoTotal" } })
+                <span class="help-block">Se calcula al guardar según habitación, fechas y tipo de tarifa. Puede editarlo si desea.</span>
+                @Html.ValidationMessageFor(model => model.MontoTotal, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-submit">Crear reserva</button>
+        </div>
+    }
+
+    @Html.ActionLink("Volver al listado", "IndexReservasA", null, new { @class = "back-link" })
+</div>
+
+<!-- Modal selección de cliente -->
+<div class="modal fade" id="modalSeleccionCliente" tabindex="-1" aria-labelledby="modalSeleccionClienteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalSeleccionClienteLabel">Seleccionar cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <input type="text" id="busquedaCliente" class="form-control" placeholder="Buscar por nombre..." />
+                </div>
+                <div class="list-group" id="listaClientes">
+                    @{
+                        var clientes = ViewBag.IdCliente as IEnumerable<SelectListItem>;
+                        if (clientes == null) { clientes = new List<SelectListItem>(); }
+                        foreach (var cli in clientes)
+                        {
+                            if (cli == null) { continue; }
+                            <button type="button"
+                                    class="list-group-item list-group-item-action cliente-item"
+                                    data-id="@(cli.Value ?? "")"
+                                    data-nombre="@(cli.Text ?? "")">
+                                @(cli.Text ?? "Sin nombre")
+                            </button>
+                        }
+                    }
+                    @if (clientes == null || !clientes.Any())
+                    {
+                        <div class="alert alert-info mb-0">
+                            No hay clientes cargados desde la base de datos.
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal selección de habitación disponible -->
+<div class="modal fade" id="modalSeleccionHabitacion" tabindex="-1" aria-labelledby="modalSeleccionHabitacionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalSeleccionHabitacionLabel">Habitaciones disponibles</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info" id="habitacionesMensaje" style="display:none;"></div>
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Número de habitación</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="habitacionesDisponiblesBody">
+                        <!-- Se llena por JS -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @* Sin bundle para evitar fallos en hosting; la validación puede venir del layout *@
+    <script>
+        (function () {
+            var nombreInput = document.querySelector('input[name="NombreCliente"]');
+            var idClienteHidden = document.getElementById('IdCliente');
+            var clienteDisplay = document.getElementById('ClienteNombreDisplay');
+
+            // Búsqueda en lista de clientes del modal
+            var txtBusqueda = document.getElementById('busquedaCliente');
+            var listaClientes = document.getElementById('listaClientes');
+            if (txtBusqueda && listaClientes) {
+                txtBusqueda.addEventListener('keyup', function () {
+                    var filtro = txtBusqueda.value.toLowerCase();
+                    var items = listaClientes.querySelectorAll('.cliente-item');
+                    items.forEach(function (btn) {
+                        var nombre = (btn.getAttribute('data-nombre') || '').toLowerCase();
+                        btn.style.display = nombre.indexOf(filtro) !== -1 ? '' : 'none';
+                    });
+                });
+            }
+
+            // Seleccionar cliente desde el modal
+            if (listaClientes) {
+                listaClientes.addEventListener('click', function (e) {
+                    var btn = e.target.closest('.cliente-item');
+                    if (!btn) return;
+                    var id = btn.getAttribute('data-id');
+                    var nombre = btn.getAttribute('data-nombre') || '';
+                    if (idClienteHidden) idClienteHidden.value = id;
+                    if (clienteDisplay) clienteDisplay.value = nombre;
+                    if (nombreInput && !nombreInput.value) nombreInput.value = nombre;
+
+                    var modalEl = document.getElementById('modalSeleccionCliente');
+                    if (modalEl && window.bootstrap) {
+                        var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                        modal.hide();
+                    }
+                });
+            }
+
+            // Lógica de habitaciones disponibles
+            var btnBuscarHab = document.getElementById('btnBuscarHabitacion');
+            var habDisplay = document.getElementById('HabitacionDisplay');
+            var habHidden = document.getElementById('IdHabitacion');
+            var cuerpoTabla = document.getElementById('habitacionesDisponiblesBody');
+            var msgHab = document.getElementById('habitacionesMensaje');
+            var montoInput = document.getElementById('MontoTotal');
+            var cantPersonasInput = document.getElementById('cantidadPersonas');
+
+            function intentarCalcularMonto() {
+                if (!habHidden || !habHidden.value || !montoInput) return;
+                var fechaInicio = document.getElementById('FechaInicio') ? document.getElementById('FechaInicio').value : '';
+                var fechaFinal = document.getElementById('FechaFinal') ? document.getElementById('FechaFinal').value : '';
+                var cant = cantPersonasInput ? parseInt(cantPersonasInput.value || '1') : 1;
+                if (!fechaInicio || !fechaFinal) return;
+
+                $.get('@Url.Action("CalcularMonto", "ReservasA")',
+                    { idHabitacion: habHidden.value, cantidadPersonas: cant, fechaInicio: fechaInicio, fechaFinal: fechaFinal },
+                    function (resp) {
+                        if (!resp.ok) return;
+                        if (!isNaN(resp.monto)) {
+                            montoInput.value = resp.monto.toFixed(2);
+                        }
+                    });
+            }
+
+            if (btnBuscarHab) {
+                btnBuscarHab.addEventListener('click', function () {
+                    var fechaInicio = document.getElementById('FechaInicio') ? document.getElementById('FechaInicio').value : '';
+                    var fechaFinal = document.getElementById('FechaFinal') ? document.getElementById('FechaFinal').value : '';
+                    if (!fechaInicio || !fechaFinal) {
+                        alert('Primero indique fecha de entrada y salida.');
+                        return;
+                    }
+
+                    if (cuerpoTabla) cuerpoTabla.innerHTML = '';
+                    if (msgHab) { msgHab.style.display = 'none'; msgHab.innerHTML = ''; }
+
+                    $.get('@Url.Action("HabitacionesDisponibles", "ReservasA")',
+                        { fechaInicio: fechaInicio, fechaFinal: fechaFinal },
+                        function (resp) {
+                            if (!resp.ok) {
+                                if (msgHab) {
+                                    msgHab.className = 'alert alert-warning';
+                                    msgHab.innerText = resp.mensaje || 'No se pudieron obtener las habitaciones.';
+                                    msgHab.style.display = 'block';
+                                }
+                                return;
+                            }
+
+                            if (!resp.habitaciones || resp.habitaciones.length === 0) {
+                                if (msgHab) {
+                                    msgHab.className = 'alert alert-warning';
+                                    msgHab.innerText = 'No hay habitaciones disponibles para ese rango de fechas.';
+                                    msgHab.style.display = 'block';
+                                }
+                                return;
+                            }
+
+                            if (cuerpoTabla) {
+                                resp.habitaciones.forEach(function (h) {
+                                    var tr = document.createElement('tr');
+                                    tr.innerHTML =
+                                        '<td>Habitación ' + (h.numero || h.id) + '</td>' +
+                                        '<td><button type=\"button\" class=\"btn btn-sm btn-primary seleccionar-hab\" data-id=\"' + h.id + '\" data-numero=\"' + (h.numero || h.id) + '\">Seleccionar</button></td>';
+                                    cuerpoTabla.appendChild(tr);
+                                });
+                            }
+
+                            var modalEl = document.getElementById('modalSeleccionHabitacion');
+                            if (modalEl && window.bootstrap) {
+                                var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                                modal.show();
+                            }
+                        });
+                });
+            }
+
+            if (cuerpoTabla) {
+                cuerpoTabla.addEventListener('click', function (e) {
+                    var btn = e.target.closest('.seleccionar-hab');
+                    if (!btn) return;
+                    var id = btn.getAttribute('data-id');
+                    var numero = btn.getAttribute('data-numero');
+                    if (habHidden) habHidden.value = id;
+                    if (habDisplay) habDisplay.value = 'Habitación ' + numero;
+
+                    intentarCalcularMonto();
+
+                    var modalEl = document.getElementById('modalSeleccionHabitacion');
+                    if (modalEl && window.bootstrap) {
+                        var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                        modal.hide();
+                    }
+                });
+            }
+
+            // Recalcular monto cuando cambien fechas o cantidad de personas (si ya hay habitación)
+            ['FechaInicio', 'FechaFinal'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (!el) return;
+                el.addEventListener('change', intentarCalcularMonto);
+            });
+            if (cantPersonasInput) {
+                cantPersonasInput.addEventListener('change', intentarCalcularMonto);
+            }
+        })();
+    </script>
+}

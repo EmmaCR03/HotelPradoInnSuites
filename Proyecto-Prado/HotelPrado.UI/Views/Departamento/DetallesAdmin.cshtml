@@ -1,0 +1,399 @@
+@model HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO
+
+@{
+    ViewBag.Title = "Detalles - " + Model.Nombre;
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-primary fw-bold mb-1">
+                <i class="fas fa-building me-2"></i>@Model.Nombre
+            </h2>
+            <p class="text-muted mb-0">@Model.NumeroHabitaciones habitación(es) - Sin amueblar</p>
+        </div>
+        <div>
+            <a href="@Url.Action("IndexDepartamentos")" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Galería de Imágenes -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-images me-2"></i>Galería de Imágenes</h5>
+                </div>
+                <div class="card-body p-0">
+                    @{
+                        var rawImages = Model.ListaImagenes != null && Model.ListaImagenes.Any()
+                            ? Model.ListaImagenes
+                            : new List<string> { "/imagenes/default.jpg" };
+                        var images = rawImages.Select(s =>
+                        {
+                            var p = (s ?? "").Trim();
+                            var bar = p.IndexOf('|');
+                            return bar >= 0 ? new { Url = p.Substring(0, bar).Trim(), Leyenda = p.Substring(bar + 1).Trim() } : new { Url = p, Leyenda = "" };
+                        }).ToList();
+                    }
+
+                    @if (images.Any())
+                    {
+                        <div id="imagenCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @for (int i = 0; i < images.Count; i++)
+                                {
+                                    var img = images[i];
+                                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                                        <img src="@Url.Content(img.Url)" 
+                                             class="d-block w-100" 
+                                             alt="@(string.IsNullOrEmpty(img.Leyenda) ? "Imagen " + (i + 1) : img.Leyenda)" 
+                                             style="height: 500px; object-fit: cover;"
+                                             onerror="this.src='@Url.Content("/imagenes/default.jpg")'">
+                                        @if (!string.IsNullOrEmpty(img.Leyenda))
+                                        {
+                                            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+                                                <span>@img.Leyenda</span>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                            @if (images.Count > 1)
+                            {
+                                <button class="carousel-control-prev" type="button" data-bs-target="#imagenCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Anterior</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#imagenCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Siguiente</span>
+                                </button>
+                            }
+                        </div>
+
+                        if (images.Count > 1)
+                        {
+                            <div class="p-3">
+                                <div class="d-flex gap-2 flex-wrap">
+                                    @for (int i = 0; i < images.Count; i++)
+                                    {
+                                        var img = images[i];
+                                        <img src="@Url.Content(img.Url)" 
+                                             class="img-thumbnail" 
+                                             style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                                             onclick="$('#imagenCarousel').carousel(@i)"
+                                             alt="@(string.IsNullOrEmpty(img.Leyenda) ? "Miniatura " + (i + 1) : img.Leyenda)"
+                                             title="@img.Leyenda">
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center p-5 bg-light">
+                            <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No hay imágenes disponibles</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Información del Departamento -->
+        <div class="col-lg-4">
+            <!-- Estado y Acciones Rápidas -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Estado</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="text-muted small">Estado Actual</label>
+                        <div>
+                            @if (Model.Estado == "Disponible")
+                            {
+                                <span class="badge bg-success fs-6">@Model.Estado</span>
+                            }
+                            else if (Model.Estado == "Ocupado")
+                            {
+                                <span class="badge bg-danger fs-6">@Model.Estado</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning fs-6">@Model.Estado</span>
+                            }
+                        </div>
+                    </div>
+
+                    @if (Model.Estado == "Ocupado" || !string.IsNullOrEmpty(Model.NombreCliente))
+                    {
+                        <div class="mb-3">
+                            <label class="text-muted small">Cliente asignado</label>
+                            <div>
+                                @if (!string.IsNullOrEmpty(Model.NombreCliente))
+                                {
+                                    <strong><i class="fas fa-user me-2"></i>@Model.NombreCliente</strong>
+                                }
+                                else
+                                {
+                                    <span class="text-muted"><i class="fas fa-user me-2"></i>Cliente asignado (no identificado)</span>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="@Url.Action("AsignarCliente", "Departamento", new { id = Model.IdDepartamento })" 
+                           class="btn btn-success">
+                            <i class="fas fa-user-plus me-2"></i>Asignar Cliente
+                        </a>
+
+                        @* Botón para desocupar el departamento con modal de confirmación *@
+                        @if (Model.Estado == "Ocupado" || !string.IsNullOrEmpty(Model.NombreCliente))
+                        {
+                            using (Html.BeginForm("AsignarCliente", "Departamento", new { id = Model.IdDepartamento }, FormMethod.Post, new { id = "formDesocuparDepartamento" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="IdCliente" value="0" />
+                            }
+                            <button type="button"
+                                    class="btn btn-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalConfirmarDesocupar">
+                                <i class="fas fa-door-open me-2"></i>Desocupar Departamento
+                            </button>
+                        }
+
+                        <a href="@Url.Action("Edit", "Departamento", new { id = Model.IdDepartamento })" 
+                           class="btn btn-warning">
+                            <i class="fas fa-edit me-2"></i>Editar Departamento
+                        </a>
+                        <a href="@Url.Action("EditarImagenes", "Departamento", new { id = Model.IdDepartamento })" 
+                           class="btn btn-info">
+                            <i class="fas fa-images me-2"></i>Gestionar Imágenes
+                        </a>
+                        <a href="@Url.Action("IndexCitas", "Citas", new { id = Model.IdDepartamento })" 
+                           class="btn btn-secondary">
+                            <i class="fas fa-calendar me-2"></i>Ver Citas
+                        </a>
+                        <a href="@Url.Action("Delete", "Departamento", new { id = Model.IdDepartamento })" 
+                           class="btn btn-outline-danger">
+                            <i class="fas fa-trash-alt me-2"></i>Eliminar Departamento
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones de Mantenimiento y Limpieza -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-tools me-2"></i>Acciones Rápidas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-warning" 
+                                onclick="window.location.href = '/Mantenimiento/Create?IdDepartamento=@Model.IdDepartamento'">
+                            <i class="fas fa-tools me-2"></i>Solicitar Mantenimiento
+                        </button>
+                        <button class="btn btn-outline-info"
+                                onclick="window.location.href = '/SolicitudLimpieza/Create?IdDepartamento=@Model.IdDepartamento'">
+                            <i class="fas fa-broom me-2"></i>Solicitar Limpieza
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información Detallada -->
+    <div class="row g-4 mt-2">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>Información Completa</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h6 class="text-primary border-bottom pb-2 mb-3">Información Básica</h6>
+                            <div class="mb-3">
+                                <label class="text-muted small">Número de Departamento</label>
+                                <div class="fs-5 fw-bold text-primary">@(Model.NumeroDepartamento == null || Model.NumeroDepartamento == 0 ? "Sin número" : Model.NumeroDepartamento.ToString())</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted small">Nombre</label>
+                                <div class="fs-6">@Model.Nombre</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted small">Descripción</label>
+                                <div class="text-muted">@Model.Descripcion</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted small">Precio</label>
+                                <div class="fs-5 fw-bold text-success">₡@Model.Precio.ToString("N0")</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h6 class="text-primary border-bottom pb-2 mb-3">Características</h6>
+                            <div class="mb-3">
+                                <label class="text-muted small">Número de Habitaciones</label>
+                                <div class="fs-6">
+                                    <i class="fas fa-bed me-2 text-primary"></i>@Model.NumeroHabitaciones habitaciones
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted small">Amueblado</label>
+                                <div>
+                                    @if (Model.Amueblado)
+                                    {
+                                        <span class="badge bg-info"><i class="fas fa-check me-1"></i>Sí</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary"><i class="fas fa-times me-1"></i>No</span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="text-muted small">Estado</label>
+                                <div>
+                                    @if (Model.Estado == "Disponible")
+                                    {
+                                        <span class="badge bg-success fs-6">@Model.Estado</span>
+                                    }
+                                    else if (Model.Estado == "Ocupado")
+                                    {
+                                        <span class="badge bg-danger fs-6">@Model.Estado</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning fs-6">@Model.Estado</span>
+                                    }
+                                </div>
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model.NombreCliente))
+                            {
+                                <div class="mb-3">
+                                    <label class="text-muted small">Cliente Asignado</label>
+                                    <div class="fs-6">
+                                        <strong><i class="fas fa-user me-2"></i>@Model.NombreCliente</strong>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.NumeroEmpresa) || !string.IsNullOrEmpty(Model.CorreoEmpresa))
+                    {
+                        <div class="row g-4 mt-2">
+                            <div class="col-12">
+                                <h6 class="text-primary border-bottom pb-2 mb-3">Información de Contacto</h6>
+                                <div class="row">
+                                    @if (!string.IsNullOrEmpty(Model.NumeroEmpresa))
+                                    {
+                                        <div class="col-md-6 mb-3">
+                                            <label class="text-muted small">Teléfono</label>
+                                            <div class="fs-6">
+                                                <i class="fas fa-phone me-2"></i>@Model.NumeroEmpresa
+                                            </div>
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model.CorreoEmpresa))
+                                    {
+                                        <div class="col-md-6 mb-3">
+                                            <label class="text-muted small">Correo</label>
+                                            <div class="fs-6">
+                                                <i class="fas fa-envelope me-2"></i>@Model.CorreoEmpresa
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal confirmar desocupar departamento -->
+<div class="modal fade" id="modalConfirmarDesocupar" tabindex="-1" aria-labelledby="modalConfirmarDesocuparLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalConfirmarDesocuparLabel">
+                    <i class="fas fa-door-open me-2"></i>Confirmar Desocupación
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-exclamation-triangle fa-4x text-danger"></i>
+                </div>
+                <h5 class="mb-3">¿Desea desocupar este departamento?</h5>
+                <p class="text-muted">
+                    <strong>@Model.Nombre</strong>
+                </p>
+                @if (!string.IsNullOrEmpty(Model.NombreCliente))
+                {
+                    <p class="text-muted mb-0">
+                        Cliente actual: <strong><i class="fas fa-user me-1"></i>@Model.NombreCliente</strong>
+                    </p>
+                }
+                <p class="text-muted small mt-3">
+                    El departamento pasará a estado <span class="badge bg-success">Disponible</span> y se creará automáticamente una solicitud de limpieza.
+                </p>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-danger" id="btnConfirmarDesocupar">
+                    <i class="fas fa-check me-2"></i>Confirmar Desocupar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var btn = document.getElementById('btnConfirmarDesocupar');
+            if (!btn) return;
+            btn.addEventListener('click', function () {
+                var form = document.getElementById('formDesocuparDepartamento');
+                if (form) {
+                    form.submit();
+                }
+            });
+        })();
+    </script>
+}
+
+<style>
+    .card {
+        border-radius: 10px;
+    }
+    
+    .card-header {
+        border-radius: 10px 10px 0 0 !important;
+    }
+    
+    .img-thumbnail:hover {
+        border-color: #0d6efd;
+        transform: scale(1.1);
+        transition: all 0.3s ease;
+    }
+    
+    .carousel-item img {
+        border-radius: 0;
+    }
+</style>
+

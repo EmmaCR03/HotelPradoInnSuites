@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HotelPrado.UI.Models.UsuarioConRoles>
+@model IEnumerable<HotelPrado.UI.Models.UsuarioConRoles>
 
 @{
     ViewBag.Title = "Gestión de Usuarios";
@@ -31,7 +31,7 @@
     </div>
 
     <!-- Card Container -->
-    <div class="card shadow-sm rounded-4 border-0 overflow-hidden">
+    <div class="card shadow-sm rounded-4 border-0">
         <div class="card-header bg-white py-3 border-bottom">
             <div class="row align-items-center">
                 <div class="col-md-6">
@@ -55,10 +55,21 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table id="tablaUsuarios" class="table table-hover align-middle mb-0">
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon"><i class="fas fa-user-cog"></i></div>
+            <h3 class="empty-state-title">No hay usuarios aún</h3>
+            <p class="empty-state-text">Los usuarios se crean desde el registro o asignando roles. Aquí aparecerán cuando existan.</p>
+            <a href="@Url.Action("Register", "Account")" class="btn-empty-state"><i class="fas fa-user-plus"></i> Ir a Registro</a>
+        </div>
+    }
+    else
+    {
+    <div class="table-container">
+        <table id="tablaUsuarios" class="table table-hover align-middle mb-0">
                     <thead class="bg-light-primary">
                         <tr>
                             <th class="ps-4">Usuario</th>
@@ -74,7 +85,7 @@
                         @foreach (var user in Model)
                         {
                             <tr data-roles="@string.Join(" ", user.Roles.Select(r => r.ToLower()))" class="user-row">
-                                <td class="ps-4 fw-semibold">
+                                <td class="ps-4 fw-semibold" data-label="Usuario">
                                     <div class="d-flex align-items-center">
                                         <div class="avatar-sm bg-light rounded-circle d-flex align-items-center justify-content-center me-2">
                                             <i class="fas fa-user text-muted"></i>
@@ -82,19 +93,19 @@
                                         <span>@user.UserName</span>
                                     </div>
                                 </td>
-                                <td>@user.NombreCompleto</td>
-                                <td>@user.cedula</td>
-                                <td>
+                                <td data-label="Nombre Completo">@user.NombreCompleto</td>
+                                <td data-label="Cédula">@user.cedula</td>
+                                <td data-label="Correo">
                                     <a href="mailto:@user.Email" class="text-primary text-decoration-none d-flex align-items-center">
                                         <i class="fas fa-envelope me-2"></i>@user.Email
                                     </a>
                                 </td>
-                                <td>
+                                <td data-label="Teléfono">
                                     <a href="tel:@user.Telefono" class="text-muted text-decoration-none d-flex align-items-center">
                                         <i class="fas fa-phone-alt me-2"></i>@user.Telefono
                                     </a>
                                 </td>
-                                <td>
+                                <td data-label="Rol(es)">
                                     <div class="d-flex flex-wrap gap-2">
                                         @foreach (var role in user.Roles)
                                         {
@@ -106,7 +117,7 @@
                                         }
                                     </div>
                                 </td>
-                                <td class="text-end pe-4">
+                                <td class="text-end pe-4" data-label="Acciones">
                                     <div class="d-flex justify-content-end gap-2">
                                         <a href="@Url.Action("Edit", new { id = user.id })"
                                            class="btn btn-sm btn-outline-primary rounded-pill px-3 d-flex align-items-center action-btn"
@@ -123,10 +134,11 @@
                             </tr>
                         }
                     </tbody>
-                </table>
-            </div>
-        </div>
+        </table>
+    </div>
+    }
 
+    <div class="card shadow-sm rounded-4 border-0">
         <div class="card-footer bg-white py-3 border-top">
             <div class="row align-items-center">
                 <div class="col-md-6">
@@ -141,6 +153,13 @@
 
 @section Styles {
     <style>
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
         :root {
             --primary-gradient: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
             --light-primary: rgba(58, 123, 213, 0.1);

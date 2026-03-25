@@ -1,174 +1,608 @@
-﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Reservas.ReservasDTO>
+@model IEnumerable<HotelPrado.Abstracciones.Modelos.Reservas.ReservasDTO>
 
 @{
-    ViewBag.Title = "IndexReservasA";
+    ViewBag.Title = "Gestión de Reservas";
+    // Definir todasReservas una sola vez al inicio para evitar duplicados
+    var todasReservas = ViewBag.TodasLasReservas as IEnumerable<HotelPrado.Abstracciones.Modelos.Reservas.ReservasDTO> ?? new List<HotelPrado.Abstracciones.Modelos.Reservas.ReservasDTO>();
 }
 
 <style>
-    body {
-        margin: 0; /* Eliminar márgenes predeterminados del body */
-        padding: 0 20px; /* Agregar padding a los laterales */
-        overflow-x: hidden;
+    :root {
+        --hotel-primary: #6D7BB8;
+        --hotel-gold: #D4AF37;
+        --hotel-dark: #2c3e50;
+        --status-confirmada: #28a745;
+        --status-solicitada: #ffc107;
+        --status-lista-espera: #17a2b8;
+        --status-rechazada: #dc3545;
+        --status-pendiente: #6c757d;
     }
 
-    /* Contenedor principal centrado */
-    .container-fluid {
-        max-width: 100%;
-        padding: 0 15px;
+    .reservas-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: calc(100vh - 200px);
+        padding: 2rem 0;
     }
 
-    /* Tarjeta responsive y centrada */
+    .page-header {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .page-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--hotel-dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-card .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card.confirmada .stat-number { color: var(--status-confirmada); }
+    .stat-card.solicitada .stat-number { color: var(--status-solicitada); }
+    .stat-card.lista-espera .stat-number { color: var(--status-lista-espera); }
+    .stat-card.rechazada .stat-number { color: var(--status-rechazada); }
+    .stat-card.total .stat-number { color: var(--hotel-primary); }
+
+    .stat-card .stat-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .filters-bar {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .view-toggle {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .view-toggle button {
+        padding: 0.5rem 1rem;
+        border: 2px solid #dee2e6;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .view-toggle button.active {
+        background: var(--hotel-primary);
+        color: white;
+        border-color: var(--hotel-primary);
+    }
+
+    .table-view {
+        display: none;
+    }
+
+    .table-view.active {
+        display: block;
+    }
+
+    .table-container {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        overflow-x: auto;
+    }
+
     .card {
-        width: 100%;
-        max-width: 1600px; /* Máximo ancho pero puede ser menor */
-        margin: 0 auto; /* Centrado horizontal */
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        overflow: hidden;
     }
 
-    /* Cuerpo de la tarjeta con padding adecuado */
     .card-body {
-        padding: 1.25rem;
+        padding: 1.5rem;
     }
 
-    /* Contenedor de tabla responsive */
     .table-responsive {
         width: 100%;
-        overflow-x: auto; /* Scroll horizontal solo cuando sea necesario */
-        -webkit-overflow-scrolling: touch; /* Mejor scroll en móviles */
+        overflow-x: auto;
     }
 
-    /* Tabla que se ajusta al contenido */
     .table {
-        width: auto;
-        min-width: 100%; /* Mínimo el ancho del contenedor */
-        margin: 0 auto; /* Centrada dentro de su contenedor */
-        table-layout: auto;
-    }
-
-        /* Estilos para celdas */
-        .table th, .table td {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            padding: 12px 15px;
-            vertical-align: middle;
-        }
-
-        /* Encabezados fijos al hacer scroll */
-        .table thead th {
-            position: sticky;
-            top: 0;
-            background-color: #f8f9fa;
-            z-index: 10;
-        }
-
-    /* Estilos para el header */
-    .page-header {
         width: 100%;
-        max-width: 1600px;
-        margin: 0 auto;
-        padding: 0 15px;
+        margin: 0;
     }
 
-    /* Badges para estados */
-    .badge {
-        font-size: 0.85em;
-        padding: 0.5em 0.75em;
+    .table th, .table td {
+        padding: 12px 15px;
+        vertical-align: middle;
     }
 
-    .bg-success {
-        background-color: #28a745 !important;
+    .table thead th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: var(--hotel-dark);
+        border-bottom: 2px solid var(--hotel-primary);
     }
 
-    .bg-warning {
-        background-color: #ffc107 !important;
+    .status-badge {
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
-    .bg-danger {
-        background-color: #dc3545 !important;
+    .status-badge.confirmada {
+        background: #e8f5e9;
+        color: var(--status-confirmada);
     }
 
-    .bg-secondary {
-        background-color: #6c757d !important;
+    .status-badge.solicitada {
+        background: #fff8e1;
+        color: #f57c00;
     }
 
-    /* Media queries para responsividad */
+    .status-badge.lista-espera {
+        background: #e0f7fa;
+        color: var(--status-lista-espera);
+    }
+
+    .status-badge.rechazada {
+        background: #fee;
+        color: var(--status-rechazada);
+    }
+
+    .status-badge.pendiente {
+        background: #f5f5f5;
+    }
+    
+    /* Estilos de paginación */
+    .pagination-container {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-top: 1.5rem;
+    }
+    
+    .pagination {
+        margin: 0;
+    }
+    
+    .page-link {
+        color: var(--hotel-primary);
+        border: 1px solid #dee2e6;
+        padding: 0.5rem 0.75rem;
+        transition: all 0.3s ease;
+    }
+    
+    .page-link:hover {
+        background-color: #e9ecef;
+        color: var(--hotel-primary);
+        transform: translateY(-1px);
+    }
+    
+    .page-item.active .page-link {
+        background-color: var(--hotel-primary);
+        border-color: var(--hotel-primary);
+        color: white;
+        font-weight: 600;
+    }
+    
+    .page-item.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background-color: #fff;
+        border-color: #dee2e6;
+        opacity: 0.5;
+    }
+    
+    .pagination-info {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .page-size-selector {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .page-size-selector label {
+        margin: 0;
+        white-space: nowrap;
+    }
+    
+    .page-size-selector select {
+        min-width: 80px;
+    }
+    
     @@media (max-width: 768px) {
-        .table th, .table td {
-            padding: 8px 10px;
-            font-size: 0.9rem;
+        .pagination-container {
+            flex-direction: column;
+            gap: 1rem;
         }
-
-        .btn-group .btn {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.8rem;
+        
+        .pagination-info,
+        .page-size-selector {
+            width: 100%;
+            justify-content: center;
         }
+    }
+        color: var(--status-pendiente);
+    }
 
-        h2 {
-            font-size: 1.5rem;
+    .btn-action {
+        padding: 0.5rem;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .header-actions .btn {
+        width: 230px;
+        max-width: 230px;
+        min-width: 230px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .btn-action.btn-edit {
+        background: #e3f2fd;
+        color: var(--hotel-primary);
+    }
+
+    .btn-action.btn-edit:hover {
+        background: var(--hotel-primary);
+        color: white;
+    }
+
+    @@media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
         }
     }
 </style>
 
-<div class="container-fluid px-0">
-    <div class="row justify-content-center my-4">
-        <div class="col-12">
-            <div class="page-header d-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-0">Gestión de Reservas</h2>
-
+<div class="reservas-container">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h1><i class="fas fa-calendar-check me-2" style="color: var(--hotel-primary);"></i>Gestión de Reservas</h1>
+                    <p class="text-muted mb-0">Administra y monitorea todas las reservas del hotel</p>
+                </div>
+                <div class="d-flex gap-2 flex-wrap header-actions">
+                    <a href="@Url.Action("SolicitudesPendientes", "ReservasA")" class="btn btn-warning">
+                        <i class="fas fa-clipboard-list me-2"></i>Solicitudes Pendientes
+                        @{
+                            var solicitudesPendientes = todasReservas.Where(r => r.EstadoReserva == "Solicitada").Count();
+                        }
+                        @if (solicitudesPendientes > 0)
+                        {
+                            <span class="badge bg-danger">@solicitudesPendientes</span>
+                        }
+                    </a>
+                    <a href="@Url.Action("ListaEspera", "ReservasA")" class="btn btn-info">
+                        <i class="fas fa-hourglass-half me-2"></i>Lista de Espera
+                        @{
+                            var listaEsperaCount = todasReservas.Where(r => r.EstadoReserva == "En Lista de Espera").Count();
+                        }
+                        @if (listaEsperaCount > 0)
+                        {
+                            <span class="badge bg-danger">@listaEsperaCount</span>
+                        }
+                    </a>
+                    <a href="@Url.Action("Create", "ReservasA")" class="btn btn-primary">
+                        <i class="fas fa-plus-circle me-2"></i>Nueva Reserva
+                    </a>
+                </div>
             </div>
+        </div>
 
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
+        <!-- Estadísticas -->
+        @{
+            var confirmadas = todasReservas.Count(r => r.EstadoReserva?.Contains("Confirmada") == true || r.EstadoReserva?.Contains("Completado") == true);
+            var solicitadas = todasReservas.Count(r => r.EstadoReserva == "Solicitada");
+            var listaEspera = todasReservas.Count(r => r.EstadoReserva == "En Lista de Espera");
+            var rechazadas = todasReservas.Count(r => r.EstadoReserva == "Rechazada");
+            var total = todasReservas.Count();
+        }
+        <div class="stats-grid">
+            <div class="stat-card confirmada">
+                <div class="stat-number" id="count-confirmada">@confirmadas</div>
+                <div class="stat-label">Confirmadas</div>
+            </div>
+            <div class="stat-card solicitada">
+                <div class="stat-number" id="count-solicitada">@solicitadas</div>
+                <div class="stat-label">Solicitadas</div>
+            </div>
+            <div class="stat-card lista-espera">
+                <div class="stat-number" id="count-lista-espera">@listaEspera</div>
+                <div class="stat-label">Lista de Espera</div>
+            </div>
+            <div class="stat-card rechazada">
+                <div class="stat-number" id="count-rechazada">@rechazadas</div>
+                <div class="stat-label">Rechazadas</div>
+            </div>
+            <div class="stat-card total">
+                <div class="stat-number" id="count-total">@total</div>
+                <div class="stat-label">Total</div>
+            </div>
+        </div>
+
+        <!-- Filtros y Vista -->
+        <div class="filters-bar">
+            <div class="view-toggle">
+                <button class="active" onclick="toggleView('table')" id="btn-table">
+                    <i class="fas fa-table me-2"></i>Tabla
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Filtrar por Estado</label>
+                    <select class="form-select" id="filter-estado" onchange="filterReservas()">
+                        <option value="">Todos los estados</option>
+                        <option value="Confirmada">Confirmada</option>
+                        <option value="Solicitada">Solicitada</option>
+                        <option value="En Lista de Espera">En Lista de Espera</option>
+                        <option value="Rechazada">Rechazada</option>
+                        <option value="Pendiente">Pendiente</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Buscar</label>
+                    <input type="text" class="form-control" id="search-input" placeholder="Buscar por nombre de cliente..." onkeyup="filterReservas()">
+                </div>
+                <div class="col-md-4 mb-3 d-flex align-items-end">
+                    <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                        <i class="fas fa-times me-2"></i>Limpiar Filtros
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vista de Tabla -->
+        <div class="table-view active" id="table-view">
+            <div class="table-container">
+                @if (!todasReservas.Any())
+                {
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><i class="fas fa-calendar-check"></i></div>
+                        <h3 class="empty-state-title">No hay reservas aún</h3>
+                        <p class="empty-state-text">Las reservas aparecerán aquí cuando los clientes soliciten o cuando crees una desde el panel.</p>
+                        <a href="@Url.Action("SolicitudesPendientes", "ReservasA")" class="btn-empty-state"><i class="fas fa-clipboard-list"></i> Ver solicitudes pendientes</a>
+                        <a href="@Url.Action("Create", "ReservasA")" class="btn-empty-state ms-2" style="background: #28a745;"><i class="fas fa-plus"></i> Nueva reserva</a>
+                    </div>
+                }
+                else
+                {
+                <table class="table table-hover">
                             <thead class="table-light">
                                 <tr>
-
-                                    <th>@Html.DisplayNameFor(model => model.First().cantidadPersonas)</th>
-                                    <th>@Html.DisplayNameFor(model => model.First().NombreCliente)</th>
-                                    <th>@Html.DisplayNameFor(model => model.First().FechaInicio)</th>
-                                    <th>@Html.DisplayNameFor(model => model.First().FechaFinal)</th>
-                                    <th>@Html.DisplayNameFor(model => model.First().EstadoReserva)</th>
-                                    <th>@Html.DisplayNameFor(model => model.First().MontoTotal)</th>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Personas</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Final</th>
+                                    <th>Estado</th>
+                                    <th>Monto Total</th>
                                     <th class="text-center">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="table-body">
                                 @foreach (var item in Model)
                                 {
-                                    <tr>
-
-                                        <td>@Html.DisplayFor(modelItem => item.cantidadPersonas)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.NombreCliente)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.FechaInicio)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.FechaFinal)</td>
-                                        <td>
-                                            <span class="badge rounded-pill @(item.EstadoReserva == "Completado" ? "bg-success" :
-                                                                            item.EstadoReserva == "En Proceso" ? "bg-warning" :
-                                                                            item.EstadoReserva == "Pendiente" ? "bg-danger" : "bg-secondary")">
-                                                @item.EstadoReserva
-                                            </span>
+                                    var estadoClass = item.EstadoReserva?.ToLower().Replace(" ", "-").Replace("de", "") ?? "pendiente";
+                                    <tr class="table-row" data-estado="@item.EstadoReserva" data-cliente="@(item.NombreCliente?.ToLower() ?? "")">
+                                        <td data-label="ID">#@item.IdReserva</td>
+                                        <td data-label="Cliente">@(item.NombreCliente ?? "Sin nombre")</td>
+                                        <td data-label="Personas">@item.cantidadPersonas</td>
+                                        <td data-label="Fecha Inicio">@(item.FechaInicio?.ToString("dd/MM/yyyy") ?? "-")</td>
+                                        <td data-label="Fecha Final">@(item.FechaFinal?.ToString("dd/MM/yyyy") ?? "-")</td>
+                                        <td data-label="Estado">
+                                            <span class="status-badge @estadoClass">@item.EstadoReserva</span>
                                         </td>
-                                        <td>@Html.DisplayFor(modelItem => item.MontoTotal)</td>
-                                        <td class="text-center">
+                                        <td data-label="Monto Total">@string.Format("{0:C}", item.MontoTotal)</td>
+                                        <td class="text-center" data-label="Acciones">
                                             <div class="btn-group" role="group">
                                                 <a href="@Url.Action("Edit", new { IdReserva = item.IdReserva })" class="btn btn-sm btn-outline-primary" title="Editar">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
+                                                @if (item.EstadoReserva == "Confirmada")
+                                                {
+                                                    <a href="@Url.Action("Create", "CheckIn", new { idReserva = item.IdReserva })" class="btn btn-sm btn-outline-success" title="Crear Check-In">
+                                                        <i class="fas fa-calendar-check"></i>
+                                                    </a>
+                                                }
                                             </div>
                                         </td>
                                     </tr>
                                 }
                             </tbody>
-                        </table>
-                    </div>
+                </table>
+                }
+                    
+                <!-- Paginación (fuera del else para evitar error Razor) -->
+                    @if (!todasReservas.Any() == false && ViewBag.TotalPages != null && (int)ViewBag.TotalPages > 1)
+                    {
+                        <div class="pagination-container mt-4">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                                <div class="pagination-info">
+                                    <span class="text-muted">
+                                        Mostrando @(((int)(ViewBag.CurrentPage ?? 1) - 1) * (int)(ViewBag.PageSize ?? 20) + 1) - @(Math.Min((int)(ViewBag.CurrentPage ?? 1) * (int)(ViewBag.PageSize ?? 20), (int)(ViewBag.TotalReservas ?? 0))) de @(ViewBag.TotalReservas ?? 0) reservas
+                                    </span>
+                                </div>
+                                <nav aria-label="Paginación de reservas">
+                                    <ul class="pagination mb-0">
+                                        @if ((int)(ViewBag.CurrentPage ?? 1) > 1)
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="@Url.Action("IndexReservasA", new { page = (int)(ViewBag.CurrentPage ?? 1) - 1, pageSize = ViewBag.PageSize ?? 20 })">
+                                                    <i class="fas fa-chevron-left"></i> Anterior
+                                                </a>
+                                            </li>
+                                        }
+                                        @if (Math.Max(1, (int)(ViewBag.CurrentPage ?? 1) - 2) > 1)
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="@Url.Action("IndexReservasA", new { page = 1, pageSize = ViewBag.PageSize ?? 20 })">1</a>
+                                            </li>
+                                        }
+                                        @if (Math.Max(1, (int)(ViewBag.CurrentPage ?? 1) - 2) > 2)
+                                        {
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        }
+                                        @for (int i = Math.Max(1, (int)(ViewBag.CurrentPage ?? 1) - 2); i <= Math.Min((int)(ViewBag.TotalPages ?? 1), (int)(ViewBag.CurrentPage ?? 1) + 2); i++)
+                                        {
+                                            <li class="page-item @(i == (int)(ViewBag.CurrentPage ?? 1) ? "active" : "")">
+                                                <a class="page-link" href="@Url.Action("IndexReservasA", new { page = i, pageSize = ViewBag.PageSize ?? 20 })">@i</a>
+                                            </li>
+                                        }
+                                        @if (Math.Min((int)(ViewBag.TotalPages ?? 1), (int)(ViewBag.CurrentPage ?? 1) + 2) < (int)(ViewBag.TotalPages ?? 1) - 1)
+                                        {
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        }
+                                        @if (Math.Min((int)(ViewBag.TotalPages ?? 1), (int)(ViewBag.CurrentPage ?? 1) + 2) < (int)(ViewBag.TotalPages ?? 1))
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="@Url.Action("IndexReservasA", new { page = ViewBag.TotalPages, pageSize = ViewBag.PageSize ?? 20 })">@(ViewBag.TotalPages)</a>
+                                            </li>
+                                        }
+                                        @if ((int)(ViewBag.CurrentPage ?? 1) < (int)(ViewBag.TotalPages ?? 1))
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="@Url.Action("IndexReservasA", new { page = (int)(ViewBag.CurrentPage ?? 1) + 1, pageSize = ViewBag.PageSize ?? 20 })">
+                                                    Siguiente <i class="fas fa-chevron-right"></i>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </nav>
+                                <div class="page-size-selector">
+                                    <label class="text-muted me-2">Mostrar:</label>
+                                    <select class="form-select form-select-sm d-inline-block" style="width: auto;" onchange="changePageSize(this.value)">
+                                        <option value="10" @((int)(ViewBag.PageSize ?? 20) == 10 ? "selected" : "")>10</option>
+                                        <option value="20" @((int)(ViewBag.PageSize ?? 20) == 20 ? "selected" : "")>20</option>
+                                        <option value="50" @((int)(ViewBag.PageSize ?? 20) == 50 ? "selected" : "")>50</option>
+                                        <option value="100" @((int)(ViewBag.PageSize ?? 20) == 100 ? "selected" : "")>100</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
-            </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+    <script>
+        // Cambiar tamaño de página
+        function changePageSize(newSize) {
+            window.location.href = '@Url.Action("IndexReservasA")?page=1&pageSize=' + newSize;
+        }
+        
+        // Calcular estadísticas usando todas las reservas (no solo las de la página actual)
+        function updateStats() {
+            // Las estadísticas se calculan del lado del servidor, pero mantenemos la función por compatibilidad
+            const rows = document.querySelectorAll('.table-row');
+            let confirmada = 0, solicitada = 0, listaEspera = 0, rechazada = 0;
+
+            rows.forEach(row => {
+                if (row.style.display !== 'none') {
+                    const estado = row.dataset.estado?.toLowerCase() || '';
+                    if (estado.includes('confirmada') || estado.includes('completado')) confirmada++;
+                    else if (estado.includes('solicitada')) solicitada++;
+                    else if (estado.includes('lista')) listaEspera++;
+                    else if (estado.includes('rechazada')) rechazada++;
+                }
+            });
+
+            document.getElementById('count-confirmada').textContent = confirmada;
+            document.getElementById('count-solicitada').textContent = solicitada;
+            document.getElementById('count-lista-espera').textContent = listaEspera;
+            document.getElementById('count-rechazada').textContent = rechazada;
+            document.getElementById('count-total').textContent = confirmada + solicitada + listaEspera + rechazada;
+        }
+
+        // Filtrar reservas
+        function filterReservas() {
+            const estadoFilter = document.getElementById('filter-estado').value.toLowerCase();
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+            const rows = document.querySelectorAll('.table-row');
+            rows.forEach(row => {
+                const estado = row.dataset.estado?.toLowerCase() || '';
+                const cliente = row.dataset.cliente || '';
+
+                const matchEstado = !estadoFilter || estado.includes(estadoFilter);
+                const matchSearch = !searchTerm || cliente.includes(searchTerm);
+
+                row.style.display = (matchEstado && matchSearch) ? '' : 'none';
+            });
+
+            updateStats();
+        }
+
+        // Limpiar filtros
+        function clearFilters() {
+            document.getElementById('filter-estado').value = '';
+            document.getElementById('search-input').value = '';
+            filterReservas();
+        }
+
+        // Cambiar vista (por ahora solo tabla)
+        function toggleView(view) {
+            // Implementación futura si se agrega vista de tarjetas
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+        });
+    </script>
 }

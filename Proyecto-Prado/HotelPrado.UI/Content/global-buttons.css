@@ -1,0 +1,188 @@
+/* ============================================
+   SISTEMA DE BOTONES GLOBAL
+   Consistencia en todo el sitio
+   ============================================ */
+
+:root {
+    --btn-primary: #2B2B2B; /* Gris oscuro como principal */
+    --btn-primary-hover: #6D7BB8; /* Azul suave SOLO en hover */
+    --btn-secondary: #BEBEBE; /* Gris neutro */
+    --btn-secondary-hover: #a0a0a0;
+    --btn-success: #10b981;
+    --btn-success-hover: #059669;
+    --btn-danger: #ef4444;
+    --btn-danger-hover: #dc2626;
+    --btn-info: #6D7BB8; /* Azul suave para info */
+    --btn-info-hover: #5a6ba3;
+    --btn-border-radius: 8px;
+    --btn-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base para todos los botones */
+.btn,
+button.btn,
+a.btn,
+input[type="submit"].btn,
+input[type="button"].btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--btn-border-radius);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    transition: var(--btn-transition);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Estados de hover y focus */
+.btn:hover,
+button.btn:hover,
+a.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn:active,
+button.btn:active,
+a.btn:active {
+    transform: translateY(0);
+}
+
+.btn:focus,
+button.btn:focus,
+a.btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* Botón primario */
+.btn-primary,
+button.btn-primary {
+    background-color: var(--btn-primary);
+    color: white;
+}
+
+.btn-primary:hover,
+button.btn-primary:hover {
+    background-color: var(--btn-primary-hover);
+    color: white;
+}
+
+/* Botón secundario */
+.btn-secondary,
+button.btn-secondary {
+    background-color: var(--btn-secondary);
+    color: white;
+}
+
+.btn-secondary:hover,
+button.btn-secondary:hover {
+    background-color: var(--btn-secondary-hover);
+    color: white;
+}
+
+/* Botón de éxito */
+.btn-success,
+button.btn-success {
+    background-color: var(--btn-success);
+    color: white;
+}
+
+.btn-success:hover,
+button.btn-success:hover {
+    background-color: var(--btn-success-hover);
+    color: white;
+}
+
+/* Botón de información */
+.btn-info,
+button.btn-info {
+    background-color: var(--btn-info);
+    color: white;
+}
+
+.btn-info:hover,
+button.btn-info:hover {
+    background-color: var(--btn-info-hover);
+    color: white;
+}
+
+/* Botón de peligro */
+.btn-danger,
+button.btn-danger {
+    background-color: var(--btn-danger);
+    color: white;
+}
+
+.btn-danger:hover,
+button.btn-danger:hover {
+    background-color: var(--btn-danger-hover);
+    color: white;
+}
+
+/* Botón outline */
+.btn-outline-primary {
+    background-color: transparent;
+    color: var(--btn-primary);
+    border: 2px solid var(--btn-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--btn-primary);
+    color: white;
+}
+
+/* Tamaños */
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.btn-lg {
+    padding: 0.875rem 1.75rem;
+    font-size: 1rem;
+}
+
+/* Botón de bloque completo */
+.btn-block {
+    width: 100%;
+    display: block;
+}
+
+/* Botón con icono */
+.btn i,
+.btn svg {
+    font-size: 1em;
+    line-height: 1;
+}
+
+/* Deshabilitado */
+.btn:disabled,
+button.btn:disabled,
+.btn.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .btn {
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.9375rem;
+    }
+}
+

@@ -1,4 +1,4 @@
-﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Habitaciones.ObtenerPorId;
+using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Habitaciones.ObtenerPorId;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Habitaciones.ObtenerPorId;
 using HotelPrado.Abstracciones.Modelos.Habitaciones;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Habitaciones;
@@ -34,6 +34,9 @@ namespace HotelPrado.LN.Habitaciones.ObtenerPorId
                 PrecioPorNoche2P = habitacionEnBaseDeDatos.PrecioPorNoche2P,
                 PrecioPorNoche3P = habitacionEnBaseDeDatos.PrecioPorNoche3P,
                 PrecioPorNoche4P = habitacionEnBaseDeDatos.PrecioPorNoche4P,
+                PrecioGeneral = habitacionEnBaseDeDatos.PrecioGeneral,
+                PrecioGobierno = habitacionEnBaseDeDatos.PrecioGobierno,
+                PrecioCorporativo = habitacionEnBaseDeDatos.PrecioCorporativo,
                 Estado = habitacionEnBaseDeDatos.Estado,
                 CapacidadMax = habitacionEnBaseDeDatos.CapacidadMax,
                 CapacidadMin = habitacionEnBaseDeDatos.CapacidadMin,

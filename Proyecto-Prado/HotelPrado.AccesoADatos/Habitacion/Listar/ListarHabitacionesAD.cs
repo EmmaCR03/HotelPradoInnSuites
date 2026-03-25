@@ -1,7 +1,8 @@
-﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Habitaciones.Listar;
+using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Habitaciones.Listar;
 using HotelPrado.Abstracciones.Modelos.Habitaciones;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 
 namespace HotelPrado.AccesoADatos.Habitacion.HabDisponibles
@@ -17,7 +18,7 @@ namespace HotelPrado.AccesoADatos.Habitacion.HabDisponibles
 
         public List<HabitacionesDTO> Listar(int? capacidad = null, string estado = null)
         {
-            var laListaDeHabitaciones = from laHabitacion in _contexto.HabitacionesTabla
+            var laListaDeHabitaciones = from laHabitacion in _contexto.HabitacionesTabla.AsNoTracking()
                                         select new HabitacionesDTO
                                         {
                                             IdHabitacion = laHabitacion.IdHabitacion,

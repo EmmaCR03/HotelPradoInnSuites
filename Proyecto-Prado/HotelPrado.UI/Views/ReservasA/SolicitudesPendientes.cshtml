@@ -1,0 +1,644 @@
+@model IEnumerable<HotelPrado.Abstracciones.Modelos.Reservas.ReservasDTO>
+@using System
+
+@{
+    ViewBag.Title = "Solicitudes de Reserva Pendientes";
+}
+
+<style>
+    .solicitud-card {
+        border-left: 4px solid #ffc107;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .solicitud-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .badge-solicitada {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    .badge-lista-espera {
+        background-color: #17a2b8;
+        color: #fff;
+    }
+
+    .btn-accion {
+        margin: 0.25rem;
+    }
+
+    .info-cliente {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">
+                        <i class="fas fa-clipboard-list me-2"></i>@ViewBag.Title
+                    </h2>
+                    <p class="text-muted mb-0">Revise y apruebe las solicitudes de reserva</p>
+                </div>
+                <div>
+                    <a href="@Url.Action("ListaEspera", "ReservasA")" class="btn btn-outline-info me-2">
+                        <i class="fas fa-hourglass-half me-2"></i>Lista de Espera
+                    </a>
+                    <a href="@Url.Action("IndexReservasA", "ReservasA")" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Volver a Reservas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var solicitud in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card solicitud-card shadow-sm">
+                        <div class="card-header @(solicitud.EstadoReserva == "En Lista de Espera" ? "bg-info bg-opacity-25" : "bg-warning bg-opacity-25")">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-user me-2"></i>@solicitud.NombreCliente
+                                </h5>
+                                <span class="badge @(solicitud.EstadoReserva == "En Lista de Espera" ? "badge-lista-espera" : "badge-solicitada") rounded-pill">
+                                    @solicitud.EstadoReserva
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="info-cliente">
+                                <p class="mb-2">
+                                    <strong><i class="fas fa-bed me-2"></i>Habitación:</strong> 
+                                    @(solicitud.NumeroHabitacion > 0 ? $"Habitación {solicitud.NumeroHabitacion}" : $"Habitación {solicitud.IdHabitacion}")
+                                </p>
+                                <p class="mb-2">
+                                    <strong><i class="fas fa-users me-2"></i>Personas:</strong> 
+                                    @solicitud.cantidadPersonas
+                                </p>
+                                <p class="mb-2">
+                                    <strong><i class="fas fa-calendar-check me-2"></i>Check-in:</strong> 
+                                    @(solicitud.FechaInicio?.ToString("dd/MM/yyyy") ?? "N/A")
+                                </p>
+                                <p class="mb-2">
+                                    <strong><i class="fas fa-calendar-times me-2"></i>Check-out:</strong> 
+                                    @(solicitud.FechaFinal?.ToString("dd/MM/yyyy") ?? "N/A")
+                                </p>
+                                @if (solicitud.FechaInicio.HasValue && solicitud.FechaFinal.HasValue)
+                                {
+                                    var noches = (solicitud.FechaFinal.Value - solicitud.FechaInicio.Value).Days;
+                                    <p class="mb-0">
+                                        <strong><i class="fas fa-moon me-2"></i>Noches:</strong> 
+                                        @noches
+                                    </p>
+                                }
+                            </div>
+                            
+                            <div class="mb-3">
+                                <strong><i class="fas fa-money-bill-wave me-2"></i>Monto Total:</strong>
+                                <span class="text-success fw-bold">₡@solicitud.MontoTotal.ToString("N2")</span>
+                            </div>
+
+                            @{
+                                var contactos = ViewBag.Contactos as Dictionary<int, Dictionary<string, string>>;
+                                var contactoInfo = contactos != null && contactos.ContainsKey(solicitud.IdReserva) 
+                                    ? contactos[solicitud.IdReserva] 
+                                    : null;
+                                var nombreCompleto = contactoInfo != null && contactoInfo.ContainsKey("NombreCompleto") 
+                                    ? contactoInfo["NombreCompleto"] 
+                                    : solicitud.NombreCliente;
+                                var cedulaCliente = contactoInfo != null && contactoInfo.ContainsKey("Cedula") 
+                                    ? contactoInfo["Cedula"] 
+                                    : null;
+                                var emailCliente = contactoInfo != null && contactoInfo.ContainsKey("Email") 
+                                    ? contactoInfo["Email"] 
+                                    : null;
+                                var telefonoCliente = contactoInfo != null && contactoInfo.ContainsKey("Telefono") 
+                                    ? contactoInfo["Telefono"] 
+                                    : null;
+                            }
+
+                            <div class="mb-3 p-2 rounded border border-light bg-white">
+                                <strong class="d-block mb-2 text-secondary"><i class="fas fa-user-circle me-2"></i>Detalles del cliente</strong>
+                                <p class="mb-1 small"><strong>Nombre:</strong> @(nombreCompleto ?? solicitud.NombreCliente ?? "—")</p>
+                                @if (!string.IsNullOrEmpty(cedulaCliente))
+                                {
+                                    <p class="mb-1 small"><strong>Cédula:</strong> @cedulaCliente</p>
+                                }
+                                @if (!string.IsNullOrEmpty(emailCliente))
+                                {
+                                    <p class="mb-1 small"><strong>Correo:</strong> <a href="mailto:@emailCliente">@emailCliente</a></p>
+                                }
+                                @if (!string.IsNullOrEmpty(telefonoCliente))
+                                {
+                                    <p class="mb-0 small"><strong>Teléfono:</strong> @telefonoCliente</p>
+                                }
+                                @if (string.IsNullOrEmpty(cedulaCliente) && string.IsNullOrEmpty(emailCliente) && string.IsNullOrEmpty(telefonoCliente))
+                                {
+                                    <p class="mb-0 small text-muted">Solo nombre en reserva: @(solicitud.NombreCliente ?? "—")</p>
+                                }
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(emailCliente) || !string.IsNullOrEmpty(telefonoCliente))
+                            {
+                                <div class="mb-3 p-2 bg-light rounded">
+                                    <strong class="d-block mb-2"><i class="fas fa-address-book me-2"></i>Contacto:</strong>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        @if (!string.IsNullOrEmpty(emailCliente))
+                                        {
+                                            var asuntoCorreo = $"Solicitud de Reserva #{solicitud.IdReserva} - {solicitud.NombreCliente}";
+                                            var cuerpoCorreo = $"Estimado/a {solicitud.NombreCliente},%0D%0A%0D%0A" +
+                                                $"Le contactamos respecto a su solicitud de reserva:%0D%0A%0D%0A" +
+                                                $"ID Reserva: {solicitud.IdReserva}%0D%0A" +
+                                                $"Habitación: {(solicitud.NumeroHabitacion > 0 ? solicitud.NumeroHabitacion.ToString() : solicitud.IdHabitacion.ToString())}%0D%0A" +
+                                                $"Check-in: {(solicitud.FechaInicio.HasValue ? solicitud.FechaInicio.Value.ToString("dd/MM/yyyy") : "N/A")}%0D%0A" +
+                                                $"Check-out: {(solicitud.FechaFinal.HasValue ? solicitud.FechaFinal.Value.ToString("dd/MM/yyyy") : "N/A")}%0D%0A" +
+                                                $"Personas: {solicitud.cantidadPersonas}%0D%0A" +
+                                                $"Monto: ₡{solicitud.MontoTotal:N2}%0D%0A%0D%0A" +
+                                                $"Saludos cordiales,%0D%0AHotel Prado Inn & Suites";
+                                            <a href="mailto:@emailCliente?subject=@Uri.EscapeDataString(asuntoCorreo)&body=@cuerpoCorreo" 
+                                               class="btn btn-sm btn-outline-primary" 
+                                               title="Enviar correo a @emailCliente">
+                                                <i class="fas fa-envelope me-1"></i>Correo
+                                            </a>
+                                        }
+                                        @if (!string.IsNullOrEmpty(telefonoCliente))
+                                        {
+                                            var telefonoWhatsApp = telefonoCliente.Replace(" ", "").Replace("-", "").Replace("(", "").Replace(")", "");
+                                            if (!telefonoWhatsApp.StartsWith("+"))
+                                            {
+                                                telefonoWhatsApp = "+506" + telefonoWhatsApp;
+                                            }
+                                            var fechaInicio = solicitud.FechaInicio.HasValue ? solicitud.FechaInicio.Value.ToString("dd/MM/yyyy") : "N/A";
+                                            var fechaFinal = solicitud.FechaFinal.HasValue ? solicitud.FechaFinal.Value.ToString("dd/MM/yyyy") : "N/A";
+                                            var numeroHab = solicitud.NumeroHabitacion > 0 ? solicitud.NumeroHabitacion.ToString() : solicitud.IdHabitacion.ToString();
+                                            var mensajeWhatsApp = $"Hola {solicitud.NombreCliente}, le contactamos del Hotel Prado Inn & Suites respecto a su solicitud de reserva #{solicitud.IdReserva}.%0A%0A" +
+                                                $"Habitación: {numeroHab}%0A" +
+                                                $"Check-in: {fechaInicio}%0A" +
+                                                $"Check-out: {fechaFinal}%0A" +
+                                                $"Personas: {solicitud.cantidadPersonas}%0A" +
+                                                $"Monto: ₡{solicitud.MontoTotal:N2}%0A%0A" +
+                                                $"¿En qué podemos ayudarle?";
+                                            <a href="https://wa.me/@telefonoWhatsApp?text=@mensajeWhatsApp" 
+                                               target="_blank"
+                                               class="btn btn-sm btn-outline-success" 
+                                               title="Contactar por WhatsApp: @telefonoCliente">
+                                                <i class="fab fa-whatsapp me-1"></i>WhatsApp
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-success btn-accion" onclick="aprobarSolicitud(@solicitud.IdReserva, '@solicitud.NombreCliente', '@(solicitud.NumeroHabitacion > 0 ? solicitud.NumeroHabitacion.ToString() : solicitud.IdHabitacion.ToString())')">
+                                    <i class="fas fa-check me-2"></i>Aprobar
+                                </button>
+                                <button class="btn btn-info btn-accion" onclick="ponerEnListaEspera(@solicitud.IdReserva, '@solicitud.NombreCliente')">
+                                    <i class="fas fa-clock me-2"></i>Lista de Espera
+                                </button>
+                                <button class="btn btn-danger btn-accion" onclick="rechazarSolicitud(@solicitud.IdReserva, '@solicitud.NombreCliente')">
+                                    <i class="fas fa-times me-2"></i>Rechazar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            <i class="fas fa-info-circle fa-3x mb-3"></i>
+            <h4>No hay solicitudes pendientes</h4>
+            <p>Todas las solicitudes han sido revisadas.</p>
+        </div>
+    }
+</div>
+
+<!-- Modales para confirmaciones -->
+<!-- Modal Aprobar -->
+<div class="modal fade" id="modalAprobar" tabindex="-1" aria-labelledby="modalAprobarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="modalAprobarLabel">
+                    <i class="fas fa-check-circle me-2"></i>Confirmar Aprobación
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-check-circle fa-4x text-success"></i>
+                </div>
+                <h5 class="mb-3">¿Desea aprobar esta solicitud de reserva?</h5>
+                <div class="alert alert-info text-start">
+                    <p class="mb-2"><strong><i class="fas fa-user me-2"></i>Cliente:</strong> <span id="aprobar-cliente"></span></p>
+                    <p class="mb-2"><strong><i class="fas fa-bed me-2"></i>Habitación:</strong> <span id="aprobar-habitacion"></span></p>
+                    <p class="mb-0"><strong><i class="fas fa-calendar me-2"></i>Fecha:</strong> @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+                <p class="text-muted small mt-3">
+                    Al aprobar:
+                </p>
+                <ul class="list-unstyled text-start">
+                    <li><i class="fas fa-check-circle text-success me-2"></i>La reserva cambiará a estado "Confirmada"</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i>Se verificará la disponibilidad</li>
+                    <li><i class="fas fa-check-circle text-success me-2"></i>Se registrará en la bitácora</li>
+                </ul>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-success" id="btnConfirmarAprobar">
+                    <i class="fas fa-check me-2"></i>Confirmar Aprobación
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Rechazar -->
+<div class="modal fade" id="modalRechazar" tabindex="-1" aria-labelledby="modalRechazarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalRechazarLabel">
+                    <i class="fas fa-times-circle me-2"></i>Confirmar Rechazo
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-times-circle fa-4x text-danger"></i>
+                </div>
+                <h5 class="mb-3">¿Desea rechazar esta solicitud de reserva?</h5>
+                <div class="alert alert-warning text-start">
+                    <p class="mb-2"><strong><i class="fas fa-user me-2"></i>Cliente:</strong> <span id="rechazar-cliente"></span></p>
+                    <p class="mb-0"><strong><i class="fas fa-calendar me-2"></i>Fecha:</strong> @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+                <div class="mb-3">
+                    <label for="motivoRechazo" class="form-label"><strong>Motivo del rechazo (opcional):</strong></label>
+                    <textarea class="form-control" id="motivoRechazo" rows="3" placeholder="Ingrese el motivo del rechazo..."></textarea>
+                </div>
+                <p class="text-muted small mt-3">
+                    Al rechazar:
+                </p>
+                <ul class="list-unstyled text-start">
+                    <li><i class="fas fa-exclamation-circle text-warning me-2"></i>La reserva cambiará a estado "Rechazada"</li>
+                    <li><i class="fas fa-exclamation-circle text-warning me-2"></i>Se registrará en la bitácora</li>
+                </ul>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-danger" id="btnConfirmarRechazar">
+                    <i class="fas fa-times me-2"></i>Confirmar Rechazo
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Lista de Espera -->
+<div class="modal fade" id="modalListaEspera" tabindex="-1" aria-labelledby="modalListaEsperaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="modalListaEsperaLabel">
+                    <i class="fas fa-clock me-2"></i>Confirmar Lista de Espera
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-hourglass-half fa-4x text-info"></i>
+                </div>
+                <h5 class="mb-3">¿Desea poner esta solicitud en lista de espera?</h5>
+                <div class="alert alert-info text-start">
+                    <p class="mb-2"><strong><i class="fas fa-user me-2"></i>Cliente:</strong> <span id="lista-espera-cliente"></span></p>
+                    <p class="mb-0"><strong><i class="fas fa-calendar me-2"></i>Fecha:</strong> @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+                <p class="text-muted small mt-3">
+                    Al poner en lista de espera:
+                </p>
+                <ul class="list-unstyled text-start">
+                    <li><i class="fas fa-info-circle text-info me-2"></i>La reserva cambiará a estado "En Lista de Espera"</li>
+                    <li><i class="fas fa-info-circle text-info me-2"></i>Se notificará al cliente cuando haya disponibilidad</li>
+                    <li><i class="fas fa-info-circle text-info me-2"></i>Se registrará en la bitácora</li>
+                </ul>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-info" id="btnConfirmarListaEspera">
+                    <i class="fas fa-clock me-2"></i>Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var reservaIdSeleccionada = null;
+        var modalAprobar = document.getElementById('modalAprobar');
+        var modalRechazar = document.getElementById('modalRechazar');
+        var modalListaEspera = document.getElementById('modalListaEspera');
+        
+        var modalAprobarInstance = null;
+        var modalRechazarInstance = null;
+        var modalListaEsperaInstance = null;
+        
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            if (modalAprobar) modalAprobarInstance = new bootstrap.Modal(modalAprobar);
+            if (modalRechazar) modalRechazarInstance = new bootstrap.Modal(modalRechazar);
+            if (modalListaEspera) modalListaEsperaInstance = new bootstrap.Modal(modalListaEspera);
+        }
+        
+        function aprobarSolicitud(idReserva, nombreCliente, numeroHabitacion) {
+            reservaIdSeleccionada = idReserva;
+            document.getElementById('aprobar-cliente').textContent = nombreCliente;
+            document.getElementById('aprobar-habitacion').textContent = 'Habitación ' + numeroHabitacion;
+            
+            if (modalAprobarInstance) {
+                modalAprobarInstance.show();
+            } else if (modalAprobar) {
+                modalAprobar.style.display = 'block';
+                modalAprobar.classList.add('show');
+                var backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop fade show';
+                backdrop.id = 'modalBackdrop';
+                document.body.appendChild(backdrop);
+            }
+        }
+        
+        function rechazarSolicitud(idReserva, nombreCliente) {
+            reservaIdSeleccionada = idReserva;
+            document.getElementById('rechazar-cliente').textContent = nombreCliente;
+            document.getElementById('motivoRechazo').value = '';
+            
+            if (modalRechazarInstance) {
+                modalRechazarInstance.show();
+            } else if (modalRechazar) {
+                modalRechazar.style.display = 'block';
+                modalRechazar.classList.add('show');
+                var backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop fade show';
+                backdrop.id = 'modalBackdrop';
+                document.body.appendChild(backdrop);
+            }
+        }
+        
+        function ponerEnListaEspera(idReserva, nombreCliente) {
+            reservaIdSeleccionada = idReserva;
+            document.getElementById('lista-espera-cliente').textContent = nombreCliente;
+            
+            if (modalListaEsperaInstance) {
+                modalListaEsperaInstance.show();
+            } else if (modalListaEspera) {
+                modalListaEspera.style.display = 'block';
+                modalListaEspera.classList.add('show');
+                var backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop fade show';
+                backdrop.id = 'modalBackdrop';
+                document.body.appendChild(backdrop);
+            }
+        }
+        
+        // Confirmar aprobación
+        document.getElementById('btnConfirmarAprobar')?.addEventListener('click', function() {
+            if (!reservaIdSeleccionada) {
+                showNotificationModal('error', 'Error', 'No se seleccionó una reserva.');
+                return;
+            }
+            
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+            
+            $.ajax({
+                url: '@Url.Action("AprobarSolicitud", "ReservasA")',
+                type: 'POST',
+                data: { IdReserva: reservaIdSeleccionada },
+                success: function (response) {
+                    if (response.success) {
+                        if (modalAprobarInstance) {
+                            modalAprobarInstance.hide();
+                        } else if (modalAprobar) {
+                            modalAprobar.style.display = 'none';
+                            modalAprobar.classList.remove('show');
+                            var backdrop = document.getElementById('modalBackdrop');
+                            if (backdrop) backdrop.remove();
+                        }
+                        showNotificationModal('success', 'Solicitud Aprobada', response.message, function() {
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 500);
+                        });
+                    } else {
+                        showNotificationModal('error', 'Error', response.message);
+                        document.getElementById('btnConfirmarAprobar').disabled = false;
+                        document.getElementById('btnConfirmarAprobar').innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Aprobación';
+                    }
+                },
+                error: function () {
+                    showNotificationModal('error', 'Error', 'Error al procesar la solicitud');
+                    document.getElementById('btnConfirmarAprobar').disabled = false;
+                    document.getElementById('btnConfirmarAprobar').innerHTML = '<i class="fas fa-check me-2"></i>Confirmar Aprobación';
+                }
+            });
+        });
+        
+        // Confirmar rechazo
+        document.getElementById('btnConfirmarRechazar')?.addEventListener('click', function() {
+            if (!reservaIdSeleccionada) {
+                showNotificationModal('error', 'Error', 'No se seleccionó una reserva.');
+                return;
+            }
+            
+            var motivo = document.getElementById('motivoRechazo').value || '';
+            
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+            
+            $.ajax({
+                url: '@Url.Action("RechazarSolicitud", "ReservasA")',
+                type: 'POST',
+                data: { IdReserva: reservaIdSeleccionada, motivo: motivo },
+                success: function (response) {
+                    if (response.success) {
+                        if (modalRechazarInstance) {
+                            modalRechazarInstance.hide();
+                        } else if (modalRechazar) {
+                            modalRechazar.style.display = 'none';
+                            modalRechazar.classList.remove('show');
+                            var backdrop = document.getElementById('modalBackdrop');
+                            if (backdrop) backdrop.remove();
+                        }
+                        showNotificationModal('success', 'Solicitud Rechazada', response.message, function() {
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 500);
+                        });
+                    } else {
+                        showNotificationModal('error', 'Error', response.message);
+                        document.getElementById('btnConfirmarRechazar').disabled = false;
+                        document.getElementById('btnConfirmarRechazar').innerHTML = '<i class="fas fa-times me-2"></i>Confirmar Rechazo';
+                    }
+                },
+                error: function () {
+                    showNotificationModal('error', 'Error', 'Error al procesar la solicitud');
+                    document.getElementById('btnConfirmarRechazar').disabled = false;
+                    document.getElementById('btnConfirmarRechazar').innerHTML = '<i class="fas fa-times me-2"></i>Confirmar Rechazo';
+                }
+            });
+        });
+        
+        // Confirmar lista de espera
+        document.getElementById('btnConfirmarListaEspera')?.addEventListener('click', function() {
+            if (!reservaIdSeleccionada) {
+                showNotificationModal('error', 'Error', 'No se seleccionó una reserva.');
+                return;
+            }
+            
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+            
+            $.ajax({
+                url: '@Url.Action("PonerEnListaEspera", "ReservasA")',
+                type: 'POST',
+                data: { IdReserva: reservaIdSeleccionada },
+                success: function (response) {
+                    if (response.success) {
+                        if (modalListaEsperaInstance) {
+                            modalListaEsperaInstance.hide();
+                        } else if (modalListaEspera) {
+                            modalListaEspera.style.display = 'none';
+                            modalListaEspera.classList.remove('show');
+                            var backdrop = document.getElementById('modalBackdrop');
+                            if (backdrop) backdrop.remove();
+                        }
+                        showNotificationModal('success', 'Lista de Espera', response.message, function() {
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 500);
+                        });
+                    } else {
+                        showNotificationModal('error', 'Error', response.message);
+                        document.getElementById('btnConfirmarListaEspera').disabled = false;
+                        document.getElementById('btnConfirmarListaEspera').innerHTML = '<i class="fas fa-clock me-2"></i>Confirmar';
+                    }
+                },
+                error: function () {
+                    showNotificationModal('error', 'Error', 'Error al procesar la solicitud');
+                    document.getElementById('btnConfirmarListaEspera').disabled = false;
+                    document.getElementById('btnConfirmarListaEspera').innerHTML = '<i class="fas fa-clock me-2"></i>Confirmar';
+                }
+            });
+        });
+        
+        // Función para mostrar modales de notificación bonitos
+        function showNotificationModal(type, title, message, callback) {
+            var existingModal = document.getElementById('notificationModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            var modal = document.createElement('div');
+            modal.id = 'notificationModal';
+            modal.className = 'modal fade';
+            modal.setAttribute('tabindex', '-1');
+            modal.setAttribute('aria-labelledby', 'notificationModalLabel');
+            modal.setAttribute('aria-hidden', 'true');
+            
+            var iconClass = type === 'success' ? 'fa-check-circle text-success' : 'fa-exclamation-circle text-danger';
+            var bgClass = type === 'success' ? 'bg-success' : 'bg-danger';
+            
+            modal.innerHTML = `
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg">
+                        <div class="modal-header ${bgClass} text-white border-0">
+                            <h5 class="modal-title" id="notificationModalLabel">
+                                <i class="fas ${iconClass} me-2"></i>${title}
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center py-4">
+                            <div class="mb-3">
+                                <i class="fas ${iconClass} fa-4x"></i>
+                            </div>
+                            <p class="fs-5">${message}</p>
+                        </div>
+                        <div class="modal-footer border-0 justify-content-center">
+                            <button type="button" class="btn ${bgClass} text-white" data-bs-dismiss="modal" id="btnCerrarNotificacion">
+                                <i class="fas fa-check me-2"></i>Aceptar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            var modalInstance = null;
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                modalInstance = new bootstrap.Modal(modal);
+                modalInstance.show();
+            } else {
+                modal.style.display = 'block';
+                modal.classList.add('show');
+                var backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop fade show';
+                backdrop.id = 'notificationBackdrop';
+                document.body.appendChild(backdrop);
+            }
+            
+            var btnCerrar = document.getElementById('btnCerrarNotificacion');
+            if (btnCerrar) {
+                btnCerrar.addEventListener('click', function() {
+                    if (modalInstance) {
+                        modalInstance.hide();
+                    } else {
+                        modal.style.display = 'none';
+                        modal.classList.remove('show');
+                        var backdrop = document.getElementById('notificationBackdrop');
+                        if (backdrop) backdrop.remove();
+                    }
+                    if (callback) {
+                        setTimeout(callback, 300);
+                    }
+                });
+            }
+            
+            if (type === 'success' && callback) {
+                setTimeout(function() {
+                    if (modalInstance) {
+                        modalInstance.hide();
+                    } else {
+                        modal.style.display = 'none';
+                        modal.classList.remove('show');
+                        var backdrop = document.getElementById('notificationBackdrop');
+                        if (backdrop) backdrop.remove();
+                    }
+                    callback();
+                }, 2000);
+            }
+        }
+    </script>
+}

@@ -118,15 +118,13 @@
                             </div>
 
                             <div class="col-12 mt-4">
-                                <div id="submitSection" class="d-flex justify-content-end gap-2">
-                                    <button type="button" class="btn btn-primary" id="submitButton" onclick="showConfirmation()">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="@Url.Action("IndexDepartamentosClientes", "Departamento")" class="btn btn-secondary">
+                                        <i class="fas fa-times me-2"></i>Cancelar
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
                                         <i class="fas fa-save me-2"></i>Crear Cita
                                     </button>
-                                </div>
-
-                                <div id="confirmationButtons" style="display:none;" class="d-flex justify-content-end gap-2">
-                                    <button type="button" class="btn btn-success" onclick="acceptAction()">Aceptar</button>
-                                    <button type="button" class="btn btn-secondary" onclick="cancelAction()">Cancelar</button>
                                 </div>
                             </div>
                         </div>
@@ -140,19 +138,3 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-
-<script>
-    function showConfirmation() {
-        document.getElementById('submitButton').style.display = 'none';
-        document.getElementById('confirmationButtons').style.display = 'flex';
-    }
-
-    function acceptAction() {
-        $("form").submit();
-    }
-
-    function cancelAction() {
-        document.getElementById('submitButton').style.display = 'inline-block';
-        document.getElementById('confirmationButtons').style.display = 'none';
-    }
-</script>

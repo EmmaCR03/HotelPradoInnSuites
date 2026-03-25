@@ -1,21 +1,158 @@
-﻿@model HotelPrado.UI.Models.RegisterViewModel
+@model HotelPrado.UI.Models.RegisterViewModel
 @{
     ViewBag.Title = "Registrarse";
+    Layout = "~/Views/Shared/_LayoutSimple.cshtml";
 }
 
-<main aria-labelledby="title" class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow rounded-4">
-                <div class="card-header bg-dark text-white text-center rounded-top-4">
-                    <h2 id="title" class="mb-0">@ViewBag.Title</h2>
+<style>
+    body {
+        background-image: url('@Url.Content(ViewBag.ImagenFondo as string ?? "/Img/images/login/WhatsApp Image 2025-12-11 at 3.27.01 PM.jpeg")');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+        position: relative;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(5px);
+        z-index: -1;
+    }
+
+    .register-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 15px;
+    }
+
+    .register-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        overflow: hidden;
+        max-width: 600px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .row {
+        margin: 0;
+    }
+
+    .w-100 {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .register-header {
+        background: linear-gradient(135deg, #3a3a3a, #2a2a2a);
+        color: white;
+        padding: 2.5rem 2rem;
+        text-align: center;
+        border-bottom: 3px solid #007bff;
+    }
+
+    .register-header h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: 0.5px;
+    }
+
+    .register-body {
+        padding: 2.5rem 2rem;
+    }
+
+    .register-body .form-subtitle {
+        color: #3a3a3a;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        margin-top: 0.5rem;
+        letter-spacing: 0.3px;
+        line-height: 1.5;
+    }
+
+    .register-body .validation-errors {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-label, .col-form-label {
+        color: #3a3a3a;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        padding-top: 0.25rem;
+    }
+
+    .register-body .mb-3.row {
+        margin-bottom: 1.25rem !important;
+    }
+
+    .register-body .mb-4.row {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .btn-register {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        border: none;
+        padding: 0.75rem 3rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .btn-register:hover {
+        background: linear-gradient(135deg, #0056b3, #004085);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+    }
+</style>
+
+<div class="register-container">
+    <div class="row justify-content-center w-100">
+        <div class="col-12">
+            <div class="register-card">
+                <div class="register-header">
+                    <h2>@ViewBag.Title</h2>
                 </div>
-                <div class="card-body">
+                <div class="register-body">
                     @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
                     {
                         @Html.AntiForgeryToken()
-                        <h4 class="text-center mb-4">Cree una cuenta nueva</h4>
-                        @Html.ValidationSummary("", new { @class = "alert alert-danger" })
+                        <p class="form-subtitle text-center">Cree una cuenta nueva</p>
+                        if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="validation-errors">
+                                @Html.ValidationSummary("", new { @class = "alert alert-danger" })
+                            </div>
+                        }
 
                         <div class="mb-3 row">
                             @Html.LabelFor(m => m.UserName, new { @class = "col-md-3 col-form-label text-end" })
@@ -67,15 +204,18 @@
                         </div>
 
                         <div class="text-center">
-                            <input type="submit" value="Registrarse" class="btn btn-dark px-4 py-2 rounded-pill" />
+                            <input type="submit" value="Registrarse" class="btn btn-register" />
                         </div>
                     }
                 </div>
             </div>
         </div>
     </div>
-</main>
+</div>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 }

@@ -1,17 +1,90 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+@{
+    ViewBag.Title = "Página Inicio - Hotel Prado Inn & Suites";
 }
+<style>
+    .hero-banner {
+        background-image: url('@(ViewBag.HeroBannerUrl ?? "/Img/images/img_3.jpg")') !important;
+        position: relative;
+    }
+    
+    .btn-edit-hero {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 10;
+        background: rgba(109, 123, 184, 0.9);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    
+    .btn-edit-hero:hover {
+        background: rgba(109, 123, 184, 1);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .btn-edit-hero i {
+        font-size: 1.1rem;
+    }
+    
+    /* Móvil: botón "Cambiar Imagen" fijo arriba a la derecha (debajo del navbar) para no solapar nada del formulario */
+    @@media (max-width: 768px) {
+        .btn-edit-hero {
+            position: fixed !important;
+            top: 72px !important;
+            right: 12px !important;
+            left: auto !important;
+            bottom: auto !important;
+            z-index: 999 !important;
+            padding: 0.45rem 0.65rem !important;
+            font-size: 0.8rem !important;
+        }
+        .btn-edit-hero i {
+            font-size: 0.95rem !important;
+        }
+    }
+    
+    @@media (max-width: 576px) {
+        .btn-edit-hero {
+            top: 68px !important;
+            right: 10px !important;
+            padding: 0.4rem 0.55rem !important;
+            font-size: 0.75rem !important;
+        }
+    }
+    
+    @@media (max-width: 991px) {
+        .hero-banner { overflow: visible !important; }
+    }
+</style>
 <main class="home-container">
     <!-- Hero Banner -->
     <section class="hero-banner">
+        @if (User.IsInRole("Administrador"))
+        {
+            <a href="@Url.Action("ConfigurarHeroBanners", "Admin")" class="btn-edit-hero" title="Cambiar imagen del hero banner">
+                <i class="fas fa-image"></i> Cambiar Imagen
+            </a>
+        }
         <div class="hero-overlay"></div>
         <div class="container-fluid hero-container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
                     <div class="hero-content">
-                        <h1 class="hero-title">Prado Inn Suites<br><span>tu lugar de comfort</span></h1>
+                        <h1 class="hero-title">¡Bienvenido al Prado Inn & Suites!</h1>
+                        <p class="hero-subtitle">El punto perfecto para comenzar su experiencia en Costa Rica</p>
                         <a href="@Url.Action("habitacionesInfo", "Habitacion")" class="btn btn-primary btn-lg">
-                            Ver información de las habitaciones <i class="fas fa-arrow-right"></i>
+                         Información de las habitaciones <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </div>
@@ -19,17 +92,18 @@
                     <div class="booking-form-container">
                         <form class="booking-form" method="get" action="@Url.Action("IndexHabitacionesUsuario", "Habitacion")">
                             <h3 class="form-title">Comprobar Disponibilidad</h3>
+                            <p class="form-date-hint">Toque cada campo para elegir la fecha</p>
                             <div class="form-group">
-                                <label>Check-In</label>
-                                <input type="date" name="check_in" class="form-control" required>
+                                <label for="check_in" class="booking-form-label-date">Fecha de entrada (Check-in)</label>
+                                <input type="date" id="check_in" name="check_in" class="form-control form-control-date" required title="Fecha de entrada" aria-label="Fecha de entrada Check-in" placeholder="">
                             </div>
                             <div class="form-group">
-                                <label>Check-Out</label>
-                                <input type="date" name="check_out" class="form-control" required>
+                                <label for="check_out" class="booking-form-label-date">Fecha de salida (Check-out)</label>
+                                <input type="date" id="check_out" name="check_out" class="form-control form-control-date" required title="Fecha de salida" aria-label="Fecha de salida Check-out" placeholder="">
                             </div>
                             <div class="form-group">
-                                <label>Personas</label>
-                                <input type="number" name="capacidad" class="form-control" value="1" min="1" required>
+                                <label for="capacidad">Personas</label>
+                                <input type="number" id="capacidad" name="capacidad" class="form-control" value="1" min="1" required>
                             </div>
                             <button type="submit" class="btn btn-primary btn-block">
                                 Comprobar <i class="fas fa-search"></i>
@@ -53,464 +127,185 @@
             <div class="gallery-container">
                 <div class="swiper gallery-swiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <img src="~/Img/images/IMG_4.JPG" alt="Habitación Deluxe" class="swiper-img">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="~/Img/images/IMG_5.JPG" alt="Sala de estar" class="swiper-img">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="~/Img/images/IMG_6.JPG" alt="Vista desde la habitación" class="swiper-img">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="~/Img/images/img_1.JPG" alt="Área de recepción" class="swiper-img">
-                        </div>
+                        @{
+                            var galeria = ViewBag.GaleriaCarousel as List<Tuple<string, string>>;
+                            if (galeria == null || !galeria.Any())
+                            {
+                                // Usar versiones optimizadas (más ligeras) por defecto.
+                                galeria = new List<Tuple<string, string>>
+                                {
+                                    Tuple.Create("/Img/images/IMG_5-small.jpg", "Habitación Deluxe"),
+                                    Tuple.Create("/Img/images/IMG_6-small.jpg", "Sala de estar"),
+                                    Tuple.Create("/Img/images/img_1-small.jpg", "Vista desde la habitación")
+                                };
+                            }
+                        }
+                        @foreach (var item in galeria)
+                        {
+                            <div class="swiper-slide">
+                                <img src="@Url.Content(item.Item1)"
+                                     alt="@(item.Item2 ?? "Galería")"
+                                     class="swiper-img"
+                                     loading="lazy"
+                                     onerror="this.src='@Url.Content("~/Img/images/img_1-small.jpg")'">
+                            </div>
+                        }
                     </div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="swiper-button-prev">
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
                     <div class="swiper-pagination"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Blog Section - AHORA VISIBLE -->
-    <section class="blog-section">
-        <div class="container-fluid">
-
-
-            <div class="blog-grid">
-                <!-- Blog Item 1 -->
-                <div class="blog-card">
-                    <img src="~/Img/images/FOTOS/IMG_7632.JPG" alt="Experiencias en el hotel" class="blog-img">
-                    <div class="blog-content">
-                        <span class="blog-category">Hotel</span>
-                        <h3 class="blog-title">Experiencias únicas en Prado Inn</h3>
-                        <div class="blog-meta">
-                            <i class="far fa-clock"></i> 22 Feb, 2024
+    <!-- Menú de Opciones Elegante - Diseño Moderno -->
+    <section class="home-menu-section">
+        <div class="container-fluid padding-side py-5">
+            <div class="row g-4">
+                <!-- Habitaciones -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="@Url.Action("habitacionesInfo", "Habitacion")" class="home-menu-card">
+                        <div class="home-menu-card-icon">
+                            <i class="fas fa-bed"></i>
                         </div>
-                    </div>
+                        <h4 class="home-menu-card-title">Habitaciones</h4>
+                        <p class="home-menu-card-description">Descubre nuestras cómodas habitaciones con todas las comodidades</p>
+                        <span class="home-menu-card-link">Explorar <i class="fas fa-arrow-right ms-1"></i></span>
+                    </a>
                 </div>
 
-                <!-- Blog Item 2 -->
-                <div class="blog-card">
-                    <img src="~/Img/images/FOTOS/IMG_7800.JPG" alt="Actividades recreativas" class="blog-img">
-                    <div class="blog-content">
-                        <span class="blog-category">Actividades</span>
-                        <h3 class="blog-title">Eventos exclusivos para huéspedes</h3>
-                        <div class="blog-meta">
-                            <i class="far fa-clock"></i> 22 Feb, 2024
+                <!-- Departamentos -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="@Url.Action("IndexDepartamentosClientes", "Departamento")" class="home-menu-card">
+                        <div class="home-menu-card-icon">
+                            <i class="fas fa-building"></i>
                         </div>
-                    </div>
+                        <h4 class="home-menu-card-title">Departamentos</h4>
+                        <p class="home-menu-card-description">Espacios amplios y modernos para toda la familia</p>
+                        <span class="home-menu-card-link">Ver más <i class="fas fa-arrow-right ms-1"></i></span>
+                    </a>
                 </div>
 
+                <!-- Servicios -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="@Url.Action("Services", "Home")" class="home-menu-card">
+                        <div class="home-menu-card-icon">
+                            <i class="fas fa-concierge-bell"></i>
+                        </div>
+                        <h4 class="home-menu-card-title">Servicios</h4>
+                        <p class="home-menu-card-description">Conoce todos los servicios que ofrecemos para tu comodidad</p>
+                        <span class="home-menu-card-link">Descubrir <i class="fas fa-arrow-right ms-1"></i></span>
+                    </a>
+                </div>
+
+                <!-- Contacto -->
+                <div class="col-lg-3 col-md-6">
+                    <a href="@Url.Action("Contact", "Home")" class="home-menu-card">
+                        <div class="home-menu-card-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h4 class="home-menu-card-title">Contacto</h4>
+                        <p class="home-menu-card-description">Estamos aquí para ayudarte, contáctanos cuando lo necesites</p>
+                        <span class="home-menu-card-link">Contactar <i class="fas fa-arrow-right ms-1"></i></span>
+                    </a>
+                </div>
+
+                @if (Request.IsAuthenticated)
+                {
+                    <!-- Mis Reservas -->
+                    <div class="col-lg-3 col-md-6">
+                        <a href="@Url.Action("ReservasUsuario", "Reservas")" class="home-menu-card">
+                            <div class="home-menu-card-icon">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <h4 class="home-menu-card-title">Mis Reservas</h4>
+                            <p class="home-menu-card-description">Gestiona y consulta todas tus reservas en un solo lugar</p>
+                            <span class="home-menu-card-link">Ver reservas <i class="fas fa-arrow-right ms-1"></i></span>
+                        </a>
+                    </div>
+                }
             </div>
         </div>
-
-
     </section>
+
+    <!-- Blog Section - AHORA VISIBLE -->
+    
 </main>
 
 <!-- Incluir Swiper JS -->
-<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
-<style>
-    /* Estilos base */
-    .home-container {
-        font-family: 'Segoe UI', Arial, sans-serif;
-        color: #333;
-        line-height: 1.6;
-        overflow-x: hidden;
-    }
-
-    /* Hero Section */
-    .hero-banner {
-        position: relative;
-        background: url('../../img/images/img_3.jpg') center/cover no-repeat;
-        min-height: 80vh;
-        display: flex;
-        align-items: center;
-    }
-
-    .hero-container {
-        padding: 4rem;
-    }
-
-    .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.5);
-    }
-
-    .hero-content {
-        position: relative;
-        z-index: 1;
-        color: white;
-        padding: 3rem;
-    }
-
-    .hero-title {
-        font-size: 3.5rem;
-        font-weight: 600;
-        margin-bottom: 2rem;
-        line-height: 1.2;
-    }
-
-        .hero-title span {
-            font-weight: 300;
-            display: block;
-            font-size: 2.5rem;
-        }
-
-    /* Formulario */
-    .booking-form-container {
-        background: white;
-        border-radius: 12px;
-        padding: 2.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        margin-left: 2rem;
-    }
-
-    /* Secciones */
-    .section-header {
-        text-align: center;
-        padding: 5rem 2rem 3rem;
-        margin: 0 auto;
-    }
-
-        .section-header h2 {
-            font-size: 2.8rem;
-            margin-bottom: 1.5rem;
-            color: #2c3e50;
-        }
-
-    .section-description {
-        color: #666;
-        font-size: 1.1rem;
-        max-width: 800px;
-        margin: 0 auto 2rem;
-        line-height: 1.7;
-    }
-
-    /* Galería */
-    .gallery-section {
-        padding: 4rem 0;
-        background-color: #f9f9f9;
-    }
-
-    .gallery-container {
-        padding: 0 3rem;
-    }
-
-    .gallery-swiper {
-        height: 550px;
-        border-radius: 12px;
-        overflow: hidden;
-    }
-
-    .swiper-slide {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .swiper-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    /* Controles del carrusel */
-    .swiper-button-next,
-    .swiper-button-prev {
-        width: 50px;
-        height: 50px;
-        background: white;
-        border-radius: 50%;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        color: #2c3e50;
-        transition: all 0.3s ease;
-    }
-
-        .swiper-button-next:hover,
-        .swiper-button-prev:hover {
-            transform: scale(1.1);
-        }
-
-        .swiper-button-next::after,
-        .swiper-button-prev::after {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-    .swiper-pagination {
-        position: relative;
-        margin-top: 1.5rem;
-    }
-
-    .swiper-pagination-bullet {
-        width: 12px;
-        height: 12px;
-        background: #ccc;
-        opacity: 1;
-    }
-
-    .swiper-pagination-bullet-active {
-        background: #2c3e50;
-        transform: scale(1.2);
-    }
-
-    /* Blog Section - AHORA VISIBLE */
-    .blog-section {
-        padding: 5rem 0;
-        background-color: white;
-    }
-
-    .blog-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 2.5rem;
-        padding: 0 4rem;
-        max-width: 1600px;
-        margin: 0 auto;
-    }
-
-    .blog-card {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        transition: all 0.3s ease;
-        background: white;
-    }
-
-        .blog-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
-        }
-
-        .blog-card.featured {
-            grid-column: span 2;
-        }
-
-    .blog-img {
-        width: 100%;
-        height: 260px;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-
-    .blog-card:hover .blog-img {
-        transform: scale(1.05);
-    }
-
-    .blog-content {
-        padding: 2rem;
-    }
-
-    .blog-category {
-        display: inline-block;
-        background: #e74c3c;
-        color: white;
-        padding: 0.4rem 1rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        margin-bottom: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .blog-title {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-        color: #2c3e50;
-        line-height: 1.3;
-    }
-
-    .blog-meta {
-        color: #7f8c8d;
-        font-size: 0.95rem;
-        display: flex;
-        align-items: center;
-    }
-
-        .blog-meta i {
-            margin-right: 0.5rem;
-            color: #bdc3c7;
-        }
-
-    /* Botones */
-    .btn {
-        padding: 0.8rem 1.8rem;
-        border-radius: 50px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-size: 0.9rem;
-    }
-
-    .btn-primary {
-        background: #3498db;
-        border: none;
-    }
-
-        .btn-primary:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
-        }
-
-    .btn-outline {
-        border: 2px solid #3498db;
-        color: #3498db;
-        background: transparent;
-    }
-
-        .btn-outline:hover {
-            background: #3498db;
-            color: white;
-        }
-
-    .btn-lg {
-        padding: 1rem 2.5rem;
-        font-size: 1rem;
-    }
-
-    /* Responsive */
-    @@media (max-width: 1200px) {
-        .hero-title {
-            font-size: 3rem;
-        }
-
-            .hero-title span {
-                font-size: 2rem;
-            }
-
-        .gallery-swiper {
-            height: 450px;
-        }
-    }
-
-    @@media (max-width: 992px) {
-        .hero-banner {
-            min-height: auto;
-            padding: 4rem 0;
-        }
-
-        .hero-container {
-            padding: 2rem;
-        }
-
-        .hero-content {
-            text-align: center;
-            padding: 2rem 0;
-            margin-bottom: 3rem;
-        }
-
-        .booking-form-container {
-            margin: 0 auto;
-            max-width: 500px;
-        }
-
-        .blog-card.featured {
-            grid-column: span 1;
-        }
-
-        .blog-grid {
-            padding: 0 2rem;
-        }
-    }
-
-    @@media (max-width: 768px) {
-        .hero-title {
-            font-size: 2.2rem;
-        }
-
-            .hero-title span {
-                font-size: 1.6rem;
-            }
-
-        .section-header h2 {
-            font-size: 2rem;
-        }
-
-        .gallery-swiper {
-            height: 350px;
-        }
-
-        .swiper-button-next,
-        .swiper-button-prev {
-            width: 40px;
-            height: 40px;
-        }
-
-        .blog-grid {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-    }
-
-    @@media (max-width: 576px) {
-        .hero-container {
-            padding: 1.5rem;
-        }
-
-        .booking-form-container {
-            padding: 1.5rem;
-        }
-
-        .gallery-container {
-            padding: 0 1rem;
-        }
-
-        .gallery-swiper {
-            height: 250px;
-        }
-    }
-</style>
+<link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+<link href="~/Content/global-buttons.css" rel="stylesheet" />
+<link href="~/Content/Home/home-styles.css" rel="stylesheet" />
+<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
 
 <script>
-    // Inicialización del Swiper
     document.addEventListener('DOMContentLoaded', function () {
-        var gallerySwiper = new Swiper('.gallery-swiper', {
-            slidesPerView: 1,
-            spaceBetween: 20,
-            loop: true,
-            autoplay: {
-                delay: 10000, // 10 segundos
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            breakpoints: {
-                768: {
-                    slidesPerView: 1.2,
-                    centeredSlides: true
+        var gallerySwiperEl = document.querySelector('.gallery-swiper');
+        if (gallerySwiperEl) {
+            new Swiper('.gallery-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: true,
+                loopAdditionalSlides: 2,
+                autoplay: {
+                    delay: 4000,
+                    disableOnInteraction: false,
+                },
+                speed: 400,
+                cssMode: false,
+                touchEventsTarget: 'container',
+                touchRatio: 1,
+                threshold: 5,
+                shortSwipes: true,
+                longSwipes: true,
+                followFinger: true,
+                allowTouchMove: true,
+                resistance: true,
+                resistanceRatio: 0.85,
+                touchReleaseOnEdges: true,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                    dynamicBullets: false,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                keyboard: { enabled: true }
+            });
+        }
+
+        // Los estilos de hover ya están en CSS, no necesitamos JavaScript adicional
+
+        // DESHABILITADO: No modificar el navbar desde vistas individuales
+        // El navbar se controla únicamente desde _Layout.cshtml
+        /*
+        const navbarMain = document.querySelector('.navbar-main');
+        const heroBanner = document.querySelector('.hero-banner');
+        
+        if (heroBanner && navbarMain) {
+            function handleScroll() {
+                const scrollPosition = window.scrollY;
+                const heroHeight = heroBanner.offsetHeight;
+                
+                if (scrollPosition > heroHeight - 100) {
+                    navbarMain.style.backgroundColor = '#3a3a3a';
+                } else {
+                    navbarMain.style.backgroundColor = 'rgba(58, 58, 58, 0.85)';
                 }
             }
-        });
-
-        // Efecto hover para los botones de navegación
-        const navButtons = document.querySelectorAll('.swiper-button-next, .swiper-button-prev');
-        navButtons.forEach(button => {
-            button.addEventListener('mouseenter', () => {
-                button.style.transform = 'scale(1.15)';
-                button.style.boxShadow = '0 6px 20px rgba(0,0,0,0.2)';
-            });
-            button.addEventListener('mouseleave', () => {
-                button.style.transform = 'scale(1)';
-                button.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-            });
-        });
+            
+            navbarMain.style.backgroundColor = 'rgba(58, 58, 58, 0.85)';
+            
+            window.addEventListener('scroll', handleScroll, { passive: true });
+            handleScroll();
+        }
+        */
     });
 </script>

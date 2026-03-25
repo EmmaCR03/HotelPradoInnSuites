@@ -1,0 +1,647 @@
+/* ============================================
+   PALETA DE COLORES PROFESIONAL
+   Blanco y Gris como principales, Azul terciario
+   ============================================ */
+
+:root {
+    /* Color principal - Azul marino (SOLO para acentos terciarios) */
+    --color-primary: #171A4A;
+    --color-primary-dark: #0f1129;
+    --color-primary-light: #2a2f6b;
+    
+    /* Azul secundario - Azul grisáceo suave (SOLO para acentos terciarios) */
+    --color-secondary: #6D7BB8;
+    --color-secondary-dark: #5a6ba3;
+    --color-secondary-light: #8a9bc5;
+    
+    /* Fondo principal - Gris casi blanco (PRINCIPAL) */
+    --color-bg-light: #F6F7F9;
+    --color-bg-medium: #e8e9eb;
+    --color-bg-dark: #d1d3d6;
+    
+    /* Gris de apoyo - Para bordes, separadores, inputs (PRINCIPAL) */
+    --color-neutral: #BEBEBE;
+    --color-neutral-dark: #a0a0a0;
+    --color-neutral-light: #d4d4d4;
+    --color-neutral-darker: #8a8a8a;
+    
+    /* Texto - Gris oscuro elegante (PRINCIPAL) */
+    --color-text-dark: #2B2B2B;
+    --color-text-medium: #4a4a4a;
+    --color-text-light: #6b6b6b;
+    
+    /* Gris para navbar/footer - Un poco más suave que text-dark */
+    --color-navbar: #3a3a3a;
+    --color-navbar-dark: #2B2B2B;
+    
+    /* Blanco (PRINCIPAL) */
+    --color-white: #FFFFFF;
+    
+    /* Dorado - Color de marca (SOLO para logo y acentos muy específicos) */
+    --color-gold: #D4AF37;
+    --color-gold-light: #E5C158;
+    --color-gold-dark: #B8941F;
+    
+    /* Sombras */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    
+    /* Transiciones */
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   APLICACIÓN DE COLORES
+   Blanco y Gris principales, Azul terciario
+   ============================================ */
+
+/* Header y Footer - GRIS más suave y elegante */
+#primary-header {
+    background-color: var(--color-navbar, #3a3a3a) !important;
+    border-bottom: 3px solid var(--color-secondary, #6D7BB8) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    position: relative !important; /* Relativo dentro del header fijo */
+    /* ELIMINAR MOVIMIENTO - IGUAL QUE FOOTER */
+    transform: none !important;
+    -webkit-transform: none !important;
+    animation: none !important;
+    transition: none !important;
+}
+
+/* Efecto LED azul sutil en el borde inferior */
+#primary-header::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--color-secondary, #6D7BB8) 20%, 
+        var(--color-secondary, #6D7BB8) 80%, 
+        transparent 100%);
+    box-shadow: 0 0 10px rgba(109, 123, 184, 0.5);
+}
+
+.header-top {
+    background-color: var(--color-navbar-dark, #2B2B2B) !important; /* Gris más oscuro para el top */
+    color: rgba(255, 255, 255, 0.9);
+    border-bottom: none !important; /* Eliminar línea gris */
+}
+
+#footer,
+section#footer {
+    background-color: #3a3a3a !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    border-top: 3px solid #6D7BB8 !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2) !important;
+    position: relative !important; /* Grid lo posiciona - FUNCIONA */
+    width: 100% !important;
+    margin-top: auto !important; /* Grid lo empuja abajo - FUNCIONA */
+    grid-row: 3 !important; /* Tercera fila del Grid - FUNCIONA */
+    z-index: 999 !important;
+    padding: 0 !important;
+}
+
+/* Efecto LED azul sutil en el borde superior del footer */
+#footer::before,
+section#footer::before {
+    content: '' !important;
+    position: absolute !important;
+    top: -3px !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 3px !important;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        #6D7BB8 20%, 
+        #6D7BB8 80%, 
+        transparent 100%) !important;
+    box-shadow: 0 0 10px rgba(109, 123, 184, 0.5) !important;
+    z-index: 1 !important;
+}
+
+/* ============================================
+   FOOTER MENÚ ELEGANTE
+   ============================================ */
+
+/* Footer Brand */
+.footer-brand h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 0.25rem;
+}
+
+.footer-brand p {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Footer Titles */
+.footer-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+/* Footer Menu */
+.footer-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-menu li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-link {
+    color: rgba(255, 255, 255, 0.75) !important;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.footer-link:hover {
+    color: rgba(255, 255, 255, 1) !important;
+    padding-left: 4px;
+    text-decoration: none;
+}
+
+.footer-link i {
+    font-size: 0.7rem;
+    margin-right: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.footer-link:hover i {
+    color: rgba(255, 255, 255, 1);
+    transform: translateX(2px);
+}
+
+/* Footer Contact */
+.footer-contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-contact li {
+    margin-bottom: 1rem;
+}
+
+.footer-contact i {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    min-width: 20px;
+}
+
+.footer-contact .footer-link {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.footer-contact .footer-link:hover {
+    color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Footer Social Links */
+.footer-social {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.footer-social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.footer-social-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 1) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.footer-social-link i {
+    font-size: 0.9rem;
+}
+
+/* Footer Copyright */
+.footer-copyright {
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.footer-copyright p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+}
+
+/* Text colors helpers */
+.text-white-50 {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.border-white-10 {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer-title {
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .footer-menu li:first-child,
+    .footer-contact li:first-child {
+        margin-top: 0;
+    }
+}
+
+/* Fondo de página - Gris casi blanco (PRINCIPAL) */
+body,
+html {
+    background-color: var(--color-bg-light, #F6F7F9) !important;
+    color: var(--color-text-dark, #2B2B2B);
+}
+
+/* Asegurar que el contenido también use el fondo - SIN SCROLL PROPIO */
+.body-content {
+    background-color: var(--color-bg-light, #F6F7F9);
+    color: var(--color-text-dark, #2B2B2B);
+    overflow-y: visible !important; /* NO auto, NO scroll */
+    overflow-x: hidden !important;
+    position: relative !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+}
+
+/* Textura sutil SIN azul - solo grises */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(190, 190, 190, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(43, 43, 43, 0.02) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Cards - BLANCO con sombras más pronunciadas */
+.card,
+.booking-form-container,
+.availability-form {
+    background-color: var(--color-white) !important;
+    border: 1px solid var(--color-neutral, #BEBEBE) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important; /* Sombra más visible */
+    border-radius: 16px !important; /* Bordes más redondeados */
+    transition: all 0.3s ease !important;
+}
+
+.card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18) !important; /* Sombra más dramática */
+    transform: translateY(-4px) !important; /* Elevación más visible */
+    border-color: var(--color-secondary, #6D7BB8) !important; /* Borde azul en hover */
+}
+
+/* Navbar links - Blanco sobre fondo gris */
+.nav-link {
+    color: rgba(255, 255, 255, 0.95) !important;
+    transition: var(--transition);
+    position: relative;
+    font-weight: 500;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: var(--color-white) !important;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+}
+
+.nav-link i {
+    opacity: 0.9;
+    transition: var(--transition);
+}
+
+/* Links - GRIS oscuro (no azul), azul solo en hover */
+a:not(.nav-link):not(.btn):not(.dropdown-item):not(.card-header a) {
+    color: var(--color-text-dark, #2B2B2B);
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+a:not(.nav-link):not(.btn):not(.dropdown-item):not(.card-header a):hover {
+    color: var(--color-secondary, #6D7BB8); /* Azul SOLO en hover */
+    text-decoration: underline;
+}
+
+/* Dropdown - Estilos mejorados (ya se manejan en layout-styles.css) */
+.dropdown-menu {
+    z-index: 100000 !important; /* Mayor que el header (99999) */
+    background-color: var(--color-navbar, #3a3a3a) !important;
+}
+
+/* Asegurar que el contenedor del dropdown no corte el menú */
+.navbar-nav {
+    overflow: visible !important;
+}
+
+.nav-item.dropdown {
+    position: relative !important;
+    overflow: visible !important;
+}
+
+.dropdown-item {
+    color: rgba(255, 255, 255, 0.9) !important;
+    transition: var(--transition);
+}
+
+.dropdown-item:hover {
+    background-color: var(--color-secondary, #6D7BB8) !important;
+    color: var(--color-white, #FFFFFF) !important;
+}
+
+.dropdown-item i {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.dropdown-item:hover i {
+    color: var(--color-white, #FFFFFF) !important;
+}
+
+/* Botones - GRIS como principal, azul solo en hover - MÁS VISIBLES */
+.btn-primary {
+    background-color: var(--color-text-dark, #2B2B2B) !important;
+    border-color: var(--color-text-dark, #2B2B2B) !important;
+    color: var(--color-white) !important;
+    font-weight: 700; /* Más bold */
+    padding: 0.875rem 2rem; /* Más padding */
+    border-radius: 12px; /* Más redondeado */
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15); /* Sombra más visible */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9375rem;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-secondary, #6D7BB8) !important; /* Azul SOLO en hover */
+    border-color: var(--color-secondary, #6D7BB8) !important;
+    color: var(--color-white) !important;
+    transform: translateY(-4px); /* Más elevación */
+    box-shadow: 0 8px 20px rgba(109, 123, 184, 0.4), 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra más dramática */
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Botones secundarios - Gris */
+.btn-secondary,
+.btn-outline {
+    background-color: transparent;
+    border-color: var(--color-neutral, #BEBEBE);
+    color: var(--color-text-dark, #2B2B2B);
+}
+
+.btn-secondary:hover,
+.btn-outline:hover {
+    background-color: var(--color-bg-medium, #e8e9eb);
+    border-color: var(--color-neutral-dark, #a0a0a0);
+    color: var(--color-text-dark, #2B2B2B);
+}
+
+/* Bordes - GRIS neutro (PRINCIPAL) */
+.form-control,
+.input-group-text,
+.border,
+.card {
+    border-color: var(--color-neutral, #BEBEBE) !important;
+}
+
+.form-control:focus {
+    border-color: var(--color-secondary, #6D7BB8); /* Azul SOLO en focus */
+    box-shadow: 0 0 0 3px rgba(109, 123, 184, 0.1);
+}
+
+/* Secciones alternas - GRIS claro (no azul) */
+.section-alt {
+    background-color: var(--color-bg-medium, #e8e9eb);
+}
+
+/* Íconos - GRIS (no azul), azul solo en hover */
+i.fas,
+i.far,
+i.fab {
+    color: var(--color-text-medium, #4a4a4a); /* Gris para íconos */
+}
+
+/* Íconos en navbar - blanco */
+.nav-link i {
+    color: inherit;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Íconos en cards - gris */
+.card-header i,
+.card-body i {
+    color: var(--color-text-medium, #4a4a4a);
+}
+
+.card:hover i {
+    color: var(--color-secondary, #6D7BB8); /* Azul SOLO en hover */
+}
+
+/* Texto - GRIS oscuro (PRINCIPAL) - Tipografía mejorada */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: var(--color-text-dark, #2B2B2B);
+    line-height: 1.7;
+}
+
+p {
+    font-family: 'Inter', sans-serif;
+    color: var(--color-text-dark, #2B2B2B);
+    line-height: 1.75;
+    font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', 'Georgia', serif;
+    color: var(--color-text-dark, #2B2B2B);
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+}
+
+.text-muted {
+    color: var(--color-text-light, #6b6b6b) !important;
+}
+
+/* Inputs y controles - BLANCO con bordes GRIS */
+.form-control,
+select,
+textarea {
+    background-color: var(--color-white) !important;
+    border-color: var(--color-neutral, #BEBEBE) !important;
+    color: var(--color-text-dark, #2B2B2B) !important;
+    border-radius: 8px;
+    padding: 0.625rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+select:focus,
+textarea:focus {
+    background-color: var(--color-white) !important;
+    border-color: var(--color-secondary, #6D7BB8) !important; /* Azul SOLO en focus */
+    color: var(--color-text-dark, #2B2B2B) !important;
+    box-shadow: 0 0 0 3px rgba(109, 123, 184, 0.1);
+    outline: none;
+}
+
+.form-control::placeholder {
+    color: var(--color-text-light, #6b6b6b);
+    opacity: 0.7;
+}
+
+/* Input group text - GRIS */
+.input-group-text {
+    background-color: var(--color-bg-medium, #e8e9eb) !important;
+    border-color: var(--color-neutral, #BEBEBE) !important;
+    color: var(--color-text-dark, #2B2B2B) !important;
+}
+
+/* Separadores - GRIS */
+hr,
+.border-top,
+.border-bottom {
+    border-color: var(--color-neutral, #BEBEBE) !important;
+    opacity: 0.5;
+}
+
+/* Badges - GRIS con azul solo en hover */
+.badge {
+    background-color: var(--color-bg-medium, #e8e9eb);
+    color: var(--color-text-dark, #2B2B2B);
+}
+
+.badge-primary {
+    background-color: var(--color-text-dark, #2B2B2B);
+    color: var(--color-white);
+}
+
+.badge:hover {
+    background-color: var(--color-secondary, #6D7BB8); /* Azul SOLO en hover */
+    color: var(--color-white);
+}
+
+/* Tablas - Blanco y gris */
+.table {
+    background-color: var(--color-white);
+    color: var(--color-text-dark, #2B2B2B);
+}
+
+.table thead th {
+    background-color: var(--color-bg-light, #F6F7F9);
+    color: var(--color-text-dark, #2B2B2B);
+    border-bottom: 2px solid var(--color-neutral, #BEBEBE);
+}
+
+.table tbody tr {
+    border-bottom: 1px solid var(--color-neutral, #BEBEBE);
+}
+
+.table tbody tr:hover {
+    background-color: var(--color-bg-light, #F6F7F9);
+}
+
+/* Card headers - GRIS (no azul) */
+.card-header {
+    background-color: var(--color-text-dark, #2B2B2B) !important;
+    color: var(--color-white) !important;
+    border-bottom: 1px solid var(--color-neutral, #BEBEBE) !important;
+}
+
+.card-header i {
+    color: var(--color-white) !important;
+}
+
+/* Logo - Sin efecto dorado, solo sombra normal */
+.navbar-brand img {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    transition: all 0.3s ease;
+    transform: scale(1);
+}
+
+.navbar-brand:hover img {
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.3));
+    transform: scale(1.02);
+}
+
+/* Texto del nombre del hotel - DORADO sutil (solo cuando se use la clase) */
+.hotel-name,
+.brand-text {
+    background: linear-gradient(135deg, var(--color-gold, #D4AF37) 0%, var(--color-gold-light, #E5C158) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+}
+
+/* Footer - nombre del hotel en dorado */
+#footer .hotel-name,
+#footer p:contains("Prado") {
+    color: var(--color-gold, #D4AF37);
+    font-weight: 600;
+}
+
+/* Acentos dorados muy sutiles */
+.gold-accent {
+    color: var(--color-gold, #D4AF37);
+}
+
+.gold-accent-border {
+    border-color: var(--color-gold, #D4AF37) !important;
+}
+
+/* Estrellas o elementos premium - DORADO */
+.star-rating i,
+.premium-badge,
+.featured-icon {
+    color: var(--color-gold, #D4AF37);
+}
+
+/* Hover dorado muy sutil en elementos especiales */
+.card:hover .premium-badge,
+.featured:hover .featured-icon {
+    color: var(--color-gold-light, #E5C158);
+    transition: color 0.3s ease;
+}

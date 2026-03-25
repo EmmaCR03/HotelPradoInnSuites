@@ -40,7 +40,8 @@ namespace HotelPrado.LN.Bitacora.Registrar
                 DescripcionDeEvento = Bitacora.DescripcionDeEvento,
                 StackTrace = Bitacora.StackTrace,
                 DatosAnteriores = Bitacora.DatosAnteriores,
-                DatosPosteriores = Bitacora.DatosPosteriores
+                DatosPosteriores = Bitacora.DatosPosteriores,
+                Usuario = Bitacora.Usuario ?? "Sistema"
             };
         }
     }

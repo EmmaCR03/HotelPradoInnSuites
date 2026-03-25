@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props')" />
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
@@ -107,6 +107,8 @@
     <Compile Include="Mantenimiento\Listar\ListarMantenimientoAD.cs" />
     <Compile Include="Mantenimiento\ObtenerPorId\ObtenerMantenimientoPorIdAD.cs" />
     <Compile Include="Mantenimiento\Registrar\RegistrarMantenimientoAD.cs" />
+    <Compile Include="SolicitudLimpieza\Listar\ListarSolicitudLimpiezaAD.cs" />
+    <Compile Include="SolicitudLimpieza\Registrar\RegistrarSolicitudLimpiezaAD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reservas\Editar\EditarReservaAD.cs" />
     <Compile Include="Reservas\Listar\ListarReservasAD.cs" />
@@ -115,6 +117,22 @@
     <Compile Include="Reservas\ReservasAD.cs" />
     <Compile Include="TipoDeHabitacion\Listar\ListarTipoDeHabitacionAD.cs" />
     <Compile Include="TipoDepartamentos\Listar\ListarTipoDeDepartamentosAD.cs" />
+    <Compile Include="Cargos\Listar\ListarCargosAD.cs" />
+    <Compile Include="Cargos\Registrar\RegistrarCargosAD.cs" />
+    <Compile Include="Cliente\Listar\ListarClientesAD.cs" />
+    <Compile Include="Cargos\Editar\EditarCargosAD.cs" />
+    <Compile Include="Cargos\ObtenerPorId\ObtenerCargosPorIdAD.cs" />
+    <Compile Include="Cargos\Eliminar\EliminarCargosAD.cs" />
+    <Compile Include="Temporadas\Listar\ListarTemporadasAD.cs" />
+    <Compile Include="Temporadas\Registrar\RegistrarTemporadasAD.cs" />
+    <Compile Include="Temporadas\Editar\EditarTemporadasAD.cs" />
+    <Compile Include="Temporadas\ObtenerPorId\ObtenerTemporadasPorIdAD.cs" />
+    <Compile Include="Temporadas\Eliminar\EliminarTemporadasAD.cs" />
+    <Compile Include="Facturas\Listar\ListarFacturasAD.cs" />
+    <Compile Include="Facturas\Registrar\RegistrarFacturasAD.cs" />
+    <Compile Include="Facturas\Editar\EditarFacturasAD.cs" />
+    <Compile Include="Facturas\ObtenerPorId\ObtenerFacturasPorIdAD.cs" />
+    <Compile Include="Facturas\Eliminar\EliminarFacturasAD.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

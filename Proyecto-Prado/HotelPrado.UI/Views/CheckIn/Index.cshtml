@@ -1,0 +1,231 @@
+@model System.Collections.Generic.List<HotelPrado.UI.Models.CheckInViewModel>
+@{
+    ViewBag.Title = "Check-Ins";
+}
+<style>
+    .table-container {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        overflow-x: auto;
+    }
+</style>
+<div class="container-fluid px-4">
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0"><i class="fas fa-calendar-check me-2"></i>Check-Ins Registrados</h2>
+                <div class="btn-group">
+                    <a href="@Url.Action("Create", "CheckIn")" class="btn btn-success">
+                        <i class="fas fa-plus-circle me-2"></i>Crear Check-In Manual
+                    </a>
+                    <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="@Url.Action("Create", "CheckIn")">
+                            <i class="fas fa-user-plus me-2"></i>Check-In Manual
+                        </a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("Create", "CheckIn", new { idReserva = 0 })">
+                            <i class="fas fa-bookmark me-2"></i>Desde Reserva
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger">
+                    @ViewBag.Error
+                </div>
+            }
+
+            <!-- Barra de búsqueda -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <form method="get" action="@Url.Action("Index", "CheckIn")" class="row g-3">
+                        <div class="col-md-8">
+                            <input type="text" 
+                                   name="busqueda" 
+                                   class="form-control" 
+                                   placeholder="Buscar por nombre, cédula o habitación..." 
+                                   value="@ViewBag.Busqueda" />
+                        </div>
+                        <div class="col-md-2">
+                            <select name="tamanoPagina" class="form-select" onchange="this.form.submit()">
+                                <option value="25" @(ViewBag.TamanoPagina == 25 ? "selected" : "")>25</option>
+                                <option value="50" @(ViewBag.TamanoPagina == 50 ? "selected" : "")>50</option>
+                                <option value="100" @(ViewBag.TamanoPagina == 100 ? "selected" : "")>100</option>
+                                <option value="200" @(ViewBag.TamanoPagina == 200 ? "selected" : "")>200</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search me-1"></i>Buscar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Información de total -->
+            @if (ViewBag.TotalCheckIns != null)
+            {
+                <div class="alert alert-info mb-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Total de check-ins: <strong>@ViewBag.TotalCheckIns</strong>
+                    @if (!string.IsNullOrEmpty(ViewBag.Busqueda as string))
+                    {
+                        <span class="text-muted">(filtrados)</span>
+                    }
+                </div>
+            }
+
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-container">
+                    <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Folio</th>
+                                        <th>Cliente</th>
+                                        <th>Cédula</th>
+                                        <th>Habitación</th>
+                                        <th>Fecha Check-In</th>
+                                        <th>Fecha Check-Out</th>
+                                        <th>Estado</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var checkIn in Model)
+                                    {
+                                        <tr>
+                                            <td data-label="Folio">
+                                                <strong>@(checkIn.CodigoFolio?.ToString("D8") ?? checkIn.IdCheckIn.ToString("D8"))</strong>
+                                            </td>
+                                            <td data-label="Cliente">@checkIn.NombreCliente</td>
+                                            <td data-label="Cédula">@checkIn.CedulaCliente</td>
+                                            <td data-label="Habitación">
+                                                <span class="badge bg-info">@checkIn.NumeroHabitacion</span>
+                                            </td>
+                                            <td data-label="Fecha Check-In">
+                                                @if (checkIn.FechaCheckIn.HasValue)
+                                                {
+                                                    @checkIn.FechaCheckIn.Value.ToString("dd/MM/yyyy")
+                                                }
+                                            </td>
+                                            <td data-label="Fecha Check-Out">
+                                                @if (checkIn.FechaCheckOut.HasValue)
+                                                {
+                                                    @checkIn.FechaCheckOut.Value.ToString("dd/MM/yyyy")
+                                                }
+                                            </td>
+                                            <td data-label="Estado">
+                                                @if (checkIn.Estado == "Check-In")
+                                                {
+                                                    <span class="badge bg-success">@checkIn.Estado</span>
+                                                }
+                                                else if (checkIn.Estado == "Check-Out")
+                                                {
+                                                    <span class="badge bg-secondary">@checkIn.Estado</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-warning">@(checkIn.Estado ?? "Activo")</span>
+                                                }
+                                            </td>
+                                            <td class="text-center" data-label="Acciones">
+                                                <a href="@Url.Action("VerTarjeta", "CheckIn", new { id = checkIn.IdCheckIn })" 
+                                                   class="btn btn-sm btn-success me-1" 
+                                                   title="Ver y Firmar Tarjeta de Registro">
+                                                    <i class="fas fa-file-signature me-1"></i>Ver y Firmar
+                                                </a>
+                                                <a href="@Url.Action("ImprimirTarjeta", "CheckIn", new { id = checkIn.IdCheckIn })" 
+                                                   target="_blank" 
+                                                   class="btn btn-sm btn-primary" 
+                                                   title="Imprimir Tarjeta de Registro">
+                                                    <i class="fas fa-print me-1"></i>Imprimir
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                    </table>
+                </div>
+            }
+
+            @* Paginación *@
+            @if (ViewBag.TotalPaginas != null && ViewBag.TotalPaginas > 1)
+            {
+                var paginaActual = (int)ViewBag.PaginaActual;
+                var totalPaginas = (int)ViewBag.TotalPaginas;
+                var tamanoPagina = (int)ViewBag.TamanoPagina;
+                var busqueda = ViewBag.Busqueda as string;
+                var inicioPagina = Math.Max(1, paginaActual - 2);
+                var finPagina = Math.Min(totalPaginas, paginaActual + 2);
+                
+                <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
+                        <div class="pagination-info">
+                            <span class="text-muted">
+                                Mostrando @((paginaActual - 1) * tamanoPagina + 1) - @(Math.Min(paginaActual * tamanoPagina, ViewBag.TotalCheckIns)) de @ViewBag.TotalCheckIns check-ins
+                            </span>
+                        </div>
+                        <nav>
+                            <ul class="pagination mb-0">
+                                @* Primera página *@
+                                @if (paginaActual > 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", new { pagina = 1, tamanoPagina = tamanoPagina, busqueda = busqueda })">
+                                            <i class="fas fa-angle-double-left"></i>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", new { pagina = paginaActual - 1, tamanoPagina = tamanoPagina, busqueda = busqueda })">
+                                            <i class="fas fa-angle-left"></i>
+                                        </a>
+                                    </li>
+                                }
+
+                                @* Páginas numeradas *@
+                                @for (int i = inicioPagina; i <= finPagina; i++)
+                                {
+                                    <li class="page-item @(i == paginaActual ? "active" : "")">
+                                        <a class="page-link" href="@Url.Action("Index", new { pagina = i, tamanoPagina = tamanoPagina, busqueda = busqueda })">
+                                            @i
+                                        </a>
+                                    </li>
+                                }
+
+                                @* Última página *@
+                                @if (paginaActual < totalPaginas)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", new { pagina = paginaActual + 1, tamanoPagina = tamanoPagina, busqueda = busqueda })">
+                                            <i class="fas fa-angle-right"></i>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", new { pagina = totalPaginas, tamanoPagina = tamanoPagina, busqueda = busqueda })">
+                                            <i class="fas fa-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    </div>
+                }
+            }
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>No hay check-ins registrados.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

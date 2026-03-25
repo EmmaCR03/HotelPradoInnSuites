@@ -1,0 +1,181 @@
+@{
+    ViewBag.Title = "Configurar galería (Apartamentos, Instalaciones y Habitaciones)";
+    var apartamentos = ViewBag.Apartamentos as List<HotelPrado.Abstracciones.Modelos.Configuracion.ConfiguracionHeroBannerDTO> ?? new List<HotelPrado.Abstracciones.Modelos.Configuracion.ConfiguracionHeroBannerDTO>();
+    var instalaciones = ViewBag.Instalaciones as List<HotelPrado.Abstracciones.Modelos.Configuracion.ConfiguracionHeroBannerDTO> ?? new List<HotelPrado.Abstracciones.Modelos.Configuracion.ConfiguracionHeroBannerDTO>();
+    var habitaciones = ViewBag.Habitaciones as List<HotelPrado.Abstracciones.Modelos.Configuracion.ConfiguracionHeroBannerDTO> ?? new List<HotelPrado.Abstracciones.Modelos.Configuracion.ConfiguracionHeroBannerDTO>();
+}
+@functions {
+    string GetUrl(string urlImagen) {
+        if (string.IsNullOrEmpty(urlImagen)) return "";
+        var bar = urlImagen.IndexOf('|');
+        return bar >= 0 ? urlImagen.Substring(0, bar).Trim() : urlImagen;
+    }
+    string GetLeyenda(string urlImagen) {
+        if (string.IsNullOrEmpty(urlImagen)) return "";
+        var bar = urlImagen.IndexOf('|');
+        return bar >= 0 ? urlImagen.Substring(bar + 1).Trim() : "";
+    }
+}
+<style>
+    .admin-panel { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: calc(100vh - 200px); padding: 2rem 0; }
+    .panel-header { text-align: center; margin-bottom: 2rem; }
+    .panel-header h1 { font-size: 2rem; color: #2c3e50; }
+    .btn-back { background: #6c757d; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; display: inline-block; margin-bottom: 1.5rem; }
+    .btn-back:hover { color: white; }
+    .section-galeria { background: white; border-radius: 16px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    .section-galeria h2 { font-size: 1.5rem; color: #6D7BB8; margin-bottom: 1.5rem; }
+    .gallery-edit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+    .gallery-edit-item { border: 2px solid #e9ecef; border-radius: 12px; padding: 1rem; }
+    .gallery-edit-item img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; }
+    .gallery-edit-item label { font-size: 0.85rem; font-weight: 600; color: #495057; margin-top: 0.5rem; display: block; }
+    .gallery-edit-item input[type="text"] { width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #dee2e6; margin-top: 0.25rem; }
+    .gallery-edit-item .btn-row { margin-top: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .btn-guardar { background: #6D7BB8; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.85rem; cursor: pointer; }
+    .btn-eliminar { background: #dc3545; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.85rem; cursor: pointer; }
+    .form-agregar { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid #e9ecef; }
+    .form-agregar input[type="text"], .form-agregar input[type="file"] { margin-right: 0.5rem; margin-bottom: 0.5rem; padding: 0.5rem; border-radius: 6px; border: 1px solid #dee2e6; }
+    .btn-agregar { background: #28a745; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; }
+    .alert { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+    .alert-success { background: #d4edda; color: #155724; }
+    .alert-error { background: #f8d7da; color: #721c24; }
+    .container-galeria { max-width: 1100px; margin: 0 auto; padding: 0 1rem; }
+</style>
+
+<div class="admin-panel">
+    <div class="panel-header">
+        <h1><i class="fas fa-images me-2" style="color: #6D7BB8;"></i>Galería para usuarios</h1>
+        <p>Edita las imágenes y leyendas de la pestaña «Galería» en la página de Apartamentos (Apartamentos, Instalaciones y Habitaciones).</p>
+    </div>
+    <div class="container-galeria">
+        <a href="@Url.Action("Configuraciones", "Admin")" class="btn-back"><i class="fas fa-arrow-left me-2"></i>Volver a Configuraciones</a>
+        @if (ViewBag.ErrorMessage != null) { <div class="alert alert-error">@ViewBag.ErrorMessage</div> }
+        @if (TempData["SuccessMessage"] != null) { <div class="alert alert-success">@TempData["SuccessMessage"]</div> }
+        @if (TempData["ErrorMessage"] != null) { <div class="alert alert-error">@TempData["ErrorMessage"]</div> }
+
+        <!-- Apartamentos -->
+        <div class="section-galeria">
+            <h2><i class="fas fa-building me-2"></i>Apartamentos</h2>
+            <div class="gallery-edit-grid">
+                @foreach (var item in apartamentos)
+                {
+                    var url = GetUrl(item.UrlImagen);
+                    var leyenda = GetLeyenda(item.UrlImagen);
+                    <div class="gallery-edit-item">
+                        <img src="@Url.Content(url)" alt="@leyenda" onerror="this.style.background='#eee';this.alt='Sin imagen';">
+                        <label>Qué es esta parte (leyenda):</label>
+                        @using (Html.BeginForm("ActualizarLeyendaGaleriaUsuarios", "Admin", FormMethod.Post, new { @class = "form-leyenda" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.IdConfiguracion" />
+                            <input type="text" name="leyenda" value="@leyenda" placeholder="Ej. Cocina, Sala, Baño..." />
+                            <div class="btn-row">
+                                <button type="submit" class="btn-guardar"><i class="fas fa-save me-1"></i>Guardar</button>
+                            </div>
+                        }
+                        @using (Html.BeginForm("EliminarImagenGaleriaUsuarios", "Admin", FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('¿Eliminar esta imagen de la galería?');" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.IdConfiguracion" />
+                            <button type="submit" class="btn-eliminar mt-1"><i class="fas fa-trash me-1"></i>Eliminar</button>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="form-agregar">
+                <h3 class="h6 mb-2">Agregar imagen</h3>
+                @using (Html.BeginForm("SubirImagenGaleriaUsuarios", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="tipo" value="Apartamentos" />
+                    <input type="text" name="leyenda" placeholder="Leyenda (ej. Cocina)" />
+                    <input type="file" name="imagen" accept="image/*" required />
+                    <button type="submit" class="btn-agregar"><i class="fas fa-plus me-1"></i>Agregar</button>
+                }
+            </div>
+        </div>
+
+        <!-- Instalaciones -->
+        <div class="section-galeria">
+            <h2><i class="fas fa-star me-2"></i>Instalaciones</h2>
+            <div class="gallery-edit-grid">
+                @foreach (var item in instalaciones)
+                {
+                    var url = GetUrl(item.UrlImagen);
+                    var leyenda = GetLeyenda(item.UrlImagen);
+                    <div class="gallery-edit-item">
+                        <img src="@Url.Content(url)" alt="@leyenda" onerror="this.style.background='#eee';this.alt='Sin imagen';">
+                        <label>Qué es esta parte (leyenda):</label>
+                        @using (Html.BeginForm("ActualizarLeyendaGaleriaUsuarios", "Admin", FormMethod.Post, new { @class = "form-leyenda" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.IdConfiguracion" />
+                            <input type="text" name="leyenda" value="@leyenda" placeholder="Ej. Gimnasio, Lavandería..." />
+                            <div class="btn-row">
+                                <button type="submit" class="btn-guardar"><i class="fas fa-save me-1"></i>Guardar</button>
+                            </div>
+                        }
+                        @using (Html.BeginForm("EliminarImagenGaleriaUsuarios", "Admin", FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('¿Eliminar esta imagen?');" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.IdConfiguracion" />
+                            <button type="submit" class="btn-eliminar mt-1"><i class="fas fa-trash me-1"></i>Eliminar</button>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="form-agregar">
+                <h3 class="h6 mb-2">Agregar imagen</h3>
+                @using (Html.BeginForm("SubirImagenGaleriaUsuarios", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="tipo" value="Instalaciones" />
+                    <input type="text" name="leyenda" placeholder="Leyenda (ej. Gimnasio)" />
+                    <input type="file" name="imagen" accept="image/*" required />
+                    <button type="submit" class="btn-agregar"><i class="fas fa-plus me-1"></i>Agregar</button>
+                }
+            </div>
+        </div>
+
+        <!-- Habitaciones -->
+        <div class="section-galeria">
+            <h2><i class="fas fa-bed me-2"></i>Habitaciones</h2>
+            <div class="gallery-edit-grid">
+                @foreach (var item in habitaciones)
+                {
+                    var url = GetUrl(item.UrlImagen);
+                    var leyenda = GetLeyenda(item.UrlImagen);
+                    <div class="gallery-edit-item">
+                        <img src="@Url.Content(url)" alt="@leyenda" onerror="this.style.background='#eee';this.alt='Sin imagen';">
+                        <label>Qué es esta parte (leyenda):</label>
+                        @using (Html.BeginForm("ActualizarLeyendaGaleriaUsuarios", "Admin", FormMethod.Post, new { @class = "form-leyenda" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.IdConfiguracion" />
+                            <input type="text" name="leyenda" value="@leyenda" placeholder="Ej. Habitación, Baño..." />
+                            <div class="btn-row">
+                                <button type="submit" class="btn-guardar"><i class="fas fa-save me-1"></i>Guardar</button>
+                            </div>
+                        }
+                        @using (Html.BeginForm("EliminarImagenGaleriaUsuarios", "Admin", FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('¿Eliminar esta imagen?');" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.IdConfiguracion" />
+                            <button type="submit" class="btn-eliminar mt-1"><i class="fas fa-trash me-1"></i>Eliminar</button>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="form-agregar">
+                <h3 class="h6 mb-2">Agregar imagen</h3>
+                @using (Html.BeginForm("SubirImagenGaleriaUsuarios", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="tipo" value="Habitaciones" />
+                    <input type="text" name="leyenda" placeholder="Leyenda (ej. Habitación)" />
+                    <input type="file" name="imagen" accept="image/*" required />
+                    <button type="submit" class="btn-agregar"><i class="fas fa-plus me-1"></i>Agregar</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

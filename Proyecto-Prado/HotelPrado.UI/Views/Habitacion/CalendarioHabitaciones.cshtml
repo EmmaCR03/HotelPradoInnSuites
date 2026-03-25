@@ -1,0 +1,501 @@
+@model HotelPrado.UI.Models.CalendarioHabitacionesViewModel
+
+@{
+    ViewBag.Title = "Calendario de Habitaciones";
+}
+
+<div class="calendario-container">
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="calendario-title">
+                            <i class="fas fa-calendar-alt me-2"></i>Calendario de Habitaciones
+                        </h1>
+                        <p class="text-muted mb-0">Visualiza todas las reservas y disponibilidad de habitaciones</p>
+                    </div>
+                    <div>
+                        <a href="@Url.Action("EstadoHabitaciones", "Habitacion")" class="btn btn-primary">
+                            <i class="fas fa-tachometer-alt me-2"></i>Ver Estado en Tiempo Real
+                        </a>
+                        <a href="@Url.Action("Create", "SolicitudLimpieza")" class="btn btn-info ms-2">
+                            <i class="fas fa-broom me-2"></i>Solicitar Limpieza
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leyenda -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="calendario-leyenda">
+                    <span class="leyenda-item">
+                        <span class="leyenda-color" style="background-color: #28a745;"></span>
+                        Confirmada
+                    </span>
+                    <span class="leyenda-item">
+                        <span class="leyenda-color" style="background-color: #ffc107;"></span>
+                        Pendiente / Mantenimiento
+                    </span>
+                    <span class="leyenda-item">
+                        <span class="leyenda-color" style="background-color: #17a2b8;"></span>
+                        Limpieza
+                    </span>
+                    <span class="leyenda-item">
+                        <span class="leyenda-color" style="background-color: #dc3545;"></span>
+                        Cancelada
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendario -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <div id="calendario-habitaciones"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para detalles de reserva -->
+<div class="modal fade" id="modalDetalleReserva" tabindex="-1" aria-labelledby="modalDetalleReservaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #6D7BB8 0%, #8B9DC3 100%); color: white; border-bottom: none;">
+                <h5 class="modal-title" id="modalDetalleReservaLabel">
+                    <i class="fas fa-calendar-check me-2"></i>Detalles de la Reserva
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalDetalleReservaBody">
+                <!-- Contenido dinámico -->
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #e9ecef;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cerrar
+                </button>
+                <a href="#" id="btnEditarReserva" class="btn btn-primary">
+                    <i class="fas fa-edit me-2"></i>Editar Reserva
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.css" rel="stylesheet" />
+
+<!-- FullCalendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.5/locales/es.js"></script>
+
+<!-- CSS específico -->
+<link href="~/Content/Habitacion/calendario-habitaciones.css" rel="stylesheet" />
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendario-habitaciones');
+        
+        // Preparar eventos para FullCalendar
+        var eventos = [
+            @foreach (var evento in Model.Eventos)
+            {
+                <text>
+                {
+                    id: '@evento.IdReserva',
+                    title: '@Html.Raw(evento.Titulo)',
+                    start: '@evento.FechaInicio',
+                    end: '@evento.FechaFin',
+                    backgroundColor: '@evento.Color',
+                    borderColor: '@evento.Color',
+                    extendedProps: {
+                        habitacion: '@evento.NumeroHabitacion',
+                        cliente: '@evento.Cliente',
+                        personas: @evento.CantidadPersonas,
+                        estado: '@evento.Estado',
+                        horaCheckIn: '@evento.HoraCheckIn',
+                        horaCheckOut: '@evento.HoraCheckOut'
+                    }
+                },
+                </text>
+            }
+        ];
+
+        // Siempre iniciar por mes; el usuario puede cambiar a Semana o Lista con los botones
+        var headerToolbar = {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,listWeek,timeGridDay'
+        };
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'es',
+            headerToolbar: headerToolbar,
+            views: {
+                dayGridMonth: { buttonText: 'Mes' },
+                timeGridWeek: { buttonText: 'Semana' },
+                timeGridDay: { buttonText: 'Día' },
+                listWeek: { buttonText: 'Lista' }
+            },
+            events: eventos,
+            eventDisplay: 'block',
+            eventTimeFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                omitZeroMinute: true,
+                meridiem: 'short'
+            },
+            eventClick: function (info) {
+                // Mostrar información detallada del evento en un modal bonito
+                var evento = info.event;
+                var extendedProps = evento.extendedProps;
+                
+                // Formatear fechas con horas
+                var horaCheckIn = extendedProps.horaCheckIn || evento.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                var horaCheckOut = extendedProps.horaCheckOut || (evento.end ? new Date(evento.end.getTime() - 86400000).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : 'N/A');
+                
+                var fechaInicio = evento.start.toLocaleDateString('es-ES', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                }) + ' a las ' + horaCheckIn;
+                var fechaFin = evento.end ? new Date(evento.end.getTime() - 86400000).toLocaleDateString('es-ES', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                }) + ' a las ' + horaCheckOut : 'N/A';
+                
+                // Determinar color del badge según el estado
+                var estadoClass = 'badge-secondary';
+                var estadoColor = '#6c757d';
+                if (extendedProps.estado && extendedProps.estado.toLowerCase().includes('confirmada')) {
+                    estadoClass = 'badge-success';
+                    estadoColor = '#28a745';
+                } else if (extendedProps.estado && extendedProps.estado.toLowerCase().includes('solicitada')) {
+                    estadoClass = 'badge-warning';
+                    estadoColor = '#ffc107';
+                } else if (extendedProps.estado && extendedProps.estado.toLowerCase().includes('cancelada')) {
+                    estadoClass = 'badge-danger';
+                    estadoColor = '#dc3545';
+                }
+                
+                // Construir HTML del modal
+                var modalBody = `
+                    <div class="reserva-detalle">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <i class="fas fa-door-open text-primary me-2"></i>
+                                    <strong>Habitación:</strong>
+                                    <span class="ms-2">#${extendedProps.habitacion}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <i class="fas fa-users text-info me-2"></i>
+                                    <strong>Personas:</strong>
+                                    <span class="ms-2">${extendedProps.personas}</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="info-item">
+                                    <i class="fas fa-user text-secondary me-2"></i>
+                                    <strong>Cliente:</strong>
+                                    <span class="ms-2">${extendedProps.cliente || 'N/A'}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <i class="fas fa-calendar-check text-success me-2"></i>
+                                    <strong>Check-in:</strong>
+                                    <span class="ms-2">${fechaInicio}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <i class="fas fa-calendar-times text-danger me-2"></i>
+                                    <strong>Check-out:</strong>
+                                    <span class="ms-2">${fechaFin}</span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="info-item">
+                                    <i class="fas fa-info-circle me-2" style="color: ${estadoColor};"></i>
+                                    <strong>Estado:</strong>
+                                    <span class="badge ${estadoClass} ms-2">${extendedProps.estado || 'N/A'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Actualizar contenido del modal
+                document.getElementById('modalDetalleReservaBody').innerHTML = modalBody;
+                
+                // Configurar botón de editar
+                var btnEditar = document.getElementById('btnEditarReserva');
+                if (btnEditar && evento.id) {
+                    btnEditar.href = '@Url.Action("Edit", "ReservasA")?IdReserva=' + evento.id;
+                }
+                
+                // Mostrar modal usando Bootstrap
+                var modal = new bootstrap.Modal(document.getElementById('modalDetalleReserva'));
+                modal.show();
+            },
+            eventMouseEnter: function (info) {
+                info.el.style.cursor = 'pointer';
+            },
+            height: 'auto',
+            contentHeight: 700,
+            dayMaxEvents: 5,
+            moreLinkClick: function (info) {
+                // Crear modal personalizado para eventos múltiples
+                var eventosDelDia = info.allSegs.map(function(seg) {
+                    var evento = seg.event;
+                    var extendedProps = evento.extendedProps;
+                    var horaCheckIn = extendedProps.horaCheckIn || evento.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                    var horaCheckOut = extendedProps.horaCheckOut || (evento.end ? new Date(evento.end.getTime() - 86400000).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : 'N/A');
+                    
+                    return {
+                        id: evento.id,
+                        titulo: evento.title,
+                        habitacion: extendedProps.habitacion,
+                        cliente: extendedProps.cliente,
+                        personas: extendedProps.personas,
+                        estado: extendedProps.estado,
+                        horaCheckIn: horaCheckIn,
+                        horaCheckOut: horaCheckOut,
+                        color: evento.backgroundColor,
+                        fechaInicio: evento.start.toLocaleDateString('es-ES'),
+                        fechaFin: evento.end ? new Date(evento.end.getTime() - 86400000).toLocaleDateString('es-ES') : 'N/A'
+                    };
+                });
+                
+                // Construir HTML del modal de eventos múltiples
+                var modalBody = '<div class="eventos-multiples"><h6 class="mb-3"><i class="fas fa-calendar-day me-2"></i>Eventos del ' + info.date.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + '</h6>';
+                modalBody += '<div class="list-group">';
+                
+                eventosDelDia.forEach(function(evt) {
+                    var estadoClass = 'badge-secondary';
+                    if (evt.estado && evt.estado.toLowerCase().includes('confirmada')) {
+                        estadoClass = 'badge-success';
+                    } else if (evt.estado && evt.estado.toLowerCase().includes('solicitada')) {
+                        estadoClass = 'badge-warning';
+                    } else if (evt.estado && evt.estado.toLowerCase().includes('cancelada')) {
+                        estadoClass = 'badge-danger';
+                    }
+                    
+                    modalBody += '<div class="list-group-item mb-2" style="border-left: 4px solid ' + evt.color + '; border-radius: 6px;">';
+                    modalBody += '<div class="d-flex justify-content-between align-items-start mb-2">';
+                    modalBody += '<div><h6 class="mb-1">' + evt.titulo + '</h6>';
+                    modalBody += '<small class="text-muted">' + evt.cliente + '</small></div>';
+                    modalBody += '<span class="badge ' + estadoClass + '">' + evt.estado + '</span>';
+                    modalBody += '</div>';
+                    modalBody += '<div class="row g-2">';
+                    modalBody += '<div class="col-6"><small><i class="fas fa-calendar-check text-success me-1"></i><strong>Check-in:</strong> ' + evt.fechaInicio + ' ' + evt.horaCheckIn + '</small></div>';
+                    modalBody += '<div class="col-6"><small><i class="fas fa-calendar-times text-danger me-1"></i><strong>Check-out:</strong> ' + evt.fechaFin + ' ' + evt.horaCheckOut + '</small></div>';
+                    modalBody += '<div class="col-12"><small><i class="fas fa-users text-info me-1"></i><strong>Personas:</strong> ' + evt.personas + '</small></div>';
+                    modalBody += '</div>';
+                    modalBody += '</div>';
+                });
+                
+                modalBody += '</div></div>';
+                
+                // Actualizar contenido del modal
+                document.getElementById('modalDetalleReservaLabel').innerHTML = '<i class="fas fa-calendar-day me-2"></i>Eventos del Día';
+                document.getElementById('modalDetalleReservaBody').innerHTML = modalBody;
+                
+                // Ocultar botón de editar en modal de múltiples eventos
+                var btnEditar = document.getElementById('btnEditarReserva');
+                if (btnEditar) {
+                    btnEditar.style.display = 'none';
+                }
+                
+                // Mostrar modal usando Bootstrap
+                var modal = new bootstrap.Modal(document.getElementById('modalDetalleReserva'));
+                modal.show();
+                
+                // Restaurar botón de editar cuando se cierre el modal
+                document.getElementById('modalDetalleReserva').addEventListener('hidden.bs.modal', function() {
+                    if (btnEditar) {
+                        btnEditar.style.display = 'inline-block';
+                    }
+                }, { once: true });
+            },
+            dayMaxEventRows: 5,
+            eventMaxStack: 5,
+            navLinks: true,
+            editable: true, // Habilitar edición (arrastrar y soltar)
+            selectable: true, // Habilitar selección de fechas
+            selectMirror: true,
+            droppable: false, // Deshabilitar drop de elementos externos por ahora
+            weekends: true,
+            firstDay: 1, // Lunes
+            businessHours: true,
+            dayHeaderFormat: { weekday: 'short' },
+            buttonText: {
+                today: 'Hoy',
+                month: 'Mes',
+                week: 'Semana',
+                day: 'Día'
+            },
+            // Evento cuando se arrastra y suelta un evento
+            eventDrop: function (info) {
+                var evento = info.event;
+                var nuevaFechaInicio = evento.start;
+                var nuevaFechaFin = evento.end ? new Date(evento.end.getTime() - 86400000) : nuevaFechaInicio; // Restar un día porque FullCalendar agrega un día extra
+                
+                // Mostrar confirmación
+                if (!confirm('¿Desea mover esta reserva a las nuevas fechas?\n\nNueva fecha inicio: ' + nuevaFechaInicio.toLocaleDateString('es-ES') + '\nNueva fecha fin: ' + nuevaFechaFin.toLocaleDateString('es-ES'))) {
+                    info.revert(); // Revertir el cambio
+                    return;
+                }
+                
+                // Actualizar fechas mediante AJAX
+                $.ajax({
+                    url: '@Url.Action("ActualizarFechasReserva", "ReservasA")',
+                    type: 'POST',
+                    data: {
+                        IdReserva: evento.id,
+                        FechaInicio: nuevaFechaInicio.toISOString(),
+                        FechaFin: nuevaFechaFin.toISOString()
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // Mostrar notificación de éxito
+                            mostrarNotificacion('Reserva actualizada correctamente', 'success');
+                            // Actualizar el evento en el calendario
+                            evento.setStart(nuevaFechaInicio);
+                            if (nuevaFechaFin) {
+                                evento.setEnd(new Date(nuevaFechaFin.getTime() + 86400000)); // Agregar un día para FullCalendar
+                            }
+                        } else {
+                            info.revert(); // Revertir si hay error
+                            mostrarNotificacion(response.message || 'Error al actualizar la reserva', 'error');
+                        }
+                    },
+                    error: function () {
+                        info.revert(); // Revertir si hay error
+                        mostrarNotificacion('Error de conexión al actualizar la reserva', 'error');
+                    }
+                });
+            },
+            
+            // Evento cuando se cambia la duración de un evento
+            eventResize: function (info) {
+                var evento = info.event;
+                var nuevaFechaInicio = evento.start;
+                var nuevaFechaFin = evento.end ? new Date(evento.end.getTime() - 86400000) : nuevaFechaInicio;
+                
+                // Mostrar confirmación
+                if (!confirm('¿Desea cambiar la duración de esta reserva?\n\nNueva fecha inicio: ' + nuevaFechaInicio.toLocaleDateString('es-ES') + '\nNueva fecha fin: ' + nuevaFechaFin.toLocaleDateString('es-ES'))) {
+                    info.revert(); // Revertir el cambio
+                    return;
+                }
+                
+                // Actualizar fechas mediante AJAX
+                $.ajax({
+                    url: '@Url.Action("ActualizarFechasReserva", "ReservasA")',
+                    type: 'POST',
+                    data: {
+                        IdReserva: evento.id,
+                        FechaInicio: nuevaFechaInicio.toISOString(),
+                        FechaFin: nuevaFechaFin.toISOString()
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            mostrarNotificacion('Duración de reserva actualizada correctamente', 'success');
+                        } else {
+                            info.revert();
+                            mostrarNotificacion(response.message || 'Error al actualizar la reserva', 'error');
+                        }
+                    },
+                    error: function () {
+                        info.revert();
+                        mostrarNotificacion('Error de conexión al actualizar la reserva', 'error');
+                    }
+                });
+            },
+            
+            eventContent: function (info) {
+                // Personalizar el contenido del evento para que sea más compacto y organizado
+                var title = info.event.title;
+                var extendedProps = info.event.extendedProps;
+                var horaCheckIn = extendedProps.horaCheckIn || info.event.start.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                var horaCheckOut = extendedProps.horaCheckOut || (info.event.end ? new Date(info.event.end.getTime() - 86400000).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) : '');
+                
+                // Crear un diseño más compacto con iconos y horas
+                var habitacionIcon = '<i class="fas fa-door-open" style="font-size: 0.7rem; margin-right: 4px;"></i>';
+                var personasIcon = '<i class="fas fa-users" style="font-size: 0.7rem; margin-left: 6px; margin-right: 2px;"></i>';
+                var horaInIcon = '<i class="fas fa-sign-in-alt" style="font-size: 0.65rem; margin-left: 4px; margin-right: 2px; color: #28a745;"></i>';
+                var horaOutIcon = '<i class="fas fa-sign-out-alt" style="font-size: 0.65rem; margin-left: 4px; margin-right: 2px; color: #dc3545;"></i>';
+                
+                // Acortar títulos largos pero mantener información importante
+                var displayTitle = title;
+                if (title.length > 18) {
+                    displayTitle = title.substring(0, 15) + '...';
+                }
+                
+                // Construir HTML con horas
+                var horasHTML = '';
+                if (horaCheckIn) {
+                    horasHTML += '<div class="fc-event-time">' + horaInIcon + '<span class="fc-event-time-text">' + horaCheckIn + '</span></div>';
+                }
+                if (horaCheckOut && info.event.end) {
+                    horasHTML += '<div class="fc-event-time">' + horaOutIcon + '<span class="fc-event-time-text">' + horaCheckOut + '</span></div>';
+                }
+                
+                return {
+                    html: '<div class="fc-event-content-wrapper">' +
+                          '<div class="fc-event-main">' +
+                          habitacionIcon + '<span class="fc-event-title">' + displayTitle + '</span>' +
+                          '</div>' +
+                          '<div class="fc-event-meta">' +
+                          personasIcon + '<span class="fc-event-people">' + (extendedProps.personas || '') + '</span>' +
+                          '</div>' +
+                          (horasHTML ? '<div class="fc-event-hours">' + horasHTML + '</div>' : '') +
+                          '</div>'
+                };
+            }
+        });
+
+        calendar.render();
+        
+        // Función para mostrar notificaciones
+        function mostrarNotificacion(mensaje, tipo) {
+            tipo = tipo || 'info';
+            var icono = tipo === 'success' ? 'check-circle' : tipo === 'error' ? 'exclamation-circle' : 'info-circle';
+            var color = tipo === 'success' ? '#28a745' : tipo === 'error' ? '#dc3545' : '#17a2b8';
+            
+            // Crear elemento de notificación
+            var notificacion = $('<div class="calendario-notificacion" style="position: fixed; top: 20px; right: 20px; background: white; padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 10000; display: flex; align-items: center; gap: 0.75rem; border-left: 4px solid ' + color + '; max-width: 400px;">' +
+                '<i class="fas fa-' + icono + '" style="color: ' + color + '; font-size: 1.2rem;"></i>' +
+                '<span style="color: #2B2B2B; font-weight: 500;">' + mensaje + '</span>' +
+                '</div>');
+            
+            $('body').append(notificacion);
+            
+            // Animar entrada
+            notificacion.hide().fadeIn(300);
+            
+            // Remover después de 3 segundos
+            setTimeout(function() {
+                notificacion.fadeOut(300, function() {
+                    $(this).remove();
+                });
+            }, 3000);
+        }
+    });
+</script>
+

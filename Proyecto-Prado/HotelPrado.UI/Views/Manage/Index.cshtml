@@ -34,7 +34,10 @@
 
                     <!-- User Information Section -->
                     <div class="mb-5">
-                        <h5 class="fw-bold text-uppercase text-muted mb-4">Información Personal</h5>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold text-uppercase text-muted mb-0">Información Personal</h5>
+                            @Html.ActionLink("Editar Información", "EditProfile", "Manage", null, new { @class = "btn btn-sm btn-primary rounded-pill px-3" })
+                        </div>
 
                         <div class="row g-3">
                             <div class="col-md-6">

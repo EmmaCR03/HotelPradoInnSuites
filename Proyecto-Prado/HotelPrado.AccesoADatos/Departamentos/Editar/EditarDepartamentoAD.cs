@@ -1,4 +1,4 @@
-﻿using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Departamentos.Editar;
+using HotelPrado.Abstracciones.Interfaces.AccesoADatos.Departamentos.Editar;
 using HotelPrado.Abstracciones.ModelosDeBaseDeDatos.Departamento;
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,10 @@ namespace HotelPrado.AccesoADatos.Departamentos.Editar
             eldepartamentoEnBaseDeDatos.IdTipoDepartamento = elDepartamentoActualizar.IdTipoDepartamento;
             eldepartamentoEnBaseDeDatos.Precio = elDepartamentoActualizar.Precio;
             eldepartamentoEnBaseDeDatos.Estado = elDepartamentoActualizar.Estado;
-            EntityState estado = _contexto.Entry(eldepartamentoEnBaseDeDatos).State = System.Data.Entity.EntityState.Modified;
+            eldepartamentoEnBaseDeDatos.UrlImagenes = elDepartamentoActualizar.UrlImagenes;
+            eldepartamentoEnBaseDeDatos.NumeroDepartamento = elDepartamentoActualizar.NumeroDepartamento;
+            eldepartamentoEnBaseDeDatos.IdCliente = elDepartamentoActualizar.IdCliente;
+            _contexto.Entry(eldepartamentoEnBaseDeDatos).State = System.Data.Entity.EntityState.Modified;
             int cantidadDeDatosAlmacenados = await _contexto.SaveChangesAsync();
             return cantidadDeDatosAlmacenados;
         }

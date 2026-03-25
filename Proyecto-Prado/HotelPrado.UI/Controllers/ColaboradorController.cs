@@ -1,4 +1,4 @@
-﻿using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Bitacora.Registrar;
+using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Bitacora.Registrar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Colaborador.Editar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Colaborador.Listar;
 using HotelPrado.Abstracciones.Interfaces.LogicaDeNegocio.Colaborador.ObtenerPorId;
@@ -11,8 +11,11 @@ using HotelPrado.LN.Colaborador.Editar;
 using HotelPrado.LN.Colaborador.Listar;
 using HotelPrado.LN.Colaborador.ObtenerPorId;
 using HotelPrado.LN.Colaborador.Registrar;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -39,7 +42,8 @@ namespace HotelPrado.UI.Controllers
             _editarColaboradorLN = new EditarColaboradorLN();
             _registrarBitacoraEventosLN = new RegistrarBitacoraEventosLN();
         }
-        // GET: Colaborador
+        // GET: Colaborador (caché 60 s para aligerar en host)
+        [OutputCache(Duration = 60, VaryByParam = "none", Location = System.Web.UI.OutputCacheLocation.Server)]
         public ActionResult IndexColaborador()
         {
             ViewBag.Title = "El Colaborador";
@@ -86,38 +90,25 @@ namespace HotelPrado.UI.Controllers
             }
 
 
-            var puestosDb = new List<dynamic>
-{
-    new { Id = "Recepcionista", Descripcion = "Recepcionista" },
-    new { Id = "Limpieza", Descripcion = "Limpieza" },
-    new { Id = "Administrador", Descripcion = "Administrador" },
-    new { Id = "Seguridad", Descripcion = "Seguridad" }
-};
+            var puestosDb = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Recepcionista", Text = "Recepcionista" },
+                new SelectListItem { Value = "Limpieza", Text = "Limpieza" },
+                new SelectListItem { Value = "Administrador", Text = "Administrador" },
+                new SelectListItem { Value = "Seguridad", Text = "Seguridad" }
+            };
+            ViewBag.PuestoColaborador = new SelectList(puestosDb, "Value", "Text", colaborador.PuestoColaborador);
 
-            ViewBag.PuestoColaborador = new SelectList(puestosDb, "Id", "Descripcion");
-
-            // Lista de estados laborales predefinidos
-            var estadosLaboralesDb = new List<dynamic>
-    {
-        new { Id = "Activo", Descripcion = "Activo" },
-        new { Id = "De Vacaciones", Descripcion = "De Vacaciones" },
-        new { Id = "Incapacitado", Descripcion = "Incapacitado" },
-        new { Id = "Licencia con goce de salario", Descripcion = "Licencia con goce de salario" },
-        new { Id = "Licencia sin goce de salario", Descripcion = "Licencia sin goce de salario" },
-        new { Id = "Permiso Especial", Descripcion = "Permiso Especial" }
-    };
-
-            // Formatear la lista de estados laborales
-            var estadosLaborales = estadosLaboralesDb
-                .Select(e => new
-                {
-                    Id = e.Id,
-                    Detalle = e.Descripcion
-                })
-                .ToList();
-
-            // Asignar la lista a ViewBag
-            ViewBag.EstadoLaboral = new SelectList(estadosLaborales, "Id", "Detalle", colaborador.EstadoLaboral);
+            var estadosLaborales = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Activo", Text = "Activo" },
+                new SelectListItem { Value = "De Vacaciones", Text = "De Vacaciones" },
+                new SelectListItem { Value = "Incapacitado", Text = "Incapacitado" },
+                new SelectListItem { Value = "Licencia con goce de salario", Text = "Licencia con goce de salario" },
+                new SelectListItem { Value = "Licencia sin goce de salario", Text = "Licencia sin goce de salario" },
+                new SelectListItem { Value = "Permiso Especial", Text = "Permiso Especial" }
+            };
+            ViewBag.EstadoLaboral = new SelectList(estadosLaborales, "Value", "Text", colaborador.EstadoLaboral);
 
             // Retornar la vista con el colaborador obtenido
             return View(colaborador);
@@ -157,24 +148,57 @@ namespace HotelPrado.UI.Controllers
 
 
         // GET: Colaborador/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+            var colaborador = await _obtenerColaboradorPorId.Obtener(id);
+            if (colaborador == null)
+                return HttpNotFound();
+            return View(colaborador);
         }
 
-        // POST: Departamento/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        // POST: Colaborador/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
+            var colaborador = await _obtenerColaboradorPorId.Obtener(id);
+            if (colaborador == null)
+                return HttpNotFound();
+
             try
             {
-                // TODO: Add delete logic here
+                var entidad = _contexto.ColaboradorTabla.Find(id);
+                if (entidad != null)
+                {
+                    _contexto.ColaboradorTabla.Remove(entidad);
+                    await _contexto.SaveChangesAsync();
 
-                return RedirectToAction("Index");
+                    var bitacora = new BitacoraEventosDTO
+                    {
+                        IdEvento = 0,
+                        TablaDeEvento = "ModuloColaborador",
+                        TipoDeEvento = "Eliminar colaborador",
+                        FechaDeEvento = DateTime.Now.ToString("dd-MM-yyyy"),
+                        DescripcionDeEvento = $"Se eliminó al colaborador {entidad.NombreColaborador} {entidad.PrimerApellidoColaborador} (Id: {id}).",
+                        StackTrace = "Sin errores",
+                        DatosAnteriores = $@"{{ ""IdColaborador"": {id}, ""Nombre"": ""{entidad.NombreColaborador}"" }}",
+                        DatosPosteriores = "{}",
+                        Usuario = (User?.Identity?.IsAuthenticated ?? false) ? User.Identity.GetUserName() : "Sistema"
+                    };
+                    await _registrarBitacoraEventosLN.RegistrarBitacora(bitacora);
+                }
+                TempData["MensajeExito"] = "Colaborador eliminado correctamente.";
+                return RedirectToAction("IndexColaborador");
             }
-            catch
+            catch (DbUpdateException ex) when (ex.InnerException?.InnerException is SqlException sqlEx && (sqlEx.Number == 547 || sqlEx.Number == 2627))
             {
-                return View();
+                ModelState.AddModelError("", "No se puede eliminar este colaborador porque tiene citas u otros registros relacionados.");
+                return View(colaborador);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Error al eliminar: " + ex.Message);
+                return View(colaborador);
             }
         }
 

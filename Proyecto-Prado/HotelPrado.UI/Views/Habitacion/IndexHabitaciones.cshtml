@@ -1,178 +1,300 @@
-﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Habitaciones.HabitacionesDTO>
+@model IEnumerable<HotelPrado.Abstracciones.Modelos.Habitaciones.HabitacionesDTO>
 
 @{
-    ViewBag.Title = "IndexHabitaciones";
+    ViewBag.Title = "Gestión de Habitaciones";
 }
 
-<h2>Todas las habitaciones</h2>
-
-<p>
-    @Html.ActionLink("Crear Habitación", "Create", null, new { @class = "btn btn-success" })
-</p>
-
-<!-- Barra de Búsqueda -->
-<form method="get" asp-action="Listar" style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
-
-    <div>
-        <label for="estado" style="font-weight: bold;">Estado:</label>
-        <select name="estado" class="input-style">
-            <option value="">Todos</option>
-            <option value="Disponible">Disponible</option>
-            <option value="Ocupado">Ocupado</option>
-            <option value="En Mantenimiento">En Mantenimiento</option>
-        </select>
-    </div>
-
-    <button type="submit" class="btn-filtrar">Filtrar</button>
-</form>
-
-
-<div class="row">
-    @foreach (var item in Model)
+<div class="container-fluid py-4">
+    @if (TempData["MensajeExito"] != null)
     {
-        <div class="col-md-4 mb-4 habitacion-item">
-            <div class="border p-3 rounded shadow-sm hover-effect" data-bs-toggle="collapse" data-bs-target="#habitacion-@item.IdHabitacion" aria-expanded="false" aria-controls="habitacion-@item.IdHabitacion">
-                <h5>Habitación @item.NumeroHabitacion</h5>
-                <p><strong>Capacidad:</strong> @item.CapacidadMax personas</p>
-                <p><strong>Estado:</strong> @item.Estado</p>
-            </div>
-
-            <div id="habitacion-@item.IdHabitacion" class="collapse">
-                <div class="border p-3 mt-2 rounded shadow-sm">
-                    <p><strong>Precio 1P:</strong> @item.PrecioPorNoche1P</p>
-                    <p><strong>Precio 2P:</strong> @item.PrecioPorNoche2P</p>
-                    <p><strong>Precio 3P:</strong> @item.PrecioPorNoche3P</p>
-                    <p><strong>Precio 4P:</strong> @item.PrecioPorNoche4P</p>
-
-                    <div class="mb-3">
-                        @if (item.ListaImagenes.Any())
-                        {
-                            foreach (var imagenUrl in item.ListaImagenes)
-                            {
-                                <img src="@Url.Content(imagenUrl)" alt="Imagen Habitacion" class="lazy" data-src="@Url.Content(imagenUrl)" style="width: 100px; height: 100px; margin-right: 5px;" />
-                            }
-                        }
-                        else
-                        {
-                            <img src="@Url.Content("~/imagenes/default.jpg")" alt="Imagen por defecto" class="lazy" data-src="@Url.Content("~/imagenes/default.jpg")" style="width: 100px; height: 100px;" />
-                        }
-                    </div>
-
-
-
-                    <div class="d-flex justify-content-between mt-2">
-
-                        @Html.ActionLink("Editar Imágenes", "EditarImagenes", "Habitacion", new { id = item.IdHabitacion }, new { @class = "btn btn-outline-info btn-sm" })
-                    </div>
-
-                    <div class="d-flex justify-content-between mt-3">
-                        @Html.ActionLink("Detalles", "Details", new { id = item.IdHabitacion }, new { @class = "btn btn-outline-info btn-sm me-2" })
-                        @Html.ActionLink("Editar", "Edit", new { id = item.IdHabitacion }, new { @class = "btn btn-outline-warning btn-sm" })
-
-                    </div>
-                    <button type="button" class="btn btn-outline-danger btn-sm mt-2" data-bs-toggle="collapse" data-bs-target="#habitacion-@item.IdHabitacion" aria-expanded="false" aria-controls="habitacion-@item.IdHabitacion">
-                        Cerrar
-                    </button>
-                </div>
-            </div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["MensajeExito"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold mb-0">
+            <i class="fas fa-bed me-2"></i>Habitaciones
+        </h2>
+        <div>
+            @Html.ActionLink("Crear Habitación", "Create", null, new { @class = "btn btn-success shadow-sm" })
+        </div>
+    </div>
+
+    <!-- Barra de Búsqueda -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="input-group">
+                <span class="input-group-text bg-white"><i class="fas fa-search"></i></span>
+                <input type="text" id="search" class="form-control shadow-sm" placeholder="Buscar por número, capacidad o estado...">
+            </div>
+        </div>
+        <div class="col-md-6 text-end">
+            <span class="badge bg-secondary fs-6">Total: @Model.Count()</span>
+        </div>
+    </div>
+
+    <!-- Cards de Habitaciones -->
+    <div class="row" id="habitacionesContainer">
+        @foreach (var item in Model)
+        {
+            var primeraImagen = item.ListaImagenes != null && item.ListaImagenes.Any() 
+                ? item.ListaImagenes.First() 
+                : "/imagenes/default.jpg";
+            
+            <div class="col-lg-4 col-md-6 mb-4 habitacion-item" 
+                 data-numero="@item.NumeroHabitacion?.ToLower() ?? """
+                 data-capacidad="@item.CapacidadMax.ToString()" 
+                 data-estado="@item.Estado?.ToLower() ?? """>
+                <div class="card border-0 shadow-sm h-100 habitacion-card">
+                    <!-- Imagen Principal -->
+                    <div class="habitacion-imagen-container">
+                        <img src="@Url.Content(primeraImagen)" 
+                             alt="Habitación @item.NumeroHabitacion" 
+                             class="card-img-top habitacion-imagen"
+                             onerror="this.src='@Url.Content("/imagenes/default.jpg")'">
+                        <div class="habitacion-badge-estado">
+                            @if (item.Estado == "Disponible")
+                            {
+                                <span class="badge bg-success">@item.Estado</span>
+                            }
+                            else if (item.Estado == "Ocupado")
+                            {
+                                <span class="badge bg-danger">@item.Estado</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning">@item.Estado</span>
+                            }
+                        </div>
+                        @if (item.ListaImagenes != null && item.ListaImagenes.Count > 1)
+                        {
+                            <div class="habitacion-badge-imagenes">
+                                <span class="badge bg-dark"><i class="fas fa-images me-1"></i>@item.ListaImagenes.Count</span>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Contenido del Card -->
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h5 class="card-title mb-1 fw-bold">
+                                    <span class="text-primary">Habitación @item.NumeroHabitacion</span>
+                                </h5>
+                                <p class="text-muted small mb-0">Capacidad: @item.CapacidadMin - @item.CapacidadMax personas</p>
+                            </div>
+                        </div>
+
+                        <div class="habitacion-info mb-3">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <small class="text-muted d-block">Precio 1P</small>
+                                    <strong class="text-success">₡@item.PrecioPorNoche1P.ToString("N0")</strong>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted d-block">Precio 2P</small>
+                                    <strong class="text-success">₡@item.PrecioPorNoche2P.ToString("N0")</strong>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted d-block">Precio 3P</small>
+                                    <strong class="text-success">₡@item.PrecioPorNoche3P.ToString("N0")</strong>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted d-block">Precio 4P</small>
+                                    <strong class="text-success">₡@item.PrecioPorNoche4P.ToString("N0")</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer con Acciones -->
+                    <div class="card-footer bg-light border-0">
+                        <div class="d-grid gap-2">
+                            <a href="@Url.Action("Details", "Habitacion", new { id = item.IdHabitacion })" 
+                               class="btn btn-primary btn-sm">
+                                <i class="fas fa-info-circle me-2"></i>Ver Detalles Completos
+                            </a>
+                            <div class="btn-group" role="group">
+                                <a href="@Url.Action("Edit", "Habitacion", new { id = item.IdHabitacion })" 
+                                   class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="@Url.Action("EditarImagenes", "Habitacion", new { id = item.IdHabitacion })" 
+                                   class="btn btn-info btn-sm">
+                                    <i class="fas fa-images"></i>
+                                </a>
+                            </div>
+                            <div class="btn-group mt-2" role="group">
+                                <button class="btn btn-outline-warning btn-sm" 
+                                        onclick="window.location.href = '/Mantenimiento/Create?IdHabitacion=@item.IdHabitacion'">
+                                    <i class="fas fa-tools me-1"></i>Mantenimiento
+                                </button>
+                                <button class="btn btn-outline-info btn-sm"
+                                        onclick="window.location.href = '/SolicitudLimpieza/Create?IdHabitacion=@item.IdHabitacion'">
+                                    <i class="fas fa-broom me-1"></i>Limpieza
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon"><i class="fas fa-bed"></i></div>
+            <h3 class="empty-state-title">No hay habitaciones aún</h3>
+            <p class="empty-state-text">Registra la primera habitación para comenzar a gestionar disponibilidad y reservas.</p>
+            <a href="@Url.Action("Create", "Habitacion")" class="btn-empty-state"><i class="fas fa-plus"></i> Crear la primera</a>
+        </div>
+    }
+
+    <div id="noResults" class="alert alert-warning text-center mt-4" style="display: none;">
+        <i class="fas fa-search me-2"></i>No se encontraron habitaciones que coincidan con la búsqueda.
+    </div>
 </div>
 
-<!-- Scripts para interactividad -->
+<!-- Scripts optimizados -->
 <script>
-    // Filtro de búsqueda
-    document.getElementById("search").addEventListener("input", function () {
-        let filter = this.value.toLowerCase();
-        let items = document.querySelectorAll(".departamento-item");
-
-        items.forEach(function (item) {
-            let nombre = item.querySelector("h5").innerText.toLowerCase();
-            if (nombre.includes(filter)) {
-                item.style.display = "block";
-            } else {
-                item.style.display = "none";
-            }
-        });
-    });
-
-    // Lazy Loading de Imágenes
-    document.addEventListener("DOMContentLoaded", function () {
-        let lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
-
-        if ("IntersectionObserver" in window) {
-            let lazyImageObserver = new IntersectionObserver(function (entries, observer) {
-                entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        let lazyImage = entry.target;
-                        lazyImage.src = lazyImage.dataset.src;
-                        lazyImage.classList.remove("lazy");
-                        lazyImageObserver.unobserve(lazyImage);
-                    }
-                });
-            });
-
-            lazyImages.forEach(function (lazyImage) {
-                lazyImageObserver.observe(lazyImage);
-            });
+    (function() {
+        'use strict';
+        
+        // Cache de elementos
+        const searchInput = document.getElementById('search');
+        const container = document.getElementById('habitacionesContainer');
+        const items = container ? container.querySelectorAll('.habitacion-item') : [];
+        const noResults = document.getElementById('noResults');
+        
+        // Debounce function para optimizar búsqueda
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
         }
-    });
-
-    // Efecto Hover
-    document.querySelectorAll('.hover-effect').forEach(function (element) {
-        element.addEventListener('mouseover', function () {
-            element.style.transform = 'scale(1.05)';
-            element.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-        });
-        element.addEventListener('mouseout', function () {
-            element.style.transform = 'scale(1)';
-            element.style.boxShadow = 'none';
-        });
-    });
+        
+        // Función de búsqueda optimizada
+        function filtrarHabitaciones() {
+            const filter = searchInput.value.toLowerCase().trim();
+            let visibleCount = 0;
+            
+            items.forEach(function(item) {
+                const numero = item.getAttribute('data-numero') || '';
+                const capacidad = item.getAttribute('data-capacidad') || '';
+                const estado = item.getAttribute('data-estado') || '';
+                
+                const match = numero.includes(filter) || 
+                             capacidad.includes(filter) || 
+                             estado.includes(filter);
+                
+                if (match) {
+                    item.style.display = '';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Mostrar/ocultar mensaje de no resultados
+            if (noResults) {
+                if (visibleCount === 0 && filter !== '') {
+                    noResults.style.display = 'block';
+                } else {
+                    noResults.style.display = 'none';
+                }
+            }
+        }
+        
+        // Event listener con debounce
+        if (searchInput) {
+            searchInput.addEventListener('input', debounce(filtrarHabitaciones, 300));
+        }
+    })();
 </script>
 
-<!-- Estilos para hover y botones -->
+<!-- Estilos optimizados -->
 <style>
-    .hover-effect {
-        transition: all 0.3s ease;
+    .habitacion-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
     }
-
-        .hover-effect:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-    /* Estilo para el filtro de búsqueda */
-    #search {
-        max-width: 300px;
-        margin-bottom: 20px;
+    
+    .habitacion-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.15) !important;
     }
-
-    /* Estilo de los botones */
-    .btn-outline-primary, .btn-outline-info, .btn-outline-warning, .btn-outline-danger {
+    
+    .habitacion-imagen-container {
+        position: relative;
+        height: 250px;
+        overflow: hidden;
+        background: #f8f9fa;
+    }
+    
+    .habitacion-imagen {
         width: 100%;
-        text-align: center;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
     }
-
-    .input-style {
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 16px;
+    
+    .habitacion-card:hover .habitacion-imagen {
+        transform: scale(1.1);
     }
-
-    .btn-filtrar {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: 0.3s;
+    
+    .habitacion-badge-estado {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
     }
-
-        .btn-filtrar:hover {
-            background-color: #0056b3;
+    
+    .habitacion-badge-imagenes {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        z-index: 10;
+    }
+    
+    .habitacion-info {
+        border-top: 1px solid #e9ecef;
+        padding-top: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .habitacion-item {
+        animation: fadeIn 0.4s ease-in;
+    }
+    
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
         }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .card-footer .btn-group .btn {
+        flex: 1;
+    }
+    
+    .card-title .text-primary {
+        font-size: 1.25rem;
+    }
+    
+    #search:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
 </style>

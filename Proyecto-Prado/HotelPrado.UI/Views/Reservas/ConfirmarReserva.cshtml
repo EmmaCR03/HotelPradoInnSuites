@@ -1,4 +1,4 @@
-﻿@model HotelPrado.Abstracciones.Modelos.Reservas.ReservasDTO
+@model HotelPrado.Abstracciones.Modelos.Reservas.ReservasDTO
 
 @{
     ViewBag.Title = "Confirmar Reserva";
@@ -30,9 +30,10 @@
                         </ul>
                     </div>
 
-                    @using (Html.BeginForm("ConfirmarReserva", "Reservas", FormMethod.Post, new { @class = "mt-4" }))
+                    @using (Html.BeginForm("ConfirmarReserva", "Reservas", FormMethod.Post, new { @class = "mt-4", @id = "formConfirmarReserva" }))
                     {
                         @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger", @role = "alert" })
                         @Html.HiddenFor(model => model.IdHabitacion)
                         @Html.HiddenFor(model => model.FechaInicio)
                         @Html.HiddenFor(model => model.FechaFinal)
@@ -40,7 +41,7 @@
                         @Html.HiddenFor(model => model.MontoTotal)
 
                         <div class="d-flex justify-content-between">
-                            <button type="submit" class="btn btn-lg btn-success shadow">
+                            <button type="submit" class="btn btn-lg btn-success shadow" id="btnConfirmar">
                                 <i class="fas fa-check-circle"></i> Confirmar Reserva
                             </button>
                             @Html.ActionLink("Cancelar", "Index", "Home", null, new { @class = "btn btn-lg btn-danger shadow" })
@@ -52,4 +53,21 @@
     </div>
 </div>
 
-<!-- Asegúrate de que en tu Layout tienes cargado Bootstrap y FontAwesome -->
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#formConfirmarReserva').on('submit', function (e) {
+                var $btn = $('#btnConfirmar');
+                $btn.prop('disabled', true);
+                $btn.html('<i class="fas fa-spinner fa-spin"></i> Procesando...');
+            });
+
+            // Mostrar errores si existen
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <text>
+                </text>
+            }
+        });
+    </script>
+}

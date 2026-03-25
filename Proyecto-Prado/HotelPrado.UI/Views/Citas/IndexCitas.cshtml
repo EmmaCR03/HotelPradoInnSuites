@@ -1,131 +1,591 @@
-﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Citas.CitasDTO>
+@model IEnumerable<HotelPrado.Abstracciones.Modelos.Citas.CitasDTO>
 
 @{
-    ViewBag.Title = "IndexCitas";
+    ViewBag.Title = "Gestión de Citas";
+    var idDepartamento = ViewBag.IdDepartamento ?? 0;
 }
 
-<h2>Gestion de Citas</h2>
+<style>
+    :root {
+        --hotel-primary: #6D7BB8;
+        --hotel-gold: #D4AF37;
+        --hotel-dark: #2c3e50;
+        --status-pendiente: #dc3545;
+        --status-visita: #ffc107;
+        --status-curso: #17a2b8;
+        --status-finalizado: #28a745;
+    }
 
+    .appointments-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: calc(100vh - 200px);
+        padding: 2rem 0;
+    }
 
-<div class="table-responsive">
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PrimerApellido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SegundoApellido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Telefono)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Correo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MedioContacto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumeroHabitacion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NombreColaborador)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PrimerApellidoColaborador)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaHoraInicio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaHoraFin)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Observaciones)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaCreacion)
-            </th>
-            <th></th>
-        </tr>
+    .page-header {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PrimerApellido)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SegundoApellido)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Telefono)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Correo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MedioContacto)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumeroHabitacion)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NombreColaborador)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PrimerApellidoColaborador)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaHoraInicio)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaHoraFin)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Estado)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Observaciones)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaCreacion)
-                </td>
+    .page-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--hotel-dark);
+        margin-bottom: 0.5rem;
+    }
 
-                <td>
-                    <!-- Agregar los enlaces de WhatsApp y correo electrónico -->
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
 
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
 
-                    <a href="@item.EnlaceWhatsApp" class="btn btn-sm btn-success" target="_blank">WhatsApp</a>
-                    <a href="@item.EnlaceCorreo" class="btn btn-sm btn-primary" target="_blank">Correo</a>
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
 
-                    @Html.ActionLink("Edit", "Edit", new { IdCita = item.IdCita }) |
-                    @using (Html.BeginForm("ToggleEstado", "Citas", FormMethod.Post, new { id = "form-estado-" + item.IdCita }))
-                    {
-                        @Html.Hidden("IdCita", item.IdCita)
+    .stat-card .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
 
-                        <select name="Estado" id="Estado" class="form-select form-select-sm me-2" onchange="this.form.submit();">
-                            <option value="RespuestaPendiente" @(item.Estado == "RespuestaPendiente" ? "selected" : "")>Respuesta Pendiente</option>
-                            <option value="VisitaPendiente" @(item.Estado == "VisitaPendiente" ? "selected" : "")>Visita Pendiente</option>
-                            <option value="EnCurso" @(item.Estado == "EnCurso" ? "selected" : "")>En Curso</option>
-                            <option value="Finalizado" @(item.Estado == "Finalizado" ? "selected" : "")>Finalizado</option>
-                        </select>
-                    }
+    .stat-card.pendiente .stat-number { color: var(--status-pendiente); }
+    .stat-card.visita .stat-number { color: var(--status-visita); }
+    .stat-card.curso .stat-number { color: var(--status-curso); }
+    .stat-card.finalizado .stat-number { color: var(--status-finalizado); }
 
+    .stat-card .stat-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
 
+    .filters-bar {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
 
-                </td>
-            </tr>
+    .appointments-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .appointment-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border-left: 5px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .appointment-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--hotel-primary), var(--hotel-gold));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .appointment-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .appointment-card:hover::before {
+        opacity: 1;
+    }
+
+    .appointment-card.pendiente { border-left-color: var(--status-pendiente); }
+    .appointment-card.visita { border-left-color: var(--status-visita); }
+    .appointment-card.curso { border-left-color: var(--status-curso); }
+    .appointment-card.finalizado { border-left-color: var(--status-finalizado); }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .card-id {
+        font-size: 0.85rem;
+        color: #6c757d;
+        font-weight: 600;
+    }
+
+    .status-badge {
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-badge.pendiente {
+        background: #fee;
+        color: var(--status-pendiente);
+    }
+
+    .status-badge.visita {
+        background: #fff8e1;
+        color: #f57c00;
+    }
+
+    .status-badge.curso {
+        background: #e0f7fa;
+        color: #00838f;
+    }
+
+    .status-badge.finalizado {
+        background: #e8f5e9;
+        color: var(--status-finalizado);
+    }
+
+    .card-client-info {
+        margin-bottom: 1rem;
+    }
+
+    .client-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--hotel-dark);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .client-name i {
+        color: var(--hotel-primary);
+    }
+
+    .card-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6c757d;
+        font-size: 0.9rem;
+        padding: 0.5rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .info-item i {
+        color: var(--hotel-primary);
+        width: 20px;
+        text-align: center;
+    }
+
+    .card-observations {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    .card-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .btn-action-group {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-card {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: none;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-weight: 600;
+    }
+
+    .btn-card.btn-whatsapp {
+        background: linear-gradient(135deg, #25d366, #128c7e);
+        color: white;
+    }
+
+    .btn-card.btn-whatsapp:hover {
+        background: linear-gradient(135deg, #128c7e, #25d366);
+        transform: scale(1.05);
+    }
+
+    .btn-card.btn-email {
+        background: linear-gradient(135deg, #4285f4, #1a73e8);
+        color: white;
+    }
+
+    .btn-card.btn-email:hover {
+        background: linear-gradient(135deg, #1a73e8, #4285f4);
+        transform: scale(1.05);
+    }
+
+    .btn-card.btn-edit {
+        background: #e3f2fd;
+        color: var(--hotel-primary);
+    }
+
+    .btn-card.btn-edit:hover {
+        background: var(--hotel-primary);
+        color: white;
+    }
+
+    .status-select-wrapper {
+        flex: 1;
+        min-width: 180px;
+    }
+
+    .status-select {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: 2px solid #dee2e6;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .status-select:focus {
+        border-color: var(--hotel-primary);
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(109, 123, 184, 0.25);
+    }
+
+    .status-select.pendiente {
+        border-color: var(--status-pendiente);
+        color: var(--status-pendiente);
+    }
+
+    .status-select.visita {
+        border-color: var(--status-visita);
+        color: #f57c00;
+    }
+
+    .status-select.curso {
+        border-color: var(--status-curso);
+        color: #00838f;
+    }
+
+    .status-select.finalizado {
+        border-color: var(--status-finalizado);
+        color: var(--status-finalizado);
+    }
+
+    @@media (max-width: 768px) {
+        .appointments-grid {
+            grid-template-columns: 1fr;
         }
 
-    </table>
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .card-info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .card-actions {
+            flex-direction: column;
+        }
+
+        .status-select-wrapper {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="appointments-container">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                    <h1><i class="fas fa-calendar-check me-2" style="color: var(--hotel-primary);"></i>Gestión de Citas</h1>
+                    <p class="text-muted mb-0">Administra las citas para ver departamentos</p>
+                </div>
+                <a href="@Url.Action("IndexDepartamentos", "Departamento")" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Volver a Departamentos
+                </a>
+            </div>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="stats-grid">
+            <div class="stat-card pendiente">
+                <div class="stat-number" id="count-pendiente">0</div>
+                <div class="stat-label">Respuesta Pendiente</div>
+            </div>
+            <div class="stat-card visita">
+                <div class="stat-number" id="count-visita">0</div>
+                <div class="stat-label">Visita Pendiente</div>
+            </div>
+            <div class="stat-card curso">
+                <div class="stat-number" id="count-curso">0</div>
+                <div class="stat-label">En Curso</div>
+            </div>
+            <div class="stat-card finalizado">
+                <div class="stat-number" id="count-finalizado">0</div>
+                <div class="stat-label">Finalizadas</div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters-bar">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label"><i class="fas fa-filter me-2"></i>Filtrar por Estado</label>
+                    <select class="form-select" id="filter-estado" onchange="filterAppointments()">
+                        <option value="">Todos los estados</option>
+                        <option value="RespuestaPendiente">Respuesta Pendiente</option>
+                        <option value="Respuesta Pendiente">Respuesta Pendiente (Alternativo)</option>
+                        <option value="VisitaPendiente">Visita Pendiente</option>
+                        <option value="EnCurso">En Curso</option>
+                        <option value="Finalizado">Finalizado</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label"><i class="fas fa-search me-2"></i>Buscar</label>
+                    <input type="text" class="form-control" id="search-input" placeholder="Buscar por nombre, correo o teléfono..." onkeyup="filterAppointments()">
+                </div>
+                <div class="col-md-4 mb-3 d-flex align-items-end">
+                    <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                        <i class="fas fa-times me-2"></i>Limpiar Filtros
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid de Citas -->
+        @if (Model != null && Model.Any())
+        {
+            <div class="appointments-grid" id="appointments-grid">
+                @foreach (var item in Model)
+                {
+                    var estadoClass = item.Estado?.Replace(" ", "") ?? "pendiente";
+                    var estadoNormalizado = estadoClass.ToLower();
+                    if (estadoNormalizado == "respuestapendiente") { estadoNormalizado = "pendiente"; }
+                    else if (estadoNormalizado == "visitapendiente") { estadoNormalizado = "visita"; }
+                    else if (estadoNormalizado == "encurso") { estadoNormalizado = "curso"; }
+                    else if (estadoNormalizado == "finalizado") { estadoNormalizado = "finalizado"; }
+                    
+                    <div class="appointment-card @estadoNormalizado" 
+                         data-estado="@item.Estado" 
+                         data-nombre="@(item.Nombre?.ToLower() ?? "")" 
+                         data-correo="@(item.Correo?.ToLower() ?? "")" 
+                         data-telefono="@(item.Telefono.ToString())">
+                        <div class="card-header">
+                            <span class="card-id">#@item.IdCita</span>
+                            <span class="status-badge @estadoNormalizado">@item.Estado</span>
+                        </div>
+                        
+                        <div class="card-client-info">
+                            <div class="client-name">
+                                <i class="fas fa-user"></i>
+                                <span>@item.Nombre @item.PrimerApellido @item.SegundoApellido</span>
+                            </div>
+                        </div>
+
+                        <div class="card-info-grid">
+                            <div class="info-item">
+                                <i class="fas fa-phone"></i>
+                                <span>@item.Telefono</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>@item.Correo</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-comments"></i>
+                                <span>@item.MedioContacto</span>
+                            </div>
+                            @if (item.NombreColaborador != null)
+                            {
+                                <div class="info-item">
+                                    <i class="fas fa-user-tie"></i>
+                                    <span>@item.NombreColaborador @item.PrimerApellidoColaborador</span>
+                                </div>
+                            }
+                            @if (item.FechaHoraInicio.HasValue)
+                            {
+                                <div class="info-item">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>@item.FechaHoraInicio.Value.ToString("dd/MM/yyyy HH:mm")</span>
+                                </div>
+                            }
+                            @if (item.FechaHoraFin.HasValue)
+                            {
+                                <div class="info-item">
+                                    <i class="fas fa-calendar-times"></i>
+                                    <span>@item.FechaHoraFin.Value.ToString("dd/MM/yyyy HH:mm")</span>
+                                </div>
+                            }
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(item.Observaciones))
+                        {
+                            <div class="card-observations">
+                                <i class="fas fa-sticky-note me-2"></i>@item.Observaciones
+                            </div>
+                        }
+
+                        <div class="card-actions">
+                            <div class="btn-action-group">
+                                @if (!string.IsNullOrEmpty(item.EnlaceWhatsApp))
+                                {
+                                    <a href="@item.EnlaceWhatsApp" target="_blank" class="btn-card btn-whatsapp">
+                                        <i class="fab fa-whatsapp"></i> WhatsApp
+                                    </a>
+                                }
+                                @if (!string.IsNullOrEmpty(item.EnlaceCorreo))
+                                {
+                                    <a href="@item.EnlaceCorreo" target="_blank" class="btn-card btn-email">
+                                        <i class="fas fa-envelope"></i> Correo
+                                    </a>
+                                }
+                                <a href="@Url.Action("Edit", new { IdCita = item.IdCita })" class="btn-card btn-edit">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                            </div>
+                            
+                            <div class="status-select-wrapper">
+                                @using (Html.BeginForm("ToggleEstado", "Citas", FormMethod.Post, new { id = "form-estado-" + item.IdCita, @class = "status-form" }))
+                                {
+                                    @Html.Hidden("IdCita", item.IdCita)
+                                    @Html.AntiForgeryToken()
+                                    
+                                    <select name="Estado" class="status-select @estadoNormalizado" onchange="this.form.submit();">
+                                        <option value="RespuestaPendiente" @(item.Estado == "RespuestaPendiente" || item.Estado == "Respuesta Pendiente" ? "selected" : "")>Respuesta Pendiente</option>
+                                        <option value="VisitaPendiente" @(item.Estado == "VisitaPendiente" ? "selected" : "")>Visita Pendiente</option>
+                                        <option value="EnCurso" @(item.Estado == "EnCurso" ? "selected" : "")>En Curso</option>
+                                        <option value="Finalizado" @(item.Estado == "Finalizado" ? "selected" : "")>Finalizado</option>
+                                    </select>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-state-icon"><i class="fas fa-calendar-check"></i></div>
+                <h3 class="empty-state-title">No hay citas aún</h3>
+                <p class="empty-state-text">Registra la primera cita para dar seguimiento a visitas y prospectos.</p>
+                <a href="@Url.Action("Create", "Citas")" class="btn-empty-state"><i class="fas fa-plus"></i> Crear la primera</a>
+            </div>
+        }
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Calcular estadísticas
+        function updateStats() {
+            const cards = document.querySelectorAll('.appointment-card');
+            let pendiente = 0, visita = 0, curso = 0, finalizado = 0;
+
+            cards.forEach(card => {
+                if (card.style.display !== 'none') {
+                    const estado = card.dataset.estado?.toLowerCase().replace(' ', '') || '';
+                    if (estado.includes('respuestapendiente')) pendiente++;
+                    else if (estado.includes('visitapendiente')) visita++;
+                    else if (estado.includes('encurso')) curso++;
+                    else if (estado.includes('finalizado')) finalizado++;
+                }
+            });
+
+            document.getElementById('count-pendiente').textContent = pendiente;
+            document.getElementById('count-visita').textContent = visita;
+            document.getElementById('count-curso').textContent = curso;
+            document.getElementById('count-finalizado').textContent = finalizado;
+        }
+
+        // Filtrar citas
+        function filterAppointments() {
+            const estadoFilter = document.getElementById('filter-estado').value.toLowerCase();
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+            const cards = document.querySelectorAll('.appointment-card');
+            cards.forEach(card => {
+                const estado = card.dataset.estado?.toLowerCase().replace(' ', '') || '';
+                const nombre = card.dataset.nombre || '';
+                const correo = card.dataset.correo || '';
+                const telefono = card.dataset.telefono || '';
+
+                const matchEstado = !estadoFilter || estado.includes(estadoFilter);
+                const matchSearch = !searchTerm || nombre.includes(searchTerm) || correo.includes(searchTerm) || telefono.includes(searchTerm);
+
+                card.style.display = (matchEstado && matchSearch) ? 'block' : 'none';
+            });
+
+            updateStats();
+        }
+
+        // Limpiar filtros
+        function clearFilters() {
+            document.getElementById('filter-estado').value = '';
+            document.getElementById('search-input').value = '';
+            filterAppointments();
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+        });
+    </script>
+}

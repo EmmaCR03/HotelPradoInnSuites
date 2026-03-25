@@ -1,0 +1,127 @@
+/* ============================================
+   NAVBAR FORCE FIXED - SOBRESCRIBIR TODO
+   Este archivo DEBE cargarse ÚLTIMO
+   ============================================ */
+
+/* HEADER ESTÁTICO - SE QUEDA ARRIBA Y DESAPARECE AL SCROLLEAR */
+header,
+header#header,
+#header,
+.navbar-new,
+header.navbar-new,
+header#header.navbar-new {
+    position: relative !important; /* Cambiado de fixed a relative */
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    z-index: 999 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    /* ELIMINAR TODO MOVIMIENTO */
+    transform: none !important;
+    -webkit-transform: none !important;
+    animation: none !important;
+    -webkit-animation: none !important;
+    transition: none !important;
+    -webkit-transition: none !important;
+    bottom: auto !important;
+}
+
+/* PROTEGER HIJOS DEL HEADER (EXCEPTO OFFCANVAS) */
+header *:not(.offcanvas):not(.offcanvas *):not(.offcanvas-backdrop),
+header#header *:not(.offcanvas):not(.offcanvas *):not(.offcanvas-backdrop),
+#header *:not(.offcanvas):not(.offcanvas *):not(.offcanvas-backdrop),
+.navbar-new *:not(.offcanvas):not(.offcanvas *):not(.offcanvas-backdrop),
+header.navbar-new *:not(.offcanvas):not(.offcanvas *):not(.offcanvas-backdrop),
+header#header.navbar-new *:not(.offcanvas):not(.offcanvas *):not(.offcanvas-backdrop) {
+    transform: none !important;
+    -webkit-transform: none !important;
+    translate: none !important;
+    -webkit-translate: none !important;
+    /* Permitir transiciones solo en background y color */
+    transition: background-color 0.3s ease, color 0.3s ease !important;
+    -webkit-transition: background-color 0.3s ease, color 0.3s ease !important;
+    animation: none !important;
+    -webkit-animation: none !important;
+}
+
+/* PERMITIR ANIMACIONES SUAVES DEL OFFCANVAS */
+/* NO usar !important aquí para no romper Bootstrap */
+
+/* NAVBAR TOP */
+.navbar-top,
+header .navbar-top,
+#header .navbar-top {
+    position: relative !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+}
+
+/* NAVBAR MAIN */
+.navbar-main,
+header .navbar-main,
+#header .navbar-main {
+    position: relative !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+}
+
+/* NAVBAR CONTAINER */
+.navbar-container,
+header .navbar-container,
+#header .navbar-container {
+    position: relative !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+}
+
+/* BODY Y HTML - SIN GRID, SIN MOVIMIENTO, SIN TRANSFORM */
+html {
+    overflow-x: hidden !important;
+    overflow-y: scroll !important; /* Cambiar a scroll forzado */
+    /* CRÍTICO: Eliminar transform del html */
+    transform: none !important;
+    -webkit-transform: none !important;
+    translate: none !important;
+    -webkit-translate: none !important;
+    position: static !important;
+    height: 100% !important;
+    /* CRÍTICO: Deshabilitar smooth scroll - Bootstrap lo activa y causa problemas */
+    scroll-behavior: auto !important;
+    /* CRÍTICO: Forzar rendering inmediato */
+    -webkit-overflow-scrolling: touch !important;
+}
+
+body {
+    display: block !important; /* NO GRID */
+    min-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    position: static !important;
+    /* CRÍTICO: NO aplicar transform al body - rompe position fixed */
+    transform: none !important;
+    -webkit-transform: none !important;
+    translate: none !important;
+    -webkit-translate: none !important;
+    perspective: none !important;
+    -webkit-perspective: none !important;
+}
+
+/* BODY-CONTENT SIN MARGIN-TOP (navbar ya no es fixed) */
+.body-content {
+    margin-top: 0 !important;
+    padding: 20px 0 !important;
+    overflow: visible !important;
+    position: static !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 991px) {
+    .body-content {
+        margin-top: 0 !important;
+    }
+}
+

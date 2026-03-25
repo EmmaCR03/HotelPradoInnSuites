@@ -1,0 +1,493 @@
+/* ============================================
+   ESTILOS PARA LAYOUT PRINCIPAL
+   Separado del HTML para mantener Clean Code
+   ============================================ */
+
+/* Reset y configuración base - SIN PADDING/MARGIN PARA NAVBAR PEGADO */
+html, body {
+    height: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    min-width: 0;
+    max-width: 100vw;
+    box-sizing: border-box;
+}
+
+/* BODY - SIMPLE, SIN GRID (Grid causa movimiento del navbar) */
+body {
+    display: block !important;
+    min-height: 100vh !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+/* NAVBAR ESTÁTICO - NO FIXED */
+header#header {
+    position: relative !important;
+    width: 100% !important;
+    z-index: 999 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* CONTENEDORES INTERNOS DEL NAVBAR - SIN MOVIMIENTO */
+header#header .header-top,
+header#header #primary-header,
+header#header .container-fluid,
+header#header .container {
+    transform: none !important;
+    -webkit-transform: none !important;
+    animation: none !important;
+    transition: none !important;
+    position: relative !important; /* Relativo dentro del header fijo */
+}
+
+/* CONTENIDO SIN MARGIN-TOP - Navbar ya no es fixed */
+.body-content {
+    margin-top: 0 !important;
+    overflow: visible !important;
+}
+
+/* FOOTER RELATIVE - AL FINAL DEL CONTENIDO */
+#footer, section#footer, footer {
+    position: relative !important;
+    width: 100% !important;
+    margin-top: 20px !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 991px) {
+    .body-content {
+        margin-top: 0 !important; /* Sin margin, navbar no es fixed */
+    }
+}
+
+/* HTML - Scrollbar invisible pero funcional */
+html {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: 100% !important;
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE y Edge */
+}
+
+/* Ocultar scrollbar en WebKit (Chrome, Safari, Edge) */
+html::-webkit-scrollbar {
+    width: 0px !important;
+    display: none !important;
+}
+
+body {
+    -ms-overflow-style: none !important; /* IE y Edge */
+}
+
+/* NO aplicar padding-top al body - navbar-new.css maneja el margin-top del body-content */
+/*
+@media (max-width: 991px) {
+    body {
+        padding-top: 60px !important;
+    }
+}
+*/
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* Header - NO APLICAR ESTILOS AQUÍ - navbar-new.css lo maneja */
+/* Comentado para evitar conflictos con navbar-new.css */
+/*
+header#header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 999999 !important;
+    background-color: transparent;
+    transform: none !important;
+    -webkit-transform: none !important;
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+*/
+
+/* Contenido principal - Grid ocupa espacio restante - SIN SCROLLBAR */
+.body-content {
+    position: relative !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+    width: 100% !important;
+    overflow: visible !important; /* Sin scroll interno, solo en html/body */
+}
+
+/* Para la página Home, eliminar el margin-top */
+.home-container {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Header superior */
+.header-top {
+    padding: 2px 0 !important;
+    font-size: 0.8em;
+}
+
+.header-top .info li {
+    margin-right: 15px !important;
+}
+
+/* Header principal */
+#primary-header {
+    padding: 5px 0 !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: relative !important; /* Relativo dentro del header fijo */
+}
+
+/* Logo */
+.navbar-brand {
+    padding: 0;
+}
+
+.navbar-brand img {
+    max-height: 50px;
+    width: auto;
+}
+
+/* Navegación */
+.navbar-nav {
+    gap: 5px;
+}
+
+.nav-link {
+    padding: 5px 10px !important;
+    font-size: 0.85em; /* Reducido de 0.9em a 0.85em */
+}
+
+/* Dropdown */
+.nav-item.dropdown {
+    position: relative !important;
+}
+
+.dropdown-menu {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    margin-top: 5px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 4px 0 !important;
+    z-index: 100000 !important; /* Mayor que el header (99999) */
+    background-color: var(--color-navbar, #3a3a3a) !important;
+    min-width: 220px !important;
+    display: block !important;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.dropdown-menu.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    display: block !important;
+}
+
+.dropdown-item {
+    font-size: 0.875rem !important;
+    padding: 8px 16px !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    transition: all 0.2s ease;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background-color: var(--color-secondary, #6D7BB8) !important;
+    color: var(--color-white, #FFFFFF) !important;
+    padding-left: 20px !important;
+}
+
+.dropdown-item i {
+    width: 18px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* Búsqueda */
+.search {
+    max-width: 200px;
+}
+
+.search .form-control {
+    height: 32px;
+    font-size: 0.9em;
+}
+
+/* Footer - Grid lo posiciona automáticamente (FUNCIONA - NO TOCAR) */
+#footer,
+section#footer,
+footer {
+    position: relative !important;
+    width: 100% !important;
+    margin-top: auto !important; /* Grid lo empuja abajo - FUNCIONA */
+    grid-row: 3 !important; /* Tercera fila - FUNCIONA */
+    background-color: #3a3a3a !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 0 !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Container interno del footer */
+#footer .container-fluid {
+    padding-top: 2rem !important;
+    padding-bottom: 1rem !important;
+}
+
+#footer img {
+    max-width: 40px;
+    height: auto;
+}
+
+#footer .small {
+    font-size: 0.85em;
+}
+
+#footer a {
+    text-decoration: none;
+}
+
+#footer .row {
+    margin: 0;
+    padding: 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+/* Tablets y móviles */
+@media (max-width: 991px) {
+    .header-top {
+        display: none;
+    }
+
+    #primary-header {
+        padding: 5px 0 !important;
+    }
+
+    .navbar-brand img {
+        max-height: 40px;
+    }
+
+    .navbar-toggler {
+        padding: 4px 8px;
+    }
+
+    .offcanvas-body {
+        padding: 10px;
+    }
+
+    .nav-link {
+        padding: 8px 15px !important;
+        font-size: 0.85em !important; /* Reducido también en móvil */
+    }
+
+    .body-content {
+        overflow-y: visible !important;
+        overflow-x: hidden !important;
+    }
+}
+
+/* Móviles pequeños */
+@media (max-width: 768px) {
+    .body-content {
+        padding-left: 10px;
+        padding-right: 10px;
+        overflow-y: visible !important;
+        overflow-x: hidden !important;
+    }
+}
+
+/* ============================================
+   PREVENIR DESACOMODOS AL REDIMENSIONAR
+   ============================================ */
+
+/* Asegurar que todos los contenedores sean responsive */
+.container,
+.container-fluid {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+}
+
+/* Prevenir overflow horizontal */
+.row {
+    margin-left: -15px;
+    margin-right: -15px;
+    width: calc(100% + 30px);
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.row > [class*="col-"] {
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+    min-width: 0; /* Prevenir overflow en flex items */
+}
+
+/* Imágenes responsive */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Prevenir que elementos se salgan del contenedor */
+* {
+    max-width: 100%;
+}
+
+/* Excepciones para elementos que necesitan mantener su tamaño */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Cards y contenedores (sin overflow-x: hidden para no cortar tablas con scroll horizontal) */
+.card,
+.card-body {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Tablas responsive */
+table {
+    width: 100%;
+    max-width: 100%;
+    table-layout: auto;
+    word-wrap: break-word;
+}
+
+/* Prevenir que los textos se salgan */
+p, span, div, h1, h2, h3, h4, h5, h6 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+/* Asegurar que los botones no se salgan */
+.btn {
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
+/* Media queries adicionales para diferentes tamaños */
+@media (max-width: 1200px) {
+    .container {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 992px) {
+    .body-content {
+        padding: 0 !important;
+        overflow-y: visible !important;
+        overflow-x: hidden !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .body-content {
+        padding: 0 !important;
+        overflow-y: visible !important;
+        overflow-x: hidden !important;
+    }
+    
+    .container,
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .body-content {
+        padding: 0 !important;
+        overflow-y: visible !important;
+        overflow-x: hidden !important;
+    }
+    
+    .container,
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .row {
+        margin-left: -8px;
+        margin-right: -8px;
+        width: calc(100% + 16px);
+    }
+    
+    .row > [class*="col-"] {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+}
+
+/* Prevenir scroll horizontal en todos los casos */
+html {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+body {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+/* Asegurar que los elementos fijos no causen problemas */
+header#header {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+}
+
+/* Footer - Grid lo maneja, NO necesita left/right fixed */
+section#footer,
+#footer {
+    width: 100% !important;
+    max-width: 100vw !important;
+    position: relative !important; /* Forzar relative, NO fixed */
+}
+
+

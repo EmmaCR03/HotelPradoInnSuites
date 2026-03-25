@@ -1,4 +1,4 @@
-﻿using System.Web;
+using System.Web;
 using System.Web.Optimization;
 
 namespace HotelPrado.UI
@@ -20,9 +20,10 @@ namespace HotelPrado.UI
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new Bundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+                      "~/Scripts/bootstrap.bundle.min.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
+            // Ruta ~/bundles/css para evitar conflicto con carpeta Content en hosting (si no, /Content/css da 404)
+            bundles.Add(new StyleBundle("~/bundles/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
         }

@@ -1,83 +1,396 @@
-﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO>
+@model IEnumerable<HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO>
 
 @{
-    ViewBag.Title = "IndexDepartamentosClientes";
+    ViewBag.Title = "Alquiler de Apartamentos";
 }
 
-<!-- Font Awesome for icons -->
+<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<!-- Custom CSS -->
-<link href="~/Content/DepartamentoClientes/departamentosgeneral.css" rel="stylesheet" />
+<section class="hero-apartamentos">
+    @if (User.IsInRole("Administrador"))
+    {
+        <a href="@Url.Action("ConfigurarHeroBanners", "Admin")" class="btn-edit-hero" title="Cambiar imagen del hero banner">
+            <i class="fas fa-image"></i> Cambiar Imagen
+        </a>
+    }
+    <div class="hero-content-apartamentos">
+        <h1>APARTAMENTOS</h1>
+        @if (ViewBag.MostrarPrecio == null || (bool)ViewBag.MostrarPrecio)
+        {
+            <p>Estadías mensuales desde ₡@(ViewBag.PrecioBase != null ? ((decimal)ViewBag.PrecioBase).ToString("N0") : "275,000")</p>
+        }
+        else
+        {
+            <p>Estadías mensuales disponibles</p>
+        }
+    </div>
+</section>
 
-<section id="departments" class="py-5">
+<!-- Tabs de Información -->
+<section class="info-tabs-section" id="informacion">
+    <div class="container">
+        <!-- Nav Tabs -->
+        <ul class="nav nav-tabs-custom justify-content-center mb-5" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link-custom active" data-bs-toggle="tab" data-bs-target="#tab-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Información</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link-custom" data-bs-toggle="tab" data-bs-target="#tab-servicios">
+                    <i class="fas fa-concierge-bell"></i>
+                    <span>Servicios</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link-custom" data-bs-toggle="tab" data-bs-target="#tab-galeria">
+                    <i class="fas fa-images"></i>
+                    <span>Galería</span>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link-custom" data-bs-toggle="tab" data-bs-target="#tab-precios">
+                    <i class="fas fa-tag"></i>
+                    <span>Precios</span>
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- TAB: Información General -->
+            <div class="tab-pane fade show active" id="tab-info">
+                <div class="row">
+                    <div class="col-lg-10 mx-auto">
+                        <div class="info-box">
+                            <h2 class="info-title">
+                                <i class="fas fa-home me-2"></i>¿Por qué elegir Prado Inn?
+                            </h2>
+                            <div class="info-content">
+                                <p>
+                                    En <strong>Prado Inn</strong> ofrecemos apartamentos diseñados para quienes buscan <strong>comodidad</strong>, <strong>funcionalidad</strong> y <strong>seguridad</strong> en un solo lugar.
+                                </p>
+                                <div class="row g-4 mt-3">
+                                    <div class="col-md-4">
+                                        <div class="feature-highlight">
+                                            <i class="fas fa-bed"></i>
+                                            <h4>Opciones</h4>
+                                            <p>Apartamentos de <strong>1 y 2 habitaciones</strong></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="feature-highlight">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <h4>Ubicación</h4>
+                                            <p>Acceso rápido a centros de trabajo y comercios</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="feature-highlight">
+                                            <i class="fas fa-shield-alt"></i>
+                                            <h4>Seguridad</h4>
+                                            <p>Vigilancia <strong>24/7</strong></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="alert-note mt-4">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Los apartamentos son <strong>sin amueblar</strong> e incluyen: cocina, sala, habitaciones y baño completo.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Servicios & Equipamiento -->
+            <div class="tab-pane fade" id="tab-servicios">
+                <div class="row">
+                    <div class="col-lg-11 mx-auto">
+                        <div class="row g-4">
+                            <!-- Servicios Incluidos -->
+                            <div class="col-md-6">
+                                <div class="services-box">
+                                    <h3 class="services-title">
+                                        <i class="fas fa-check-circle me-2"></i>Servicios Incluidos
+                                    </h3>
+                                    <ul class="services-list">
+                                        <li><i class="fas fa-tv"></i> Televisión por cable</li>
+                                        <li><i class="fas fa-wifi"></i> Internet Wi-Fi</li>
+                                        <li><i class="fas fa-parking"></i> Parqueo</li>
+                                        <li><i class="fas fa-dumbbell"></i> Uso del gimnasio</li>
+                                        <li><i class="fas fa-tshirt"></i> Uso de lavandería</li>
+                                        <li><i class="fas fa-shield-alt"></i> Seguridad 24 horas</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Equipamiento -->
+                            <div class="col-md-6">
+                                <div class="services-box">
+                                    <h3 class="services-title">
+                                        <i class="fas fa-home me-2"></i>Equipamiento Incluido
+                                    </h3>
+                                    <ul class="services-list">
+                                        <li><i class="fas fa-fire"></i> Placa de inducción</li>
+                                        <li><i class="fas fa-wind"></i> Extractor de grasa</li>
+                                        <li><i class="fas fa-snowflake"></i> Aire acondicionado</li>
+                                        <li><i class="fas fa-fan"></i> Abanico de techo</li>
+                                        <li><i class="fas fa-door-open"></i> Closets</li>
+                                        <li><i class="fas fa-tshirt"></i> Aplanchador</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Galería -->
+            <div class="tab-pane fade" id="tab-galeria">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Sub-tabs para categorías de galería -->
+                        <ul class="nav nav-pills-gallery justify-content-center mb-4" role="tablist">
+                            <li class="nav-item">
+                                <button class="nav-pill active" data-bs-toggle="tab" data-bs-target="#gal-apartamentos">
+                                    <i class="fas fa-building"></i> Apartamentos
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-pill" data-bs-toggle="tab" data-bs-target="#gal-instalaciones">
+                                    <i class="fas fa-dumbbell"></i> Instalaciones
+                                </button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <!-- Galería Apartamentos (editable desde Admin) -->
+                            <div class="tab-pane fade show active" id="gal-apartamentos">
+                                <div class="gallery-grid">
+                                    @{
+                                        var listaApartamentos = ViewBag.GaleriaApartamentos as List<Tuple<string, string>>;
+                                    }
+                                    @if (listaApartamentos != null && listaApartamentos.Any())
+                                    {
+                                        foreach (var item in listaApartamentos)
+                                        {
+                                            <div class="gallery-item">
+                                                <img src="@Url.Content(item.Item1)" alt="@item.Item2" loading="lazy" onerror="this.style.display='none'">
+                                                <div class="gallery-caption">@(item.Item2 ?? "Imagen")</div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="gallery-item">
+                                            <img src="@Url.Content("~/Img/images/Apartamentos/WhatsApp cocinaapartamentos2025-12-17 at 10.33.45 AM.jpeg")" alt="Cocina" loading="lazy" onerror="this.style.display='none'">
+                                            <div class="gallery-caption">Cocina</div>
+                                        </div>
+                                        <div class="gallery-item">
+                                            <img src="@Url.Content("~/Img/images/Apartamentos/WhatsApp Image 2025-12-17 at 10.33.41 AM.jpeg")" alt="Habitación" loading="lazy" onerror="this.style.display='none'">
+                                            <div class="gallery-caption">Habitación</div>
+                                        </div>
+                                        <div class="gallery-item">
+                                            <img src="@Url.Content("~/Img/images/Apartamentos/WhatsApp Image 2xxxxx025-12-17 at 10.33.44 AM.jpeg")" alt="Sala" loading="lazy" onerror="this.style.display='none'">
+                                            <div class="gallery-caption">Sala</div>
+                                        </div>
+                                        <div class="gallery-item">
+                                            <img src="@Url.Content("~/Img/images/Apartamentos/WhatsApp Image 2025-1ffffff.33.44 AM.jpeg")" alt="Baño" loading="lazy" onerror="this.style.display='none'">
+                                            <div class="gallery-caption">Baño</div>
+                                        </div>
+                                        <div class="gallery-item">
+                                            <img src="@Url.Content("~/Img/images/Apartamentos/WhatsApp aaaaa2025-12-17 at 10.33.42 AM.jpeg")" alt="Ambiente" loading="lazy" onerror="this.style.display='none'">
+                                            <div class="gallery-caption">Ambiente</div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Galería Instalaciones (gimnasio, etc.; editable desde Admin) -->
+                            <div class="tab-pane fade" id="gal-instalaciones">
+                                <div class="gallery-grid gallery-grid-services">
+                                    @{
+                                        var listaInstalaciones = ViewBag.GaleriaInstalaciones as List<Tuple<string, string>>;
+                                    }
+                                    @if (listaInstalaciones != null && listaInstalaciones.Any())
+                                    {
+                                        foreach (var item in listaInstalaciones)
+                                        {
+                                            <div class="gallery-item">
+                                                <img src="@Url.Content(item.Item1)" alt="@item.Item2" loading="lazy" onerror="this.style.display='none'">
+                                                <div class="gallery-caption"><i class="fas fa-star me-2"></i>@(item.Item2 ?? "Imagen")</div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="gallery-item">
+                                            <img src="@Url.Content("~/Img/images/Servicios/Gimnasio.jpeg")" alt="Gimnasio" loading="lazy" onerror="this.style.display='none'">
+                                            <div class="gallery-caption"><i class="fas fa-dumbbell me-2"></i>Gimnasio</div>
+                                        </div>
+                                        <div class="gallery-item">
+                                            <img src="@Url.Content("~/Img/images/Servicios/Lavandería.jpeg")" alt="Lavandería" loading="lazy" onerror="this.style.display='none'">
+                                            <div class="gallery-caption"><i class="fas fa-tshirt me-2"></i>Lavandería</div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: Precios -->
+            <div class="tab-pane fade" id="tab-precios">
+                @if (ViewBag.MostrarPrecio == null || (bool)ViewBag.MostrarPrecio)
+                {
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            <div class="pricing-box text-center">
+                                <div class="pricing-icon">
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                                <h2 class="pricing-label">Desde</h2>
+                                <div class="pricing-amount">₡@(ViewBag.PrecioBase != null ? ((decimal)ViewBag.PrecioBase).ToString("N0") : "275,000")</div>
+                                <p class="pricing-period">@(ViewBag.TextoPrecio != null ? ViewBag.TextoPrecio.ToString() : "Por mes")</p>
+                                <div class="pricing-features">
+                                    <div class="pricing-feature">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Lavandería y gimnasio incluido</span>
+                                    </div>
+                                    <div class="pricing-feature">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Sin costos ocultos</span>
+                                    </div>
+                                </div>
+                                <div class="pricing-cta mt-4">
+                                    <a href="#departments" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-eye me-2"></i>Ver Apartamentos Disponibles
+                                    </a>
+                                    <p class="pricing-note mt-3">
+                                        <i class="fas fa-calendar-check me-2"></i>
+                                        <strong>Cita previa requerida</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            <div class="pricing-box text-center">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Los precios no están disponibles en este momento. Por favor, contáctenos para más información.
+                                </div>
+                                <div class="pricing-cta mt-4">
+                                    <a href="@Url.Action("Contact", "Home")" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-envelope me-2"></i>Contáctenos
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mensaje Motivacional -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-box text-center">
+            <p class="cta-text">
+                Viva la comodidad de un apartamento en un entorno seguro, bien ubicado y pensado para su tranquilidad.
+            </p>
+            <p class="cta-highlight">
+                <strong>Prado Inn</strong>, su mejor opción para vivir con total comodidad.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Departamentos Disponibles -->
+<section id="departments" class="departments-section">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="section-title">Nuestros Exclusivos Departamentos</h2>
-            <p class="section-subtitle">Descubre el confort y elegancia que tenemos para ofrecerte</p>
+            <h2 class="section-title">Apartamentos Disponibles</h2>
+            <p class="section-subtitle">Explore nuestras opciones y encuentre el apartamento perfecto para usted</p>
         </div>
 
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center departments-cards-row">
             @foreach (var depto in Model)
             {
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-5 col-md-6 col-sm-10 col-11">
                     <div class="department-card">
-                        <!-- Image Carousel -->
+                        <!-- Carousel -->
                         <div id="carousel-@depto.IdDepartamento" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner rounded-top">
-                                @if (!string.IsNullOrEmpty(depto.UrlImagenes))
+                            <div class="carousel-inner">
+                                @{
+                                    var imagesList = !string.IsNullOrEmpty(depto.UrlImagenes)
+                                        ? depto.UrlImagenes.Split(',').Where(img => !string.IsNullOrWhiteSpace(img)).Take(3)
+                                            .Select(s => { var t = (s ?? "").Trim(); var bar = t.IndexOf('|'); return bar >= 0 ? t.Substring(0, bar).Trim() : t; }).ToList()
+                                        : new List<string>();
+                                }
+                                @if (imagesList.Any())
                                 {
-                                    var images = depto.UrlImagenes.Split(',').ToList();
-                                    for (int i = 0; i < images.Count; i++)
+                                    for (int i = 0; i < imagesList.Count; i++)
                                     {
                                         <div class="carousel-item @(i == 0 ? "active" : "")">
-                                            <img src="@Url.Content(images[i])" class="d-block w-100 department-img" alt="Imagen de @depto.Nombre">
+                                            <img src="@Url.Content(imagesList[i])" 
+                                                 class="d-block w-100" 
+                                                 alt="Imagen de @depto.Nombre"
+                                                 loading="lazy">
                                         </div>
                                     }
                                 }
                                 else
                                 {
                                     <div class="carousel-item active">
-                                        <img src="@Url.Content("~/imagenes/default.jpg")" class="d-block w-100 department-img" alt="Imagen de @depto.Nombre">
+                                        <img src="@Url.Content("~/imagenes/default.jpg")" 
+                                             class="d-block w-100" 
+                                             alt="Imagen de @depto.Nombre"
+                                             loading="lazy">
                                     </div>
                                 }
                             </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@depto.IdDepartamento" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carousel-@depto.IdDepartamento" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
+                            @if (imagesList.Count > 1)
+                            {
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@depto.IdDepartamento" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon"></span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carousel-@depto.IdDepartamento" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon"></span>
+                                </button>
+                            }
                         </div>
 
-                        <!-- Card Body -->
-                        <div class="department-card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h3 class="department-title">@depto.Nombre</h3>
-                                <span class="badge bg-primary">Disponible</span>
+                        <!-- Body -->
+                        <div class="department-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h3 class="department-name">@depto.Nombre</h3>
+                                <span class="badge-available">Disponible</span>
                             </div>
-
-                            <p class="department-description">@depto.Descripcion</p>
-
-                            <div class="department-features">
-                                <div class="feature-item">
-                                    <i class="fas fa-bed feature-icon"></i>
-                                    <span>@depto.NumeroHabitaciones Habitaciones</span>
+                            <p class="department-desc">@depto.Descripcion</p>
+                            <div class="department-info">
+                                <div class="info-item">
+                                    <i class="fas fa-bed"></i>
+                                    <span>@depto.NumeroHabitaciones Hab.</span>
                                 </div>
-                                <div class="feature-item">
-                                    <i class="fas fa-couch feature-icon"></i>
+                                <div class="info-item">
+                                    <i class="fas fa-couch"></i>
                                     <span>@(depto.Amueblado ? "Amueblado" : "Sin amueblar")</span>
                                 </div>
                             </div>
-
-                            <div class="d-flex justify-content-between align-items-center mt-4">
-
-                                <a href="@Url.Action("Details", "Departamento", new { id = depto.IdDepartamento })" class="btn btn-primary btn-details">
+                            <a href="@Url.Action("Details", "Departamento", new { id = depto.IdDepartamento })" class="btn-view-details">
                                     <i class="fas fa-eye me-2"></i>Ver Detalles
                                 </a>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -86,188 +399,784 @@
     </div>
 </section>
 
-<!-- Scripts -->
-<script src="~/Scripts/bootstrap.bundle.min.js"></script>
-
 <style>
     :root {
-        --primary-color: #2c3e50;
-        --secondary-color: #3498db;
-        --accent-color: #e74c3c;
-        --light-color: #ecf0f1;
-        --dark-color: #2c3e50;
-        --text-color: #34495e;
-        --shadow: 0 10px 20px rgba(0,0,0,0.1);
-        --transition: all 0.3s ease;
+    --hotel-primary: #2B2B2B;
+    --hotel-secondary: #6D7BB8;
+    --hotel-light: #F6F7F9;
+    --hotel-white: #FFFFFF;
+    --hotel-text: #2B2B2B;
+    --hotel-text-light: #6b6b6b;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.15);
     }
 
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        color: var(--text-color);
-        background-color: #f9f9f9;
-    }
+    background-color: var(--hotel-light);
+    font-family: 'Inter', sans-serif;
+}
 
-    .section-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: var(--primary-color);
-        margin-bottom: 0.5rem;
+/* ===== HERO ===== */
+    .hero-apartamentos {
         position: relative;
-        display: inline-block;
+        height: 500px;
+        background-image: url('@(ViewBag.HeroBannerUrl ?? "/Img/images/Apartamentos/WhatsApp Image 2025-12-17 at 10.33.41 AM.jpeg")');
+        background-size: cover;
+        background-position: center;
+        background-attachment: scroll;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        margin: 0 !important;
+        margin-top: 0 !important;
+        padding: 0 !important;
+        overflow: hidden;
     }
 
-        .section-title::after {
-            content: '';
+.hero-apartamentos::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.8) 100%);
+    backdrop-filter: blur(2px);
+    z-index: 1;
+}
+
+.hero-content-apartamentos {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    padding: 3rem 2rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    width: 100%;
+}
+
+.hero-apartamentos h1 {
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 3px 3px 15px rgba(0,0,0,1);
+    color: white;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.hero-apartamentos p {
+    font-size: 1.5rem;
+    font-weight: 300;
+    text-shadow: 2px 2px 8px rgba(0,0,0,1);
+    color: white;
+    letter-spacing: 1px;
+}
+
+.btn-edit-hero {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    background: rgba(109, 123, 184, 0.9);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.btn-edit-hero:hover {
+    background: rgba(109, 123, 184, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-hero:hover {
+    background: #5a6aa8;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    color: #FFFFFF !important; /* Blanco puro */
+}
+
+.btn-hero i {
+    color: #FFFFFF !important; /* Icono también blanco */
+}
+
+/* ===== TABS ===== */
+.info-tabs-section {
+    padding: 4rem 0;
+    background: var(--hotel-white);
+}
+
+.nav-tabs-custom {
+    border: none;
+    gap: 0;
+    flex-wrap: wrap;
+}
+
+.nav-link-custom {
+    background: var(--hotel-light);
+    border: none;
+    color: var(--hotel-text);
+    padding: 1.25rem 2rem;
+    border-radius: 0;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+}
+
+.nav-link-custom i {
+    font-size: 1.5rem;
+    color: var(--hotel-text-light);
+    transition: all 0.3s;
+}
+
+.nav-link-custom:hover {
+    background: var(--hotel-white);
+    color: var(--hotel-secondary);
+}
+
+.nav-link-custom:hover i {
+    color: var(--hotel-secondary);
+    transform: scale(1.1);
+}
+
+.nav-link-custom.active {
+    background: var(--hotel-white);
+    color: var(--hotel-primary);
+    border-bottom-color: var(--hotel-secondary);
+}
+
+.nav-link-custom.active i {
+    color: var(--hotel-secondary);
+}
+
+/* ===== INFO TAB ===== */
+.info-box {
+    background: var(--hotel-light);
+    padding: 3rem;
+    border-radius: 16px;
+}
+
+.info-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--hotel-text);
+    margin-bottom: 1.5rem;
+}
+
+.info-content p {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--hotel-text);
+}
+
+.feature-highlight {
+    background: var(--hotel-white);
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s;
+    border: 1px solid #e0e0e0;
+}
+
+.feature-highlight:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--hotel-secondary);
+}
+
+.feature-highlight i {
+        font-size: 2.5rem;
+    color: var(--hotel-secondary);
+    margin-bottom: 1rem;
+}
+
+.feature-highlight h4 {
+    font-size: 1.125rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    color: var(--hotel-text);
+}
+
+.feature-highlight p {
+    font-size: 0.95rem;
+    color: var(--hotel-text-light);
+    margin: 0;
+}
+
+.alert-note {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--hotel-secondary);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.alert-note i {
+    font-size: 1.5rem;
+    color: var(--hotel-secondary);
+}
+
+/* ===== SERVICIOS TAB ===== */
+.services-box {
+    background: var(--hotel-light);
+    padding: 2.5rem;
+    border-radius: 16px;
+    height: 100%;
+}
+
+.services-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--hotel-text);
+}
+
+.services-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.services-list li {
+    padding: 0.875rem 0;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1rem;
+}
+
+.services-list li:last-child {
+    border-bottom: none;
+}
+
+.services-list i {
+    font-size: 1.25rem;
+    color: var(--hotel-secondary);
+    min-width: 25px;
+    text-align: center;
+}
+
+/* ===== GALERÍA ===== */
+.nav-pills-gallery {
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.nav-pill {
+    background: var(--hotel-light);
+    border: 2px solid transparent;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    color: var(--hotel-text);
+    transition: all 0.3s;
+}
+
+.nav-pill:hover {
+    border-color: var(--hotel-secondary);
+    color: var(--hotel-secondary);
+}
+
+.nav-pill.active {
+    background: var(--hotel-secondary);
+    color: white;
+    border-color: var(--hotel-secondary);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.gallery-grid-services {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.gallery-item {
+        position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s;
+}
+
+.gallery-item:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+.gallery-caption {
             position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    color: #FFFFFF !important; /* Blanco puro */
+    padding: 1rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.gallery-caption i {
+    color: #FFFFFF !important; /* Iconos también blancos */
+}
+
+/* ===== PRECIOS ===== */
+.pricing-box {
+    background: var(--hotel-light);
+    padding: 4rem 3rem;
+    border-radius: 20px;
+}
+
+.pricing-icon {
+    display: inline-block;
             width: 80px;
-            height: 4px;
-            background: var(--secondary-color);
-            border-radius: 2px;
+    height: 80px;
+    background: var(--hotel-secondary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+}
+
+.pricing-icon i {
+    font-size: 2.5rem;
+    color: white;
+}
+
+.pricing-label {
+    font-size: 1rem;
+    color: var(--hotel-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+}
+
+.pricing-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 6vw, 4.5rem);
+    font-weight: 700;
+    color: var(--hotel-text);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.pricing-period {
+    font-size: 1.125rem;
+    color: var(--hotel-text-light);
+    margin-bottom: 2rem;
+}
+
+.pricing-features {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.pricing-feature {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-size: 1rem;
+}
+
+.pricing-feature i {
+    color: var(--hotel-secondary);
+    font-size: 1.25rem;
+}
+
+.pricing-note {
+    color: var(--hotel-text);
+    font-size: 1rem;
+}
+
+.pricing-note i {
+    color: var(--hotel-secondary);
+}
+
+/* ===== CTA ===== */
+.cta-section {
+    background: linear-gradient(135deg, var(--hotel-primary) 0%, #1a1a1a 100%);
+    padding: 3rem 0;
+    color: #FFFFFF !important; /* Blanco puro */
+}
+
+.cta-box {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cta-text {
+    font-size: clamp(1.125rem, 2vw, 1.375rem);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    color: #FFFFFF !important; /* Blanco puro */
+}
+
+.cta-highlight {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    margin: 0;
+    color: #FFFFFF !important; /* Blanco puro */
+}
+
+.cta-highlight strong {
+    color: #FFFFFF !important; /* Blanco puro para el strong también */
+}
+
+/* ===== DEPARTAMENTOS ===== */
+.departments-section {
+    padding: 4rem 0;
+    background: var(--hotel-white);
+}
+
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    color: var(--hotel-text);
+    margin-bottom: 0.5rem;
         }
 
     .section-subtitle {
-        font-size: 1.1rem;
-        color: #7f8c8d;
+    font-size: 1.125rem;
+    color: var(--hotel-text-light);
         max-width: 700px;
         margin: 0 auto;
     }
 
+    .departments-cards-row {
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     .department-card {
         background: white;
-        border-radius: 10px;
+    border-radius: 16px;
         overflow: hidden;
-        box-shadow: var(--shadow);
-        transition: var(--transition);
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s;
         height: 100%;
-        display: flex;
-        flex-direction: column;
     }
 
         .department-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
         }
 
-    .department-img {
+.department-card .carousel-inner img {
         height: 250px;
         object-fit: cover;
-        transition: var(--transition);
-    }
+}
 
-    .department-card:hover .department-img {
-        opacity: 0.9;
+/* Móvil: mejorar respuesta táctil del carrusel y evitar que se congele */
+@@media (max-width: 768px) {
+    .department-card .carousel,
+    .department-card .carousel-inner {
+        touch-action: manipulation;
+        -webkit-overflow-scrolling: touch;
     }
-
-    .department-card-body {
-        padding: 1.5rem;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
+    .department-card .carousel-control-prev,
+    .department-card .carousel-control-next {
+        opacity: 0.85;
+        pointer-events: auto;
     }
+}
 
-    .department-title {
+.carousel-control-prev, .carousel-control-next {
+    width: 40px;
+    height: 40px;
+    background: rgba(43,43,43,0.7);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: all 0.3s;
+}
+
+.department-card:hover .carousel-control-prev,
+.department-card:hover .carousel-control-next {
+    opacity: 1;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background: rgba(109,123,184,0.9);
+}
+
+.department-body {
+    padding: 1.75rem;
+}
+
+.department-name {
+    font-family: 'Playfair Display', serif;
         font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--primary-color);
+    font-weight: 700;
+    color: var(--hotel-text);
         margin-bottom: 0;
     }
 
-    .department-description {
-        color: #7f8c8d;
+.badge-available {
+    background: var(--hotel-primary);
+    color: white;
+    padding: 0.35rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.department-desc {
+    color: var(--hotel-text-light);
         margin: 1rem 0;
-        flex-grow: 1;
+    font-size: 0.95rem;
+    line-height: 1.6;
     }
 
-    .department-features {
+.department-info {
         display: flex;
         gap: 1.5rem;
-        margin: 1rem 0;
+    margin: 1.25rem 0;
     }
 
-    .feature-item {
+.info-item {
         display: flex;
         align-items: center;
         gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--hotel-text);
     }
 
-    .feature-icon {
-        color: var(--secondary-color);
+.info-item i {
+    color: var(--hotel-text-light);
         font-size: 1.1rem;
     }
 
-    .department-price {
-        text-align: left;
-    }
+.btn-view-details {
+    display: block;
+    width: 100%;
+    background: var(--hotel-primary);
+    color: white;
+    text-align: center;
+    padding: 0.875rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    margin-top: 1rem;
+}
 
-    .price-label {
-        display: block;
-        font-size: 0.8rem;
-        color: #7f8c8d;
-    }
+.btn-view-details:hover {
+    background: var(--hotel-secondary);
+    transform: translateY(-2px);
+    color: white;
+}
 
-    .price-amount {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--primary-color);
-    }
-
-    .price-period {
+/* ===== RESPONSIVE ===== */
+@@media (max-width: 992px) {
+    .nav-link-custom {
+        padding: 1rem 1.5rem;
         font-size: 0.9rem;
-        color: #7f8c8d;
     }
 
-    .btn-details {
-        background-color: var(--secondary-color);
-        border: none;
-        padding: 0.5rem 1.25rem;
-        border-radius: 50px;
-        font-weight: 500;
-        transition: var(--transition);
+    .info-box, .services-box {
+        padding: 2rem;
+    }
+    
+    /* Centrar contenido en móvil */
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .row {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .col-lg-10, .col-lg-11, .col-lg-8 {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@@media (max-width: 768px) {
+    .hero-apartamentos {
+        height: 400px;
     }
 
-        .btn-details:hover {
-            background-color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-
-    .badge {
-        font-size: 0.75rem;
-        font-weight: 500;
-        padding: 0.35rem 0.75rem;
-        border-radius: 50px;
+    .hero-apartamentos h1 {
+        font-size: 3rem;
     }
 
-    .carousel-control-prev, .carousel-control-next {
-        width: 40px;
-        height: 40px;
-        background: rgba(0,0,0,0.3);
-        border-radius: 50%;
-        top: 50%;
-        transform: translateY(-50%);
-        opacity: 0;
-        transition: var(--transition);
+    .hero-apartamentos p {
+        font-size: 1.3rem;
     }
 
-    .department-card:hover .carousel-control-prev,
-    .department-card:hover .carousel-control-next {
-        opacity: 1;
+    .hero-content-apartamentos {
+        padding: 2.5rem 2rem;
     }
 
-    @@media (max-width: 768px) {
-        .section-title {
-            font-size: 2rem;
-        }
-
-        .department-features {
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .department-card-body {
-            padding: 1.25rem;
-        }
+    .nav-link-custom {
+        padding: 0.875rem 1rem;
+        font-size: 0.85rem;
     }
+
+    .nav-link-custom i {
+        font-size: 1.25rem;
+    }
+
+    .info-box {
+        padding: 1.5rem;
+    }
+
+    .services-box {
+        padding: 1.75rem;
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    .pricing-box {
+        padding: 3rem 2rem;
+    }
+
+    .department-info {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    /* Centrar todo el contenido en móvil */
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .row {
+        margin-left: auto;
+        margin-right: auto;
+        justify-content: center;
+    }
+    
+    .col-lg-10, .col-lg-11, .col-lg-8, .col-lg-4, .col-md-6 {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+    
+    .info-box, .services-box, .pricing-box {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+}
+
+@@media (max-width: 576px) {
+    .hero-apartamentos {
+        height: 350px;
+    }
+
+    .hero-apartamentos h1 {
+        font-size: 2.5rem;
+        letter-spacing: 2px;
+    }
+
+    .hero-apartamentos p {
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+    }
+
+    .hero-content-apartamentos {
+        padding: 2rem 1.5rem;
+    }
+
+    .nav-link-custom {
+        flex: 1;
+        min-width: 150px;
+        padding: 0.75rem;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-grid-services {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Centrar todo el contenido en móvil pequeño */
+    .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+    
+    .row {
+        margin-left: auto;
+        margin-right: auto;
+        justify-content: center;
+    }
+    
+    .col-lg-10, .col-lg-11, .col-lg-8, .col-lg-4, .col-md-6 {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+    
+    .info-box, .services-box, .pricing-box {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+    
+    .department-card {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
 </style>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

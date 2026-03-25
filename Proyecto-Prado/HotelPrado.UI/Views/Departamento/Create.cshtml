@@ -1,63 +1,182 @@
-﻿@model HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO
+@model HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO
 
 @{
     ViewBag.Title = "Crear Departamento";
 }
 
 <style>
+    /* ============================================
+       ESTILOS RESPONSIVE PARA FORMULARIO
+       ============================================ */
     .card {
         border: none;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,.08);
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0,0,0,.1);
+        border: 1px solid #BEBEBE;
     }
 
     .card-header {
-        background-color: #f8f9fa;
+        background-color: #2B2B2B;
+        color: white;
         border-bottom: 1px solid rgba(0,0,0,.05);
-        padding: 1rem 1.5rem;
+        padding: 1.25rem 1.5rem;
+        border-radius: 12px 12px 0 0;
     }
 
     .form-label {
-        font-weight: 500;
+        font-weight: 600;
         margin-bottom: .5rem;
-        font-size: 0.9rem;
+        font-size: 0.9375rem;
+        color: #2B2B2B;
     }
 
     .form-control, .form-select {
-        border-radius: 6px;
-        border: 1px solid #dee2e6;
-        padding: .5rem .75rem;
-        font-size: 0.9rem;
+        border-radius: 8px;
+        border: 1px solid #BEBEBE;
+        padding: .625rem .875rem;
+        font-size: 0.9375rem;
+        transition: all 0.3s ease;
     }
 
-        .form-control:focus, .form-select:focus {
-            border-color: #80bdff;
-            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-        }
+    .form-control:focus, .form-select:focus {
+        border-color: #6D7BB8;
+        box-shadow: 0 0 0 3px rgba(109, 123, 184, 0.1);
+        outline: none;
+    }
 
     .btn-primary {
-        padding: .5rem 1.5rem;
-        font-weight: 500;
+        padding: .75rem 2rem;
+        font-weight: 600;
+        background-color: #2B2B2B;
+        border-color: #2B2B2B;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.875rem;
     }
 
-    .btn-secondary {
-        background-color: #6c757d;
-        border-color: #6c757d;
-        color: white;
-        padding: .5rem 1.5rem;
+    .btn-primary:hover {
+        background-color: #6D7BB8;
+        border-color: #6D7BB8;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(109, 123, 184, 0.3);
+    }
+
+    .btn-outline-secondary {
+        border-radius: 8px;
+        padding: .75rem 1.5rem;
         font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-secondary:hover {
+        transform: translateY(-2px);
     }
 
     .text-danger {
-        font-size: 0.8rem;
+        font-size: 0.8125rem;
         margin-top: .25rem;
+        display: block;
     }
 
     .preview-img {
         width: 100px;
+        height: 100px;
+        object-fit: cover;
         margin-right: 10px;
+        margin-bottom: 10px;
         border-radius: 8px;
         box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .alert-danger {
+        border-radius: 8px;
+        border: 1px solid #dc3545;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .container-fluid {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .d-flex.justify-content-between {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .d-flex.justify-content-between h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0;
+        }
+
+        .card-body {
+            padding: 1.5rem !important;
+        }
+
+        .row.g-4 > [class*="col-"] {
+            margin-bottom: 1rem;
+        }
+
+        .col-md-6 {
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary, .btn-outline-secondary {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .d-flex.justify-content-end {
+            flex-direction: column;
+        }
+
+        .preview-img {
+            width: 80px;
+            height: 80px;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .container-fluid {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+        }
+
+        .card-body {
+            padding: 1.25rem !important;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+        }
+
+        .form-control, .form-select {
+            font-size: 0.875rem;
+            padding: .5rem .75rem;
+        }
+
+        .btn-primary, .btn-outline-secondary {
+            font-size: 0.8125rem;
+            padding: .625rem 1.25rem;
+        }
+
+        .preview-img {
+            width: 70px;
+            height: 70px;
+        }
+
+        #fileCount {
+            display: block;
+            margin-top: 0.5rem;
+            margin-left: 0 !important;
+        }
     }
 </style>
 
@@ -78,38 +197,37 @@
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 
-                        <div class="row g-4">
-                            <div class="col-md-6">
+                        <div class="row g-3 g-md-4">
+                            <div class="col-12 col-md-6">
+                                @Html.LabelFor(model => model.NumeroDepartamento, new { @class = "form-label" })
+                                @Html.EditorFor(model => model.NumeroDepartamento, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0", placeholder = "Opcional. Dejar vacío para sin número" } })
+                                @Html.ValidationMessageFor(model => model.NumeroDepartamento, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-12 col-md-6">
                                 @Html.LabelFor(model => model.Nombre, new { @class = "form-label" })
                                 @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
                             </div>
 
-                            <div class="col-md-6">
-                                @Html.LabelFor(model => model.NumeroDepartamento, new { @class = "form-label" })
-                                @Html.EditorFor(model => model.NumeroDepartamento, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.NumeroDepartamento, "", new { @class = "text-danger" })
-                            </div>
-
-                            <div class="col-md-12">
+                            <div class="col-12">
                                 @Html.LabelFor(model => model.Descripcion, new { @class = "form-label" })
                                 @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
                             </div>
 
-                            <div class="col-md-6">
-                                @Html.LabelFor(model => model.IdTipoDepartamento, new { @class = "form-label" })
-                                @Html.DropDownListFor(model => model.IdTipoDepartamento, (SelectList)ViewBag.TipoDepartamento, "Seleccione un tipo de Habitación", new { @class = "form-select" })
+                            <div class="col-12 col-md-6">
+                                <label for="IdTipoDepartamento" class="form-label">Tipo de Departamento</label>
+                                @Html.DropDownListFor(model => model.IdTipoDepartamento, (SelectList)ViewBag.TipoDepartamento, "Seleccione un tipo de Departamento", new { @class = "form-select" })
                                 @Html.ValidationMessageFor(model => model.IdTipoDepartamento, "", new { @class = "text-danger" })
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 @Html.LabelFor(model => model.Precio, new { @class = "form-label" })
                                 @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-12 col-md-6">
                                 @Html.LabelFor(model => model.Estado, new { @class = "form-label" })
                                 @Html.DropDownListFor(model => model.Estado,
                                     new SelectList(new List<SelectListItem>
@@ -123,7 +241,7 @@
 
                             <div class="col-md-12">
                                 <label class="form-label">Imágenes</label>
-                                <input type="file" id="imagenInput" name="Imagenes" multiple class="d-none" accept="image/*" />
+                                <input type="file" id="imagenInput" name="Imagenes" multiple class="d-none" accept="image/*,.heic,image/heic" />
                                 <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('imagenInput').click();">
                                     Subir Imágenes
                                 </button>
@@ -131,7 +249,10 @@
                                 <div id="preview" class="mt-3 d-flex flex-wrap"></div>
                             </div>
 
-                            <div class="col-12 mt-4 d-flex justify-content-end">
+                            <div class="col-12 mt-4 d-flex flex-column flex-md-row justify-content-end gap-2">
+                                <a href="@Url.Action("IndexDepartamentos")" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-2"></i>Cancelar
+                                </a>
                                 <input type="submit" value="Crear Departamento" class="btn btn-primary" />
                             </div>
                         </div>

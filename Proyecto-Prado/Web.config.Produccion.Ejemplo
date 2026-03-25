@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  CONFIGURACIÓN DE EJEMPLO PARA PRODUCCIÓN
+  Copia este archivo como Web.config y ajusta los valores según tu servidor
+-->
+<configuration>
+  <configSections>
+    <section name="entityFramework" type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false" />
+  </configSections>
+  
+  <connectionStrings>
+    <!-- 
+      IMPORTANTE: Actualiza estos valores con los datos de tu servidor de producción
+      
+      Ejemplos de cadenas de conexión:
+      
+      SQL Server en el mismo servidor:
+      Data Source=localhost;Initial Catalog=HotelPrado;Integrated Security=True;...
+      
+      SQL Server remoto:
+      Data Source=servidor-sql.tudominio.com;Initial Catalog=HotelPrado;User ID=usuario;Password=contraseña;...
+      
+      SQL Server con puerto específico:
+      Data Source=servidor-sql.tudominio.com,1433;Initial Catalog=HotelPrado;User ID=usuario;Password=contraseña;...
+    -->
+    <add name="Contexto" 
+         connectionString="Data Source=TU_SERVIDOR_SQL;Initial Catalog=HotelPrado;User ID=TU_USUARIO;Password=TU_CONTRASEÑA;Connection Timeout=30;MultipleActiveResultSets=True;Pooling=true;Min Pool Size=5;Max Pool Size=100" 
+         providerName="System.Data.SqlClient" />
+  </connectionStrings>
+  
+  <appSettings>
+    <add key="owin:AutomaticAppStartup" value="true" />
+    <add key="webpages:Version" value="3.0.0.0" />
+    <add key="webpages:Enabled" value="false" />
+    <add key="ClientValidationEnabled" value="true" />
+    <add key="UnobtrusiveJavaScriptEnabled" value="true" />
+    
+    <!-- Configuraciones adicionales para producción -->
+    <!-- <add key="Email:SMTP:Host" value="smtp.tudominio.com" /> -->
+    <!-- <add key="Email:SMTP:Port" value="587" /> -->
+    <!-- <add key="Email:SMTP:User" value="noreply@tudominio.com" /> -->
+    <!-- <add key="Email:SMTP:Password" value="contraseña" /> -->
+  </appSettings>
+  
+  <system.web>
+    <!-- IMPORTANTE: debug debe ser false en producción -->
+    <compilation debug="false" targetFramework="4.8.1" />
+    
+    <!-- Configuración de runtime -->
+    <httpRuntime targetFramework="4.8.1" 
+                 maxRequestLength="1048576" 
+                 executionTimeout="600" />
+    
+    <!-- Configuración de globalización -->
+    <globalization culture="es-CR" 
+                   uiCulture="es-CR" 
+                   requestEncoding="utf-8" 
+                   responseEncoding="utf-8" 
+                   fileEncoding="utf-8" />
+    
+    <!-- Configuración de autenticación (ajustar según necesidades) -->
+    <authentication mode="Forms">
+      <forms loginUrl="~/Account/Login" timeout="2880" />
+    </authentication>
+    
+    <!-- Configuración de autorización -->
+    <authorization>
+      <allow users="*" />
+    </authorization>
+    
+    <!-- Configuración de sesión -->
+    <sessionState timeout="30" />
+    
+    <!-- Manejo de errores personalizado -->
+    <customErrors mode="RemoteOnly" defaultRedirect="~/Error">
+      <!-- 
+        mode puede ser:
+        - Off: Muestra todos los errores (solo para desarrollo)
+        - On: Siempre muestra página de error personalizada
+        - RemoteOnly: Muestra errores detallados solo localmente
+      -->
+    </customErrors>
+  </system.web>
+  
+  <system.webServer>
+    <!-- Configuración de seguridad -->
+    <security>
+      <requestFiltering>
+        <!-- Tamaño máximo de archivo: 2GB (ajustar según necesidades) -->
+        <requestLimits maxAllowedContentLength="2147483648" />
+      </requestFiltering>
+    </security>
+    
+    <!-- Configuración de módulos -->
+    <modules runAllManagedModulesForAllRequests="true" />
+    
+    <!-- Configuración de compresión (mejora el rendimiento) -->
+    <urlCompression doStaticCompression="true" doDynamicCompression="true" />
+    
+    <!-- Manejo de errores HTTP -->
+    <httpErrors errorMode="Custom" existingResponse="Replace">
+      <remove statusCode="404" />
+      <error statusCode="404" path="/Error" responseMode="ExecuteURL" />
+      <remove statusCode="500" />
+      <error statusCode="500" path="/Error" responseMode="ExecuteURL" />
+    </httpErrors>
+    
+    <!-- Configuración de caché estático (opcional, mejora rendimiento) -->
+    <staticContent>
+      <clientCache cacheControlMode="UseMaxAge" cacheControlMaxAge="7.00:00:00" />
+    </staticContent>
+  </system.webServer>
+  
+  <!-- Configuración de Entity Framework -->
+  <entityFramework>
+    <defaultConnectionFactory type="System.Data.Entity.Infrastructure.SqlConnectionFactory, EntityFramework" />
+    <providers>
+      <provider invariantName="System.Data.SqlClient" 
+                type="System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer" />
+    </providers>
+  </entityFramework>
+  
+  <!-- Configuración de compiladores -->
+  <system.codedom>
+    <compilers>
+      <compiler language="c#;cs;csharp" 
+                extension=".cs" 
+                warningLevel="4" 
+                compilerOptions="/langversion:default /nowarn:1659;1699;1701;612;618" 
+                type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    </compilers>
+  </system.codedom>
+  
+  <!-- Configuración de redirecciones de ensamblados (mantener igual que el original) -->
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <!-- Mantener todas las redirecciones de ensamblados del Web.config original -->
+      <!-- Copiar desde el Web.config original -->
+    </assemblyBinding>
+  </runtime>
+</configuration>
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,466 @@
+@{
+    ViewBag.Title = "Panel de Configuraciones - Administrador";
+}
+
+<style>
+    :root {
+        --hotel-primary: #6D7BB8;
+        --hotel-gold: #D4AF37;
+        --hotel-dark: #2c3e50;
+        --hotel-light: #f8f9fa;
+    }
+
+    .admin-panel {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: calc(100vh - 200px);
+        padding: 2rem 0;
+    }
+
+    .panel-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 2rem 0;
+    }
+
+    .panel-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--hotel-dark);
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .panel-header p {
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    /* Grid simplificado - sin secciones divididas */
+    .config-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .config-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.75rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .config-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--hotel-primary), var(--hotel-gold));
+    }
+
+    .config-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        border-color: var(--hotel-primary);
+    }
+
+    .card-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--hotel-primary), var(--hotel-gold));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.25rem;
+        box-shadow: 0 5px 15px rgba(109, 123, 184, 0.3);
+    }
+
+    .card-icon i {
+        font-size: 1.75rem;
+        color: white;
+    }
+
+    .card-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 600;
+        font-size: 1.35rem;
+        color: var(--hotel-dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .card-description {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 1.25rem;
+        line-height: 1.5;
+    }
+
+    .card-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 0.85rem;
+    }
+
+    .btn-primary-action {
+        background: linear-gradient(135deg, var(--hotel-primary), #8a9dd4);
+        color: white;
+    }
+
+    .btn-primary-action:hover {
+        background: linear-gradient(135deg, #5a6ba8, var(--hotel-primary));
+        color: white;
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(109, 123, 184, 0.4);
+    }
+
+    .btn-secondary-action {
+        background: #f8f9fa;
+        color: var(--hotel-dark);
+        border: 2px solid #dee2e6;
+    }
+
+    .btn-secondary-action:hover {
+        background: #e9ecef;
+        border-color: var(--hotel-primary);
+        color: var(--hotel-primary);
+        transform: scale(1.05);
+    }
+
+    @@media (max-width: 768px) {
+        .config-grid {
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+        }
+
+        .panel-header h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<div class="admin-panel">
+    <div class="panel-header">
+        <h1><i class="fas fa-cog me-3" style="color: var(--hotel-primary);"></i>Panel de Configuraciones</h1>
+        <p>Gestión completa del sistema del hotel</p>
+        <div class="alert alert-warning mt-3 mb-0 mx-auto" style="max-width: 700px; font-size: 0.9rem;">
+            <i class="fas fa-shield-alt me-2"></i><strong>Seguridad:</strong> Si vas a pasar un enlace a otra persona, cierra sesión antes. Así nadie entrará con tu sesión de administrador.
+        </div>
+    </div>
+
+    <div class="config-grid">
+        <!-- Habitaciones -->
+        <div class="config-card">
+            <div class="card-icon">
+                <i class="fas fa-bed"></i>
+            </div>
+            <h3 class="card-title">Habitaciones</h3>
+            <p class="card-description">Gestiona las habitaciones del hotel, su estado y disponibilidad.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("IndexHabitaciones", "Habitacion")" class="btn-action btn-primary-action">
+                    <i class="fas fa-list"></i> Ver Todas
+                </a>
+            </div>
+        </div>
+
+        <!-- Estado en Tiempo Real -->
+        <div class="config-card">
+            <div class="card-icon" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                <i class="fas fa-tachometer-alt"></i>
+            </div>
+            <h3 class="card-title">Estado en Tiempo Real</h3>
+            <p class="card-description">Monitorea el estado actual de todas las habitaciones y departamentos en tiempo real.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("EstadoHabitaciones", "Habitacion")" class="btn-action btn-primary-action">
+                    <i class="fas fa-eye"></i> Ver Estado
+                </a>
+            </div>
+        </div>
+
+        <!-- Calendario de Habitaciones -->
+        <div class="config-card">
+            <div class="card-icon" style="background: linear-gradient(135deg, #17a2b8, #138496);">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <h3 class="card-title">Calendario de Habitaciones</h3>
+            <p class="card-description">Visualiza el calendario completo de reservas y disponibilidad de habitaciones.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("CalendarioHabitaciones", "Habitacion")" class="btn-action btn-primary-action">
+                    <i class="fas fa-calendar"></i> Ver Calendario
+                </a>
+            </div>
+        </div>
+
+        <!-- Departamentos -->
+        <div class="config-card">
+            <div class="card-icon">
+                <i class="fas fa-building"></i>
+            </div>
+            <h3 class="card-title">Departamentos</h3>
+            <p class="card-description">Administra los departamentos disponibles, sus características e imágenes.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("IndexDepartamentos", "Departamento")" class="btn-action btn-primary-action">
+                    <i class="fas fa-list"></i> Ver Todos
+                </a>
+            </div>
+        </div>
+
+        <!-- Reservas -->
+        <div class="config-card">
+            <div class="card-icon">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <h3 class="card-title">Reservas</h3>
+            <p class="card-description">Visualiza y gestiona todas las reservas del hotel.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("IndexReservasA", "ReservasA")" class="btn-action btn-primary-action">
+                    <i class="fas fa-list"></i> Ver Todas
+                </a>
+            </div>
+        </div>
+
+        <!-- Solicitudes Pendientes -->
+        <div class="config-card">
+            <div class="card-icon">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
+            <h3 class="card-title">Solicitudes Pendientes</h3>
+            <p class="card-description">Revisa y aprueba las solicitudes de reserva pendientes.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("SolicitudesPendientes", "ReservasA")" class="btn-action btn-primary-action">
+                    <i class="fas fa-eye"></i> Ver Solicitudes
+                </a>
+            </div>
+        </div>
+
+        <!-- Lista de Espera -->
+        <div class="config-card">
+            <div class="card-icon">
+                <i class="fas fa-hourglass-half"></i>
+            </div>
+            <h3 class="card-title">Lista de Espera</h3>
+            <p class="card-description">Gestiona la lista de espera cuando no hay disponibilidad.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("ListaEspera", "ReservasA")" class="btn-action btn-primary-action">
+                    <i class="fas fa-list"></i> Ver Lista
+                </a>
+            </div>
+        </div>
+
+        <!-- Mantenimientos -->
+        <div class="config-card">
+            <div class="card-icon">
+                <i class="fas fa-tools"></i>
+            </div>
+            <h3 class="card-title">Mantenimientos</h3>
+            <p class="card-description">Registra y gestiona los mantenimientos de habitaciones y departamentos.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("IndexMantenimiento", "Mantenimiento")" class="btn-action btn-primary-action">
+                    <i class="fas fa-list"></i> Ver Todos
+                </a>
+            </div>
+        </div>
+
+        <!-- Solicitudes de Limpieza -->
+        <div class="config-card">
+            <div class="card-icon">
+                <i class="fas fa-broom"></i>
+            </div>
+            <h3 class="card-title">Solicitudes de Limpieza</h3>
+            <p class="card-description">Gestiona las solicitudes de limpieza de las habitaciones.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("IndexSolicitudLimpieza", "SolicitudLimpieza")" class="btn-action btn-primary-action">
+                    <i class="fas fa-list"></i> Ver Solicitudes
+                </a>
+            </div>
+        </div>
+
+        <!-- Cargos -->
+        <div class="config-card">
+            <div class="card-icon" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                <i class="fas fa-receipt"></i>
+            </div>
+            <h3 class="card-title">Cargos</h3>
+            <p class="card-description">Gestiona los cargos adicionales, extras y servicios del hotel.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("Index", "Cargos")" class="btn-action btn-primary-action">
+                    <i class="fas fa-list"></i> Ver Todos
+                </a>
+                <a href="@Url.Action("Create", "Cargos")" class="btn-action btn-secondary-action">
+                    <i class="fas fa-plus"></i> Nuevo
+                </a>
+            </div>
+        </div>
+
+        <!-- Check-Ins -->
+        <div class="config-card">
+            <div class="card-icon" style="background: linear-gradient(135deg, #007bff, #0056b3);">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <h3 class="card-title">Check-Ins</h3>
+            <p class="card-description">Gestiona los registros de check-in, imprime tarjetas de hospedaje y gestiona firmas de huéspedes.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("Index", "CheckIn")" class="btn-action btn-primary-action">
+                    <i class="fas fa-list"></i> Ver Check-Ins
+                </a>
+            </div>
+        </div>
+
+        <!-- Colaboradores -->
+        <div class="config-card">
+            <div class="card-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h3 class="card-title">Colaboradores</h3>
+            <p class="card-description">Gestiona el personal del hotel y sus permisos.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("IndexColaborador", "Colaborador")" class="btn-action btn-primary-action">
+                    <i class="fas fa-list"></i> Ver Todos
+                </a>
+            </div>
+        </div>
+
+        <!-- Clientes -->
+        <div class="config-card">
+            <div class="card-icon" style="background: linear-gradient(135deg, #6f42c1, #e83e8c);">
+                <i class="fas fa-address-book"></i>
+            </div>
+            <h3 class="card-title">Clientes</h3>
+            <p class="card-description">Visualiza y gestiona todos los clientes del hotel. Busca por nombre, email, cédula o teléfono y consulta sus detalles.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("Index", "Clientes")" class="btn-action btn-primary-action">
+                    <i class="fas fa-list"></i> Ver Todos
+                </a>
+            </div>
+        </div>
+
+        <!-- Usuarios -->
+        <div class="config-card">
+            <div class="card-icon">
+                <i class="fas fa-user-cog"></i>
+            </div>
+            <h3 class="card-title">Usuarios</h3>
+            <p class="card-description">Administra los usuarios del sistema y sus roles.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("Index", "Usuario")" class="btn-action btn-primary-action">
+                    <i class="fas fa-list"></i> Ver Todos
+                </a>
+            </div>
+        </div>
+
+
+        <!-- Configurar Hero Banners -->
+        <div class="config-card">
+            <div class="card-icon" style="background: linear-gradient(135deg, #ff6b6b, #ee5a6f);">
+                <i class="fas fa-image"></i>
+            </div>
+            <h3 class="card-title">Hero Banners</h3>
+            <p class="card-description">Cambia las imágenes de los hero banners en las páginas principales (Home, Habitaciones, Contacto, etc.).</p>
+            <div class="card-actions">
+                <a href="@Url.Action("ConfigurarHeroBanners", "Admin")" class="btn-action btn-primary-action">
+                    <i class="fas fa-edit"></i> Configurar
+                </a>
+            </div>
+        </div>
+
+        <!-- Galería de inicio (carrusel) -->
+        <div class="config-card">
+            <div class="card-icon" style="background: linear-gradient(135deg, #6D7BB8, #8a9dd4);">
+                <i class="fas fa-images"></i>
+            </div>
+            <h3 class="card-title">Galería de inicio</h3>
+            <p class="card-description">Configura las 3 imágenes del carrusel de la sección «Nuestra Galería» en la página de inicio.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("ConfigurarGaleriaCarousel", "Admin")" class="btn-action btn-primary-action">
+                    <i class="fas fa-edit"></i> Configurar
+                </a>
+            </div>
+        </div>
+
+        <!-- Galería Apartamentos e Instalaciones (pestaña Galería para usuarios) -->
+        <div class="config-card">
+            <div class="card-icon" style="background: linear-gradient(135deg, #20c997, #17a2b8);">
+                <i class="fas fa-building"></i>
+            </div>
+            <h3 class="card-title">Galería Apartamentos, Habitaciones e Instalaciones</h3>
+            <p class="card-description">Edita las imágenes y leyendas de la pestaña «Galería» en la página de Apartamentos: Apartamentos, Habitaciones e Instalaciones.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("ConfigurarGaleriaUsuarios", "Admin")" class="btn-action btn-primary-action">
+                    <i class="fas fa-edit"></i> Configurar
+                </a>
+            </div>
+        </div>
+
+        <!-- Configurar Precios Departamentos -->
+        <div class="config-card">
+            <div class="card-icon" style="background: linear-gradient(135deg, #feca57, #ff9ff3);">
+                <i class="fas fa-tag"></i>
+            </div>
+            <h3 class="card-title">Precios Departamentos</h3>
+            <p class="card-description">Edita los precios mostrados en la sección de departamentos y controla su visibilidad.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("ConfigurarPreciosDepartamentos", "Admin")" class="btn-action btn-primary-action">
+                    <i class="fas fa-edit"></i> Configurar
+                </a>
+            </div>
+        </div>
+
+        <!-- Bitácora de Eventos -->
+        <div class="config-card">
+            <div class="card-icon">
+                <i class="fas fa-book"></i>
+            </div>
+            <h3 class="card-title">Bitácora de Eventos</h3>
+            <p class="card-description">Revisa el registro de todas las actividades del sistema.</p>
+            <div class="card-actions">
+                <a href="@Url.Action("IndexBitacoraEventos", "Bitacora")" class="btn-action btn-primary-action">
+                    <i class="fas fa-list"></i> Ver Bitácora
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Animación ligera y rápida para que la página se sienta ágil (evitar sensación de lentitud)
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.config-card');
+            cards.forEach(function(card) {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(8px)';
+                card.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+            });
+            requestAnimationFrame(function() {
+                cards.forEach(function(card) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+}

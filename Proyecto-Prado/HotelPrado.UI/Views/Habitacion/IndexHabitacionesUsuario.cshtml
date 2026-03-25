@@ -1,15 +1,10 @@
-﻿@model IEnumerable<HotelPrado.Abstracciones.Modelos.Habitaciones.HabitacionesDTO>
+@model IEnumerable<HotelPrado.Abstracciones.Modelos.Habitaciones.HabitacionesDTO>
 
 @{
     ViewBag.Title = "Habitaciones Disponibles";
     var checkIn = ViewBag.CheckIn as DateTime?;
     var checkOut = ViewBag.CheckOut as DateTime?;
 }
-
-<!-- Estilos mejorados -->
-<link href="~/Content/aos.css" rel="stylesheet" />
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
     :root {
@@ -28,7 +23,8 @@
     body {
         font-family: 'Montserrat', sans-serif;
         color: var(--text-color);
-        background-color: #f9f9f9;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
     }
 
     .display-4 {
@@ -38,16 +34,16 @@
         padding-bottom: 15px;
     }
 
-        .display-4:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: var(--secondary-color);
-        }
+    .display-4:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background: var(--secondary-color);
+    }
 
     .room-container {
         perspective: 1000px;
@@ -55,63 +51,207 @@
 
     .room-item {
         background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: var(--box-shadow);
+        border-radius: 20px;
+        overflow: visible;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         transition: var(--transition);
         transform-style: preserve-3d;
         position: relative;
         margin-bottom: 30px;
-    }
-
-        .room-item:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        }
-
-    .room-image {
-        height: 250px;
+        display: flex;
+        flex-direction: row;
         width: 100%;
-        object-fit: cover;
-        border-bottom: 4px solid var(--secondary-color);
+    }
+    
+    @@media (max-width: 991px) {
+        .room-item {
+            flex-direction: column;
+        }
     }
 
-    .room-info {
-        padding: 25px;
+    .room-item:hover {
+        transform: translateY(-15px) scale(1.01);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    }
+
+    .room-image-container {
         position: relative;
+        width: 50%;
+        height: 350px;
+        min-height: 350px;
+        max-height: 350px;
+        overflow: hidden;
+        background: #f8f9fa;
+        flex-shrink: 0;
+    }
+    
+    @@media (max-width: 991px) {
+        .room-image-container {
+            width: 100%;
+            height: 250px;
+            min-height: 250px;
+            max-height: 250px;
+        }
+    }
+
+    .room-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .room-item:hover .room-image-container img {
+        transform: scale(1.1);
     }
 
     .room-badge {
         position: absolute;
-        top: -20px;
+        top: 20px;
         right: 20px;
-        background: var(--accent-color);
+        background: rgba(231, 76, 60, 0.95);
         color: white;
-        padding: 8px 15px;
+        padding: 10px 20px;
         border-radius: 30px;
         font-weight: 600;
-        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        z-index: 10;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.8;
+        transition: var(--transition);
+    }
+
+    .carousel-control-prev:hover,
+    .carousel-control-next:hover {
+        opacity: 1;
+        background: rgba(255, 255, 255, 1);
+    }
+
+    .carousel-control-prev {
+        left: 20px;
+    }
+
+    .carousel-control-next {
+        right: 20px;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        filter: invert(1);
+    }
+
+    .image-thumbnails {
+        display: flex;
+        gap: 8px;
+        padding: 10px 15px;
+        background: rgba(248, 249, 250, 0.95);
+        overflow-x: auto;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        backdrop-filter: blur(5px);
+    }
+
+    .image-thumbnail {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 6px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: var(--transition);
+        flex-shrink: 0;
+    }
+
+    .image-thumbnail:hover {
+        border-color: var(--secondary-color);
+        transform: scale(1.1);
+    }
+
+    .image-thumbnail.active {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+    }
+
+    .room-info {
+        padding: 25px 30px;
+        position: relative;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 350px;
+        align-items: stretch;
+        width: 50%;
+        min-width: 0;
+        overflow: visible;
+    }
+    
+    @@media (max-width: 991px) {
+        .room-info {
+            min-height: auto;
+            padding: 20px;
+            justify-content: flex-start;
+        }
+    }
+
+    .room-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .room-title i {
+        color: var(--secondary-color);
     }
 
     .room-features {
         list-style: none;
         padding: 0;
-        margin: 20px 0;
+        margin: 15px 0;
+        flex-grow: 1;
     }
 
-        .room-features li {
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: center;
-        }
+    .room-features li {
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
+        font-size: 1rem;
+    }
 
-            .room-features li i {
-                margin-right: 10px;
-                color: var(--secondary-color);
-                width: 20px;
-                text-align: center;
-            }
+    .room-features li:last-child {
+        border-bottom: none;
+    }
+
+    .room-features li i {
+        margin-right: 15px;
+        color: var(--secondary-color);
+        width: 25px;
+        text-align: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .room-features li strong {
+        margin-right: 8px;
+        min-width: 120px;
+    }
 
     .price-total {
         font-size: 1.5rem;
@@ -119,73 +259,271 @@
         color: var(--success-color);
         margin: 20px 0;
         text-align: center;
-        background: rgba(39, 174, 96, 0.1);
-        padding: 10px;
-        border-radius: 8px;
+        background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(39, 174, 96, 0.05));
+        padding: 15px;
+        border-radius: 10px;
+        border: 2px solid rgba(39, 174, 96, 0.2);
+        flex-shrink: 0;
+    }
+
+    .price-total i {
+        margin-right: 10px;
     }
 
     .btn-reserve {
         background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
         border: none;
-        padding: 12px;
+        padding: 12px 25px;
         font-weight: 600;
+        font-size: 1rem;
         letter-spacing: 0.5px;
         text-transform: uppercase;
-        border-radius: 8px;
+        border-radius: 10px;
         width: 100%;
         color: white;
         transition: var(--transition);
-        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+        margin-top: 10px;
     }
 
-        .btn-reserve:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
-            color: white;
-        }
+    .btn-reserve:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(52, 152, 219, 0.5);
+        color: white;
+    }
 
     .no-rooms {
         background: white;
-        padding: 30px;
-        border-radius: 12px;
+        padding: 50px;
+        border-radius: 20px;
         box-shadow: var(--box-shadow);
         max-width: 600px;
         margin: 0 auto;
-    }
-
-        .no-rooms i {
-            font-size: 3rem;
-            color: var(--accent-color);
-            margin-bottom: 20px;
-        }
-
-    .date-info {
-        background: var(--light-color);
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 30px;
         text-align: center;
     }
 
-        .date-info strong {
-            color: var(--primary-color);
+    .no-rooms i {
+        font-size: 4rem;
+        color: var(--accent-color);
+        margin-bottom: 20px;
+    }
+
+    .date-info {
+        background: linear-gradient(135deg, #6D7BB8 0%, #8B9DC3 100%);
+        padding: 30px 40px;
+        border-radius: 16px;
+        margin-bottom: 40px;
+        text-align: center;
+        border: none;
+        box-shadow: 0 8px 20px rgba(109, 123, 184, 0.3);
+        color: white;
+        position: relative;
+        overflow: visible;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .date-info::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        opacity: 0.3;
+        pointer-events: none;
+    }
+
+    .date-info > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .date-info strong {
+        color: white;
+        font-size: 1.15rem;
+        font-weight: 600;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .date-info i {
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0 12px;
+        font-size: 1.1rem;
+    }
+
+    .date-info .badge {
+        background: rgba(255, 255, 255, 0.25) !important;
+        color: white !important;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-top: 20px;
+    }
+
+    .section-header p {
+        font-size: 1.1rem;
+        color: var(--text-light);
+        margin-top: 10px;
+    }
+
+    .section-header h3 {
+        margin-bottom: 20px;
+    }
+
+    /* Mejorar el contenedor principal */
+    #room {
+        padding: 40px 0;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: calc(100vh - 200px);
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Asegurar que no haya overflow */
+    section#room {
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    .date-info .row {
+        margin: 0;
+        width: 100%;
+    }
+
+    .date-info .col-12,
+    .date-info .col-md-auto {
+        padding: 0 10px;
+    }
+
+    /* Asegurar que el room-item esté bien alineado */
+    .room-item {
+        align-items: stretch;
+        min-height: 350px;
+    }
+
+    @@media (max-width: 991px) {
+        .room-item {
+            min-height: auto;
         }
+    }
+
+    /* Mejorar el responsive del date-info */
+    @@media (max-width: 768px) {
+        .date-info {
+            padding: 25px 20px;
+            margin-bottom: 30px;
+            overflow: visible;
+        }
+
+        .date-info .d-flex {
+            flex-direction: column;
+            gap: 15px !important;
+        }
+
+        .date-info .vr {
+            display: none;
+        }
+
+        .date-info strong {
+            font-size: 1.1rem;
+            display: block;
+            margin: 5px 0;
+        }
+
+        .date-info i {
+            margin: 0 10px;
+            font-size: 1.1rem;
+        }
+
+        .date-info .d-flex > div {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .date-info {
+            padding: 20px 15px;
+        }
+
+        .date-info strong {
+            font-size: 1rem;
+        }
+
+        .date-info small {
+            font-size: 0.8rem;
+        }
+    }
 </style>
 
 <section id="room" class="py-5">
     <div class="container">
-        <div class="text-center mb-5">
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>@ViewBag.ErrorMessage
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        
+        <div class="section-header">
             <h3 class="display-4 fw-bold">Habitaciones Disponibles</h3>
             <p class="text-muted">Descubre el confort perfecto para tu estadía</p>
 
             @if (checkIn != null && checkOut != null)
             {
                 <div class="date-info">
-                    <i class="far fa-calendar-alt me-2"></i>
-                    <strong>Check-in:</strong> @checkIn.Value.ToString("dd MMM yyyy")
-                    <i class="fas fa-arrow-right mx-3"></i>
-                    <strong>Check-out:</strong> @checkOut.Value.ToString("dd MMM yyyy")
-                    (@((checkOut.Value - checkIn.Value).Days) noches)
+                    <div class="row g-3 align-items-center justify-content-center">
+                        <div class="col-12 col-md-auto">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <i class="far fa-calendar-check me-2" style="font-size: 1.3rem;"></i>
+                                <div class="text-start">
+                                    <small style="opacity: 0.9; font-size: 0.85rem; display: block; margin-bottom: 4px;">Check-in</small>
+                                    <strong style="font-size: 1.2rem;">@checkIn.Value.ToString("dd MMM yyyy")</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-auto d-none d-md-block">
+                            <i class="fas fa-arrow-right" style="font-size: 1.5rem; opacity: 0.8;"></i>
+                        </div>
+                        <div class="col-12 col-md-auto">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <i class="far fa-calendar-times me-2" style="font-size: 1.3rem;"></i>
+                                <div class="text-start">
+                                    <small style="opacity: 0.9; font-size: 0.85rem; display: block; margin-bottom: 4px;">Check-out</small>
+                                    <strong style="font-size: 1.2rem;">@checkOut.Value.ToString("dd MMM yyyy")</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-auto d-none d-md-block">
+                            <div class="vr" style="height: 50px; border-left: 2px solid rgba(255,255,255,0.3);"></div>
+                        </div>
+                        <div class="col-12 col-md-auto">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <i class="fas fa-moon me-2" style="font-size: 1.3rem;"></i>
+                                <div class="text-start">
+                                    <small style="opacity: 0.9; font-size: 0.85rem; display: block; margin-bottom: 4px;">Duración</small>
+                                    <strong style="font-size: 1.2rem;">@((checkOut.Value - checkIn.Value).Days) @((checkOut.Value - checkIn.Value).Days == 1 ? "noche" : "noches")</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             }
         </div>
@@ -194,42 +532,106 @@
             @if (Model != null && Model.Any())
             {
                 var hab = Model.First();
-                <div class="col-lg-8 room-container">
+                var images = hab.ListaImagenes != null && hab.ListaImagenes.Any()
+                    ? hab.ListaImagenes
+                    : new List<string> { "/imagenes/default.jpg" };
+                
+                <div class="col-lg-12 room-container">
                     <div class="room-item">
+                        <!-- Galería de Imágenes -->
+                        <div class="room-image-container">
+                            @if (images.Any())
+                            {
+                                <div id="imagenCarousel" class="carousel slide h-100" data-bs-ride="carousel">
+                                    <div class="carousel-inner h-100">
+                                        @for (int i = 0; i < images.Count; i++)
+                                        {
+                                            <div class="carousel-item h-100 @(i == 0 ? "active" : "")">
+                                                <img src="@Url.Content(images[i])" 
+                                                     class="d-block w-100 h-100" 
+                                                     alt="Habitación - Imagen @(i + 1)"
+                                                     style="object-fit: cover;"
+                                                     onerror="this.src='@Url.Content("/imagenes/default.jpg")'">
+                                            </div>
+                                        }
+                                    </div>
+                                    if (images.Count > 1)
+                                    {
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#imagenCarousel" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Anterior</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#imagenCarousel" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Siguiente</span>
+                                        </button>
+                                    }
+                                </div>
 
+                                if (images.Count > 1)
+                                {
+                                    <div class="image-thumbnails">
+                                        @for (int i = 0; i < images.Count; i++)
+                                        {
+                                            <img src="@Url.Content(images[i])" 
+                                                 class="image-thumbnail @(i == 0 ? "active" : "")" 
+                                                 onclick="changeCarouselSlide(@i)"
+                                                 alt="Miniatura @(i + 1)"
+                                                 onerror="this.src='@Url.Content("/imagenes/default.jpg")'">
+                                        }
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="d-flex align-items-center justify-content-center h-100 bg-light">
+                                    <div class="text-center">
+                                        <i class="fas fa-image fa-4x text-muted mb-3"></i>
+                                        <p class="text-muted">No hay imágenes disponibles</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
 
+                        <!-- Información de la Habitación -->
                         <div class="room-info">
-                            <h4 class="fw-bold mb-3">Habitación @hab.NumeroHabitacion</h4>
+                            <div>
+                                <h4 class="room-title">
+                                    <i class="fas fa-bed"></i>
+                                    Habitación disponible
+                                </h4>
 
-                            <ul class="room-features">
-                                <li>
-                                    <i class="fas fa-user-friends"></i>
-                                    <strong>Capacidad:</strong> @hab.Capacidad personas
-                                </li>
-
-                                <li>
-                                    <i class="fas fa-money-bill-wave"></i>
-                                    <strong>Precio por noche:</strong> ₡@hab.PrecioFinal.ToString("0.00")
-                                </li>
-                                <li>
-                                    <i class="far fa-calendar-check"></i>
-                                    <strong>Total noches:</strong> @hab.TotalNoches noches
-                                </li>
-                            </ul>
-
-                            <div class="price-total">
-                                <i class="fas fa-tag me-2"></i>Total: ₡@hab.TotalPrecio.ToString("0.00")
+                                <ul class="room-features">
+                                    <li>
+                                        <i class="fas fa-user-friends"></i>
+                                        <strong>Capacidad:</strong> <span>@hab.Capacidad personas</span>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <strong>Precio por noche:</strong> <span>₡@hab.PrecioFinal.ToString("N2")</span>
+                                    </li>
+                                    <li>
+                                        <i class="far fa-calendar-check"></i>
+                                        <strong>Total noches:</strong> <span>@hab.TotalNoches noches</span>
+                                    </li>
+                                </ul>
                             </div>
 
-                            <a href="@Url.Action("ConfirmarReserva", "Reservas", new {
-                                 id = hab.IdHabitacion,
-                                 checkIn = checkIn?.ToString("yyyy-MM-dd"),
-                                 checkOut = checkOut?.ToString("yyyy-MM-dd"),
-                                 totalPrecio = hab.TotalPrecio,
-                                 cantidadPersonas = hab.Capacidad })"
-                               class="btn btn-reserve">
-                                <i class="fas fa-calendar-check me-2"></i> RESERVAR AHORA
-                            </a>
+                            <div>
+                                <div class="price-total">
+                                    <i class="fas fa-tag"></i>Total: ₡@hab.TotalPrecio.ToString("N2")
+                                </div>
+
+                                <a href="@Url.Action("ConfirmarReserva", "Reservas", new {
+                                     id = hab.IdHabitacion,
+                                     checkIn = checkIn?.ToString("yyyy-MM-dd"),
+                                     checkOut = checkOut?.ToString("yyyy-MM-dd"),
+                                     totalPrecio = hab.TotalPrecio,
+                                     cantidadPersonas = hab.Capacidad })"
+                                   class="btn btn-reserve">
+                                    <i class="fas fa-calendar-check me-2"></i> RESERVAR AHORA
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -240,7 +642,7 @@
                     <i class="fas fa-calendar-times"></i>
                     <h4 class="fw-bold mb-3">No hay disponibilidad</h4>
                     <p class="mb-4">Lo sentimos, no encontramos habitaciones disponibles para las fechas seleccionadas.</p>
-                    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary">
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary btn-lg">
                         <i class="fas fa-arrow-left me-2"></i>Volver a intentar
                     </a>
                 </div>
@@ -250,11 +652,41 @@
 </section>
 
 <!-- Scripts -->
-<script src="~/Scripts/aos.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-    AOS.init({
-        duration: 800,
-        easing: 'ease-in-out'
+    // Función para cambiar el slide del carrusel desde las miniaturas
+    function changeCarouselSlide(index) {
+        var carousel = document.querySelector('#imagenCarousel');
+        if (carousel) {
+            var carouselInstance = bootstrap.Carousel.getInstance(carousel) || new bootstrap.Carousel(carousel);
+            carouselInstance.to(index);
+            
+            // Actualizar miniaturas activas
+            document.querySelectorAll('.image-thumbnail').forEach(function(thumb, i) {
+                if (i === index) {
+                    thumb.classList.add('active');
+                } else {
+                    thumb.classList.remove('active');
+                }
+            });
+        }
+    }
+
+    // Actualizar miniaturas cuando cambia el carrusel
+    document.addEventListener('DOMContentLoaded', function() {
+        var carousel = document.querySelector('#imagenCarousel');
+        if (carousel) {
+            carousel.addEventListener('slid.bs.carousel', function(e) {
+                var activeIndex = Array.from(e.target.querySelectorAll('.carousel-item')).indexOf(e.relatedTarget);
+                document.querySelectorAll('.image-thumbnail').forEach(function(thumb, i) {
+                    if (i === activeIndex) {
+                        thumb.classList.add('active');
+                    } else {
+                        thumb.classList.remove('active');
+                    }
+                });
+            });
+        }
     });
 
     // Efecto hover más suave

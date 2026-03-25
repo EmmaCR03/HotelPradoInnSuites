@@ -1,527 +1,1688 @@
-﻿<!DOCTYPE html>
+@using Microsoft.AspNet.Identity
+@{
+    // Evitar que el navegador cachee la página y muestre barra de sesión desactualizada (Login/Logout).
+    Response.Cache.SetNoStore();
+    Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
+    Response.AppendHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    Response.AppendHeader("Pragma", "no-cache");
+
+    var nombre = User?.Identity?.Name ?? "";
+    var porIdentity = Request.IsAuthenticated && !nombre.Contains("\\");
+    var porSession = Session["UserId"] != null;
+    var esUsuarioReal = porIdentity || porSession;
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
-    @Styles.Render("~/Content/css")
-    <link href="~/Scripts/bootstrap-datepicker.min.css" rel="stylesheet" />
-    <link href="~/Scripts/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/Content/flatpickr.min.css" rel="stylesheet" />
-    <link href="~/Views/mellow-1.0.0/mellow-1.0.0/style.css" rel="stylesheet" />
-    <link href="~/Views/mellow-1.0.0/mellow-1.0.0/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/Views/mellow-1.0.0/mellow-1.0.0/css/vendor.css" rel="stylesheet" />
-    <link href="~/Content/DepartamentoClientes/site.css" rel="stylesheet" />
+    <title>@ViewBag.Title - Hotel Prado Inn & Suites</title>
+    <!-- Favicon - Optimizado para carga rápida -->
+    <link rel="preload" as="image" href="@Url.Content("~/Img/images/main-Prado-removebg-preview.png")" />
+    @* Preload hero para que la imagen cargue primero y la vista no se vea por partes (Home, Habitaciones, Departamentos, Contacto, etc.) *@
+    @if (ViewBag.HeroBannerUrl != null)
+    {
+        <link rel="preload" as="image" href="@Url.Content(ViewBag.HeroBannerUrl)" />
+    }
+    <link rel="icon" type="image/png" href="@Url.Content("~/Img/images/main-Prado-removebg-preview.png")" />
+    <link rel="shortcut icon" type="image/png" href="@Url.Content("~/Img/images/main-Prado-removebg-preview.png")" />
+    <link rel="apple-touch-icon" href="@Url.Content("~/Img/images/main-Prado-removebg-preview.png")" />
+    <!-- Google Fonts - Tipografía mejorada -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- CSS directos (evita fallos de bundles en hosting) -->
+    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" />
+    <!-- Bootstrap 5 para Offcanvas -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="@Url.Content("~/Scripts/bootstrap-datepicker.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/flatpickr.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/DepartamentoClientes/site.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/layout-styles.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/global-buttons.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/theme-colors.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/Reservas/reservas-usuario.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/global-mobile.css")" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-    @Scripts.Render("~/bundles/modernizr")
+    <link href="@Url.Content("~/Content/navbar-new.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/navbar-force-fixed.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" />
+    <script src="@Url.Content("~/Scripts/modernizr-2.8.3.js")"></script>
     @RenderSection("Styles", required: false)
+    <!-- ESTILOS INLINE - FOOTER FUNCIONA, NAVBAR ARREGLAR -->
     <style>
         html, body {
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow-x: hidden !important;
         }
-
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1030;
-            background-color: #fff;
+        /* Reservar espacio del hero y color de fondo mientras cargan las imágenes (evita parpadeo) */
+        .hero-banner, .habitaciones-hero, .hero-apartamentos, .servicios-hero, .nosotros-hero, .contacto-hero {
+            min-height: 85vh;
+            background-color: #2a2a2a;
         }
-        .body-content {
+        /* En móvil: altura fija solo para heroes de otras páginas (no el del Home que tiene formulario) */
+        @@media (max-width: 768px) {
+            .habitaciones-hero, .hero-apartamentos, .servicios-hero, .nosotros-hero, .contacto-hero {
+                min-height: 0;
+                height: 280px;
+                max-height: 45vh;
+                background-size: cover !important;
+                background-position: center center !important;
+                background-attachment: scroll !important;
+            }
+            .hero-banner h1, .habitaciones-hero h1, .hero-apartamentos h1,
+            .servicios-hero h1, .nosotros-hero h1, .contacto-hero h1 {
+                font-size: 1.75rem !important;
+            }
+            .hero-banner p, .habitaciones-hero p, .hero-apartamentos p,
+            .servicios-hero p, .nosotros-hero p, .contacto-hero p {
+                font-size: 1rem !important;
+            }
+        }
+        @@media (max-width: 480px) {
+            .habitaciones-hero, .hero-apartamentos, .servicios-hero, .nosotros-hero, .contacto-hero {
+                height: 220px;
+                max-height: 40vh;
+            }
+            .hero-banner h1, .habitaciones-hero h1, .hero-apartamentos h1,
+            .servicios-hero h1, .nosotros-hero h1, .contacto-hero h1 {
+                font-size: 1.5rem !important;
+            }
+        }
+        
+        /* Hero Habitaciones: siempre centrado (como el resto de heroes) */
+        .habitaciones-hero {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+        }
+        .habitaciones-hero .hero-content-hab,
+        .habitaciones-hero h1,
+        .habitaciones-hero p {
+            text-align: center !important;
+        }
+        
+        /* Estilos para Notificaciones en Navbar */
+        .notificaciones-navbar {
             position: relative;
-            margin-top: 160px;
-            padding: 20px;
-            min-height: calc(100vh - 160px - 400px);
+            display: inline-block;
+            vertical-align: middle;
         }
-
-        .header-top {
-            padding: 2px 0 !important;
-            font-size: 0.8em;
+        
+        .btn-notificaciones {
+            background: rgba(255,255,255,0.1) !important;
+            border: none !important;
+            color: white !important;
+            padding: 0.5rem 0.75rem !important;
+            border-radius: 8px !important;
+            cursor: pointer !important;
+            position: relative !important;
+            transition: all 0.3s ease !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            vertical-align: middle !important;
+            line-height: 1 !important;
         }
-
-        .header-top .info li {
-            margin-right: 15px !important;
+        
+        .btn-notificaciones:hover {
+            background: rgba(255,255,255,0.2) !important;
+            transform: scale(1.05) !important;
         }
-
-        #primary-header {
-            padding: 5px 0 !important;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        
+        .btn-notificaciones i {
+            font-size: 1.1rem;
         }
-
-        .navbar-brand {
-            padding: 0;
+        
+        .notificaciones-badge {
+            position: absolute !important;
+            top: -8px !important;
+            right: -8px !important;
+            background: #dc3545 !important;
+            color: white !important;
+            border-radius: 12px !important;
+            min-width: 20px !important;
+            height: 20px !important;
+            padding: 0 6px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 0.7rem !important;
+            font-weight: 700 !important;
+            border: 2px solid white !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+            z-index: 1000 !important;
         }
-
-        .navbar-brand img {
-            max-height: 50px;
-            width: auto;
+        
+        .notificaciones-badge:empty {
+            display: none !important;
         }
-
-        .navbar-nav {
-            gap: 5px;
+        
+        .notificaciones-badge[data-count="0"] {
+            display: none !important;
         }
-
-        .nav-link {
-            padding: 5px 10px !important;
-            font-size: 0.9em;
+        
+        .notificaciones-dropdown {
+            position: absolute !important;
+            top: 100% !important;
+            right: 0 !important;
+            background: white !important;
+            border-radius: 12px !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
+            min-width: 350px !important;
+            max-width: 400px !important;
+            max-height: 500px !important;
+            overflow-y: auto !important;
+            z-index: 10000 !important;
+            margin-top: 0.5rem !important;
         }
-
-        .dropdown-menu {
-            margin-top: 0;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            border: none;
-            padding: 5px 0;
+        
+        .notificaciones-header {
+            padding: 1rem !important;
+            border-bottom: 2px solid #e9ecef !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            position: sticky !important;
+            top: 0 !important;
+            background: white !important;
+            z-index: 1 !important;
         }
-
-        .dropdown-item {
-            font-size: 0.9em;
-            padding: 5px 15px;
+        
+        .notificaciones-header h5 {
+            margin: 0 !important;
+            font-weight: 600 !important;
+            color: #2c3e50 !important;
         }
-
-        .search {
-            max-width: 200px;
+        
+        .notificaciones-header button {
+            background: none !important;
+            border: none !important;
+            color: #6c757d !important;
+            cursor: pointer !important;
+            font-size: 1.2rem !important;
+            padding: 0 !important;
+            width: 24px !important;
+            height: 24px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
-
-        .search .form-control {
-            height: 32px;
-            font-size: 0.9em;
+        
+        .notificaciones-header button:hover {
+            color: #2c3e50 !important;
         }
-
+        
+        #notificaciones-lista {
+            padding: 0.5rem !important;
+        }
+        
+        .notificacion-item {
+            padding: 1rem !important;
+            margin-bottom: 0.5rem !important;
+            border-radius: 8px !important;
+            border-left: 4px solid #6D7BB8 !important;
+            background: #f8f9fa !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .notificacion-item:hover {
+            background: #e9ecef !important;
+            transform: translateX(3px) !important;
+        }
+        
+        /* Solo en desktop: mostrar login/notificaciones en navbar. En móvil se ocultan para dar espacio al menú hamburguesa */
+        @@media (min-width: 992px) {
+            .navbar-login-desktop {
+                display: flex !important;
+                align-items: center !important;
+                gap: 1rem !important;
+            }
+        }
+        
         @@media (max-width: 991px) {
-            .header-top {
-                display: none;
+            .navbar-login-desktop {
+                display: none !important;
             }
-
-            #primary-header {
-                padding: 5px 0 !important;
+            .navbar-toggle {
+                display: block !important;
+                flex-shrink: 0 !important;
             }
-
-            .navbar-brand img {
-                max-height: 40px;
+        }
+        
+        @@media (max-width: 768px) {
+            .notificaciones-dropdown {
+                min-width: 300px !important;
+                max-width: 90vw !important;
+                right: -10px !important;
             }
-
-            .navbar-toggler {
-                padding: 4px 8px;
+            
+            /* Optimizar navbar-top en móviles - ocultar o simplificar */
+            .navbar-top {
+                display: none !important;
             }
-
+            
+            /* Optimizar navbar-main en móviles */
+            .navbar-main {
+                min-height: 60px !important;
+                padding: 6px 0 !important;
+            }
+            
+            .navbar-logo img {
+                max-height: 40px !important;
+            }
+            
+            /* Optimizar contenido del offcanvas */
             .offcanvas-body {
-                padding: 10px;
+                padding: 0.75rem 1rem !important;
             }
-
-            .nav-link {
-                padding: 8px 15px !important;
+            
+            .mobile-menu-section {
+                margin-bottom: 1rem !important;
+            }
+            
+            .mobile-menu-section-title {
+                font-size: 0.7rem !important;
+                margin-bottom: 0.4rem !important;
+            }
+            
+            .navbar-menu-mobile a {
+                padding: 8px 10px !important;
+                font-size: 0.85rem !important;
+            }
+            
+            .navbar-login-mobile {
+                margin-top: 1rem !important;
+                padding-top: 1rem !important;
             }
         }
-
+        
+        /* BODY - SIMPLE Y DIRECTO */
+        body {
+            display: block !important; /* Block en lugar de Grid */
+            min-height: 100vh !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            height: auto !important;
+            margin: 0 !important;
+        }
+        
+        html {
+            overflow-y: scroll !important; /* Forzar scroll estándar */
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+            scroll-behavior: auto !important; /* NO smooth scroll */
+            -webkit-overflow-scrolling: touch !important;
+        }
+        
+        /* NAVBAR ESTÁTICO - NO FIXED */
+        header#header.navbar-new {
+            position: relative !important; /* Cambiado a relative - se scrollea con la página */
+            width: 100% !important;
+            z-index: 999 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        /* PROTEGER ELEMENTOS DEL NAVBAR (EXCEPTO OFFCANVAS) */
+        header#header.navbar-new *:not(.offcanvas):not(.offcanvas *) {
+            transform: none !important;
+            -webkit-transform: none !important;
+            animation: none !important;
+            -webkit-animation: none !important;
+            transition: none !important;
+            -webkit-transition: none !important;
+        }
+        
+        /* PERMITIR ANIMACIONES DEL OFFCANVAS */
+        .offcanvas {
+            transition: transform 0.3s ease-in-out !important;
+            -webkit-transition: -webkit-transform 0.3s ease-in-out !important;
+        }
+        
+        .offcanvas-backdrop {
+            transition: opacity 0.3s ease-in-out !important;
+        }
+        
+        /* CONTENIDO - SIN MARGIN-TOP (navbar ya no es fixed) */
         .body-content {
-            /* flex-grow: 1;*/
-            box-sizing: border-box;
-            margin-top: 100px;
-            /*margin-bottom: 400px;*/
-            padding: 20px;
-            box-sizing: border-box;
-            min-height: calc(100vh-140px);
+            margin-top: 0 !important;
+            padding: 20px 0 !important;
+            overflow: visible !important;
         }
-
-        .header-top .info li {
-            margin-right: 15px !important;
+        
+        /* FOOTER - RELATIVE AL FINAL */
+        #footer, section#footer, footer {
+            position: relative !important;
+            width: 100% !important;
+            margin-top: 20px !important;
         }
-
-        #primary-header {
-            padding: 5px 0 !important;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .navbar-brand {
-            padding: 0;
-        }
-
-            .navbar-brand img {
-                max-height: 50px;
-                width: auto;
-            }
-
-        .navbar-nav {
-            gap: 5px;
-        }
-
-        .nav-link {
-            padding: 5px 10px !important;
-            font-size: 0.9em;
-        }
-
-        .dropdown-menu {
-            margin-top: 0;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            border: none;
-            padding: 5px 0;
-        }
-
-        .dropdown-item {
-            font-size: 0.9em;
-            padding: 5px 15px;
-        }
-
-        .search {
-            max-width: 200px;
-        }
-
-            .search .form-control {
-                height: 32px;
-                font-size: 0.9em;
-            }
-
-        @@media (max-width: 991px) {
-            .header-top {
-                display: none;
-            }
-
-            #primary-header {
-                padding: 5px 0 !important;
-            }
-
-            .navbar-brand img {
-                max-height: 40px;
-            }
-
-            .navbar-toggler {
-                padding: 4px 8px;
-            }
-
-            .offcanvas-body {
-                padding: 10px;
-            }
-
-            .nav-link {
-                padding: 8px 15px !important;
-            }
-        }
-
-        .body-content {
-            margin-top: 120px;
-        }
-
+        
+        /* RESPONSIVE */
         @@media (max-width: 991px) {
             .body-content {
-                margin-top: 80px;
+                margin-top: 0 !important; /* Sin margin */
             }
         }
-
-        #footer {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            background-color: #f8f9fa;
-            padding: 2px 0;
-            z-index: 10;
-            box-sizing: border-box;
-        }
-
-            #footer img {
-                max-width: 40px;
-                height: auto;
-            }
-
-            #footer .small {
-                font-size: 0.85em;
-            }
-
-            #footer a {
-                text-decoration: none;
-            }
-
-            #footer .row {
-                margin: 0;
-                padding: 0;
-            }
-
-        @@media (max-width: 768px) {
-            #footer {
-                position: relative;
-                margin-top: 10px;
-            }
-
-            .body-content {
-                margin-bottom: 0;
-                padding-bottom: 60px;
-            }
-        }
-
-        #footer img {
-            max-width: 40px;
-            height: auto;
-        }
-
-        #footer .small {
-            font-size: 0.85em;
-        }
-
-        #footer a {
-            text-decoration: none;
-        }
-
-        #footer .row {
-            margin: 0;
-            padding: 0;
-        }
-
-        @@media (max-width: 768px) {
-            #footer {
-                position: relative;
-                margin-top: 10px;
-            }
-            
-            .body-content {
-                margin-bottom: 0;
-                padding-bottom: 60px;
-            }
-        }
-
-        #footer img {
-            max-width: 40px;
-            height: auto;
-        }
-
-        #footer .small {
-            font-size: 0.85em;
-        }
-
-        #footer a {
-            text-decoration: none;
-        }
-
-        #footer .row {
-            margin: 0;
-            padding: 0;
-        }
-
-        @@media (max-width: 768px) {
-            #footer {
-                position: relative;
-                margin-top: 10px;
-            }
-            
-            .body-content {
-                margin-bottom: 0;
-                padding-bottom: 60px;
-            }
-        }
-
-        #footer img {
-            max-width: 40px;
-            height: auto;
-        }
-
-        #footer .small {
-            font-size: 0.85em;
-        }
-
-        #footer a {
-            text-decoration: none;
-        }
-
-        #footer .row {
-            margin: 0;
-            padding: 0;
-        }
-
-        @@media (max-width: 768px) {
-            #footer {
-                position: relative;
-                margin-top: 10px;
-            }
-            
-            .body-content {
-                margin-bottom: 0;
-                padding-bottom: 60px;
-            }
-        }
+        
+        /* SCROLLBAR INVISIBLE */
+        html::-webkit-scrollbar { width: 0px !important; display: none !important; }
+        body::-webkit-scrollbar { width: 0px !important; display: none !important; }
     </style>
 </head>
-<body>
-    <header id="header">
-        <nav class="header-top bg-secondary py-1">
-            <div class="container-fluid padding-side">
-                <div class="d-flex flex-wrap justify-content-between align-items-center">
-                    <ul class="info d-flex flex-wrap list-unstyled m-0">
-                        <li class="location text-capitalize d-flex align-items-center me-4" style="font-size: 14px;">
-                            <svg class="color me-1" width="15" height="15">
-                                <use xlink:href="#location"></use>
-                            </svg>Torre Mercedes, 300m North, 100m West, 100m North of, San José, 10102
+<body class="@(ViewBag.BodyClass ?? "")">
+    <!-- NAVBAR NUEVO - SIMPLE Y LIMPIO -->
+    <header id="header" class="navbar-new">
+        <!-- Header Top -->
+        <div class="navbar-top">
+            <div class="navbar-container">
+                <div class="navbar-top-content">
+                    <ul class="navbar-info">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Torre Mercedes, 300m Norte, 100m Oeste, 100m Norte, San José, 10102</span>
+                            <a href="https://waze.com/ul?q=Hotel+Prado+Inn+%26+Suites&navigate=yes" target="_blank" class="waze-btn">
+                                <i class="fab fa-waze"></i>Waze
+                            </a>
                         </li>
-                        <li class="phone d-flex align-items-center me-4" style="font-size: 14px;">
-                            <svg class="color me-1" width="15" height="15">
-                                <use xlink:href="#phone"></use>
-                            </svg>2256-0106
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>+506 2256-0106</span>
                         </li>
-                        <li class="time d-flex align-items-center me-4" style="font-size: 14px;">
-                            <svg class="color me-1" width="15" height="15">
-                                <use xlink:href="#email"></use>
-                            </svg>info@pradoinn.com
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@pradoinn.com</span>
                         </li>
                     </ul>
-                    <ul class="social-links d-flex flex-wrap list-unstyled m-0 ">
-                        <li class="social">
-                            <a href="https://www.facebook.com/share/19uV5QTfRa/?mibextid=LQQJ4d">
-                                <svg class="social" width="16" height="16">
-                                    <use xlink:href="#facebook"></use>
-                                </svg>
-                            </a>
-                        </li>
-                        <li class="social ms-4">
-                            <a href="#">
-                                <svg class="social" width="16" height="16">
-                                    <use xlink:href="#instagram"></use>
-                                </svg>
-                            </a>
-                        </li>
+                    <ul class="navbar-social">
+                        <li><a href="https://www.facebook.com/share/19uV5QTfRa/?mibextid=LQQJ4d"><i class="fab fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
                     </ul>
                 </div>
             </div>
-        </nav>
-        <nav id="primary-header" class="navbar navbar-expand-lg py-4 navbar-dark bg-dark">
-            <div class="container-fluid padding-side">
-                <a class="navbar-brand" href="@Url.Action("Index", "Home")">
-
-                    <img src="~/Img/images/main-Prado-removebg-preview.png"
-                         class="img-fluid logo"
-                         alt="Logo"
-                         style="max-width: 100px; height: auto; display: block;">
+        </div>
+        
+        <!-- Navbar Principal -->
+        <nav class="navbar-main">
+            <div class="navbar-container">
+                <!-- Logo -->
+                <a class="navbar-logo" href="@Url.Action("Index", "Home")">
+                    <img src="@Url.Content("~/Img/images/main-Prado-removebg-preview.png")" alt="Logo Prado Inn">
                 </a>
-                <button class="navbar-toggler border-0 d-flex d-lg-none order-3 p-2 shadow-none" type="button"
-                        data-bs-toggle="offcanvas" data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false">
-                    <svg class="navbar-icon" width="60" height="60">
-                        <use xlink:href="#navbar-icon"></use>
-                    </svg>
+                
+                <!-- Menú Desktop -->
+                <ul class="navbar-menu-desktop">
+                    <li><a href="@Url.Action("habitacionesInfo", "Habitacion")"><i class="fas fa-bed"></i> Habitaciones</a></li>
+                    <li><a href="@Url.Action("IndexDepartamentosClientes", "Departamento")"><i class="fas fa-building"></i> Apartamentos</a></li>
+                    <li><a href="@Url.Action("About", "Home")"><i class="fas fa-info-circle"></i> Acerca de</a></li>
+                    <li><a href="@Url.Action("Services", "Home")"><i class="fas fa-concierge-bell"></i> Servicios</a></li>
+                    <li><a href="@Url.Action("Contact", "Home")"><i class="fas fa-envelope"></i> Contacto</a></li>
+                    @if (esUsuarioReal || User.IsInRole("Administrador") || User.IsInRole("Colaborador"))
+                    {
+                        <li><a href="@Url.Action("ReservasUsuario", "Reservas")"><i class="fas fa-calendar-check"></i> Mis Reservas</a></li>
+                    }
+                    @if (User.IsInRole("Administrador") || User.IsInRole("Colaborador"))
+                    {
+                        <li><a href="@Url.Action("Configuraciones", "Admin")"><i class="fas fa-cog"></i> Configuraciones</a></li>
+                    }
+                </ul>
+                
+                <!-- Login Desktop -->
+                <div class="navbar-login-desktop" style="display: flex; align-items: center; gap: 1rem;">
+                    @if (User.IsInRole("Administrador") || User.IsInRole("Colaborador"))
+                    {
+                        <!-- Notificaciones en Navbar -->
+                        <div class="notificaciones-navbar">
+                            <button id="btn-notificaciones" class="btn-notificaciones" onclick="toggleNotificaciones()">
+                                <i class="fas fa-bell"></i>
+                                <span id="notificaciones-badge" class="notificaciones-badge" data-count="0" style="display: none !important;"></span>
+                            </button>
+                            <div id="notificaciones-dropdown" class="notificaciones-dropdown" style="display: none !important;">
+                                <div class="notificaciones-header">
+                                    <h5>Notificaciones</h5>
+                                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <button id="btn-limpiar-notificaciones" onclick="limpiarNotificaciones()" title="Limpiar todas" style="background: none; border: none; color: #6c757d; cursor: pointer; font-size: 1rem; padding: 0.25rem 0.5rem;">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                        <button onclick="toggleNotificaciones()">&times;</button>
+                                    </div>
+                                </div>
+                                <div style="padding: 0.5rem; border-bottom: 1px solid #e9ecef; background: #f8f9fa;">
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                        <button class="filtro-notificacion active" data-filtro="todas" onclick="filtrarNotificaciones('todas')" style="padding: 0.25rem 0.75rem; border: 1px solid #6D7BB8; background: #6D7BB8; color: white; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">Todas</button>
+                                        <button class="filtro-notificacion" data-filtro="reserva" onclick="filtrarNotificaciones('reserva')" style="padding: 0.25rem 0.75rem; border: 1px solid #28a745; background: white; color: #28a745; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">Reservas</button>
+                                        <button class="filtro-notificacion" data-filtro="limpieza" onclick="filtrarNotificaciones('limpieza')" style="padding: 0.25rem 0.75rem; border: 1px solid #17a2b8; background: white; color: #17a2b8; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">Limpieza</button>
+                                        <button class="filtro-notificacion" data-filtro="checkin" onclick="filtrarNotificaciones('checkin')" style="padding: 0.25rem 0.75rem; border: 1px solid #ffc107; background: white; color: #ffc107; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">Check-in</button>
+                                        <button class="filtro-notificacion" data-filtro="checkout" onclick="filtrarNotificaciones('checkout')" style="padding: 0.25rem 0.75rem; border: 1px solid #dc3545; background: white; color: #dc3545; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">Check-out</button>
+                                        <button class="filtro-notificacion" data-filtro="cita" onclick="filtrarNotificaciones('cita')" style="padding: 0.25rem 0.75rem; border: 1px solid #6D7BB8; background: white; color: #6D7BB8; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">Citas</button>
+                                    </div>
+                                </div>
+                                <div id="notificaciones-lista">
+                                    <div class="notificacion-cargando">
+                                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @Html.Partial("_LoginPartial")
+                </div>
+                
+                <!-- Botón Hamburger -->
+                <button class="navbar-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvas" aria-controls="navbarOffcanvas">
+                    <i class="fas fa-bars"></i>
                 </button>
-                <div class="header-bottom offcanvas offcanvas-end" id="bdNavbar" aria-labelledby="bdNavbarOffcanvasLabel">
-                    <div class="offcanvas-header px-4 pb-0">
-                        <button type="button" class="btn-close btn-close-black mt-2" data-bs-dismiss="offcanvas"
-                                aria-label="Close" data-bs-target="#bdNavbar"></button>
-                    </div>
-                    <div class="offcanvas-body align-items-center justify-content-center">
-                        <ul class="navbar-nav align-items-center mb-2 mb-lg-0">
-                            <li class="nav-item px-3">
-                                @Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "nav-link" })
-                            </li>
-                            <li class="nav-item px-3">
-                                @Html.ActionLink("Habitaciones", "habitacionesInfo", "Habitacion", new { area = "" }, new { @class = "nav-link" })
-                            </li>
-                            <li class="nav-item px-3">
-                                @Html.ActionLink("Departamentos", "IndexDepartamentosClientes", "Departamento", new { area = "" }, new { @class = "nav-link" })
-                            </li>
-                            <li class="nav-item px-3">
-                                @Html.ActionLink("Acerca de", "About", "Home", new { area = "" }, new { @class = "nav-link" })
-                            </li>
-                            <li class="nav-item px-3">
-                                @Html.ActionLink("Servicios", "Services", "Home", new { area = "" }, new { @class = "nav-link" })
-                            </li>
-                            <li class="nav-item px-3">
-                                @Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })
-                            </li>
-
-                            <!-- Opciones del administrador -->
-                            @if (User.IsInRole("Administrador") || User.IsInRole("Colaborador"))
-                            {
-                                <li class="nav-item dropdown px-3">
-                                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Administrador
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                        <li>@Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "dropdown-item" })</li>
-                                        <li>@Html.ActionLink("Departamentos", "IndexDepartamentos", "Departamento", new { area = "" }, new { @class = "dropdown-item" })</li>
-                                        <li>@Html.ActionLink("Colaboradores", "IndexColaborador", "Colaborador", new { area = "" }, new { @class = "dropdown-item" })</li>
-                                        <li>@Html.ActionLink("Habitaciones", "IndexHabitaciones", "Habitacion", new { area = "" }, new { @class = "dropdown-item" })</li>
-                                        <li>@Html.ActionLink("Reservas", "IndexReservasA", "ReservasA", new { area = "" }, new { @class = "dropdown-item" })</li>
-                                        <li>@Html.ActionLink("Mantenimientos", "IndexMantenimiento", "Mantenimiento", new { area = "" }, new { @class = "dropdown-item" })</li>
-                                        <li>@Html.ActionLink("Bitácora de Eventos", "IndexBitacoraEventos", "Bitacora", new { area = "" }, new { @class = "dropdown-item" })</li>
-                                        <li>@Html.ActionLink("Usuarios", "Index", "Usuario", new { area = "" }, new { @class = "dropdown-item" })</li>
-                                    </ul>
-                                </li>
-                            }
-
+            </div>
+        </nav>
+        
+        <!-- Offcanvas Móvil -->
+        <div class="offcanvas offcanvas-end" id="navbarOffcanvas" tabindex="-1" aria-labelledby="navbarOffcanvasLabel" data-bs-scroll="false" data-bs-backdrop="true" data-bs-keyboard="true">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="navbarOffcanvasLabel">Menú</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+            </div>
+            <div class="offcanvas-body">
+                <!-- Menú Principal -->
+                <div class="mobile-menu-section">
+                    <h6 class="mobile-menu-section-title">Navegación</h6>
+                    <ul class="navbar-menu-mobile">
+                        <li><a href="@Url.Action("habitacionesInfo", "Habitacion")"><i class="fas fa-bed"></i> Habitaciones</a></li>
+                        <li><a href="@Url.Action("IndexDepartamentosClientes", "Departamento")"><i class="fas fa-building"></i> Apartamentos</a></li>
+                        <li><a href="@Url.Action("About", "Home")"><i class="fas fa-info-circle"></i> Acerca de</a></li>
+                        <li><a href="@Url.Action("Services", "Home")"><i class="fas fa-concierge-bell"></i> Servicios</a></li>
+                        <li><a href="@Url.Action("Contact", "Home")"><i class="fas fa-envelope"></i> Contacto</a></li>
+                    </ul>
+                </div>
+                
+                @if (esUsuarioReal || User.IsInRole("Administrador") || User.IsInRole("Colaborador"))
+                {
+                    <div class="mobile-menu-section">
+                        <h6 class="mobile-menu-section-title">Mi Cuenta</h6>
+                        <ul class="navbar-menu-mobile">
+                            <li><a href="@Url.Action("ReservasUsuario", "Reservas")"><i class="fas fa-calendar-check"></i> Mis Reservas</a></li>
                         </ul>
                     </div>
-                </div>
-
-                <!-- Formulario de búsqueda -->
-                <div class="search d-lg-block d-none">
-                    <form class="position-relative">
-                        <input type="text" class="form-control bg-secondary border-0 rounded-5 px-4 py-2" placeholder="Search...">
-                        <a href="#" class="position-absolute top-50 end-0 translate-middle-y p-1 me-3">
-                            <svg width="20" height="20">
-                                <use xlink:href="#search"></use>
-                            </svg>
-                        </a>
-                    </form>
-                </div>
-
-                <!-- Login -->
-                @Html.Partial("_LoginPartial")
-            </div>
-        </nav>
-    </header>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-
-        <section id="footer" class="bg-light text-dark mt-5 w-100">
-            <div class="padding-side padding-small pt-2 px-3" data-aos="fade-up">
-                <footer class="row justify-content-between align-items-center">
-                    <!-- Logo y descripción -->
-                    <div class="col-md-3 text-center text-md-start d-flex align-items-center">
-                        <img src="~/Img/images/main-Prado-removebg-preview.png" style="max-width: 50px; height: auto;" alt="logo-footer" class="img-fluid me-2">
-                        <div class="d-none d-md-block">
-                            <p class="small mb-0">Hotel Prado Inn & Suites</p>
+                }
+                
+                @if (User.IsInRole("Administrador") || User.IsInRole("Colaborador"))
+                {
+                    <div class="mobile-menu-section">
+                        <h6 class="mobile-menu-section-title">Administración</h6>
+                        <ul class="navbar-menu-mobile">
+                            <li><a href="@Url.Action("Configuraciones", "Admin")"><i class="fas fa-cog"></i> Configuraciones</a></li>
+                        </ul>
+                    </div>
+                }
+                
+                <div class="navbar-login-mobile">
+                    @if (esUsuarioReal)
+                    {
+                        <div class="mobile-user-info" style="padding: 0.75rem; background: rgba(255,255,255,0.1); border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                <i class="fas fa-user" style="font-size: 1.2rem;"></i>
+                                <span style="font-weight: 600;">@User.Identity.GetUserName()</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <a href="@Url.Action("Index", "Manage")" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: rgba(255,255,255,0.1); border-radius: 6px; color: white !important; text-decoration: none; font-size: 0.85rem;">
+                                    <i class="fas fa-user-cog"></i> Configurar Perfil
+                                </a>
+                                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutFormMobile", style = "margin: 0;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.5rem; background: rgba(220, 53, 69, 0.2); border: 1px solid rgba(220, 53, 69, 0.5); border-radius: 6px; color: white; font-size: 0.85rem; cursor: pointer;">
+                                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                                    </button>
+                                }
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- Información de contacto -->
-                    <div class="col-md-5 text-center my-1">
-                        <span class="small me-3"><i class="fas fa-phone"></i> +506 2256-0106</span>
-                        <span class="small"><i class="fas fa-envelope"></i> info@pradoinn.com</span>
-                    </div>
-
-                    <!-- Redes sociales -->
-                    <div class="col-md-3 text-center text-md-end">
-                        <a href="#" class="text-dark me-2"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-dark me-2"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-dark"><i class="fab fa-twitter"></i></a>
-                    </div>
-                </footer>
+                    }
+                    else
+                    {
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <a href="@Url.Action("Login", "Account")" class="btn btn-primary" style="width: 100%; text-align: center; padding: 0.75rem; border-radius: 6px; text-decoration: none; font-size: 0.9rem;">Iniciar sesión</a>
+                            <a href="@Url.Action("Register", "Account")" class="btn btn-outline-light" style="width: 100%; text-align: center; padding: 0.75rem; border-radius: 6px; text-decoration: none; font-size: 0.9rem;">Registrarse</a>
+                        </div>
+                    }
+                </div>
             </div>
-
-            <!-- Copyright -->
-            <div class="text-center py-1">
-                <p class="small m-0">© 2024 Hotel Prado Inn & Suites</p>
-            </div>
-        </section>
+        </div>
+    </header>
+    
+    <!-- SCRIPT - MANTENER FOOTER FUNCIONANDO, ARREGLAR NAVBAR -->
+    <script>
+        (function() {
+            'use strict';
+            document.addEventListener('DOMContentLoaded', function() {
+                var header = document.querySelector('header#header');
+                var bodyContent = document.querySelector('.body-content');
+                var footer = document.querySelector('#footer, section#footer');
+                
+                // Navbar estático - NO fixed
+                if (header) {
+                    header.style.setProperty('position', 'relative', 'important');
+                    header.style.setProperty('width', '100%', 'important');
+                    header.style.setProperty('margin', '0', 'important');
+                    header.style.setProperty('padding', '0', 'important');
+                }
+                
+                // Body-content sin margin-top (navbar ya no es fixed)
+                if (bodyContent) {
+                    bodyContent.style.marginTop = '0';
+                }
+                
+                // Footer relative (FUNCIONA - NO TOCAR)
+                if (footer) {
+                    footer.style.setProperty('position', 'relative', 'important');
+                    footer.style.setProperty('bottom', 'auto', 'important');
+                }
+                
+                // Body sin padding (FOOTER FUNCIONA ASÍ)
+                document.body.style.setProperty('padding-top', '0', 'important');
+                document.body.style.setProperty('padding-bottom', '0', 'important');
+            });
+        })();
+    </script>
+    
+    <!-- Contenido principal con padding para navbar y footer fijos -->
+    <div class="body-content">
+        @RenderBody()
     </div>
+    
+    <!-- Footer fijo fuera del body-content -->
+    <section id="footer" class="text-white">
+        <div class="padding-side padding-small pt-2 px-3">
+            <div class="row justify-content-between align-items-center">
+                <!-- Logo y descripción -->
+                <div class="col-md-3 text-center text-md-start d-flex align-items-center">
+                    <img src="@Url.Content("~/Img/images/main-Prado-removebg-preview.png")" style="max-width: 50px; height: auto;" alt="logo-footer" class="img-fluid me-2">
+                    <div class="d-none d-md-block">
+                        <p class="small mb-0 text-white hotel-name" style="opacity: 0.9;"><span style="color: #D4AF37; font-weight: 600;">Prado Inn & Suites</span></p>
+                    </div>
+                </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+                <!-- Redes sociales y contacto -->
+                <div class="col-md-6 text-center my-1">
+                    <a href="https://www.facebook.com/share/19uV5QTfRa/?mibextid=LQQJ4d" class="text-white me-2" style="opacity: 0.8; font-size: 1.2rem;" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://wa.me/50622560106" class="text-white me-2" style="opacity: 0.8; font-size: 1.2rem;" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a href="@Url.Action("Contact", "Home")" class="text-white" style="opacity: 0.8; font-size: 1.2rem;"><i class="fas fa-envelope"></i></a>
+                </div>
+                </div>
+        </div>
 
-    <script src="~/Scripts/bootstrap-datepicker.min.js"></script>
-    <script src="~/Scripts/flatpickr.js"></script>
-    <script src="~/Scripts/bootstrap.bundle.js"></script>
-    <a href="~/Scripts/bootstrap.bundle.js.map"></a>
+        <!-- Copyright -->
+        <div class="text-center py-1">
+            <p class="small m-0 text-white" style="opacity: 0.8;">© @DateTime.Now.Year <span style="color: #D4AF37; font-weight: 600;">Prado Inn & Suites</span></p>
+        </div>
+    </section>
+
+    <script src="@Url.Content("~/Scripts/jquery-3.7.1.min.js")"></script>
+    <!-- Bootstrap 5 Bundle con Popper para Offcanvas -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/flatpickr.js")"></script>
+    
+    @if (User.IsInRole("Administrador") || User.IsInRole("Colaborador"))
+    {
+        <script>
+            // Sistema de Notificaciones
+            (function() {
+                let notificacionesVistas = new Set();
+                let intentosCarga = 0;
+                const maxIntentos = 10;
+                
+                function cargarNotificaciones() {
+                    intentosCarga++;
+                    
+                    // Verificar que jQuery esté disponible
+                    if (typeof $ === 'undefined' || typeof jQuery === 'undefined') {
+                        if (intentosCarga < maxIntentos) {
+                            setTimeout(cargarNotificaciones, 500);
+                        }
+                        return;
+                    }
+                    
+                    // Verificar que la lista exista
+                    const lista = document.getElementById('notificaciones-lista');
+                    if (!lista) {
+                        if (intentosCarga < maxIntentos) {
+                            setTimeout(cargarNotificaciones, 500);
+                        }
+                        return;
+                    }
+                    
+                    $.ajax({
+                        url: '@Url.Action("Obtener", "Notificaciones")',
+                        type: 'GET',
+                        dataType: 'json',
+                        cache: false,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        success: function(notificaciones) {
+                            todasLasNotificaciones = notificaciones || [];
+                            // Actualizar badge inmediatamente
+                            actualizarBadge();
+                            
+                            // Mostrar notificaciones filtradas solo si el dropdown está abierto
+                            const dropdown = document.getElementById('notificaciones-dropdown');
+                            if (dropdown && (dropdown.style.display === 'block' || dropdown.style.display === '')) {
+                                mostrarNotificacionesFiltradas();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // Ocultar badge si hay error
+                            const badge = document.getElementById('notificaciones-badge');
+                            if (badge) {
+                                badge.textContent = '';
+                                badge.style.display = 'none';
+                                badge.setAttribute('data-count', '0');
+                            }
+                        }
+                    });
+                }
+                
+                function mostrarNotificaciones(notificaciones) {
+                    const lista = document.getElementById('notificaciones-lista');
+                    const badge = document.getElementById('notificaciones-badge');
+                    const dropdown = document.getElementById('notificaciones-dropdown');
+                    if (!lista) return;
+                    
+                    // NO abrir el dropdown automáticamente - solo actualizar el badge
+                    const isDropdownOpen = dropdown && (dropdown.style.display === 'block' || dropdown.style.display === '');
+                    
+                    // Limpiar mensaje de carga solo si el dropdown está abierto
+                    if (isDropdownOpen) {
+                        lista.innerHTML = '';
+                    }
+                    
+                    if (!notificaciones || notificaciones.length === 0) {
+                        if (isDropdownOpen) {
+                            lista.innerHTML = '<div style="padding: 2rem; text-align: center; color: #6c757d;"><i class="fas fa-bell-slash"></i><br>No hay notificaciones</div>';
+                        }
+                        // Actualizar badge para ocultarlo si no hay notificaciones
+                        actualizarBadge();
+                        return;
+                    }
+                    
+                    // Guardar notificaciones globalmente
+                    todasLasNotificaciones = notificaciones || [];
+                    
+                    // Actualizar badge SIEMPRE (sin abrir dropdown)
+                    actualizarBadge();
+                    
+                    // Solo actualizar la lista si el dropdown está abierto
+                    if (!isDropdownOpen) {
+                        return;
+                    }
+                    
+                    // Filtrar notificaciones ya vistas
+                    const nuevas = notificaciones.filter(n => !notificacionesVistas.has(n.tipo + '-' + n.id));
+                    
+                    if (nuevas.length === 0 && notificaciones.length > 0) {
+                        lista.innerHTML = '<div style="padding: 2rem; text-align: center; color: #6c757d;"><i class="fas fa-check-circle"></i><br>Todas las notificaciones han sido vistas</div>';
+                        return;
+                    }
+                    
+                    nuevas.forEach(function(notif) {
+                        const key = notif.tipo + '-' + notif.id;
+                        notificacionesVistas.add(key);
+                        
+                        // Determinar icono y color según el tipo de notificación (ANTES de usarlos)
+                        let icono, color;
+                        switch(notif.tipo) {
+                            case 'reserva':
+                                icono = 'fa-calendar-check';
+                                color = '#28a745';
+                                break;
+                            case 'limpieza':
+                                icono = 'fa-broom';
+                                color = '#17a2b8';
+                                break;
+                            case 'checkin':
+                                icono = 'fa-sign-in-alt';
+                                color = '#ffc107';
+                                break;
+                            case 'checkout':
+                                icono = 'fa-sign-out-alt';
+                                color = '#dc3545';
+                                break;
+                            case 'cita':
+                                icono = 'fa-calendar-alt';
+                                color = '#6D7BB8';
+                                break;
+                            default:
+                                icono = 'fa-bell';
+                                color = '#6D7BB8';
+                        }
+                        
+                        const notificacion = document.createElement('div');
+                        notificacion.className = 'notificacion-item';
+                        notificacion.style.cssText = `
+                            padding: 1rem;
+                            margin-bottom: 0.5rem;
+                            border-radius: 8px;
+                            border-left: 4px solid ${color};
+                            background: #f8f9fa;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        `;
+                        
+                        notificacion.innerHTML = `
+                            <div style="display: flex; align-items: start; gap: 0.75rem;">
+                                <div style="background: ${color}; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9rem;">
+                                    <i class="fas ${icono}"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; color: #2c3e50; margin-bottom: 0.25rem; font-size: 0.9rem;">
+                                        ${notif.mensaje}
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: #6c757d;">
+                                        ${formatearFecha(notif.fecha)}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        notificacion.onclick = function(e) {
+                            e.stopPropagation();
+                            if (notif.url) {
+                                window.location.href = notif.url;
+                            }
+                        };
+                        
+                        notificacion.onmouseenter = function() {
+                            this.style.background = '#e9ecef';
+                            this.style.transform = 'translateX(3px)';
+                        };
+                        
+                        notificacion.onmouseleave = function() {
+                            this.style.background = '#f8f9fa';
+                            this.style.transform = 'translateX(0)';
+                        };
+                        
+                        lista.appendChild(notificacion);
+                    });
+                }
+                
+                // Hacer toggleNotificaciones global - disponible en todas las vistas
+                window.toggleNotificaciones = function() {
+                    const dropdown = document.getElementById('notificaciones-dropdown');
+                    const badge = document.getElementById('notificaciones-badge');
+                    
+                    if (dropdown) {
+                        const isVisible = dropdown.style.display === 'block' || 
+                                         (dropdown.style.display !== 'none' && window.getComputedStyle(dropdown).display !== 'none');
+                        
+                        if (!isVisible) {
+                            // Abrir dropdown
+                            dropdown.style.display = 'block';
+                            
+                            // Marcar todas las notificaciones actuales como vistas cuando se abre el dropdown
+                            marcarTodasComoVistas();
+                            
+                            // Ocultar badge inmediatamente al abrir (comportamiento estándar como WhatsApp)
+                            if (badge) {
+                                badge.style.display = 'none';
+                                badge.setAttribute('data-count', '0');
+                                badge.textContent = '';
+                            }
+                            
+                            // Cargar notificaciones solo cuando se abre manualmente
+                            if (typeof cargarNotificaciones === 'function') {
+                                cargarNotificaciones();
+                            }
+                        } else {
+                            // Cerrar dropdown
+                            dropdown.style.display = 'none';
+                        }
+                    }
+                };
+                
+                // También definir la función local para compatibilidad
+                function toggleNotificaciones() {
+                    window.toggleNotificaciones();
+                }
+                
+                // Cerrar dropdown al hacer click fuera (MEJORADO - NO INTERFIERE CON OTROS DROPDOWNS)
+                document.addEventListener('click', function(e) {
+                    const dropdown = document.getElementById('notificaciones-dropdown');
+                    const btn = document.getElementById('btn-notificaciones');
+                    
+                    // No cerrar si se hace click en el offcanvas
+                    if (e.target.closest('.offcanvas') || e.target.closest('#navbarOffcanvas')) {
+                        return;
+                    }
+                    
+                    // No cerrar si se hace click en otros dropdowns
+                    if (e.target.closest('.dropdown-menu') && !e.target.closest('.notificaciones-dropdown')) {
+                        return;
+                    }
+                    
+                    if (dropdown && btn && !dropdown.contains(e.target) && !btn.contains(e.target)) {
+                        dropdown.style.display = 'none';
+                    }
+                }, true); // Usar capture phase para que se ejecute antes
+                
+                window.cerrarNotificacion = function(btn) {
+                    const notificacion = btn ? btn.closest('.notificacion-item') : null;
+                    if (notificacion) {
+                        const tipo = notificacion.getAttribute('data-tipo');
+                        const mensaje = notificacion.querySelector('div[style*="font-weight: 600"]')?.textContent;
+                        
+                        // Eliminar de la lista global
+                        todasLasNotificaciones = todasLasNotificaciones.filter(n => 
+                            !(n.tipo === tipo && n.mensaje === mensaje)
+                        );
+                        
+                        notificacion.style.opacity = '0';
+                        notificacion.style.transform = 'translateX(20px)';
+                        setTimeout(function() {
+                            notificacion.remove();
+                            actualizarBadge();
+                            // Refrescar la vista filtrada
+                            mostrarNotificacionesFiltradas();
+                        }, 300);
+                    }
+                };
+                
+                // Variable global para almacenar todas las notificaciones
+                let todasLasNotificaciones = [];
+                let filtroActual = 'todas';
+
+                // Función para obtener las notificaciones vistas (guardadas en localStorage)
+                function obtenerNotificacionesVistas() {
+                    try {
+                        const vistas = localStorage.getItem('notificaciones_vistas');
+                        return vistas ? JSON.parse(vistas) : [];
+                    } catch (e) {
+                        return [];
+                    }
+                }
+                
+                // Función para guardar una notificación como vista
+                function marcarNotificacionComoVista(tipo, id) {
+                    try {
+                        const vistas = obtenerNotificacionesVistas();
+                        const key = tipo + '-' + id;
+                        if (!vistas.includes(key)) {
+                            vistas.push(key);
+                            localStorage.setItem('notificaciones_vistas', JSON.stringify(vistas));
+                        }
+                    } catch (e) { }
+                }
+                
+                // Función para marcar todas las notificaciones actuales como vistas
+                function marcarTodasComoVistas() {
+                    if (!todasLasNotificaciones || todasLasNotificaciones.length === 0) return;
+                    
+                    try {
+                        const vistas = obtenerNotificacionesVistas();
+                        todasLasNotificaciones.forEach(function(notif) {
+                            const key = notif.tipo + '-' + notif.id;
+                            if (!vistas.includes(key)) {
+                                vistas.push(key);
+                            }
+                        });
+                        localStorage.setItem('notificaciones_vistas', JSON.stringify(vistas));
+                    } catch (e) { }
+                }
+                
+                function actualizarBadge() {
+                    const badge = document.getElementById('notificaciones-badge');
+                    if (!badge) return;
+                    
+                    if (!todasLasNotificaciones || todasLasNotificaciones.length === 0) {
+                        badge.textContent = '';
+                        badge.style.display = 'none';
+                        badge.setAttribute('data-count', '0');
+                        return;
+                    }
+                    
+                    const vistas = obtenerNotificacionesVistas();
+                    const notificacionesNuevas = todasLasNotificaciones.filter(function(notif) {
+                        if (!notif || !notif.tipo || !notif.id) return false;
+                        const key = notif.tipo + '-' + notif.id;
+                        return !vistas.includes(key);
+                    });
+                    const total = notificacionesNuevas.length;
+                    
+                    if (total > 0) {
+                        badge.textContent = total > 99 ? '99+' : total.toString();
+                        badge.style.display = 'flex';
+                        badge.setAttribute('data-count', total);
+                    } else {
+                        badge.textContent = '';
+                        badge.style.display = 'none';
+                        badge.setAttribute('data-count', '0');
+                    }
+                }
+
+                // Función para filtrar notificaciones
+                window.filtrarNotificaciones = function(tipo) {
+                    filtroActual = tipo;
+                    
+                    // Actualizar botones de filtro
+                    document.querySelectorAll('.filtro-notificacion').forEach(btn => {
+                        const filtro = btn.getAttribute('data-filtro');
+                        if (filtro === tipo) {
+                            btn.classList.add('active');
+                            // Aplicar estilo activo
+                            const color = obtenerColorPorTipo(tipo);
+                            btn.style.background = color;
+                            btn.style.color = 'white';
+                            btn.style.borderColor = color;
+                        } else {
+                            btn.classList.remove('active');
+                            const color = obtenerColorPorTipo(filtro);
+                            btn.style.background = 'white';
+                            btn.style.color = color;
+                            btn.style.borderColor = color;
+                        }
+                    });
+                    
+                    // Filtrar y mostrar notificaciones
+                    mostrarNotificacionesFiltradas();
+                };
+
+                function obtenerColorPorTipo(tipo) {
+                    switch(tipo) {
+                        case 'reserva': return '#28a745';
+                        case 'limpieza': return '#17a2b8';
+                        case 'checkin': return '#ffc107';
+                        case 'checkout': return '#dc3545';
+                        case 'cita': return '#6D7BB8';
+                        default: return '#6D7BB8';
+                    }
+                }
+
+                function mostrarNotificacionesFiltradas() {
+                    const lista = document.getElementById('notificaciones-lista');
+                    if (!lista) return;
+                    
+                    // Filtrar según el tipo seleccionado
+                    let notificacionesFiltradas = todasLasNotificaciones;
+                    if (filtroActual !== 'todas') {
+                        notificacionesFiltradas = todasLasNotificaciones.filter(n => n.tipo === filtroActual);
+                    }
+                    
+                    // Limpiar lista
+                    lista.innerHTML = '';
+                    
+                    if (notificacionesFiltradas.length === 0) {
+                        lista.innerHTML = '<div style="padding: 2rem; text-align: center; color: #6c757d;"><i class="fas fa-bell-slash"></i><br>No hay notificaciones de este tipo</div>';
+                        return;
+                    }
+                    
+                    // Mostrar notificaciones filtradas
+                    notificacionesFiltradas.forEach(function(notif) {
+                        const key = notif.tipo + '-' + notif.id;
+                        
+                        // Determinar icono y color según el tipo de notificación
+                        let icono, color;
+                        switch(notif.tipo) {
+                            case 'reserva':
+                                icono = 'fa-calendar-check';
+                                color = '#28a745';
+                                break;
+                            case 'limpieza':
+                                icono = 'fa-broom';
+                                color = '#17a2b8';
+                                break;
+                            case 'checkin':
+                                icono = 'fa-sign-in-alt';
+                                color = '#ffc107';
+                                break;
+                            case 'checkout':
+                                icono = 'fa-sign-out-alt';
+                                color = '#dc3545';
+                                break;
+                            case 'cita':
+                                icono = 'fa-calendar-alt';
+                                color = '#6D7BB8';
+                                break;
+                            default:
+                                icono = 'fa-bell';
+                                color = '#6D7BB8';
+                        }
+                        
+                        const notificacion = document.createElement('div');
+                        notificacion.className = 'notificacion-item';
+                        notificacion.setAttribute('data-tipo', notif.tipo);
+                        notificacion.style.cssText = `
+                            padding: 1rem;
+                            margin-bottom: 0.5rem;
+                            border-radius: 8px;
+                            border-left: 4px solid ${color};
+                            background: #f8f9fa;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        `;
+                        
+                        notificacion.innerHTML = `
+                            <div style="display: flex; align-items: start; gap: 0.75rem;">
+                                <div style="background: ${color}; color: white; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9rem;">
+                                    <i class="fas ${icono}"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; color: #2c3e50; margin-bottom: 0.25rem; font-size: 0.9rem;">
+                                        ${notif.mensaje}
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: #6c757d;">
+                                        ${formatearFecha(notif.fecha)}
+                                    </div>
+                                </div>
+                                <button onclick="cerrarNotificacion(this); event.stopPropagation();" style="background: none; border: none; color: #6c757d; cursor: pointer; padding: 0.25rem; font-size: 0.8rem;" title="Eliminar">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        `;
+                        
+                        notificacion.onclick = function(e) {
+                            if (e.target.closest('button')) return;
+                            e.stopPropagation();
+                            if (notif.url) {
+                                window.location.href = notif.url;
+                            }
+                        };
+                        
+                        notificacion.onmouseenter = function() {
+                            this.style.background = '#e9ecef';
+                            this.style.transform = 'translateX(3px)';
+                        };
+                        
+                        notificacion.onmouseleave = function() {
+                            this.style.background = '#f8f9fa';
+                            this.style.transform = 'translateX(0)';
+                        };
+                        
+                        lista.appendChild(notificacion);
+                    });
+                }
+
+                // Función para limpiar todas las notificaciones
+                window.limpiarNotificaciones = function() {
+                    if (confirm('¿Desea eliminar todas las notificaciones?')) {
+                        todasLasNotificaciones = [];
+                        const lista = document.getElementById('notificaciones-lista');
+                        if (lista) {
+                            lista.innerHTML = '<div style="padding: 2rem; text-align: center; color: #6c757d;"><i class="fas fa-bell-slash"></i><br>No hay notificaciones</div>';
+                        }
+                        actualizarBadge();
+                        // Marcar todas como vistas
+                        notificacionesVistas.clear();
+                    }
+                };
+                
+                function formatearFecha(fecha) {
+                    if (!fecha) return 'Ahora';
+                    
+                    let fechaNotif;
+                    // Manejar formato de fecha de .NET: /Date(1234567890)/
+                    if (typeof fecha === 'string' && fecha.startsWith('/Date(')) {
+                        const match = fecha.match(/\d+/);
+                        if (match && match[0]) {
+                            const timestamp = parseInt(match[0]);
+                            fechaNotif = new Date(timestamp);
+                        } else {
+                            fechaNotif = new Date(fecha);
+                        }
+                    } else if (typeof fecha === 'string') {
+                        // Intentar parsear diferentes formatos de fecha
+                        fechaNotif = new Date(fecha);
+                        // Si falla, intentar formato ISO
+                        if (isNaN(fechaNotif.getTime())) {
+                            // Intentar formato: "2026-01-05T00:00:00"
+                            const isoMatch = fecha.match(/(\d{4})-(\d{2})-(\d{2})/);
+                            if (isoMatch) {
+                                fechaNotif = new Date(isoMatch[1], parseInt(isoMatch[2]) - 1, isoMatch[3]);
+                            } else {
+                                fechaNotif = new Date();
+                            }
+                        }
+                    } else if (fecha instanceof Date) {
+                        fechaNotif = fecha;
+                    } else {
+                        fechaNotif = new Date(fecha);
+                    }
+                    
+                    if (isNaN(fechaNotif.getTime())) return 'Fecha inválida';
+                    
+                    const ahora = new Date();
+                    const diffMs = ahora.getTime() - fechaNotif.getTime();
+                    
+                    // Si la diferencia es negativa (fecha futura), mostrar fecha completa
+                    if (diffMs < 0) {
+                        return fechaNotif.toLocaleDateString('es-ES', { 
+                            day: '2-digit', 
+                            month: '2-digit', 
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                    }
+                    
+                    const diffSegs = Math.floor(diffMs / 1000);
+                    const diffMins = Math.floor(diffSegs / 60);
+                    const diffHoras = Math.floor(diffMins / 60);
+                    const diffDias = Math.floor(diffHoras / 24);
+                    
+                    if (diffSegs < 60) return 'Hace un momento';
+                    if (diffMins < 60) return `Hace ${diffMins} minuto${diffMins > 1 ? 's' : ''}`;
+                    if (diffHoras < 24) return `Hace ${diffHoras} hora${diffHoras > 1 ? 's' : ''}`;
+                    if (diffDias < 7) return `Hace ${diffDias} día${diffDias > 1 ? 's' : ''}`;
+                    
+                    // Si es más de una semana, mostrar fecha completa
+                    return fechaNotif.toLocaleDateString('es-ES', { 
+                        day: '2-digit', 
+                        month: '2-digit', 
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+                
+                // Agregar estilos de animación
+                const style = document.createElement('style');
+                style.textContent = `
+                    @@keyframes slideInRight {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @@keyframes slideOutRight {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                // Cargar notificaciones al iniciar (solo actualizar badge, NO abrir dropdown)
+                function initNotificaciones() {
+                    // Esperar a que el DOM esté listo
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', function() {
+                            setTimeout(initNotificaciones, 100);
+                        });
+                        return;
+                    }
+                    
+                    // Intentar con jQuery primero, luego con fetch como fallback
+                    if (typeof $ !== 'undefined' && typeof jQuery !== 'undefined') {
+                        $(document).ready(function() {
+                            // Cargar notificaciones al inicio para actualizar el badge
+                            cargarNotificaciones();
+                            // Actualizar cada 30 segundos (solo badge, sin abrir dropdown)
+                            setInterval(function() {
+                                const dropdown = document.getElementById('notificaciones-dropdown');
+                                // Solo actualizar si el dropdown NO está abierto
+                                if (!dropdown || dropdown.style.display !== 'block') {
+                                    cargarNotificaciones();
+                                }
+                            }, 30000);
+                        });
+                    } else {
+                        // Fallback con fetch si jQuery no está disponible
+                        setTimeout(function() {
+                            cargarNotificacionesFetch();
+                            setInterval(function() {
+                                const dropdown = document.getElementById('notificaciones-dropdown');
+                                if (!dropdown || dropdown.style.display !== 'block') {
+                                    cargarNotificacionesFetch();
+                                }
+                            }, 30000);
+                        }, 500);
+                    }
+                }
+                
+                // Función alternativa usando fetch en lugar de jQuery
+                function cargarNotificacionesFetch() {
+                    const lista = document.getElementById('notificaciones-lista');
+                    const badge = document.getElementById('notificaciones-badge');
+                    
+                    if (!lista) {
+                        setTimeout(cargarNotificacionesFetch, 500);
+                        return;
+                    }
+                    
+                    fetch('@Url.Action("Obtener", "Notificaciones")', {
+                        method: 'GET',
+                        cache: 'no-cache',
+                        credentials: 'same-origin',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(notificaciones => {
+                        // Guardar todas las notificaciones
+                        todasLasNotificaciones = notificaciones || [];
+                        // Actualizar badge inmediatamente
+                        actualizarBadge();
+                        // Mostrar notificaciones filtradas solo si el dropdown está abierto
+                        const dropdown = document.getElementById('notificaciones-dropdown');
+                        if (dropdown && (dropdown.style.display === 'block' || dropdown.style.display === '')) {
+                            mostrarNotificacionesFiltradas();
+                        }
+                    })
+                    .catch(function() { });
+                }
+                
+                initNotificaciones();
+                
+                // Exponer función globalmente
+                window.cerrarNotificacion = cerrarNotificacion;
+            })();
+        </script>
+    }
+    
+    <!-- SOLUCIÓN MEJORADA PARA DROPDOWNS - NO INTERFIERE CON OFFCANVAS -->
+    <script>
+        (function() {
+            var dropdownsInitialized = false;
+            
+            function setupDropdowns() {
+                if (dropdownsInitialized) return;
+                
+                // Esperar a que Bootstrap esté disponible
+                if (typeof bootstrap === 'undefined' || !bootstrap.Dropdown) {
+                    setTimeout(setupDropdowns, 100);
+                    return;
+                }
+                
+                // Encontrar todos los elementos con data-bs-toggle="dropdown"
+                var dropdownToggles = document.querySelectorAll('[data-bs-toggle="dropdown"]');
+                
+                if (dropdownToggles.length === 0) {
+                    setTimeout(setupDropdowns, 100);
+                    return;
+                }
+                
+                dropdownsInitialized = true;
+                
+                dropdownToggles.forEach(function(toggle) {
+                    // Inicializar con Bootstrap Dropdown
+                    try {
+                        var dropdownInstance = bootstrap.Dropdown.getInstance(toggle);
+                        if (!dropdownInstance) {
+                            new bootstrap.Dropdown(toggle, {
+                                boundary: 'viewport',
+                                popperConfig: {
+                                    modifiers: [
+                                        {
+                                            name: 'preventOverflow',
+                                            options: {
+                                                boundary: 'viewport'
+                                            }
+                                        }
+                                    ]
+                                }
+                            });
+                        }
+                    } catch(e) { }
+                });
+                
+                // Cerrar dropdowns al hacer click fuera (EXCEPTO notificaciones y offcanvas)
+                document.addEventListener('click', function(e) {
+                    // No cerrar si se hace click en el offcanvas o su contenido
+                    if (e.target.closest('.offcanvas') || e.target.closest('#navbarOffcanvas')) {
+                        return;
+                    }
+                    
+                    // No cerrar si se hace click en notificaciones
+                    if (e.target.closest('.notificaciones-navbar') || e.target.closest('#notificaciones-dropdown')) {
+                        return;
+                    }
+                    
+                    var clickedDropdown = e.target.closest('.nav-item.dropdown') || e.target.closest('.dropdown');
+                    if (!clickedDropdown) {
+                        // Cerrar todos los dropdowns excepto los de notificaciones
+                        document.querySelectorAll('.dropdown-menu.show').forEach(function(menu) {
+                            if (!menu.closest('.notificaciones-navbar')) {
+                                var toggle = menu.previousElementSibling || 
+                                           document.querySelector('[aria-labelledby="' + menu.getAttribute('aria-labelledby') + '"]');
+                                if (toggle) {
+                                    var instance = bootstrap.Dropdown.getInstance(toggle);
+                                    if (instance) {
+                                        instance.hide();
+                                    } else {
+                                        menu.classList.remove('show');
+                                        toggle.setAttribute('aria-expanded', 'false');
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+            
+            // Ejecutar cuando el DOM esté listo
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(setupDropdowns, 100);
+                });
+            } else {
+                setTimeout(setupDropdowns, 100);
+            }
+            
+            // También ejecutar después de que todo cargue por si acaso
+            window.addEventListener('load', function() {
+                setTimeout(setupDropdowns, 150);
+            });
+        })();
+    </script>
+    <!-- Comentado: Las rutas relativas y a Views no son accesibles desde el navegador
     <script src="js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="js/plugins.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
+    <link href="~/Views/mellow-1.0.0/mellow-1.0.0/style.css" rel="stylesheet" />
+    <link href="~/Views/mellow-1.0.0/mellow-1.0.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Views/mellow-1.0.0/mellow-1.0.0/css/vendor.css" rel="stylesheet" />
+    -->
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script type="text/javascript" src="js/script.js"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    
+    
+    <!-- SCRIPT GLOBAL PARA MANEJAR RESIZE Y PREVENIR CONGELAMIENTOS -->
+    <script>
+        (function() {
+            'use strict';
+            
+            // Debounce function para optimizar el resize
+            function debounce(func, wait) {
+                var timeout;
+                return function executedFunction() {
+                    var context = this;
+                    var args = arguments;
+                    var later = function() {
+                        timeout = null;
+                        func.apply(context, args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+            
+            // ELIMINADO: handleResize ya no es necesario
+            // El CSS inline con padding-top maneja todo correctamente
+            // No necesitamos ajustar margin-top del body-content porque body ya tiene padding-top
+            
+            // Asegurar que el viewport meta tag esté correcto
+            var viewport = document.querySelector('meta[name="viewport"]');
+            if (!viewport) {
+                var meta = document.createElement('meta');
+                meta.name = 'viewport';
+                meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes';
+                document.getElementsByTagName('head')[0].appendChild(meta);
+            } else {
+                viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes');
+            }
+            
+            // Prevenir overflow horizontal
+            document.documentElement.style.overflowX = 'hidden';
+            document.body.style.overflowX = 'hidden';
+            
+        })();
+    </script>
+    
+    <!-- SCRIPT PARA INICIALIZAR MENÚ HAMBURGUESA Y PREVENIR CONGELAMIENTOS -->
+    <script>
+        (function() {
+            'use strict';
+            
+            var offcanvasElement = null;
+            var offcanvasInstance = null;
+            
+            // Inicializar offcanvas - SIMPLIFICADO Y MEJORADO
+            function initOffcanvas() {
+                offcanvasElement = document.getElementById('navbarOffcanvas');
+                if (!offcanvasElement) return;
+                
+                // Esperar a que Bootstrap esté disponible
+                if (typeof bootstrap !== 'undefined' && bootstrap.Offcanvas) {
+                    try {
+                        // Obtener instancia existente o crear nueva
+                        if (typeof bootstrap.Offcanvas.getInstance === 'function') {
+                            offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement);
+                        }
+                        
+                        if (!offcanvasInstance) {
+                            offcanvasInstance = new bootstrap.Offcanvas(offcanvasElement, {
+                                backdrop: true,
+                                keyboard: true,
+                                scroll: false
+                            });
+                        }
+                        
+                        // Prevenir animación de rebote
+                        offcanvasElement.addEventListener('hide.bs.offcanvas', function() {
+                            offcanvasElement.style.transition = 'transform 0.3s ease-in-out';
+                        });
+                        
+                        offcanvasElement.addEventListener('show.bs.offcanvas', function() {
+                            offcanvasElement.style.transition = 'transform 0.3s ease-in-out';
+                        });
+                        
+                        // Prevenir que el backdrop cierre el offcanvas cuando se hace click en elementos interactivos
+                        document.addEventListener('click', function(e) {
+                            // Si el offcanvas está abierto y se hace click en un dropdown o botón dentro del offcanvas
+                            if (offcanvasElement.classList.contains('show')) {
+                                var clickedElement = e.target.closest('.dropdown-menu') || 
+                                                   e.target.closest('[data-bs-toggle="dropdown"]') ||
+                                                   e.target.closest('button[type="submit"]') ||
+                                                   e.target.closest('form');
+                                
+                                if (clickedElement && offcanvasElement.contains(clickedElement)) {
+                                    // No cerrar el offcanvas
+                                    e.stopPropagation();
+                                }
+                            }
+                        }, true);
+                        
+                    } catch (e) { }
+                } else {
+                    setTimeout(initOffcanvas, 100);
+                }
+            }
+            
+            // Setup botón hamburguesa - MEJORADO - PREVIENE CIERRE AUTOMÁTICO
+            function setupHamburgerButton() {
+                var hamburgerButton = document.querySelector('.navbar-toggle[data-bs-target="#navbarOffcanvas"]');
+                
+                if (hamburgerButton && offcanvasElement) {
+                    // Remover listeners anteriores si existen
+                    var newButton = hamburgerButton.cloneNode(true);
+                    hamburgerButton.parentNode.replaceChild(newButton, hamburgerButton);
+                    hamburgerButton = newButton;
+                    
+                    hamburgerButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Prevenir que otros scripts interfieran
+                        setTimeout(function() {
+                            if (offcanvasInstance) {
+                                var isShown = offcanvasElement.classList.contains('show');
+                                if (!isShown) {
+                                    offcanvasInstance.show();
+                                }
+                            } else if (typeof bootstrap !== 'undefined' && bootstrap.Offcanvas) {
+                                try {
+                                    offcanvasInstance = new bootstrap.Offcanvas(offcanvasElement, {
+                                        backdrop: true,
+                                        keyboard: true,
+                                        scroll: false
+                                    });
+                                    offcanvasInstance.show();
+                                } catch (err) { }
+                            }
+                        }, 10);
+                    }, true); // Usar capture phase
+                }
+            }
+            
+            // Cerrar offcanvas al hacer click en links - MEJORADO
+            // SOLO cerrar si el link NO es un dropdown toggle o un botón de acción
+            function setupOffcanvasLinks() {
+                if (!offcanvasElement) return;
+                
+                // Solo cerrar al hacer click en links de navegación principales
+                var navLinks = offcanvasElement.querySelectorAll('.navbar-menu-mobile a[href]:not([data-bs-toggle="dropdown"]):not([href^="javascript:"]):not([href="#"]):not(.dropdown-toggle)');
+                navLinks.forEach(function(link) {
+                    // Verificar que no sea parte de un dropdown
+                    if (link.closest('.dropdown-menu')) {
+                        return; // No cerrar si está dentro de un dropdown
+                    }
+                    
+                    link.addEventListener('click', function(e) {
+                        // Solo cerrar si el link tiene un href válido (no es # o javascript:)
+                        var href = link.getAttribute('href');
+                        if (href && href !== '#' && !href.startsWith('javascript:') && !href.startsWith('#')) {
+                            if (offcanvasInstance) {
+                                setTimeout(function() {
+                                    offcanvasInstance.hide();
+                                }, 200);
+                            }
+                        }
+                    });
+                });
+            }
+            
+            // Ajustar navbar - Simplificado - SOLO AJUSTAR CONTENIDO, NO MOVER NAVBAR
+            function adjustNavbar() {
+                try {
+                    var header = document.querySelector('header#header');
+                    var bodyContent = document.querySelector('.body-content');
+                    
+                    // IMPORTANTE: Solo ajustar el contenido, NO mover el navbar
+                    if (header && bodyContent) {
+                        var isMobile = window.innerWidth < 992;
+                        var headerHeight = isMobile ? 60 : 105;
+                        bodyContent.style.marginTop = headerHeight + 'px';
+                        // NO modificar posición del header
+                    }
+                } catch (e) { }
+            }
+            
+            // Ejecutar al cargar
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    initOffcanvas();
+                    setupHamburgerButton();
+                    setupOffcanvasLinks();
+                    adjustNavbar();
+                });
+            } else {
+                initOffcanvas();
+                setupHamburgerButton();
+                setupOffcanvasLinks();
+                adjustNavbar();
+            }
+            
+            // Reajustar en resize
+            window.addEventListener('resize', function() {
+                adjustNavbar();
+            });
+            
+            // Re-inicializar si el DOM cambia
+            var observer = new MutationObserver(function() {
+                if (!offcanvasInstance && offcanvasElement) {
+                    initOffcanvas();
+                }
+            });
+            
+            if (document.body) {
+                observer.observe(document.body, { childList: true, subtree: true });
+            }
+        })();
+    </script>
+    
     @RenderSection("scripts", required: false)
+    
+    <!-- Evitar doble envío: deshabilitar botones y mostrar "Cargando..." al enviar formularios (script protegido para no romper la página) -->
+    <script>
+        (function() {
+            try {
+                document.addEventListener('submit', function(e) {
+                    try {
+                        var form = e && e.target;
+                        if (!form || form.tagName !== 'FORM') return;
+                        var btns = form.querySelectorAll('button[type="submit"], input[type="submit"], input[type="image"]');
+                        setTimeout(function() {
+                            try {
+                                if (!form.ownerDocument || form.ownerDocument !== document) return;
+                                for (var i = 0; i < btns.length; i++) {
+                                    var btn = btns[i];
+                                    if (btn && !btn.disabled) {
+                                        btn.disabled = true;
+                                        btn.classList.add('btn-loading');
+                                        btn.setAttribute('data-loading', '1');
+                                    }
+                                }
+                                setTimeout(function() {
+                                    try {
+                                        if (!document.body || !form.parentNode) return;
+                                        for (var j = 0; j < btns.length; j++) {
+                                            var b = btns[j];
+                                            if (b && b.getAttribute('data-loading') === '1') {
+                                                b.disabled = false;
+                                                b.classList.remove('btn-loading');
+                                                b.removeAttribute('data-loading');
+                                            }
+                                        }
+                                    } catch (err) { }
+                                }, 3000);
+                            } catch (err) { }
+                        }, 100);
+                    } catch (err) { }
+                }, true);
+            } catch (err) { }
+        })();
+    </script>
+    
+    <!-- SCRIPT FINAL - MANTENER FOOTER FUNCIONANDO -->
+    <script>
+        (function() {
+            'use strict';
+            function mantenerPosiciones() {
+                var header = document.querySelector('header#header');
+                var footer = document.querySelector('#footer, section#footer');
+                
+                // Navbar - Asegurar que esté RELATIVE (no fixed)
+                if (header) {
+                    header.style.setProperty('position', 'relative', 'important');
+                    header.style.setProperty('width', '100%', 'important');
+                }
+                
+                // Footer siempre relative (FUNCIONA - NO TOCAR)
+                if (footer) {
+                    footer.style.setProperty('position', 'relative', 'important');
+                    footer.style.setProperty('bottom', 'auto', 'important');
+                    footer.style.setProperty('margin-top', 'auto', 'important');
+                }
+                
+                // Body sin padding
+                document.body.style.setProperty('padding-top', '0', 'important');
+                document.body.style.setProperty('padding-bottom', '0', 'important');
+            }
+            
+            // Solo ejecutar una vez al cargar y en resize
+            window.addEventListener('load', mantenerPosiciones);
+            window.addEventListener('resize', mantenerPosiciones, { passive: true });
+            mantenerPosiciones();
+        })();
+    </script>
 </body>
 </html>
-
-

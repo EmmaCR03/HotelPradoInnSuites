@@ -1,0 +1,930 @@
+@model HotelPrado.UI.Models.CheckInCrearViewModel
+@{
+    ViewBag.Title = "Crear Check-In";
+}
+
+<div class="container-fluid px-4">
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Crear Nuevo Check-In</h2>
+                <a href="@Url.Action("Index", "CheckIn")" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Volver a Check-Ins
+                </a>
+            </div>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>@ViewBag.Error
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    @using (Html.BeginForm("Create", "CheckIn", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <h5 class="border-bottom pb-2 mb-3">
+                                    <i class="fas fa-calendar-check me-2"></i>Información de la Reserva
+                                </h5>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-bookmark me-1"></i>Reserva (Opcional)
+                                </label>
+                                <div class="input-group">
+                                    @Html.HiddenFor(m => m.IdReserva, new { id = "IdReserva" })
+                                    <input type="text" class="form-control" id="ReservaDisplay" placeholder="Ninguna reserva seleccionada" readonly />
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalBuscarReserva">
+                                        <i class="fas fa-search me-1"></i>Buscar
+                                    </button>
+                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalCrearReserva">
+                                        <i class="fas fa-plus me-1"></i>Nueva
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="limpiarReserva()" title="Limpiar selección">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <small class="form-text text-muted">Busque una reserva confirmada o cree una nueva para cargar datos automáticamente</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="IdHabitacion" class="form-label">
+                                    <i class="fas fa-bed me-1"></i>Habitación <span class="text-danger">*</span>
+                                </label>
+                                @Html.DropDownListFor(m => m.IdHabitacion, ViewBag.Habitaciones as SelectList, "Seleccione una habitación", new { @class = "form-select", id = "IdHabitacion", required = "required" })
+                                <div class="invalid-feedback">Por favor seleccione una habitación</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <h5 class="border-bottom pb-2 mb-3 mt-4">
+                                    <i class="fas fa-user me-2"></i>Información del Cliente
+                                </h5>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="NombreCliente" class="form-label">
+                                    <i class="fas fa-user me-1"></i>Nombre Completo <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.NombreCliente, new { @class = "form-control", id = "NombreCliente", required = "required", placeholder = "Nombre completo del cliente" })
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalBuscarCliente" title="Buscar cliente registrado">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                                <small class="form-text text-muted">Puede escribir el nombre a mano o buscar un cliente registrado</small>
+                                <div class="invalid-feedback">Por favor ingrese el nombre del cliente</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="CedulaCliente" class="form-label">
+                                    <i class="fas fa-id-card me-1"></i>Cédula
+                                </label>
+                                @Html.TextBoxFor(m => m.CedulaCliente, new { @class = "form-control", id = "CedulaCliente", placeholder = "Número de cédula" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="TelefonoCliente" class="form-label">
+                                    <i class="fas fa-phone me-1"></i>Teléfono
+                                </label>
+                                @Html.TextBoxFor(m => m.TelefonoCliente, new { @class = "form-control", id = "TelefonoCliente", placeholder = "Número de teléfono" })
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="EmailCliente" class="form-label">
+                                    <i class="fas fa-envelope me-1"></i>Email
+                                </label>
+                                @Html.TextBoxFor(m => m.EmailCliente, new { @class = "form-control", id = "EmailCliente", type = "email", placeholder = "correo@ejemplo.com" })
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-building me-1"></i>Empresa
+                                </label>
+                                <div class="input-group">
+                                    @Html.HiddenFor(m => m.IdEmpresa, new { id = "IdEmpresa" })
+                                    <input type="text" class="form-control" id="EmpresaDisplay" placeholder="Ninguna empresa seleccionada" readonly />
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalBuscarEmpresa">
+                                        <i class="fas fa-search me-1"></i>Buscar
+                                    </button>
+                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalCrearEmpresa">
+                                        <i class="fas fa-plus me-1"></i>Nueva
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="limpiarEmpresa()" title="Limpiar selección">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="DireccionCliente" class="form-label">
+                                    <i class="fas fa-map-marker-alt me-1"></i>Dirección
+                                </label>
+                                @Html.TextAreaFor(m => m.DireccionCliente, new { @class = "form-control", id = "DireccionCliente", rows = "2", placeholder = "Dirección completa del cliente" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <h5 class="border-bottom pb-2 mb-3 mt-4">
+                                    <i class="fas fa-calendar-alt me-2"></i>Fechas y Estadía
+                                </h5>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="FechaCheckIn" class="form-label">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Fecha de Entrada <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.FechaCheckIn, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", id = "FechaCheckIn", type = "datetime-local", required = "required" })
+                                <div class="invalid-feedback">Por favor ingrese la fecha de entrada</div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="FechaCheckOut" class="form-label">
+                                    <i class="fas fa-sign-out-alt me-1"></i>Fecha de Salida <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.FechaCheckOut, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", id = "FechaCheckOut", type = "datetime-local", required = "required" })
+                                <div class="invalid-feedback">Por favor ingrese la fecha de salida</div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="Estado" class="form-label">
+                                    <i class="fas fa-info-circle me-1"></i>Estado <span class="text-danger">*</span>
+                                </label>
+                                @Html.DropDownListFor(m => m.Estado, new SelectList(new[] { 
+                                    new SelectListItem { Text = "Check-In", Value = "Check-In" },
+                                    new SelectListItem { Text = "En Proceso", Value = "En Proceso" },
+                                    new SelectListItem { Text = "Check-Out", Value = "Check-Out" }
+                                }, "Value", "Text"), new { @class = "form-select", id = "Estado", required = "required" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="NumeroAdultos" class="form-label">
+                                    <i class="fas fa-users me-1"></i>Número de Adultos <span class="text-danger">*</span>
+                                </label>
+                                @Html.TextBoxFor(m => m.NumeroAdultos, new { @class = "form-control", id = "NumeroAdultos", type = "number", min = "1", max = "10", required = "required" })
+                                <div class="invalid-feedback">Por favor ingrese el número de adultos (1-10)</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="NumeroNinos" class="form-label">
+                                    <i class="fas fa-child me-1"></i>Número de Niños
+                                </label>
+                                @Html.TextBoxFor(m => m.NumeroNinos, new { @class = "form-control", id = "NumeroNinos", type = "number", min = "0", max = "10", Value = "0" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="Total" class="form-label">
+                                    <i class="fas fa-dollar-sign me-1"></i>Total
+                                </label>
+                                @Html.TextBoxFor(m => m.Total, new { @class = "form-control", id = "Total", type = "text", inputmode = "decimal", pattern = "[0-9]+([.,][0-9]{1,2})?", placeholder = "0.00" })
+                                <small class="form-text text-muted">Monto con punto o coma (ej: 84.75)</small>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="Deposito" class="form-label">
+                                    <i class="fas fa-piggy-bank me-1"></i>Depósito
+                                </label>
+                                @Html.TextBoxFor(m => m.Deposito, new { @class = "form-control", id = "Deposito", type = "text", inputmode = "decimal", placeholder = "0.00" })
+                                <small class="form-text text-muted">Depósito recibido (ej: 50.00)</small>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="Observaciones" class="form-label">
+                                    <i class="fas fa-sticky-note me-1"></i>Observaciones
+                                </label>
+                                @Html.TextAreaFor(m => m.Observaciones, new { @class = "form-control", id = "Observaciones", rows = "2", placeholder = "Notas adicionales" })
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="@Url.Action("Index", "CheckIn")" class="btn btn-secondary" id="btnCancelar">
+                                        <i class="fas fa-times me-2"></i>Cancelar
+                                    </a>
+                                    <button type="submit" class="btn btn-primary" id="btnSubmit">
+                                        <i class="fas fa-save me-2"></i>Crear Check-In
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Indicador de carga -->
+                        <div id="loadingIndicator" style="display: none;" class="mt-3">
+                            <div class="alert alert-info">
+                                <i class="fas fa-spinner fa-spin me-2"></i>
+                                <strong>Procesando...</strong> Por favor espere mientras se crea el check-in.
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Validación del formulario y manejo de envío
+        (function() {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        form.classList.add('was-validated');
+                        return false;
+                    }
+                    
+                    // Mostrar indicador de carga
+                    var loadingIndicator = document.getElementById('loadingIndicator');
+                    var btnSubmit = document.getElementById('btnSubmit');
+                    var btnCancelar = document.getElementById('btnCancelar');
+                    
+                    if (loadingIndicator) {
+                        loadingIndicator.style.display = 'block';
+                    }
+                    if (btnSubmit) {
+                        btnSubmit.disabled = true;
+                        btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creando...';
+                    }
+                    if (btnCancelar) {
+                        btnCancelar.disabled = true;
+                    }
+                    
+                    // Scroll al indicador de carga
+                    if (loadingIndicator) {
+                        loadingIndicator.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        // Validar y formatear Total y Deposito para aceptar decimales con punto o coma
+        function configurarDecimal(inputId) {
+            var el = document.getElementById(inputId);
+            if (!el) return;
+            el.addEventListener('input', function() {
+                var value = this.value.replace(/[^0-9.,]/g, '');
+                var parts = value.split(/[.,]/);
+                if (parts.length > 2) value = parts[0] + '.' + parts.slice(1).join('');
+                if (value !== this.value) this.value = value;
+            });
+        }
+        configurarDecimal('Total');
+        configurarDecimal('Deposito');
+        var totalInput = document.getElementById('Total');
+        if (totalInput) {
+            // Validar formato al perder el foco
+            totalInput.addEventListener('blur', function() {
+                var value = this.value.trim();
+                if (value) {
+                    // Reemplazar coma por punto para validación
+                    var normalizedValue = value.replace(',', '.');
+                    if (!/^\d+(\.\d{1,2})?$/.test(normalizedValue)) {
+                        alert('Por favor ingrese un número válido (ej: 84.75 o 84,75)');
+                        this.focus();
+                        return;
+                    }
+                    // Convertir a número y formatear con punto
+                    var numValue = parseFloat(normalizedValue);
+                    if (!isNaN(numValue)) {
+                        this.value = numValue.toFixed(2);
+                    }
+                }
+            });
+        }
+
+        // Validar que la fecha de salida sea posterior a la de entrada
+        document.getElementById('FechaCheckOut').addEventListener('change', function() {
+            var fechaIn = new Date(document.getElementById('FechaCheckIn').value);
+            var fechaOut = new Date(this.value);
+            if (fechaOut <= fechaIn) {
+                alert('La fecha de salida debe ser posterior a la fecha de entrada');
+                this.value = '';
+            }
+        });
+    </script>
+
+    <!-- Modal Buscar Reserva -->
+    <div class="modal fade" id="modalBuscarReserva" tabindex="-1" aria-labelledby="modalBuscarReservaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalBuscarReservaLabel">
+                        <i class="fas fa-search me-2"></i>Buscar Reserva
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="buscarReservaInput" placeholder="Buscar por nombre, ID de reserva o número de habitación..." />
+                    </div>
+                    <div id="resultadosReservas" style="max-height: 400px; overflow-y: auto;">
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-spinner fa-spin fa-2x mb-2"></i>
+                            <p>Cargando reservas...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Buscar Cliente -->
+    <div class="modal fade" id="modalBuscarCliente" tabindex="-1" aria-labelledby="modalBuscarClienteLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalBuscarClienteLabel"><i class="fas fa-user-friends me-2"></i>Buscar Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="buscarClienteInput" placeholder="Buscar por nombre, cédula o email..." />
+                    </div>
+                    <div id="resultadosClientes" style="max-height: 400px; overflow-y: auto;">
+                        <div class="text-center text-muted py-4"><i class="fas fa-spinner fa-spin fa-2x mb-2"></i><p>Cargando...</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Crear Reserva -->
+    <div class="modal fade" id="modalCrearReserva" tabindex="-1" aria-labelledby="modalCrearReservaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCrearReservaLabel">
+                        <i class="fas fa-plus-circle me-2"></i>Crear Nueva Reserva
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formCrearReserva">
+                        <div class="mb-3">
+                            <label class="form-label">Habitación <span class="text-danger">*</span></label>
+                            @Html.DropDownList("ReservaIdHabitacion", ViewBag.Habitaciones as SelectList, "Seleccione una habitación", new { @class = "form-select", id = "ReservaIdHabitacion", required = "required" })
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nombre del Cliente <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="ReservaNombreCliente" required />
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Fecha Entrada <span class="text-danger">*</span></label>
+                                <input type="datetime-local" class="form-control" id="ReservaFechaInicio" required />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Fecha Salida <span class="text-danger">*</span></label>
+                                <input type="datetime-local" class="form-control" id="ReservaFechaFinal" required />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Cantidad de Personas <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="ReservaCantidadPersonas" min="1" max="10" value="1" required />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Monto Total <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="ReservaMontoTotal" step="0.01" min="0" required />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="crearReserva()">
+                        <i class="fas fa-save me-2"></i>Crear Reserva
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Buscar Empresa -->
+    <div class="modal fade" id="modalBuscarEmpresa" tabindex="-1" aria-labelledby="modalBuscarEmpresaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalBuscarEmpresaLabel">
+                        <i class="fas fa-search me-2"></i>Buscar Empresa
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="buscarEmpresaInput" placeholder="Buscar por nombre, email o teléfono..." />
+                    </div>
+                    <div id="resultadosEmpresas" style="max-height: 400px; overflow-y: auto;">
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-spinner fa-spin fa-2x mb-2"></i>
+                            <p>Cargando empresas...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Crear Empresa -->
+    <div class="modal fade" id="modalCrearEmpresa" tabindex="-1" aria-labelledby="modalCrearEmpresaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCrearEmpresaLabel">
+                        <i class="fas fa-plus-circle me-2"></i>Crear Nueva Empresa
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formCrearEmpresa">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre de la Empresa <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="EmpresaNombre" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="EmpresaTelefono" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="EmpresaEmail" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Dirección</label>
+                            <textarea class="form-control" id="EmpresaDireccion" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="crearEmpresa()">
+                        <i class="fas fa-save me-2"></i>Crear Empresa
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Empresa -->
+    <div class="modal fade" id="modalEditarEmpresa" tabindex="-1" aria-labelledby="modalEditarEmpresaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarEmpresaLabel"><i class="fas fa-edit me-2"></i>Editar Empresa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="EmpresaIdEdit" />
+                    <div class="mb-3">
+                        <label class="form-label">Nombre de la Empresa <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="EmpresaNombreEdit" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="EmpresaTelefonoEdit" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="EmpresaEmailEdit" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Dirección</label>
+                        <textarea class="form-control" id="EmpresaDireccionEdit" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarEditarEmpresa()">
+                        <i class="fas fa-save me-2"></i>Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para cargar reservas
+        function cargarReservas(busqueda) {
+            var resultadosDiv = document.getElementById('resultadosReservas');
+            resultadosDiv.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-spinner fa-spin fa-2x mb-2"></i><p>Cargando...</p></div>';
+            
+            $.ajax({
+                url: '@Url.Action("BuscarReservas", "CheckIn")',
+                type: 'GET',
+                data: { busqueda: busqueda || '' },
+                success: function(reservas) {
+                    if (reservas.length === 0) {
+                        resultadosDiv.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-inbox fa-2x mb-2"></i><p>No se encontraron reservas</p></div>';
+                        return;
+                    }
+                    
+                    function formatReservaDate(val) {
+                        if (val == null || val === '') return 'N/A';
+                        var d;
+                        var m = typeof val === 'string' && val.match(/\/Date\((-?\d+)\)\//);
+                        if (m) d = new Date(parseInt(m[1], 10));
+                        else d = new Date(val);
+                        return isNaN(d.getTime()) ? 'N/A' : d.toLocaleDateString('es', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    }
+                    var html = '<div class="list-group">';
+                    reservas.forEach(function(reserva) {
+                        var fechaInicioDisplay = formatReservaDate(reserva.FechaInicio);
+                        var fechaFinalDisplay = formatReservaDate(reserva.FechaFinal);
+                        html += '<a href="#" class="list-group-item list-group-item-action" onclick="elegirReserva(' + reserva.IdReserva + '); return false;">';
+                        html += '<div class="d-flex w-100 justify-content-between">';
+                        html += '<h6 class="mb-1">Reserva #' + reserva.IdReserva + ' - ' + reserva.NombreCliente + '</h6>';
+                        html += '<small class="badge bg-success">' + reserva.EstadoReserva + '</small>';
+                        html += '</div>';
+                        html += '<p class="mb-1"><i class="fas fa-bed me-1"></i>Habitación: ' + (reserva.NumeroHabitacion || 'N/A') + ' | ';
+                        html += '<i class="fas fa-users me-1"></i>Personas: ' + reserva.CantidadPersonas + ' | ';
+                        html += '<i class="fas fa-dollar-sign me-1"></i>Total: ₡' + reserva.MontoTotal.toFixed(2) + '</p>';
+                        html += '<small><i class="fas fa-calendar me-1"></i>' + fechaInicioDisplay + ' - ' + fechaFinalDisplay + '</small>';
+                        html += '</a>';
+                    });
+                    html += '</div>';
+                    resultadosDiv.innerHTML = html;
+                },
+                error: function() {
+                    resultadosDiv.innerHTML = '<div class="alert alert-danger">Error al cargar reservas</div>';
+                }
+            });
+        }
+
+        // Cargar reservas cuando se abre el modal
+        document.getElementById('modalBuscarReserva').addEventListener('show.bs.modal', function() {
+            cargarReservas('');
+        });
+
+        // Búsqueda de reservas
+        let timeoutReserva;
+        document.getElementById('buscarReservaInput').addEventListener('input', function() {
+            clearTimeout(timeoutReserva);
+            var busqueda = this.value.trim();
+            
+            timeoutReserva = setTimeout(function() {
+                cargarReservas(busqueda);
+            }, 300);
+        });
+
+        function elegirReserva(idReserva) {
+            $.ajax({
+                url: '@Url.Action("ObtenerReservaConCliente", "CheckIn")',
+                type: 'GET',
+                data: { IdReserva: idReserva },
+                success: function(data) {
+                    if (!data.success) {
+                        alert(data.message || 'No se pudo cargar la reserva');
+                        return;
+                    }
+                    var r = data.reserva;
+                    var c = data.cliente || {};
+                    document.getElementById('IdReserva').value = r.IdReserva;
+                    document.getElementById('ReservaDisplay').value = 'Reserva #' + r.IdReserva + ' - ' + (r.NombreCliente || '');
+                    document.getElementById('IdHabitacion').value = r.IdHabitacion || '';
+                    document.getElementById('NombreCliente').value = r.NombreCliente || c.NombreCompleto || '';
+                    document.getElementById('CedulaCliente').value = c.Cedula || '';
+                    document.getElementById('TelefonoCliente').value = c.Telefono || '';
+                    document.getElementById('EmailCliente').value = c.Email || '';
+                    document.getElementById('DireccionCliente').value = c.Direccion || '';
+                    document.getElementById('NumeroAdultos').value = r.CantidadPersonas || 1;
+                    document.getElementById('Total').value = r.MontoTotal != null ? r.MontoTotal : '';
+                    if (r.FechaInicio) {
+                        var fechaIn = new Date(r.FechaInicio);
+                        if (!isNaN(fechaIn.getTime()))
+                            document.getElementById('FechaCheckIn').value = fechaIn.getFullYear() + '-' + String(fechaIn.getMonth() + 1).padStart(2, '0') + '-' + String(fechaIn.getDate()).padStart(2, '0') + 'T' + String(fechaIn.getHours()).padStart(2, '0') + ':' + String(fechaIn.getMinutes()).padStart(2, '0');
+                    }
+                    if (r.FechaFinal) {
+                        var fechaOut = new Date(r.FechaFinal);
+                        if (!isNaN(fechaOut.getTime()))
+                            document.getElementById('FechaCheckOut').value = fechaOut.getFullYear() + '-' + String(fechaOut.getMonth() + 1).padStart(2, '0') + '-' + String(fechaOut.getDate()).padStart(2, '0') + 'T' + String(fechaOut.getHours()).padStart(2, '0') + ':' + String(fechaOut.getMinutes()).padStart(2, '0');
+                    }
+                    var modal = bootstrap.Modal.getInstance(document.getElementById('modalBuscarReserva'));
+                    if (modal) modal.hide();
+                },
+                error: function() { alert('Error al cargar la reserva'); }
+            });
+        }
+
+        function seleccionarReserva(idReserva, nombreCliente, idHabitacion, fechaInicioStr, fechaFinalStr, cantidadPersonas, montoTotal) {
+            document.getElementById('IdReserva').value = idReserva;
+            document.getElementById('ReservaDisplay').value = 'Reserva #' + idReserva + ' - ' + nombreCliente;
+            document.getElementById('IdHabitacion').value = idHabitacion;
+            document.getElementById('NombreCliente').value = nombreCliente;
+            document.getElementById('NumeroAdultos').value = cantidadPersonas;
+            document.getElementById('Total').value = montoTotal;
+            if (fechaInicioStr && fechaInicioStr !== 'N/A') {
+                var fechaIn = new Date(fechaInicioStr);
+                if (!isNaN(fechaIn.getTime()))
+                    document.getElementById('FechaCheckIn').value = fechaIn.getFullYear() + '-' + String(fechaIn.getMonth() + 1).padStart(2, '0') + '-' + String(fechaIn.getDate()).padStart(2, '0') + 'T' + String(fechaIn.getHours()).padStart(2, '0') + ':' + String(fechaIn.getMinutes()).padStart(2, '0');
+            }
+            if (fechaFinalStr && fechaFinalStr !== 'N/A') {
+                var fechaOut = new Date(fechaFinalStr);
+                if (!isNaN(fechaOut.getTime()))
+                    document.getElementById('FechaCheckOut').value = fechaOut.getFullYear() + '-' + String(fechaOut.getMonth() + 1).padStart(2, '0') + '-' + String(fechaOut.getDate()).padStart(2, '0') + 'T' + String(fechaOut.getHours()).padStart(2, '0') + ':' + String(fechaOut.getMinutes()).padStart(2, '0');
+            }
+            var modal = bootstrap.Modal.getInstance(document.getElementById('modalBuscarReserva'));
+            if (modal) modal.hide();
+        }
+
+        function crearReserva() {
+            var form = document.getElementById('formCrearReserva');
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+                return;
+            }
+
+            var datos = {
+                IdHabitacion: document.getElementById('ReservaIdHabitacion').value,
+                NombreCliente: document.getElementById('ReservaNombreCliente').value,
+                CantidadPersonas: parseInt(document.getElementById('ReservaCantidadPersonas').value),
+                FechaInicio: document.getElementById('ReservaFechaInicio').value,
+                FechaFinal: document.getElementById('ReservaFechaFinal').value,
+                MontoTotal: parseFloat(document.getElementById('ReservaMontoTotal').value)
+            };
+
+            $.ajax({
+                url: '@Url.Action("CrearReserva", "CheckIn")',
+                type: 'POST',
+                data: datos,
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert('Reserva creada exitosamente');
+                        seleccionarReserva(
+                            response.reserva.IdReserva,
+                            response.reserva.NombreCliente,
+                            parseInt(response.reserva.IdHabitacion),
+                            response.reserva.FechaInicio,
+                            response.reserva.FechaFinal,
+                            datos.CantidadPersonas,
+                            datos.MontoTotal
+                        );
+                        var modal = bootstrap.Modal.getInstance(document.getElementById('modalCrearReserva'));
+                        if (modal) modal.hide();
+                        form.reset();
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function() {
+                    alert('Error al crear la reserva');
+                }
+            });
+        }
+
+        // Función para cargar empresas
+        function cargarEmpresas(busqueda) {
+            var resultadosDiv = document.getElementById('resultadosEmpresas');
+            resultadosDiv.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-spinner fa-spin fa-2x mb-2"></i><p>Cargando...</p></div>';
+            
+            $.ajax({
+                url: '@Url.Action("BuscarEmpresas", "CheckIn")',
+                type: 'GET',
+                data: { busqueda: busqueda || '' },
+                success: function(empresas) {
+                    if (empresas.length === 0) {
+                        resultadosDiv.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-inbox fa-2x mb-2"></i><p>No se encontraron empresas</p></div>';
+                        return;
+                    }
+                    
+                    var html = '<div class="list-group">';
+                    empresas.forEach(function(empresa) {
+                        var nomEsc = (empresa.NombreEmpresa || '').replace(/'/g, "\\'");
+                        var dataObj = { id: empresa.IdEmpresa, nombre: empresa.NombreEmpresa || '', telefono: empresa.Telefono || '', email: empresa.Email || '', direccion: empresa.Direccion || '' };
+                        var dataAttr = JSON.stringify(dataObj).replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        html += '<div class="list-group-item d-flex justify-content-between align-items-start" data-empresa="' + dataAttr + '">';
+                        html += '<div class="flex-grow-1" style="cursor:pointer;" onclick="seleccionarEmpresa(' + empresa.IdEmpresa + ', \'' + nomEsc + '\')">';
+                        html += '<h6 class="mb-1">' + (empresa.NombreEmpresa || '') + '</h6>';
+                        if (empresa.Telefono) html += '<p class="mb-1 small"><i class="fas fa-phone me-1"></i>' + (empresa.Telefono || '') + '</p>';
+                        if (empresa.Email) html += '<p class="mb-1 small"><i class="fas fa-envelope me-1"></i>' + (empresa.Email || '') + '</p>';
+                        if (empresa.Direccion) html += '<small><i class="fas fa-map-marker-alt me-1"></i>' + (empresa.Direccion || '') + '</small>';
+                        html += '</div>';
+                        html += '<div class="btn-group btn-group-sm ms-2">';
+                        html += '<button type="button" class="btn btn-outline-primary" title="Editar" onclick="event.stopPropagation(); abrirEditarEmpresa(this)"><i class="fas fa-edit"></i></button>';
+                        html += '<button type="button" class="btn btn-outline-danger" title="Eliminar" onclick="event.stopPropagation(); eliminarEmpresa(this)"><i class="fas fa-trash"></i></button>';
+                        html += '</div></div>';
+                    });
+                    html += '</div>';
+                    resultadosDiv.innerHTML = html;
+                },
+                error: function() {
+                    resultadosDiv.innerHTML = '<div class="alert alert-danger">Error al cargar empresas</div>';
+                }
+            });
+        }
+
+        // --- Buscar cliente (llenar nombre, cédula, teléfono, email, dirección)
+        function cargarClientes(busqueda) {
+            var div = document.getElementById('resultadosClientes');
+            div.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-spinner fa-spin fa-2x mb-2"></i><p>Cargando...</p></div>';
+            $.ajax({
+                url: '@Url.Action("BuscarClientes", "CheckIn")',
+                type: 'GET',
+                data: { busqueda: busqueda || '' },
+                success: function(clientes) {
+                    if (!clientes || clientes.length === 0) {
+                        div.innerHTML = '<div class="text-center text-muted py-4"><i class="fas fa-inbox fa-2x mb-2"></i><p>No se encontraron clientes</p></div>';
+                        return;
+                    }
+                    var html = '<div class="list-group">';
+                    clientes.forEach(function(cli) {
+                        var nom = (cli.NombreCompleto || '').replace(/'/g, "\\'");
+                        html += '<a href="#" class="list-group-item list-group-item-action" onclick="seleccionarCliente(\'' + (cli.Id || '').replace(/'/g, "\\'") + '\', \'' + nom + '\', \'' + (cli.Cedula || '').replace(/'/g, "\\'") + '\', \'' + (cli.Email || '').replace(/'/g, "\\'") + '\', \'' + (cli.Telefono || '').replace(/'/g, "\\'") + '\', \'' + (cli.Direccion || '').replace(/'/g, "\\'").replace(/</g, '').replace(/>/g, '') + '\'); return false;">';
+                        html += '<h6 class="mb-1">' + (cli.NombreCompleto || '') + '</h6>';
+                        if (cli.Cedula) html += '<p class="mb-1 small"><i class="fas fa-id-card me-1"></i>' + cli.Cedula + '</p>';
+                        if (cli.Email) html += '<p class="mb-1 small"><i class="fas fa-envelope me-1"></i>' + cli.Email + '</p>';
+                        if (cli.Telefono) html += '<p class="mb-1 small"><i class="fas fa-phone me-1"></i>' + cli.Telefono + '</p>';
+                        html += '</a>';
+                    });
+                    html += '</div>';
+                    div.innerHTML = html;
+                },
+                error: function() { div.innerHTML = '<div class="alert alert-danger">Error al cargar clientes</div>'; }
+            });
+        }
+        document.getElementById('modalBuscarCliente').addEventListener('show.bs.modal', function() { cargarClientes(''); });
+        var timeoutCliente;
+        document.getElementById('buscarClienteInput').addEventListener('input', function() {
+            clearTimeout(timeoutCliente);
+            timeoutCliente = setTimeout(function() { cargarClientes(document.getElementById('buscarClienteInput').value.trim()); }, 300);
+        });
+        function seleccionarCliente(id, nombre, cedula, email, telefono, direccion) {
+            document.getElementById('NombreCliente').value = nombre || '';
+            document.getElementById('CedulaCliente').value = cedula || '';
+            document.getElementById('EmailCliente').value = email || '';
+            document.getElementById('TelefonoCliente').value = telefono || '';
+            document.getElementById('DireccionCliente').value = direccion || '';
+            var modal = bootstrap.Modal.getInstance(document.getElementById('modalBuscarCliente'));
+            if (modal) modal.hide();
+        }
+
+        // Cargar empresas cuando se abre el modal
+        document.getElementById('modalBuscarEmpresa').addEventListener('show.bs.modal', function() {
+            cargarEmpresas('');
+        });
+
+        // Búsqueda de empresas
+        let timeoutEmpresa;
+        document.getElementById('buscarEmpresaInput').addEventListener('input', function() {
+            clearTimeout(timeoutEmpresa);
+            var busqueda = this.value.trim();
+            
+            timeoutEmpresa = setTimeout(function() {
+                cargarEmpresas(busqueda);
+            }, 300);
+        });
+
+        function seleccionarEmpresa(idEmpresa, nombreEmpresa) {
+            document.getElementById('IdEmpresa').value = idEmpresa;
+            document.getElementById('EmpresaDisplay').value = nombreEmpresa;
+            var modal = bootstrap.Modal.getInstance(document.getElementById('modalBuscarEmpresa'));
+            modal.hide();
+        }
+
+        function abrirEditarEmpresa(btn) {
+            var row = btn.closest('.list-group-item');
+            var dataStr = row.getAttribute('data-empresa');
+            if (!dataStr) return;
+            var data = JSON.parse(dataStr.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>'));
+            document.getElementById('EmpresaIdEdit').value = data.id;
+            document.getElementById('EmpresaNombreEdit').value = data.nombre;
+            document.getElementById('EmpresaTelefonoEdit').value = data.telefono;
+            document.getElementById('EmpresaEmailEdit').value = data.email;
+            document.getElementById('EmpresaDireccionEdit').value = data.direccion;
+            new bootstrap.Modal(document.getElementById('modalEditarEmpresa')).show();
+        }
+
+        function guardarEditarEmpresa() {
+            var id = document.getElementById('EmpresaIdEdit').value;
+            var nom = document.getElementById('EmpresaNombreEdit').value;
+            if (!nom.trim()) { alert('El nombre es requerido'); return; }
+            var datos = {
+                IdEmpresa: parseInt(id, 10),
+                NombreEmpresa: nom,
+                Telefono1: document.getElementById('EmpresaTelefonoEdit').value,
+                CorreoElectronico: document.getElementById('EmpresaEmailEdit').value,
+                Direccion: document.getElementById('EmpresaDireccionEdit').value,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            };
+            $.ajax({
+                url: '@Url.Action("EditarEmpresa", "CheckIn")',
+                type: 'POST',
+                data: datos,
+                success: function(r) {
+                    if (r.success) {
+                        alert(r.message);
+                        bootstrap.Modal.getInstance(document.getElementById('modalEditarEmpresa')).hide();
+                        cargarEmpresas(document.getElementById('buscarEmpresaInput').value);
+                    } else { alert(r.message || 'Error al guardar'); }
+                },
+                error: function(xhr) {
+                    alert((xhr.responseJSON && xhr.responseJSON.message) || 'Error al guardar');
+                }
+            });
+        }
+
+        function eliminarEmpresa(btn) {
+            var row = btn.closest('.list-group-item');
+            var dataStr = row.getAttribute('data-empresa').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+            var data = JSON.parse(dataStr);
+            if (!confirm('¿Eliminar la empresa "' + data.nombre + '"?')) return;
+            $.ajax({
+                url: '@Url.Action("EliminarEmpresa", "CheckIn")',
+                type: 'POST',
+                data: { IdEmpresa: data.id, __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() },
+                success: function(r) {
+                    if (r.success) {
+                        alert(r.message);
+                        cargarEmpresas(document.getElementById('buscarEmpresaInput').value);
+                    } else { alert(r.message || 'No se pudo eliminar'); }
+                },
+                error: function(xhr) {
+                    alert((xhr.responseJSON && xhr.responseJSON.message) || 'Error al eliminar');
+                }
+            });
+        }
+
+        function crearEmpresa() {
+            var form = document.getElementById('formCrearEmpresa');
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+                return;
+            }
+
+            var datos = {
+                NombreEmpresa: document.getElementById('EmpresaNombre').value,
+                Telefono1: document.getElementById('EmpresaTelefono').value,
+                CorreoElectronico: document.getElementById('EmpresaEmail').value,
+                Direccion: document.getElementById('EmpresaDireccion').value,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            };
+
+            $.ajax({
+                url: '@Url.Action("CrearEmpresa", "CheckIn")',
+                type: 'POST',
+                data: datos,
+                success: function(response) {
+                    if (response.success) {
+                        alert('Empresa creada exitosamente');
+                        seleccionarEmpresa(response.empresa.IdEmpresa, response.empresa.NombreEmpresa);
+                        var modal = bootstrap.Modal.getInstance(document.getElementById('modalCrearEmpresa'));
+                        modal.hide();
+                        form.reset();
+                    } else {
+                        alert('Error: ' + (response.message || 'Error al crear la empresa'));
+                    }
+                },
+                error: function(xhr) {
+                    var msg = 'Error al crear la empresa';
+                    if (xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
+                    else if (xhr.responseText) msg = xhr.responseText.substring(0, 200);
+                    alert(msg);
+                }
+            });
+        }
+
+        // Limpiar selección de reserva
+        function limpiarReserva() {
+            document.getElementById('IdReserva').value = '';
+            document.getElementById('ReservaDisplay').value = '';
+        }
+
+        // Limpiar selección de empresa
+        function limpiarEmpresa() {
+            document.getElementById('IdEmpresa').value = '';
+            document.getElementById('EmpresaDisplay').value = '';
+        }
+    </script>
+}
+

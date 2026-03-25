@@ -1,9 +1,89 @@
-﻿@model System.Web.Mvc.HandleErrorInfo
-
+@model System.Web.Mvc.HandleErrorInfo
 @{
-    ViewBag.Title = "Error";
+    Layout = null;
+    var isDebug = false;
+    var msg = (string)null;
+    var stack = (string)null;
+    var errorType = (string)null;
+    var innerError = (string)null;
+    try
+    {
+        var ctx = System.Web.HttpContext.Current;
+        if (ctx != null) { isDebug = ctx.IsDebuggingEnabled; }
+        // Siempre leer el detalle que envía el controlador (desde Server.GetLastError) para poder ver el error en hosting
+        msg = ViewBag.ErrorMessage as string;
+        stack = ViewBag.ErrorStackTrace as string;
+        errorType = ViewBag.ErrorType as string;
+        innerError = ViewBag.InnerError as string;
+        if (msg == null && ctx?.Application != null) { msg = ctx.Application["LastError"] as string; }
+        if (stack == null && ctx?.Application != null) { stack = ctx.Application["LastErrorStackTrace"] as string; }
+        if (errorType == null && ctx?.Application != null) { errorType = ctx.Application["LastErrorType"] as string; }
+        if (innerError == null && ctx?.Application != null) { innerError = ctx.Application["LastInnerError"] as string; }
+    }
+    catch { isDebug = false; msg = null; stack = null; errorType = null; innerError = null; }
+    var hayDetalle = !string.IsNullOrEmpty(msg) || !string.IsNullOrEmpty(stack) || !string.IsNullOrEmpty(errorType) || !string.IsNullOrEmpty(innerError);
 }
-
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">Error al procesar la solicitud.</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error - Hotel Prado</title>
+    <style>
+        body { font-family: sans-serif; padding: 2rem; max-width: 900px; margin: 0 auto; background: #f5f5f5; }
+        h1 { color: #c00; }
+        .msg { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; margin: 1rem 0; border-radius: 5px; }
+        .error-type { background: #e9ecef; padding: 0.5rem; margin: 0.5rem 0; border-radius: 3px; font-family: monospace; font-size: 0.9em; }
+        .inner-error { background: #f8d7da; border: 1px solid #f5c6cb; padding: 1rem; margin: 1rem 0; border-radius: 5px; }
+        pre { background: #eee; padding: 1rem; overflow: auto; font-size: 0.85em; max-height: 400px; border-radius: 5px; }
+        .generic-msg { background: #e7f1ff; border: 1px solid #6D7BB8; padding: 1.25rem; margin: 1rem 0; border-radius: 8px; color: #2c3e50; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .actions { margin-top: 2rem; }
+        .actions a { display: inline-block; margin-right: 1rem; padding: 0.5rem 1rem; background: #007bff; color: white; border-radius: 5px; }
+        .actions a:hover { background: #0056b3; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <h1>Error</h1>
+    <p>Algo salió mal. Por favor intenta de nuevo o contacta a soporte si el problema continúa.</p>
+    <div class="generic-msg">
+        <strong>Qué puedes hacer:</strong>
+        <ul style="margin: 0.5rem 0 0 1.25rem;">
+            <li>Volver al inicio e intentar de nuevo</li>
+            <li>Verificar tu conexión a internet</li>
+            <li>Contactar al administrador del sistema</li>
+        </ul>
+    </div>
+    @* Siempre mostrar detalle técnico cuando exista (también en hosting) para poder diagnosticar *@
+    @if (hayDetalle)
+    {
+        <h2 style="margin-top: 1.5rem; color: #333;">Detalle del error</h2>
+        if (!string.IsNullOrEmpty(msg))
+        {
+            <div class="msg"><strong>Mensaje:</strong> @msg</div>
+        }
+        if (!string.IsNullOrEmpty(errorType))
+        {
+            <div class="error-type"><strong>Tipo:</strong> @errorType</div>
+        }
+        if (!string.IsNullOrEmpty(innerError))
+        {
+            <div class="inner-error"><strong>Error interno:</strong><pre style="margin:0.5rem 0 0; white-space: pre-wrap;">@innerError</pre></div>
+        }
+        if (!string.IsNullOrEmpty(stack))
+        {
+            <div><strong>Stack trace:</strong><pre>@stack</pre></div>
+        }
+    }
+    <div class="actions">
+        <a href="/">Volver al inicio</a>
+        @if (isDebug)
+        {
+            <a href="/Home/Ping">Probar conexión</a>
+        }
+        <a href="/Account/Login">Intentar login</a>
+    </div>
+</body>
+</html>
 

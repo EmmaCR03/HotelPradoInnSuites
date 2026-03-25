@@ -1,4 +1,4 @@
-﻿@model HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO
+@model HotelPrado.Abstracciones.Modelos.Departamento.DepartamentoDTO
 
 @{
     ViewBag.Title = "Detalles del Departamento";
@@ -14,7 +14,7 @@
             <div class="col-lg-7">
                 @{
                     var images = !string.IsNullOrEmpty(Model.UrlImagenes)
-                        ? Model.UrlImagenes.Split(',').Select(img => img.Trim()).Where(img => !string.IsNullOrEmpty(img)).ToList()
+                        ? Model.UrlImagenes.Split(',').Select(img => { var t = (img ?? "").Trim(); var bar = t.IndexOf('|'); return bar >= 0 ? t.Substring(0, bar).Trim() : t; }).Where(img => !string.IsNullOrEmpty(img)).ToList()
                         : new List<string>();
                 }
 
@@ -86,27 +86,19 @@
 
 
                     <div class="action-buttons mt-5">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <a href="@($"https://wa.me/{Model.NumeroEmpresa}?text=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
-                                   class="btn btn-success w-100 whatsapp-btn" target="_blank">
-                                    <i class="fab fa-whatsapp me-2"></i> WhatsApp
-                                </a>
-                            </div>
-                            <div class="col-md-6">
-                                <a href="@($"mailto:{Model.CorreoEmpresa}?subject=Solicitud%20de%20cotización&body=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
-                                   class="btn btn-primary w-100 email-btn" target="_blank">
-                                    <i class="fas fa-envelope me-2"></i> Correo
-                                </a>
-                            </div>
-                            <div class="col-12">
-                                @Html.ActionLink("Solicitar Visita", "Create", "Citas", new { id = Model.IdDepartamento }, new { @class = "btn btn-outline-primary w-100 visit-btn" })
-                            </div>
-                            <div class="col-12">
-                                <a href="@Url.Action("IndexDepartamentosClientes", "Departamento")" class="btn btn-light w-100 back-btn">
-                                    <i class="fas fa-arrow-left me-2"></i> Volver al listado
-                                </a>
-                            </div>
+                        <div class="action-buttons-grid-four">
+                            <a href="@($"https://wa.me/{Model.NumeroEmpresa}?text=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
+                               class="btn btn-success whatsapp-btn" target="_blank">
+                                <i class="fab fa-whatsapp me-2"></i> WhatsApp
+                            </a>
+                            <a href="@($"mailto:{Model.CorreoEmpresa}?subject=Solicitud%20de%20cotización&body=Hola,%20estoy%20interesado%20en%20una%20cotización%20del%20departamento%20")"
+                               class="btn btn-primary email-btn" target="_blank">
+                                <i class="fas fa-envelope me-2"></i> Correo
+                            </a>
+                            @Html.ActionLink("Solicitar Visita", "Create", "Citas", new { id = Model.IdDepartamento }, new { @class = "btn btn-outline-primary visit-btn" })
+                            <a href="@Url.Action("IndexDepartamentosClientes", "Departamento")" class="btn btn-light back-btn">
+                                <i class="fas fa-arrow-left me-2"></i> Volver
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -237,22 +229,50 @@
     }
 
     .action-buttons .btn {
-        padding: 0.75rem;
+        padding: 0.75rem 1rem;
         font-weight: 500;
         border-radius: var(--border-radius);
         transition: var(--transition);
+        min-height: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        text-decoration: none;
+        border: 2px solid transparent;
+    }
+
+    .action-buttons-grid-four {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        max-width: 400px;
+    }
+    .action-buttons-grid-four .btn {
+        width: 100%;
+        white-space: nowrap;
+        padding: 0.6rem 1rem;
+        font-size: 0.95rem;
+        min-height: 44px;
+        box-sizing: border-box;
+    }
+    @@media (max-width: 400px) {
+        .action-buttons-grid-four .btn {
+            white-space: normal;
+            font-size: 0.85rem;
+            padding: 0.55rem 0.75rem;
+        }
     }
 
     .whatsapp-btn {
-        background-color: #25D366;
-        border-color: #25D366;
+        background-color: #25D366 !important;
+        border-color: #25D366 !important;
     }
-
-        .whatsapp-btn:hover {
-            background-color: #128C7E;
-            border-color: #128C7E;
-            transform: translateY(-2px);
-        }
+    .whatsapp-btn:hover {
+        background-color: #128C7E !important;
+        border-color: #128C7E !important;
+        transform: translateY(-2px);
+    }
 
     .email-btn:hover,
     .visit-btn:hover {
@@ -308,4 +328,5 @@
             gap: 1rem;
         }
     }
+
 </style>
