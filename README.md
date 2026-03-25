@@ -7,8 +7,8 @@
 *Reservas, habitaciones, apartamentos, clientes y operación diaria en un solo lugar.*
 
 [![.NET Framework](https://img.shields.io/badge/.NET%20Framework-4.8.1-512BD4?style=for-the-badge&logo=.net&logoColor=white)](https://dotnet.microsoft.com/)
-[![ASP.NET MVC](https://img.shields.io/badge/ASP.NET-MVC-239120?style=for-the-badge&logo=asp.net&logoColor=white)](https://dotnet.microsoft.com/apps/aspnet)
-[![Entity Framework](https://img.shields.io/badge/Entity%20Framework-6.x-9333EA?style=for-the-badge&logo=entity-framework&logoColor=white)](https://learn.microsoft.com/ef/)
+[![ASP.NET MVC](https://img.shields.io/badge/ASP.NET-MVC-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/apps/aspnet)
+[![Entity Framework](https://img.shields.io/badge/Entity_Framework-6.5-9333EA?style=for-the-badge)](https://learn.microsoft.com/ef/ef6/)
 [![SQL Server](https://img.shields.io/badge/SQL%20Server-CC2927?style=for-the-badge&logo=microsoft-sql-server&logoColor=white)](https://www.microsoft.com/sql-server)
 
 [**Ver en GitHub**](https://github.com/EmmaCR03/HotelPradoInnSuites) · [**Clonar**](#-clonar-el-repositorio) · [**Ejecutar local**](#-ejecución-en-local)
